@@ -1,0 +1,99 @@
+package models
+
+import (
+	"fmt"
+	"math"
+	"strings"
+	"time"
+
+	"github.com/google/uuid"
+	"github.com/gosimple/slug"
+	"gorm.io/gorm"
+)
+
+type Collection struct {
+	ID        uint           `gorm:"primaryKey"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
+	UUID      uuid.UUID      `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
+	Status    string         `gorm:"default:unlisted" json:"status"`
+
+	UserUUID uuid.UUID `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()" json:"user_uuid" yaml:"user_uuid"`
+	User     User      `gorm:"foreignKey:UserUUID;references:UUID" json:"user"`
+
+	Name string `gorm:"not null" json:"name" form:"name" binding:"required"`
+	Slug string `gorm:"" json:"slug"`
+}
+
+func (c *Collection) BeforeCreate(tx *gorm.DB) (err error) {
+	sp := strings.Split(slug.Make(c.Name), "-")
+	i := math.Min(float64(len(sp)), 5)
+
+	c.Slug = fmt.Sprintf("%s-%s", strings.Join(sp[:int(i)], "-"), c.UUID.String()[:8])
+
+	return nil
+}
+
+func CreateCollection(coll *Collection, user_uuid uuid.UUID) (Collection, error) {
+	user, err := GetUser(user_uuid, user_uuid)
+	if err != nil {
+		return *coll, err
+	}
+
+	err = db.Model(&user).Association("Collections").Append(coll)
+	if err != nil {
+		return *coll, err
+	}
+
+	created, err := GetCollection(coll.UUID, user_uuid)
+	return created, err
+}
+
+func GetCollection(uuid uuid.UUID, user_uuid uuid.UUID) (Collection, error) {
+	var coll Collection
+	result := db.Preload("User").Where("uuid = ? AND (status = 'listed' OR user_uuid = ?)", uuid, user_uuid).First(&coll)
+	if result.Error != nil {
+		return coll, result.Error
+	}
+
+	return coll, nil
+}
+
+func GetCollectionBySlug(slug string, user_uuid uuid.UUID) (Collection, error) {
+	var coll Collection
+	result := db.Preload("User").Where("slug = ?", slug).First(&coll)
+	if result.Error != nil {
+		return coll, result.Error
+	}
+
+	return coll, nil
+}
+
+func GetAllCollections(user_uuid uuid.UUID) ([]Collection, error) {
+	coll := make([]Collection, 0)
+	result := db.Preload("User").Where("status = 'listed' OR user_uuid = ?", user_uuid).Find(&coll)
+	return coll, result.Error
+}
+
+func UpdateCollection(uuid uuid.UUID, user_uuid uuid.UUID, coll *Collection) (Collection, error) {
+	var existing Collection
+	result := db.Where("uuid = ?", uuid).First(&existing)
+	if result.Error != nil {
+		return *coll, result.Error
+	}
+
+	result = db.Model(&existing).Where("uuid = ?", uuid).Updates(&coll)
+	return existing, result.Error
+}
+
+func DeleteCollection(uuid uuid.UUID, user_uuid uuid.UUID) (Collection, error) {
+	var coll Collection
+	result := db.Where("uuid = ?", uuid).First(&coll)
+	if result.Error != nil {
+		return coll, result.Error
+	}
+
+	result = db.Where("uuid = ?", uuid).Delete(&coll)
+	return coll, result.Error
+}

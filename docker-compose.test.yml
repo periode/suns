@@ -1,0 +1,56 @@
+services:
+  db_test_suns:
+    image: postgres:alpine
+    user: postgres
+    container_name: db_test_suns
+    environment:
+      POSTGRES_USER: cosyl
+      POSTGRES_PASSWORD: cosyl
+      POSTGRES_DB: suns-test
+      PGPORT: "5433"
+    expose:
+      - "5433"
+    volumes:
+      - pgdata_suns_test:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U cosyl -d suns-test && psql -U cosyl suns-test" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend_suns:
+    container_name: backend_suns
+    build: .
+    depends_on:
+      db_test_suns:
+        condition: service_healthy
+    ports:
+     - ${PORT}:${PORT}
+    env_file:
+     - ./.secrets
+    environment:
+      DATABASE_TEST_URL: "postgres://cosyl:cosyl@db_test_suns:5433/suns-test"
+      PORT: "3046"
+      DB_PORT: "5433"
+      DEBUG: "false"
+      API_MODE: "test"
+      RUN_FIXTURES: "true"
+    tmpfs:
+      - /tmp
+
+  frontend_test_suns:
+    container_name: frontend_test_suns
+    build:
+      context: .
+      dockerfile: tests/Dockertest.next.front
+    environment:
+      API_URL: "http://backend_suns:3046"
+      NEXT_PUBLIC_API_URL: "http://backend_suns:3046"
+      NEXTAUTH_URL: "http://backend_suns:3046/auth"
+    depends_on:
+      - backend_suns
+    ports:
+     - 3000:3000
+
+volumes:
+  pgdata_suns_test:
