@@ -1,4 +1,4 @@
-# Common Syllabi - Explorer
+# The sun sets 194 times
 
  The [Syllabi Explorer](https://explorer.common-syllabi.org) is a platform on which educators can publish and browse syllabi.
 
@@ -72,5 +72,6 @@ There are also two secrets that can be provided, in a `.secrets` file.
 
 ## Resources
 
-- [API Reference](https://commonsyllabi.stoplight.io/)
-- [CommonCartridge Go Package](https://pkg.go.dev/search?q=github.com%2Fcommonsyllabi%2Fcommoncartridge)
+- [Echo framework](https://echo.labstack.com/) - for handling HTTP requests
+- [GORM](https://gorm.io/) - for handling DB transactions
+- [Next-Auth](https://next-auth.js.org/) - for handling JWT session management in the frontend
