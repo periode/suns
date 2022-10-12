@@ -1,6 +1,6 @@
 # The sun sets 194 times
 
- The [Syllabi Explorer](https://explorer.common-syllabi.org) is a platform on which educators can publish and browse syllabi.
+ The sun sets 194 times is an online performative experience.
 
 ## Running
 
