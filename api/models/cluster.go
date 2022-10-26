@@ -22,8 +22,8 @@ type Cluster struct {
 	Name string `gorm:"not null" json:"name" form:"name" binding:"required"`
 	Slug string `gorm:"" json:"slug"`
 
-	Lat  float32 `json:"lat"`
-	Long float32 `json:"long"`
+	Lat float32 `json:"lat"`
+	Lng float32 `json:"lng"`
 }
 
 func (c *Cluster) BeforeCreate(tx *gorm.DB) (err error) {
