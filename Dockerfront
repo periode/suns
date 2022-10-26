@@ -1,0 +1,17 @@
+# ========= BUILD =========
+FROM node:16.14.2 as builder
+
+WORKDIR /app
+
+COPY www/package.json .
+RUN npm install
+
+COPY www/. .
+
+RUN npm run build
+
+# ========= RUN =========
+FROM caddy:2.6.2
+
+COPY conf/Caddyfile /etc/Caddyfile
+COPY --from=builder /app/build /usr/share/caddy

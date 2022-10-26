@@ -1,7 +1,5 @@
 # The sun sets 194 times
 
- The [Syllabi Explorer](https://explorer.common-syllabi.org) is a platform on which educators can publish and browse syllabi.
-
 ## Running
 
 The API runs in a docker container, requiring:
@@ -12,7 +10,7 @@ To run it, use the Makefile:
 
 ```
 make build
-make docker-run
+make docker-
 ```
 
 The front-end is a Next.JS application. To install requirements and serve it:
