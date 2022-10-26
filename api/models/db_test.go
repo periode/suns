@@ -21,11 +21,11 @@ var (
 	syllabusDeleteID   uuid.UUID
 	syllabusUnknownID  uuid.UUID
 
-	collectionID        uuid.UUID
-	collectionSlug      string
-	collectionName      string
-	collectionDeleteID  uuid.UUID
-	collectionUnknownID uuid.UUID
+	clusterID        uuid.UUID
+	clusterSlug      string
+	clusterName      string
+	clusterDeleteID  uuid.UUID
+	clusterUnknownID uuid.UUID
 
 	attachmentID        uuid.UUID
 	attachmentSlug      string
@@ -64,11 +64,11 @@ func setup(t *testing.T) func(t *testing.T) {
 	syllabusDeleteID = uuid.MustParse("46de6a2b-aacb-4c24-b1e1-3495821f8469")
 	syllabusUnknownID = uuid.New()
 
-	collectionID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a9")
-	collectionSlug = "good-public-stuff-b9e4c3ed"
-	collectionName = "Good public stuff"
-	collectionDeleteID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a7")
-	collectionUnknownID = uuid.New()
+	clusterID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a9")
+	clusterSlug = "good-public-stuff-b9e4c3ed"
+	clusterName = "Good public stuff"
+	clusterDeleteID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a7")
+	clusterUnknownID = uuid.New()
 
 	attachmentID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab21")
 	attachmentSlug = "chair-website-c55f0baf"

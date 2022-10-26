@@ -18,156 +18,156 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestCollectionHandler(t *testing.T) {
+func TestClusterHandler(t *testing.T) {
 	teardown := setup(t)
 	defer teardown(t)
 
-	t.Run("Test get all listed collections", func(t *testing.T) {
+	t.Run("Test get all listed clusters", func(t *testing.T) {
 		os.Setenv("API_MODE", "debug")
 		res := httptest.NewRecorder()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		c := echo.New().NewContext(req, res)
-		c.SetPath("/collections")
-		handlers.GetAllCollections(c)
+		c.SetPath("/clusters")
+		handlers.GetAllClusters(c)
 		assert.Equal(t, http.StatusOK, res.Code)
 
-		colls := make([]models.Collection, 0)
+		colls := make([]models.Cluster, 0)
 		err := json.Unmarshal(res.Body.Bytes(), &colls)
 		require.Nil(t, err)
 		assert.Equal(t, 2, len(colls))
 		os.Setenv("API_MODE", "test")
 	})
 
-	t.Run("Test get all listed and owned collections", func(t *testing.T) {
+	t.Run("Test get all listed and owned clusters", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		c := echo.New().NewContext(req, res)
-		c.SetPath("/collections")
-		handlers.GetAllCollections(c)
+		c.SetPath("/clusters")
+		handlers.GetAllClusters(c)
 		assert.Equal(t, http.StatusOK, res.Code)
 
-		colls := make([]models.Collection, 0)
+		colls := make([]models.Cluster, 0)
 		err := json.Unmarshal(res.Body.Bytes(), &colls)
 		require.Nil(t, err)
 		assert.Equal(t, 3, len(colls))
 	})
 
-	t.Run("Test create collection", func(t *testing.T) {
+	t.Run("Test create cluster", func(t *testing.T) {
 		f := make(url.Values)
-		f.Set("name", "Test Collection Handling")
+		f.Set("name", "Test Cluster Handling")
 
 		res := httptest.NewRecorder()
 		req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(f.Encode()))
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
 		c := echo.New().NewContext(req, res)
-		c.SetPath("/collections")
+		c.SetPath("/clusters")
 
-		handlers.CreateCollection(c)
+		handlers.CreateCluster(c)
 
 		assert.Equal(t, http.StatusCreated, res.Code)
 
-		var coll models.Collection
+		var coll models.Cluster
 		err := json.Unmarshal(res.Body.Bytes(), &coll)
 		require.Nil(t, err)
-		assert.Equal(t, "Test Collection Handling", coll.Name)
+		assert.Equal(t, "Test Cluster Handling", coll.Name)
 		assert.NotZero(t, coll.CreatedAt)
 	})
 
-	t.Run("Test create collection malformed input", func(t *testing.T) {
+	t.Run("Test create cluster malformed input", func(t *testing.T) {
 		f := make(url.Values)
 		f.Set("name", "Test")
 
 		res := httptest.NewRecorder()
-		req := httptest.NewRequest(http.MethodPost, "/collections", strings.NewReader(f.Encode()))
+		req := httptest.NewRequest(http.MethodPost, "/clusters", strings.NewReader(f.Encode()))
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
 		c := echo.New().NewContext(req, res)
-		c.SetPath("/collections")
+		c.SetPath("/clusters")
 
-		handlers.CreateCollection(c)
+		handlers.CreateCluster(c)
 
 		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
-	t.Run("Test get collection", func(t *testing.T) {
+	t.Run("Test get cluster", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 
 		c := echo.New().NewContext(req, res)
-		c.SetPath("/collections")
+		c.SetPath("/clusters")
 		c.SetParamNames("id")
-		c.SetParamValues(collectionID.String())
+		c.SetParamValues(clusterID.String())
 
-		handlers.GetCollection(c)
+		handlers.GetCluster(c)
 		assert.Equal(t, http.StatusOK, res.Code)
 
-		var coll models.Collection
+		var coll models.Cluster
 		err := json.Unmarshal(res.Body.Bytes(), &coll)
 		require.Nil(t, err)
-		assert.Equal(t, collectionID, coll.UUID)
-		assert.Equal(t, collectionName, coll.Name)
+		assert.Equal(t, clusterID, coll.UUID)
+		assert.Equal(t, clusterName, coll.Name)
 	})
 
-	t.Run("Test get collection by slug", func(t *testing.T) {
+	t.Run("Test get cluster by slug", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 
 		c := echo.New().NewContext(req, res)
-		c.SetPath("/collections")
+		c.SetPath("/clusters")
 		c.SetParamNames("id")
-		c.SetParamValues(collectionSlug)
+		c.SetParamValues(clusterSlug)
 
-		handlers.GetCollection(c)
+		handlers.GetCluster(c)
 		assert.Equal(t, http.StatusOK, res.Code)
 
-		var coll models.Collection
+		var coll models.Cluster
 		err := json.Unmarshal(res.Body.Bytes(), &coll)
 		require.Nil(t, err)
-		assert.Equal(t, collectionID, coll.UUID)
-		assert.Equal(t, collectionName, coll.Name)
+		assert.Equal(t, clusterID, coll.UUID)
+		assert.Equal(t, clusterName, coll.Name)
 	})
 
-	t.Run("Test get collection non-existing ID", func(t *testing.T) {
+	t.Run("Test get cluster non-existing ID", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 
 		c := echo.New().NewContext(req, res)
-		c.SetPath("/collections")
+		c.SetPath("/clusters")
 		c.SetParamNames("id")
-		c.SetParamValues(collectionUnknownID.String())
+		c.SetParamValues(clusterUnknownID.String())
 
-		handlers.GetCollection(c)
+		handlers.GetCluster(c)
 		assert.Equal(t, http.StatusNotFound, res.Code)
 	})
 
-	t.Run("Test get collection malformed ID", func(t *testing.T) {
+	t.Run("Test get cluster malformed ID", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 
 		c := echo.New().NewContext(req, res)
-		c.SetPath("/collections/:id")
+		c.SetPath("/clusters/:id")
 		c.SetParamNames("id")
 		c.SetParamValues("wrong")
 
-		handlers.GetCollection(c)
+		handlers.GetCluster(c)
 		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
-	t.Run("Test update collection", func(t *testing.T) {
+	t.Run("Test update cluster", func(t *testing.T) {
 		f := make(url.Values)
 		f.Set("name", "Updated")
 
 		res := httptest.NewRecorder()
-		req := httptest.NewRequest(http.MethodPatch, "/collections", strings.NewReader(f.Encode()))
+		req := httptest.NewRequest(http.MethodPatch, "/clusters", strings.NewReader(f.Encode()))
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
 		c := echo.New().NewContext(req, res)
-		c.SetPath("/collections/:id")
+		c.SetPath("/clusters/:id")
 		c.SetParamNames("id")
-		c.SetParamValues(collectionID.String())
+		c.SetParamValues(clusterID.String())
 
-		handlers.UpdateCollection(c)
+		handlers.UpdateCluster(c)
 		assert.Equal(t, http.StatusOK, res.Code)
 
-		var coll models.Collection
+		var coll models.Cluster
 		err := json.Unmarshal(res.Body.Bytes(), &coll)
 		require.Nil(t, err)
 		assert.Equal(t, "Updated", coll.Name)
@@ -175,7 +175,7 @@ func TestCollectionHandler(t *testing.T) {
 		assert.NotZero(t, coll.CreatedAt)
 	})
 
-	t.Run("Test update collection non-existing ID", func(t *testing.T) {
+	t.Run("Test update cluster non-existing ID", func(t *testing.T) {
 		f := make(url.Values)
 		f.Set("name", "Updated Name")
 
@@ -183,15 +183,15 @@ func TestCollectionHandler(t *testing.T) {
 		req := httptest.NewRequest(http.MethodPatch, "/", strings.NewReader(f.Encode()))
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
 		c := echo.New().NewContext(req, res)
-		c.SetPath("/collections/:id")
+		c.SetPath("/clusters/:id")
 		c.SetParamNames("id")
-		c.SetParamValues(collectionUnknownID.String())
+		c.SetParamValues(clusterUnknownID.String())
 
-		handlers.UpdateCollection(c)
+		handlers.UpdateCluster(c)
 		assert.Equal(t, http.StatusNotFound, res.Code)
 	})
 
-	t.Run("Test update collection malformed ID", func(t *testing.T) {
+	t.Run("Test update cluster malformed ID", func(t *testing.T) {
 		f := make(url.Values)
 		f.Set("name", "Updated Name")
 
@@ -199,15 +199,15 @@ func TestCollectionHandler(t *testing.T) {
 		req := httptest.NewRequest(http.MethodPatch, "/", strings.NewReader(f.Encode()))
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
 		c := echo.New().NewContext(req, res)
-		c.SetPath("/collections/:id")
+		c.SetPath("/clusters/:id")
 		c.SetParamNames("id")
 		c.SetParamValues("wrong")
 
-		handlers.UpdateCollection(c)
+		handlers.UpdateCluster(c)
 		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
-	t.Run("Test update collection wrong field", func(t *testing.T) {
+	t.Run("Test update cluster wrong field", func(t *testing.T) {
 		f := make(url.Values)
 		f.Set("wrong-field", "malicious")
 
@@ -215,50 +215,50 @@ func TestCollectionHandler(t *testing.T) {
 		req := httptest.NewRequest(http.MethodPatch, "/", strings.NewReader(f.Encode()))
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
 		c := echo.New().NewContext(req, res)
-		c.SetPath("/collections/:id")
+		c.SetPath("/clusters/:id")
 		c.SetParamNames("id")
-		c.SetParamValues(collectionID.String())
+		c.SetParamValues(clusterID.String())
 
-		handlers.UpdateCollection(c)
+		handlers.UpdateCluster(c)
 		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
-	t.Run("Test delete collection", func(t *testing.T) {
+	t.Run("Test delete cluster", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
 		c := echo.New().NewContext(req, res)
-		c.SetPath("/collections/:id")
+		c.SetPath("/clusters/:id")
 		c.SetParamNames("id")
-		c.SetParamValues(collectionID.String())
+		c.SetParamValues(clusterID.String())
 
-		handlers.DeleteCollection(c)
+		handlers.DeleteCluster(c)
 		assert.Equal(t, http.StatusOK, res.Code)
 	})
 
-	t.Run("Test delete collection non-existant ID", func(t *testing.T) {
+	t.Run("Test delete cluster non-existant ID", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
 		c := echo.New().NewContext(req, res)
-		c.SetPath("/collections/:id")
+		c.SetPath("/clusters/:id")
 		c.SetParamNames("id")
-		c.SetParamValues(collectionUnknownID.String())
+		c.SetParamValues(clusterUnknownID.String())
 
-		handlers.DeleteCollection(c)
+		handlers.DeleteCluster(c)
 		assert.Equal(t, http.StatusNotFound, res.Code)
 	})
 
-	t.Run("Test delete collection wrong input", func(t *testing.T) {
+	t.Run("Test delete cluster wrong input", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
 		c := echo.New().NewContext(req, res)
-		c.SetPath("/collections/:id")
+		c.SetPath("/clusters/:id")
 		c.SetParamNames("id")
 		c.SetParamValues("wrong")
 
-		handlers.DeleteCollection(c)
+		handlers.DeleteCluster(c)
 		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 }

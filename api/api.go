@@ -91,14 +91,14 @@ func SetupRouter() *echo.Echo {
 		users.DELETE("/:id", handlers.DeleteUser)
 	}
 
-	collections := r.Group("/collections")
+	clusters := r.Group("/clusters")
 	{
-		collections.GET("/", handlers.GetAllCollections)
-		collections.GET("/:id", handlers.GetCollection)
+		clusters.GET("/", handlers.GetAllClusters)
+		clusters.GET("/:id", handlers.GetCluster)
 
-		collections.POST("/", handlers.CreateCollection)
-		collections.PATCH("/:id", handlers.UpdateCollection)
-		collections.DELETE("/:id", handlers.DeleteCollection)
+		clusters.POST("/", handlers.CreateCluster)
+		clusters.PATCH("/:id", handlers.UpdateCluster)
+		clusters.DELETE("/:id", handlers.DeleteCluster)
 	}
 
 	r.GET("/", handleNotFound)

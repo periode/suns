@@ -42,7 +42,7 @@ func InitDB(url string) (*gorm.DB, error) {
 	}
 
 	// migration
-	err = db.AutoMigrate(&User{}, &Collection{}, &Token{})
+	err = db.AutoMigrate(&User{}, &Cluster{}, &Token{})
 	if err != nil {
 		zero.Errorf("error running migrations: %v", err)
 		log.Fatal(err)
@@ -66,7 +66,7 @@ func runFixtures(shouldTruncateTables bool) error {
 	var err error
 
 	if shouldTruncateTables {
-		err := db.Exec("TRUNCATE TABLE users CASCADE").Error
+		err := db.Exec("TRUNCATE TABLE clusters CASCADE").Error
 		if err != nil {
 			return err
 		}
@@ -77,19 +77,19 @@ func runFixtures(shouldTruncateTables bool) error {
 		}
 	}
 
-	bytes, err := os.ReadFile(filepath.Join(Basepath, "fixtures", "full.yml"))
+	bytes, err := os.ReadFile(filepath.Join(Basepath, "fixtures", "clusters.yml"))
 	if err != nil {
 		return err
 	}
 
-	users := make([]User, 0)
-	err = yaml.Unmarshal(bytes, &users)
+	clusters := make([]Cluster, 0)
+	err = yaml.Unmarshal(bytes, &clusters)
 	if err != nil {
 		return err
 	}
 
-	for _, u := range users {
-		err := db.Create(&u).Error
+	for _, c := range clusters {
+		err := db.Create(&c).Error
 		if err != nil {
 			return err
 		}

@@ -31,8 +31,6 @@ type User struct {
 	Name     string `gorm:"default:Anonymous User;not null" json:"name" form:"name"`
 	Slug     string `gorm:"" json:"slug"`
 	Password []byte `gorm:"not null" json:"password"`
-
-	Collections []Collection `gorm:"foreignKey:UserUUID;references:UUID" json:"collections"`
 }
 
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
@@ -51,7 +49,7 @@ func CreateUser(user *User) (User, error) {
 
 func GetUser(uuid uuid.UUID, user_uuid uuid.UUID) (User, error) {
 	var user User
-	err := db.Preload("Collections").Where("uuid = ?", uuid).First(&user).Error
+	err := db.Where("uuid = ?", uuid).First(&user).Error
 	if err != nil {
 		return user, err
 	}
@@ -61,7 +59,7 @@ func GetUser(uuid uuid.UUID, user_uuid uuid.UUID) (User, error) {
 
 func GetUserByEmail(email string, user_uuid uuid.UUID) (User, error) {
 	var user User
-	err := db.Preload("Collections").Where("email = ?", email).Find(&user).Error
+	err := db.Where("email = ?", email).Find(&user).Error
 	if err != nil {
 		return user, err
 	}
@@ -71,7 +69,7 @@ func GetUserByEmail(email string, user_uuid uuid.UUID) (User, error) {
 
 func GetUserBySlug(slug string, user_uuid uuid.UUID) (User, error) {
 	var user User
-	err := db.Preload("Collections").Where("slug = ?", slug).Find(&user).Error
+	err := db.Where("slug = ?", slug).Find(&user).Error
 	if err != nil {
 		return user, err
 	}

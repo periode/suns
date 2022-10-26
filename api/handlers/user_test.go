@@ -18,22 +18,22 @@ import (
 )
 
 var (
-	collectionID        uuid.UUID
-	collectionUnknownID uuid.UUID
-	collectionName      string
-	collectionSlug      string
-	userID              uuid.UUID
-	userUnknownID       uuid.UUID
-	userSlug            string
-	userEmail           string
+	clusterID        uuid.UUID
+	clusterUnknownID uuid.UUID
+	clusterName      string
+	clusterSlug      string
+	userID           uuid.UUID
+	userUnknownID    uuid.UUID
+	userSlug         string
+	userEmail        string
 )
 
 func setup(t *testing.T) func(t *testing.T) {
 	os.Setenv("API_MODE", "test")
 
-	collectionID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a7")
-	collectionName = "Good public stuff"
-	collectionSlug = "good-public-stuff-b9e4c3ed"
+	clusterID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a7")
+	clusterName = "Good public stuff"
+	clusterSlug = "good-public-stuff-b9e4c3ed"
 	userID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8")
 	userUnknownID = uuid.New()
 	userSlug = "test-user-e7b74bcd" // todo change this to actual slug

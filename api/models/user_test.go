@@ -32,11 +32,10 @@ func TestUserModel(t *testing.T) {
 		assert.Equal(t, result.Name, "Anonymous User")
 	})
 
-	t.Run("Test get user with listed collections", func(t *testing.T) {
+	t.Run("Test get user", func(t *testing.T) {
 		user, err := models.GetUser(userID, uuid.Nil)
 		require.Nil(t, err)
 		assert.Equal(t, user.Name, userName)
-		assert.Equal(t, 2, len(user.Collections))
 	})
 
 	t.Run("Test get user by email", func(t *testing.T) {

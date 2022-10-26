@@ -79,7 +79,7 @@ func TestLoadConfig(t *testing.T) {
 func TestRoutes(t *testing.T) {
 	os.Setenv("API_MODE", "release")
 	t.Run("Test delete collection unauthorized", func(t *testing.T) {
-		path := "/collections/" + collectionID.String()
+		path := "/clusters/" + collectionID.String()
 		req := httptest.NewRequest(http.MethodDelete, path, nil)
 
 		res := httptest.NewRecorder()
