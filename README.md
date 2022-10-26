@@ -1,5 +1,7 @@
 # The sun sets 194 times
 
+The sun sets 194 times is an online performative experience.
+
 ## Running
 
 The API runs in a docker container, requiring:
