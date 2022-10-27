@@ -22,8 +22,7 @@ type Cluster struct {
 	Name string `gorm:"not null" json:"name" form:"name" binding:"required"`
 	Slug string `gorm:"" json:"slug"`
 
-	Lat float32 `json:"lat"`
-	Lng float32 `json:"lng"`
+	//-- has many entrypoints
 }
 
 func (c *Cluster) BeforeCreate(tx *gorm.DB) (err error) {
@@ -35,11 +34,10 @@ func (c *Cluster) BeforeCreate(tx *gorm.DB) (err error) {
 	return nil
 }
 
-func CreateCluster(coll *Cluster) (Cluster, error) {
-	//-- TODO: create cluster simply
+func CreateCluster(cluster *Cluster) (Cluster, error) {
+	result := db.Create(cluster)
 
-	created := Cluster{}
-	return created, nil
+	return *cluster, result.Error
 }
 
 func GetCluster(uuid uuid.UUID, user_uuid uuid.UUID) (Cluster, error) {

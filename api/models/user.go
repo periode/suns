@@ -31,6 +31,8 @@ type User struct {
 	Name     string `gorm:"default:Anonymous User;not null" json:"name" form:"name"`
 	Slug     string `gorm:"" json:"slug"`
 	Password []byte `gorm:"not null" json:"password"`
+
+	//-- a user has many entrypoints
 }
 
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {

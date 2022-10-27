@@ -101,6 +101,26 @@ func SetupRouter() *echo.Echo {
 		clusters.DELETE("/:id", handlers.DeleteCluster)
 	}
 
+	entrypoints := r.Group("/entrypoints")
+	{
+		entrypoints.GET("/", handlers.GetAllEntrypoints)
+		entrypoints.GET("/:id", handlers.GetEntrypoint)
+
+		entrypoints.POST("/", handlers.CreateEntrypoint)
+		entrypoints.PATCH("/:id", handlers.UpdateEntrypoint)
+		entrypoints.DELETE("/:id", handlers.DeleteEntrypoint)
+	}
+
+	modules := r.Group("/modules")
+	{
+		modules.GET("/", handlers.GetAllModules)
+		modules.GET("/:id", handlers.GetModule)
+
+		modules.POST("/", handlers.CreateModule)
+		modules.PATCH("/:id", handlers.UpdateModule)
+		modules.DELETE("/:id", handlers.DeleteModule)
+	}
+
 	r.GET("/", handleNotFound)
 	r.POST("/", handleNotFound)
 
