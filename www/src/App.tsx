@@ -15,8 +15,10 @@ const App = () => {
   const bounds = new L.LatLngBounds(new L.LatLng(0, 0), new L.LatLng(500, 500))
 
   useEffect(() => {
+    const endpoint = new URL('entrypoints/', process.env.REACT_APP_API_URL)
+    
     async function fetchClusters() {
-      const res = await fetch("http://localhost:3046/clusters/")
+      const res = await fetch(endpoint)
       if (res.ok) {
         const c = await res.json()
         setClusters(c as Array<ClusterInterface>)
