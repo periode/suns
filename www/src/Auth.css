@@ -1,0 +1,23 @@
+.auth-container{
+    position: absolute;
+    left: 35vw;
+    top: 20vh;
+    width: 30vw;
+    border: 1px solid black;
+}
+
+.auth-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-container .form-group{
+    display: flex;
+    flex-direction: column;
+    margin: 2em;
+    text-align: left;
+}
+
+.form-group button {
+    cursor: pointer;
+}

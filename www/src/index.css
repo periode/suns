@@ -18,7 +18,18 @@ code {
 }
 
 #map {
+  z-index: -1;
   position: absolute;
   height: 100vh;
   width: 100vw;
+}
+
+
+.menu{
+  position: absolute;
+  z-index: 20;
+  top: 30px;
+  right: 30px;
+  width: 100px;
+  height: 100px;
 }

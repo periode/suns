@@ -76,6 +76,11 @@ func runFixtures(shouldTruncateTables bool) error {
 			return err
 		}
 
+		err = db.Exec("TRUNCATE TABLE users CASCADE").Error
+		if err != nil {
+			return err
+		}
+
 		err = db.Exec("TRUNCATE TABLE tokens CASCADE").Error
 		if err != nil {
 			return err
@@ -94,6 +99,24 @@ func runFixtures(shouldTruncateTables bool) error {
 	}
 
 	for _, c := range entrypoints {
+		err := db.Create(&c).Error
+		if err != nil {
+			return err
+		}
+	}
+
+	bytes, err = os.ReadFile(filepath.Join(Basepath, "fixtures", "users.yml"))
+	if err != nil {
+		return err
+	}
+
+	users := make([]User, 0)
+	err = yaml.Unmarshal(bytes, &users)
+	if err != nil {
+		return err
+	}
+
+	for _, c := range users {
 		err := db.Create(&c).Error
 		if err != nil {
 			return err
