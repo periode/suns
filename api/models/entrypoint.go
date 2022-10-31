@@ -11,6 +11,12 @@ import (
 	"gorm.io/gorm"
 )
 
+const (
+	EntrypointPending   string = "pending"
+	EntrypointConfirmed string = "closed"
+	EntrypointDeleted   string = "open"
+)
+
 type Entrypoint struct {
 	ID        uint           `gorm:"primaryKey"`
 	CreatedAt time.Time      `json:"created_at"`
@@ -23,7 +29,14 @@ type Entrypoint struct {
 	Slug string `gorm:"" json:"slug"`
 
 	//-- belongs to a cluster
-	//-- has-many modules
+	ClusterUUID uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()" json:"cluster_uuid" yaml:"cluster_uuid"`
+	Cluster     Cluster   `gorm:"foreignKey:ClusterUUID;references:UUID" json:"cluster"`
+
+	//-- has many modules
+	Modules []Module `gorm:"foreignKey:EntrypointUUID;references:UUID" json:"modules"`
+
+	//-- has many-to-many users (0, 1 or 2)
+	Users []*User `gorm:"many2many:entrypoints_users;" json:"users"`
 
 	Lat float32 `json:"lat"`
 	Lng float32 `json:"lng"`

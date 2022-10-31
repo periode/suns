@@ -22,7 +22,8 @@ type Cluster struct {
 	Name string `gorm:"not null" json:"name" form:"name" binding:"required"`
 	Slug string `gorm:"" json:"slug"`
 
-	//-- has many entrypoints
+	// has many entrypoints
+	Entrypoints []Entrypoint `gorm:"foreignKey:ClusterUUID;references:UUID" json:"entrypoints" yaml:"entrypoints"`
 }
 
 func (c *Cluster) BeforeCreate(tx *gorm.DB) (err error) {
@@ -61,9 +62,9 @@ func GetClusterBySlug(slug string, user_uuid uuid.UUID) (Cluster, error) {
 }
 
 func GetAllClusters(user_uuid uuid.UUID) ([]Cluster, error) {
-	coll := make([]Cluster, 0)
-	result := db.Where("status = 'listed'").Find(&coll)
-	return coll, result.Error
+	clusters := make([]Cluster, 0)
+	result := db.Preload("Entrypoints").Where("status = 'listed'").Find(&clusters)
+	return clusters, result.Error
 }
 
 func UpdateCluster(uuid uuid.UUID, user_uuid uuid.UUID, coll *Cluster) (Cluster, error) {

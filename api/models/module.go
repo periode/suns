@@ -22,11 +22,9 @@ type Module struct {
 	Name string `gorm:"not null" json:"name" form:"name" binding:"required"`
 	Slug string `gorm:"" json:"slug"`
 
-	//-- belongs to a cluster
-	//-- has-many modules
-
-	Lat float32 `json:"lat"`
-	Lng float32 `json:"lng"`
+	//-- belongs to an entrypoint
+	EntrypointUUID uuid.UUID  `gorm:"type:uuid;default:uuid_generate_v4()" json:"entrypoint_uuid" yaml:"entrypoint_uuid"`
+	Entrypoint     Entrypoint `gorm:"foreignKey:EntrypointUUID;references:UUID" json:"cluster"`
 }
 
 func (c *Module) BeforeCreate(tx *gorm.DB) (err error) {

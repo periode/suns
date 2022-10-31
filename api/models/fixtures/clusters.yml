@@ -1,0 +1,24 @@
+- uuid: '57ed6a2b-aacb-4c24-b1e1-3495821f846a'
+  name: "Cluster 1"
+  status: "listed"
+  entrypoints:
+    - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846a'
+      status: "listed"
+      name: "Entrypoint 2"
+      lat: 200.300
+      lng: 200.400
+    - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846b'
+      status: "listed"
+      name: "Entrypoint 3"
+      lat: 240.300
+      lng: 240.400
+    - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846c'
+      status: "listed"
+      name: "Entrypoint 4"
+      lat: 150.300
+      lng: 150.400
+    - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846d'
+      status: "listed"
+      name: "Entrypoint 5"
+      lat: 140.300
+      lng: 150.400

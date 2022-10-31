@@ -87,18 +87,18 @@ func runFixtures(shouldTruncateTables bool) error {
 		}
 	}
 
-	bytes, err := os.ReadFile(filepath.Join(Basepath, "fixtures", "entrypoints.yml"))
+	bytes, err := os.ReadFile(filepath.Join(Basepath, "fixtures", "clusters.yml"))
 	if err != nil {
 		return err
 	}
 
-	entrypoints := make([]Entrypoint, 0)
-	err = yaml.Unmarshal(bytes, &entrypoints)
+	clusters := make([]Cluster, 0)
+	err = yaml.Unmarshal(bytes, &clusters)
 	if err != nil {
 		return err
 	}
 
-	for _, c := range entrypoints {
+	for _, c := range clusters {
 		err := db.Create(&c).Error
 		if err != nil {
 			return err

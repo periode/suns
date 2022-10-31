@@ -32,7 +32,8 @@ type User struct {
 	Slug     string `gorm:"" json:"slug"`
 	Password []byte `gorm:"not null" json:"password"`
 
-	//-- a user has many entrypoints
+	//-- a user has many-many entrypoints
+	Entrypoints []*Entrypoint `gorm:"many2many:entrypoints_users;" json:"entrypoints"`
 }
 
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {

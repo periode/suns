@@ -72,17 +72,17 @@ func UpdateCluster(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "There was an error parsing the updated information.")
 	}
 
-	coll, err := models.GetCluster(uid, user_uuid)
+	cluster, err := models.GetCluster(uid, user_uuid)
 	if err != nil {
 		return c.String(http.StatusNotFound, "We couldn't find the Cluster to update.")
 	}
 
-	err = c.Bind(&coll)
+	err = c.Bind(&cluster)
 	if err != nil {
 		return c.String(http.StatusBadRequest, "Error binding to the Cluster to update.")
 	}
 
-	updated, err := models.UpdateCluster(uid, user_uuid, &coll)
+	updated, err := models.UpdateCluster(uid, user_uuid, &cluster)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error updating the Cluster. Please try again later.")
 	}
