@@ -5,7 +5,7 @@ import { CRS } from 'leaflet';
 import L from "leaflet";
 
 import Auth from './components/Auth'
-import { getSession, logout } from './utils/auth'
+import { getSession, signout } from './utils/auth'
 
 interface ClusterInterface {
   lat: number,
@@ -23,7 +23,8 @@ const App = () => {
 
     async function fetchClusters() {
       const h = new Headers();
-      h.append("Authorization", `Bearer ${session.token}`);
+      if(session.token !== "")
+        h.append("Authorization", `Bearer ${session.token}`);
   
       var options = {
           method: 'GET',
@@ -38,7 +39,7 @@ const App = () => {
       }
     }
     fetchClusters()
-  }, [])
+  }, [session.token])
 
   return (
     <div className="App">
@@ -65,7 +66,7 @@ const App = () => {
           </div>
           <div className="menu">
             <div>hi {session.user.name}</div>
-            <button onClick={logout}>logout</button>
+            <button onClick={signout}>sign out</button>
           </div>
         </>
       }

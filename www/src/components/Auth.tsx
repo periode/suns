@@ -1,19 +1,42 @@
 import React, { useState } from 'react';
-import { login } from '../utils/auth'
+import { signin, signup } from '../utils/auth'
 import '../Auth.css'
 
 const Auth = () => {
+    const [success, setSuccess] = useState(false)
     const [message, setMessage] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
-    const handleLogin = (e: React.BaseSyntheticEvent) => {
+    const [signupEmail, setSignupEmail] = useState("")
+    const [signupPassword, setSignupPassword] = useState("")
+    const [signupEmailConf, setSignupEmailConf] = useState("")
+    const [signupPasswordConf, setSignupPasswordConf] = useState("")
+
+    const handleSignin = (e: React.BaseSyntheticEvent) => {
         e.preventDefault()
         e.stopPropagation()
         console.log(`logging in with: ${email} - ${password}`);
-        login(email, password).then(result => {
+        signin(email, password).then(result => {
             setMessage(result)
+            setSuccess(true)
         })
+            .catch((err) => {
+                setMessage(err)
+            })
+    }
+
+    const handleSignup = (e: React.BaseSyntheticEvent) => {
+        e.preventDefault()
+        e.stopPropagation()
+
+        signup(signupEmail, signupEmailConf, signupPassword, signupPasswordConf).then((res) => {
+            setMessage(res)
+            setSuccess(true)
+        })
+            .catch((err) => {
+                setMessage(err)
+            })
     }
 
     const handleEmailChange = (e: React.BaseSyntheticEvent) => {
@@ -26,21 +49,73 @@ const Auth = () => {
         setPassword(v)
     }
 
+    const handleSignupEmailChange = (e: React.BaseSyntheticEvent) => {
+        const v = e.target.value as string;
+        setSignupEmail(v)
+    }
+
+    const handleSignupEmailConfChange = (e: React.BaseSyntheticEvent) => {
+        const v = e.target.value as string;
+        setSignupEmailConf(v)
+    }
+
+    const handleSignupPasswordChange = (e: React.BaseSyntheticEvent) => {
+        const v = e.target.value as string;
+        setSignupPassword(v)
+    }
+
+    const handleSignupPasswordConfChange = (e: React.BaseSyntheticEvent) => {
+        const v = e.target.value as string;
+        setSignupPasswordConf(v)
+    }
+
     return (
         <div className="auth-container">
-            <form action="">
-                <div className="form-group">
-                    <label htmlFor="email">Email</label>
-                    <input onChange={handleEmailChange} type="text" name="email" />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="password">Password</label>
-                    <input onChange={handlePasswordChange} type="password" name="password" />
-                </div>
-                <div className="form-group">
-                    <button onClick={handleLogin}>Login</button>
-                </div>
-            </form>
+            {
+                success === true ?
+                    <div className="status-info">{message}</div>
+                    :
+                    <>
+                        <form action="">
+                            <div className="form-group">
+                                <label htmlFor="email">Email</label>
+                                <input onChange={handleEmailChange} type="text" name="email" />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="password">Password</label>
+                                <input onChange={handlePasswordChange} type="password" name="password" />
+                            </div>
+                            <div className="form-group">
+                                <button onClick={handleSignin}>Login</button>
+                            </div>
+                        </form>
+                        <hr />
+                        <form action="">
+                            <div className="form-group">
+                                <label htmlFor="signupEmail">Email</label>
+                                <input onChange={handleSignupEmailChange} type="text" name="signupEmail" />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="signupEmailConf">Email</label>
+                                <input onChange={handleSignupEmailConfChange} type="text" name="signupEmailConf" />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="signupPassword">Password</label>
+                                <input onChange={handleSignupPasswordChange} type="password" name="signupPassword" />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="signupPasswordConf">Password</label>
+                                <input onChange={handleSignupPasswordConfChange} type="password" name="signupPasswordConf" />
+                            </div>
+                            <div className="form-group">
+                                <button onClick={handleSignup}>Sign up</button>
+                            </div>
+                        </form>
+                        <hr />
+                        <div className="status-info">{message}</div>
+                    </>
+            }
+
         </div>
     )
 }

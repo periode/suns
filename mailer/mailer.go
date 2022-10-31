@@ -12,7 +12,8 @@ import (
 	"github.com/mailgun/mailgun-go/v4"
 )
 
-const DOMAIN = "mail.common-syllabi.org"
+const DOMAIN = "post.enframed.net"
+const SENDER = "Suns - Test <suns@post.enframed.net>"
 
 type Payload interface {
 	Check() error
@@ -54,7 +55,7 @@ func (c DeletionPayload) Data() interface{} {
 }
 
 func loadTemplate(_name string, _data interface{}) (string, error) {
-	p := filepath.Join("./templates", fmt.Sprintf("%s.tmpl", _name))
+	p := filepath.Join("./mailer/templates", fmt.Sprintf("%s.tmpl", _name))
 	t, err := template.ParseFiles(p)
 
 	if err != nil {
@@ -74,7 +75,7 @@ func SendMail(_dest string, _subject string, _template string, _data Payload) er
 	mg := mailgun.NewMailgun(DOMAIN, os.Getenv("MAILGUN_PRIVATE_API_KEY"))
 	mg.SetAPIBase(mailgun.APIBaseEU) //-- rgpd mon amour
 
-	sender := "Common Syllabi <cosyl@mail.common-syllabi.org>"
+	sender := SENDER
 	subject := _subject
 	recipient := _dest
 	message := mg.NewMessage(sender, subject, "", recipient)

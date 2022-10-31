@@ -14,10 +14,14 @@
 .auth-container .form-group{
     display: flex;
     flex-direction: column;
-    margin: 2em;
+    margin: 1em 2em;
     text-align: left;
 }
 
 .form-group button {
     cursor: pointer;
+}
+
+.form-group button, .form-group input {
+    width: 80%;
 }

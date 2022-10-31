@@ -48,7 +48,12 @@ func Authenticate(c echo.Context) (uuid.UUID, error) {
 	if len(authHeader) == 0 {
 		return uuid.Nil, nil
 	}
+
 	raw := c.Request().Header["Authorization"][0]
+	if len(raw) == 0 {
+		return uuid.Nil, nil
+	}
+
 	tokenString := strings.Split(raw, " ")[1]
 	token, err := jwt.ParseWithClaims(tokenString, &JWTCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -78,8 +83,13 @@ func Login(c echo.Context) error {
 	}
 
 	user, err := models.GetUserByEmail(email.Address, uuid.Nil)
-	if err != nil || user.Status == models.UserPending {
+	if err != nil {
 		zero.Error(err.Error())
+		return c.String(http.StatusUnauthorized, "Authentication failed")
+	}
+
+	if user.Status == models.UserPending {
+		zero.Error("Cannot login pending user")
 		return c.String(http.StatusUnauthorized, "Authentication failed")
 	}
 
