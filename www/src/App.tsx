@@ -4,8 +4,8 @@ import { ImageOverlay, MapContainer, Marker, Popup } from 'react-leaflet'
 import { CRS } from 'leaflet';
 import L from "leaflet";
 
-import Auth from './components/Auth'
 import { getSession, signout } from './utils/auth'
+import { Navigate } from 'react-router-dom';
 
 interface ClusterInterface {
   lat: number,
@@ -44,7 +44,7 @@ const App = () => {
   return (
     <div className="App">
       {getSession().token === '' ?
-        <Auth />
+        <Navigate to="/auth"/>
         :
         <>
           <div className="map-container" id="map">

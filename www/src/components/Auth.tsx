@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { signin, signup } from '../utils/auth'
 import '../Auth.css'
+import { useNavigate } from 'react-router-dom';
 
 const Auth = () => {
+    const navigate = useNavigate()
     const [success, setSuccess] = useState(false)
     const [message, setMessage] = useState("")
     const [email, setEmail] = useState("")
@@ -16,11 +18,13 @@ const Auth = () => {
     const handleSignin = (e: React.BaseSyntheticEvent) => {
         e.preventDefault()
         e.stopPropagation()
-        console.log(`logging in with: ${email} - ${password}`);
-        signin(email, password).then(result => {
-            setMessage(result)
-            setSuccess(true)
-        })
+
+        signin(email, password)
+            .then(result => {
+                setMessage(result)
+                setSuccess(true)
+                navigate("/")
+            })
             .catch((err) => {
                 setMessage(err)
             })
@@ -30,10 +34,11 @@ const Auth = () => {
         e.preventDefault()
         e.stopPropagation()
 
-        signup(signupEmail, signupEmailConf, signupPassword, signupPasswordConf).then((res) => {
-            setMessage(res)
-            setSuccess(true)
-        })
+        signup(signupEmail, signupEmailConf, signupPassword, signupPasswordConf)
+            .then((res) => {
+                setMessage(res)
+                setSuccess(true)
+            })
             .catch((err) => {
                 setMessage(err)
             })
