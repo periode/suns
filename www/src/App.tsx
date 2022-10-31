@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
 import { ImageOverlay, MapContainer, Marker, Popup } from 'react-leaflet'
 import { CRS } from 'leaflet';
 import L from "leaflet";
 
 import { getSession, signout } from './utils/auth'
-import { Navigate } from 'react-router-dom';
+import Auth from './components/Auth'
 
 interface ClusterInterface {
   lat: number,
@@ -14,9 +14,10 @@ interface ClusterInterface {
 }
 
 const App = () => {
+  const hasData = useRef(false)
   const [clusters, setClusters] = useState(Array<ClusterInterface>)
   const bounds = new L.LatLngBounds(new L.LatLng(0, 0), new L.LatLng(500, 500))
-  var session = getSession()
+  const session = getSession()
 
   useEffect(() => {
     const endpoint = new URL('entrypoints/', process.env.REACT_APP_API_URL)
@@ -38,13 +39,18 @@ const App = () => {
         console.warn('error', res.status)
       }
     }
-    fetchClusters()
+
+    if(hasData.current === false){
+      fetchClusters()
+      hasData.current = true
+    }
+
   }, [session.token])
 
   return (
     <div className="App">
-      {getSession().token === '' ?
-        <Navigate to="/auth"/>
+      {session.token === '' ?
+        <Auth />
         :
         <>
           <div className="map-container" id="map">
