@@ -7,18 +7,58 @@
       name: "Entrypoint 2"
       lat: 200.300
       lng: 200.400
+      modules:
+        - name: "Module A"
+          status: "listed"
+          content: "This is the first content"
+        - name: "Module B"
+          status: "listed"
+          content: "This is the second content"
+        - name: "Module C"
+          status: "listed"
+          content: "This is the third content"
     - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846b'
       status: "listed"
       name: "Entrypoint 3"
       lat: 240.300
       lng: 240.400
+      modules:
+        - name: "Module A"
+          status: "listed"
+          content: "This is the first content"
+        - name: "Module B"
+          status: "listed"
+          content: "This is the second content"
+        - name: "Module C"
+          status: "listed"
+          content: "This is the third content"
     - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846c'
       status: "listed"
       name: "Entrypoint 4"
       lat: 150.300
       lng: 150.400
+      modules:
+        - name: "Module A"
+          status: "listed"
+          content: "This is the first content"
+        - name: "Module B"
+          status: "listed"
+          content: "This is the second content"
+        - name: "Module C"
+          status: "listed"
+          content: "This is the third content"
     - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846d'
       status: "listed"
       name: "Entrypoint 5"
       lat: 140.300
       lng: 150.400
+      modules:
+        - name: "Module A"
+          status: "listed"
+          content: "This is the first content"
+        - name: "Module B"
+          status: "listed"
+          content: "This is the second content"
+        - name: "Module C"
+          status: "listed"
+          content: "This is the third content"

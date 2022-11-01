@@ -58,7 +58,7 @@ func CreateEntrypoint(entry *Entrypoint) (Entrypoint, error) {
 
 func GetEntrypoint(uuid uuid.UUID, user_uuid uuid.UUID) (Entrypoint, error) {
 	var entry Entrypoint
-	result := db.Where("uuid = ? AND (status = 'listed' OR user_uuid = ?)", uuid, user_uuid).First(&entry)
+	result := db.Preload("Modules").Where("uuid = ? AND (status = 'listed' OR user_uuid = ?)", uuid, user_uuid).First(&entry)
 	if result.Error != nil {
 		return entry, result.Error
 	}
@@ -78,7 +78,7 @@ func GetEntrypointBySlug(slug string, user_uuid uuid.UUID) (Entrypoint, error) {
 
 func GetAllEntrypoints(user_uuid uuid.UUID) ([]Entrypoint, error) {
 	entry := make([]Entrypoint, 0)
-	result := db.Where("status = 'listed'").Find(&entry)
+	result := db.Preload("Modules").Where("status = 'listed'").Find(&entry)
 	return entry, result.Error
 }
 
