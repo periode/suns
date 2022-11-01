@@ -1,21 +1,26 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
 import { ImageOverlay, MapContainer, Marker, Popup } from 'react-leaflet'
-import { CRS } from 'leaflet';
+import { CRS, LeafletMouseEvent } from 'leaflet';
 import L from "leaflet";
 
 import { getSession, signout } from './utils/auth'
 import Auth from './components/Auth'
+import EntrypointMarker from './components/EntrypointMarker';
+import Entrypoint from './components/Entrypoint';
 
-interface ClusterInterface {
+
+interface EntrypointInterface {
   lat: number,
   lng: number,
   name: string,
+  modules: [],
 }
 
 const App = () => {
   const hasData = useRef(false)
-  const [clusters, setClusters] = useState(Array<ClusterInterface>)
+  const [entrypoints, setEntrypoints] = useState(Array<EntrypointInterface>)
+  const [currentEntrypoint, setCurrentEntrypoint] = useState({} as EntrypointInterface)
   const bounds = new L.LatLngBounds(new L.LatLng(0, 0), new L.LatLng(500, 500))
   const session = getSession()
 
@@ -24,28 +29,36 @@ const App = () => {
 
     async function fetchClusters() {
       const h = new Headers();
-      if(session.token !== "")
+      if (session.token !== "")
         h.append("Authorization", `Bearer ${session.token}`);
-  
+
       var options = {
-          method: 'GET',
-          headers: h
+        method: 'GET',
+        headers: h
       };
       const res = await fetch(endpoint, options)
       if (res.ok) {
         const c = await res.json()
-        setClusters(c as Array<ClusterInterface>)
+        setEntrypoints(c as Array<EntrypointInterface>)
       } else {
         console.warn('error', res.status)
       }
     }
 
-    if(hasData.current === false){
+    if (hasData.current === false) {
       fetchClusters()
       hasData.current = true
     }
 
   }, [session.token])
+
+  const handleEntrypointSelect = (ep: EntrypointInterface) => {
+    setCurrentEntrypoint(ep)
+  }
+
+  const handleEntrypointClose = () => {
+    setCurrentEntrypoint({} as EntrypointInterface)
+  }
 
   return (
     <div className="App">
@@ -57,19 +70,25 @@ const App = () => {
             <MapContainer center={[250, 250]} minZoom={2} maxZoom={8} zoom={2} scrollWheelZoom={true} crs={CRS.Simple} maxBounds={bounds} inertia={false}>
               <ImageOverlay url="https://i.imgur.com/Ion6X7C.jpg" bounds={bounds} />
               <>
-                {clusters.map(c => {
+                {entrypoints.map(ep => {
                   return (
-                    <Marker position={[c.lat, c.lng]} key={`marker-${c.name}`}>
-                      <Popup>
-                        {c.name}
-                      </Popup>
-                    </Marker>
+                    <EntrypointMarker
+                      data={ep}
+                      onSelect={handleEntrypointSelect} />
                   )
                 })
                 }
               </>
             </MapContainer>
           </div>
+          <>
+            {
+              Object.keys(currentEntrypoint).length > 0 ?
+                <Entrypoint onClose={handleEntrypointClose} data={currentEntrypoint}/>
+                :
+                <></>
+            }
+          </>
           <div className="menu">
             <div>hi {session.user.name}</div>
             <button onClick={signout}>sign out</button>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { signin, signup } from '../utils/auth'
-import '../Auth.css'
+import "../styles/auth.css"
 import { useNavigate } from 'react-router-dom';
 
 const Auth = () => {
@@ -81,6 +81,7 @@ const Auth = () => {
                     <div className="status-info">{message}</div>
                     :
                     <>
+                    <h2>Sign in</h2>
                         <form action="">
                             <div className="form-group">
                                 <label htmlFor="email">Email</label>
@@ -95,6 +96,7 @@ const Auth = () => {
                             </div>
                         </form>
                         <hr />
+                        <h2>Sign up</h2>
                         <form action="">
                             <div className="form-group">
                                 <label htmlFor="signupEmail">Email</label>
