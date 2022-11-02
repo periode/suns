@@ -1,19 +1,37 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Navigate } from "react-router-dom";
 
 import "../styles/entrypoint.css"
 import { getSession } from "../utils/auth";
 
-interface IModule {
+interface IEntrypoint {
+    uuid: String,
     name: String,
     status: String,
-    content: String
+    content: String,
+    current_module: number,
+    modules: [{
+        name: String,
+        content: String
+    }],
+    users: [{
+        uuid: String,
+        name: String
+    }]
 }
 
 const Entrypoint = (props: any) => {
     const session = getSession()
-    const [data, setData] = useState(props.data)
+    const [data, setData] = useState(props.data as IEntrypoint)
     const [isClaimed, setClaimed] = useState(data.users.length > 0)
+    const [isOwned, setOwned] = useState(false)
+
+    useEffect(() => {
+        if (data.users.length > 0 && session.user.uuid !== "")
+            for (let u of data.users)
+                if (u.uuid === session.user.uuid)
+                    setOwned(true)
+    }, [data, session])
 
     const claimEntrypoint = async () => {
         const endpoint = new URL(`entrypoints/${data.uuid}/claim`, process.env.REACT_APP_API_URL)
@@ -51,7 +69,7 @@ const Entrypoint = (props: any) => {
         h.append("Authorization", `Bearer ${session.token}`);
 
         const b = new FormData()
-        b.append("current_module", current)
+        b.append("current_module", current.toString())
 
         var options = {
             method: 'PATCH',
@@ -75,6 +93,9 @@ const Entrypoint = (props: any) => {
             mods.push(<div key={`mod-${m.name}`}>{m.content}</div>)
         }
 
+        if (data.current_module < data.modules.length - 1)
+            mods.push(<button onClick={completeModule}>complete module</button>)
+
         return mods
     }
 
@@ -82,19 +103,15 @@ const Entrypoint = (props: any) => {
         <div className="current-entrypoint">
             <h1>{data.name}</h1>
             {isClaimed ?
-                <>Owned by {data.users[0].name}</>
+                isOwned ?
+                    <>Owned by you</>
+                    :
+                    <>Owned by {data.users[0].name}</>
                 :
                 <button onClick={claimEntrypoint}>claim</button>
             }
             <hr />
-            {getModules()}
-            {
-                data.current_module < data.modules.length-1 ?
-                    <button onClick={completeModule}>complete module</button>
-                    :
-                    <></>
-            }
-
+            {isOwned ? getModules() : <></>}
             <hr />
             <button onClick={props.onClose}>close</button>
         </div>
