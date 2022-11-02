@@ -9,6 +9,7 @@ import Auth from './components/Auth'
 import EntrypointMarker from './components/EntrypointMarker';
 import Entrypoint from './components/Entrypoint';
 
+import backgroundMap from './map.png'
 
 interface EntrypointInterface {
   lat: number,
@@ -17,11 +18,16 @@ interface EntrypointInterface {
   modules: [],
 }
 
+const WIDTH = 1000;
+const HEIGHT = 1000;
+const MIN_ZOOOM = 0.5;
+const MAX_ZOOM = 6;
+
 const App = () => {
   const hasData = useRef(false)
   const [entrypoints, setEntrypoints] = useState(Array<EntrypointInterface>)
   const [currentEntrypoint, setCurrentEntrypoint] = useState({} as EntrypointInterface)
-  const bounds = new L.LatLngBounds(new L.LatLng(0, 0), new L.LatLng(500, 500))
+  const bounds = new L.LatLngBounds(new L.LatLng(0, 0), new L.LatLng(WIDTH, HEIGHT))
   const session = getSession()
 
   useEffect(() => {
@@ -67,8 +73,8 @@ const App = () => {
         :
         <>
           <div className="map-container" id="map">
-            <MapContainer center={[250, 250]} minZoom={2} maxZoom={8} zoom={2} scrollWheelZoom={true} crs={CRS.Simple} maxBounds={bounds} inertia={false}>
-              <ImageOverlay url="https://i.imgur.com/Ion6X7C.jpg" bounds={bounds} />
+            <MapContainer center={[WIDTH/2, HEIGHT/2]} minZoom={MIN_ZOOOM} maxZoom={MAX_ZOOM} zoom={2} scrollWheelZoom={true} crs={CRS.Simple} maxBounds={bounds} inertia={false}>
+              <ImageOverlay url={backgroundMap} bounds={bounds} />
               <>
                 {entrypoints.map(ep => {
                   return (
