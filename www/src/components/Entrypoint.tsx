@@ -32,12 +32,50 @@ const Entrypoint = (props: any) => {
         const res = await fetch(endpoint, options)
         if (res.ok) {
             console.log(`successfully claimed entrypoint!`);
-            setClaimed(true)
             const updated = await res.json()
             setData(updated)
+            setClaimed(true)
         } else {
             console.warn('error', res.status)
         }
+    }
+
+    const completeModule = async () => {
+        const current = (data.current_module + 1)
+        const endpoint = new URL(`entrypoints/${data.uuid}`, process.env.REACT_APP_API_URL)
+
+        if (session.token === "")
+            Navigate({ to: "/auth" })
+
+        const h = new Headers();
+        h.append("Authorization", `Bearer ${session.token}`);
+
+        const b = new FormData()
+        b.append("current_module", current)
+
+        var options = {
+            method: 'PATCH',
+            headers: h,
+            body: b
+        };
+        const res = await fetch(endpoint, options)
+        if (res.ok) {
+            console.log(`successfully completed entrypoint!`);
+            const updated = await res.json()
+            setData({ ...data, current_module: current })
+        } else {
+            console.warn('error', res.status)
+        }
+    }
+
+    const getModules = () => {
+        let mods = []
+        for (let i = 0; i <= data.current_module; i++) {
+            const m = data.modules[i]
+            mods.push(<div key={`mod-${m.name}`}>{m.content}</div>)
+        }
+
+        return mods
     }
 
     return (
@@ -49,14 +87,15 @@ const Entrypoint = (props: any) => {
                 <button onClick={claimEntrypoint}>claim</button>
             }
             <hr />
+            {getModules()}
             {
-                data.modules.map((mod: IModule) => {
-                    return (
-                        <div key={`mod-${mod.name}`}>{mod.content}</div>
-                    )
-
-                })
+                data.current_module < data.modules.length-1 ?
+                    <button onClick={completeModule}>complete module</button>
+                    :
+                    <></>
             }
+
+            <hr />
             <button onClick={props.onClose}>close</button>
         </div>
     )

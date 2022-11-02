@@ -73,6 +73,7 @@ const App = () => {
                 {entrypoints.map(ep => {
                   return (
                     <EntrypointMarker
+                      key={`ep-${ep.name}`}
                       data={ep}
                       onSelect={handleEntrypointSelect} />
                   )

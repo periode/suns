@@ -34,7 +34,7 @@ type Entrypoint struct {
 
 	//-- has many modules
 	Modules       []Module `gorm:"foreignKey:EntrypointUUID;references:UUID" json:"modules"`
-	CurrentModule int      `gorm:"default:0" json:"current_module"`
+	CurrentModule int      `gorm:"default:0" json:"current_module" form:"current_module"`
 
 	//-- has many-to-many users (0, 1 or 2)
 	Users    []*User `gorm:"many2many:entrypoints_users;" json:"users"`
