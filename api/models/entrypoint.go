@@ -33,10 +33,12 @@ type Entrypoint struct {
 	Cluster     Cluster   `gorm:"foreignKey:ClusterUUID;references:UUID" json:"cluster"`
 
 	//-- has many modules
-	Modules []Module `gorm:"foreignKey:EntrypointUUID;references:UUID" json:"modules"`
+	Modules       []Module `gorm:"foreignKey:EntrypointUUID;references:UUID" json:"modules"`
+	CurrentModule int      `gorm:"default:0" json:"current_module"`
 
 	//-- has many-to-many users (0, 1 or 2)
-	Users []*User `gorm:"many2many:entrypoints_users;" json:"users"`
+	Users    []*User `gorm:"many2many:entrypoints_users;" json:"users"`
+	MaxUsers int     `gorm:"default:1" json:"max_users"`
 
 	Lat float32 `json:"lat"`
 	Lng float32 `json:"lng"`
@@ -58,7 +60,7 @@ func CreateEntrypoint(entry *Entrypoint) (Entrypoint, error) {
 
 func GetEntrypoint(uuid uuid.UUID, user_uuid uuid.UUID) (Entrypoint, error) {
 	var entry Entrypoint
-	result := db.Preload("Modules").Where("uuid = ? AND (status = 'listed' OR user_uuid = ?)", uuid, user_uuid).First(&entry)
+	result := db.Preload("Modules").Preload("Users").Where("uuid = ? AND status = 'listed'", uuid, user_uuid).First(&entry)
 	if result.Error != nil {
 		return entry, result.Error
 	}
@@ -78,7 +80,7 @@ func GetEntrypointBySlug(slug string, user_uuid uuid.UUID) (Entrypoint, error) {
 
 func GetAllEntrypoints(user_uuid uuid.UUID) ([]Entrypoint, error) {
 	entry := make([]Entrypoint, 0)
-	result := db.Preload("Modules").Where("status = 'listed'").Find(&entry)
+	result := db.Preload("Modules").Preload("Users").Where("status = 'listed'").Find(&entry)
 	return entry, result.Error
 }
 
@@ -91,6 +93,12 @@ func UpdateEntrypoint(uuid uuid.UUID, user_uuid uuid.UUID, entry *Entrypoint) (E
 
 	result = db.Model(&existing).Where("uuid = ?", uuid).Updates(&entry)
 	return existing, result.Error
+}
+
+func ClaimEntrypoint(entry *Entrypoint, user *User) (Entrypoint, error) {
+	err := db.Model(&entry).Association("Users").Append(user)
+
+	return *entry, err
 }
 
 func DeleteEntrypoint(uuid uuid.UUID, user_uuid uuid.UUID) (Entrypoint, error) {

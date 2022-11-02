@@ -108,6 +108,7 @@ func SetupRouter() *echo.Echo {
 
 		entrypoints.POST("/", handlers.CreateEntrypoint)
 		entrypoints.PATCH("/:id", handlers.UpdateEntrypoint)
+		entrypoints.PATCH("/:id/claim", handlers.ClaimEntrypoint)
 		entrypoints.DELETE("/:id", handlers.DeleteEntrypoint)
 	}
 

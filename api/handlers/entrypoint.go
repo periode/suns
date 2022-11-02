@@ -72,17 +72,54 @@ func UpdateEntrypoint(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "There was an error parsing the updated information.")
 	}
 
-	coll, err := models.GetEntrypoint(uid, user_uuid)
+	entrypoint, err := models.GetEntrypoint(uid, user_uuid)
 	if err != nil {
 		return c.String(http.StatusNotFound, "We couldn't find the Entrypoint to update.")
 	}
 
-	err = c.Bind(&coll)
+	err = c.Bind(&entrypoint)
 	if err != nil {
 		return c.String(http.StatusBadRequest, "Error binding to the Entrypoint to update.")
 	}
 
-	updated, err := models.UpdateEntrypoint(uid, user_uuid, &coll)
+	updated, err := models.UpdateEntrypoint(uid, user_uuid, &entrypoint)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "Error updating the Entrypoint. Please try again later.")
+	}
+
+	return c.JSON(http.StatusOK, updated)
+}
+
+func ClaimEntrypoint(c echo.Context) error {
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
+		return c.String(http.StatusUnauthorized, "unauthorized")
+	}
+
+	id := c.Param("id")
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		zero.Error(err.Error())
+		return c.String(http.StatusBadRequest, "Not a valid ID")
+	}
+
+	// find the entry, find the user, check if max users is over, add the user, update
+
+	entrypoint, err := models.GetEntrypoint(uid, user_uuid)
+	if err != nil {
+		return c.String(http.StatusNotFound, "We couldn't find the Entrypoint to update.")
+	}
+
+	if len(entrypoint.Users) >= entrypoint.MaxUsers {
+		return c.String(http.StatusPreconditionFailed, "This entrypoint has already been claimed")
+	}
+
+	user, err := models.GetUser(user_uuid, user_uuid)
+	if err != nil {
+		return c.String(http.StatusNotFound, "We couldn't find the User to update.")
+	}
+
+	updated, err := models.ClaimEntrypoint(&entrypoint, &user)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error updating the Entrypoint. Please try again later.")
 	}
