@@ -27,27 +27,27 @@ func GetAllUsers(c echo.Context) error {
 }
 
 func CreateUser(c echo.Context) error {
-	err := sanitizeUserCreate(c)
+	err := sanitizeUserCreate(c) // Making sure adress and password are correctly formated
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 
 	var user models.User
-	err = c.Bind(&user)
+	err = c.Bind(&user) // Bind user data to user struct
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusBadRequest, "There was an error creating your account. Please try again later.")
 	}
 
-	hashed, err := bcrypt.GenerateFromPassword([]byte(c.FormValue("password")), bcrypt.DefaultCost)
+	hashed, err := bcrypt.GenerateFromPassword([]byte(c.FormValue("password")), bcrypt.DefaultCost) // Hash password
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "Error generating the hash for the password. Please try again later.")
 	}
 	user.Password = hashed
 
-	user, err = models.CreateUser(&user)
+	user, err = models.CreateUser(&user) // Create User in database
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "There already is a user with this email address. Try to login instead?")
