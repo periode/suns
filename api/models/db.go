@@ -42,7 +42,7 @@ func InitDB(url string) (*gorm.DB, error) {
 	}
 
 	// migration
-	err = db.AutoMigrate(&User{}, &Cluster{}, &Entrypoint{}, &Token{})
+	err = db.AutoMigrate(&User{}, &Cluster{}, &Entrypoint{}, &Module{}, &Token{})
 	if err != nil {
 		zero.Errorf("error running migrations: %v", err)
 		log.Fatal(err)

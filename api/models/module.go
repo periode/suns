@@ -25,6 +25,8 @@ type Module struct {
 	//-- belongs to an entrypoint
 	EntrypointUUID uuid.UUID  `gorm:"type:uuid;default:uuid_generate_v4()" json:"entrypoint_uuid" yaml:"entrypoint_uuid"`
 	Entrypoint     Entrypoint `gorm:"foreignKey:EntrypointUUID;references:UUID" json:"cluster"`
+
+	Content string `json:"content"`
 }
 
 func (c *Module) BeforeCreate(tx *gorm.DB) (err error) {
