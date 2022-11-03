@@ -10,6 +10,7 @@ import reportWebVitals from './reportWebVitals';
 import Auth from './components/Auth';
 import NotFound from './NotFound';
 import About from './About';
+import AccountConfirm from './pages/auth/AccountConfirm';
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
   {
     path: '/auth',
     element: <Auth />
+  },
+  {
+    path: '/auth/confirm',
+    element: <AccountConfirm />
   },
   {
     path: '/about',

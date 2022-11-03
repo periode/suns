@@ -7,6 +7,29 @@ interface IUser {
 
 var user: IUser
 
+const ConfirmToken = async (_token : string) => {
+    const endpoint = new URL('auth/confirm', process.env.REACT_APP_API_URL)
+    console.log(_token)
+    const h = new Headers();
+    var b = new URLSearchParams();
+    b.append("token", _token);
+    const options = {
+        method: 'POST',
+        headers: h,
+        body: b,
+    }
+    const res = await fetch(endpoint, options)
+    if (res.ok)
+    {
+        return Promise.resolve("Confirmation successful!")
+    }
+    else
+    {
+        console.error(`Could not confirm! ${res.statusText} (removing token)`)
+        return Promise.reject("We could not confirm your account.")
+    }
+}
+
 const signin = async (_email: string, _password: string) => {
     const endpoint = new URL('login', process.env.REACT_APP_API_URL)
 
@@ -100,4 +123,4 @@ const getSession = () => {
         return { user: JSON.parse(u), token: t }
 }
 
-export { signin, signout, signup, getSession }
+export { signin, signout, signup, getSession, ConfirmToken }
