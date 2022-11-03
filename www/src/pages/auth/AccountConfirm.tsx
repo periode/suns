@@ -10,6 +10,7 @@ const AccountConfirm = () => {
 	const token = new URLSearchParams(search).get('token');
 	const [confirming, setConfirming] = useState(true);
 	const [message, setMessage] = useState("");
+	const [Success, setSuccess] = useState(false);
 	
 	
 	useEffect(() => {
@@ -17,13 +18,16 @@ const AccountConfirm = () => {
 		{
 			ConfirmToken(token).then(result => {
 				setMessage(result)
+				setSuccess(true)
 			})
 			.catch((err) => {
 				setMessage(err)
 			})
 		}
 		else
-		setMessage("You should not be here")
+		{	
+			setMessage("You should not be here")
+		}
 		setConfirming(false)
 	}, [token])
 
@@ -37,6 +41,12 @@ const AccountConfirm = () => {
 		:
 		<>
 			<h2>{ message }</h2>
+			{
+				Success &&
+				<>
+					<p>You can now login</p>
+				</>
+			}
 		</>
 	 );
 }
