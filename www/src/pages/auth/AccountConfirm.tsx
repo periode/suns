@@ -10,7 +10,7 @@ const AccountConfirm = () => {
 	const token = new URLSearchParams(search).get('token');
 	const [confirming, setConfirming] = useState(true);
 	const [message, setMessage] = useState("");
-	const [Success, setSuccess] = useState(false);
+	const [isSuccess, setIsSuccess] = useState(false);
 	
 	
 	useEffect(() => {
@@ -18,31 +18,31 @@ const AccountConfirm = () => {
 		{
 			ConfirmToken(token).then(result => {
 				setMessage(result)
-				setSuccess(true)
+				setIsSuccess(true)
+				setConfirming(false)
 			})
 			.catch((err) => {
 				setMessage(err)
+				setConfirming(false)
 			})
 		}
 		else
 		{	
 			setMessage("You should not be here")
+			setConfirming(false)
 		}
-		setConfirming(false)
 	}, [token])
 
 	return ( 
 		confirming ? 
 		<>
 			<Spinner/>
-			<p>{search}</p>
-			<p>{token}</p>
 		</>
 		:
 		<>
 			<h2>{ message }</h2>
 			{
-				Success &&
+				isSuccess &&
 				<>
 					<p>You can now login</p>
 				</>
