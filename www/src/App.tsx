@@ -6,10 +6,11 @@ import L from "leaflet";
 
 import { getSession, signout } from './utils/auth'
 import Auth from './components/auth/Auth'
-import EntrypointMarker from './components/EntrypointMarker';
+import EntrypointMarker from './components/entrypoints/EntrypointMarker';
 import Entrypoint from './components/entrypoints/Entrypoint';
 
 import backgroundMap from './map.png'
+import MainMenu from './components/commons/menu/MainMenu';
 
 interface EntrypointInterface {
   lat: number,
@@ -72,6 +73,7 @@ const App = () => {
         <Auth />
         :
         <>
+          <MainMenu/>
           <div className="map-container" id="map">
             <MapContainer center={[WIDTH/2, HEIGHT/2]} minZoom={MIN_ZOOOM} maxZoom={MAX_ZOOM} zoom={2} scrollWheelZoom={true} crs={CRS.Simple} maxBounds={bounds} inertia={false}>
               <ImageOverlay url={backgroundMap} bounds={bounds} />
@@ -96,10 +98,6 @@ const App = () => {
                 <></>
             }
           </>
-          <div className="menu">
-            <div>hi {session.user.name}</div>
-            <button onClick={signout}>sign out</button>
-          </div>
         </>
       }
     </div>

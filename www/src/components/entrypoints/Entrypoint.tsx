@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Navigate } from "react-router-dom";
 
-import "../styles/entrypoint.css"
+import {FiCommand, FiX } from "react-icons/fi"
+
+import "../../styles/entrypoint.css"
 import { getSession } from "../../utils/auth";
 
 interface IEntrypoint {
@@ -100,8 +102,27 @@ const Entrypoint = (props: any) => {
     }
 
     return (
-        <div className="current-entrypoint">
-            <h1>{data.name}</h1>
+    <div className="absolute w-full h-full p-4">
+        <div className=" absolute z-100
+                        flex flex-col
+                        w-full h-full m-4
+                        border border-amber-800
+                        text-amber-800
+                        bg-amber-50
+                        ">
+            <div className="w-full flex justify-between 
+                            p-4
+                            border-b border-amber-800">
+                <div className="w-full flex justify-between items-center">
+                    <div className="flex gap-4">
+                        <FiCommand className="text-2xl"/>
+                        <h1>{data.name}</h1>
+                    </div>
+                    <button onClick={props.onClose}>
+                        <FiX className="text-2xl"/>
+                    </button>
+                </div>
+            </div>
             {isClaimed ?
                 isOwned ?
                     <>Owned by you</>
@@ -113,8 +134,8 @@ const Entrypoint = (props: any) => {
             <hr />
             {isOwned ? getModules() : <></>}
             <hr />
-            <button onClick={props.onClose}>close</button>
         </div>
+    </div>
     )
 }
 
