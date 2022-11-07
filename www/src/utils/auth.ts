@@ -32,8 +32,8 @@ const ConfirmToken = async (_token : string) => {
 const recoverConfirm = async(_token: string, _password: string) => {
     const endpoint = new URL('auth/check-recover', process.env.REACT_APP_API_URL)
     const h = new Headers();
-    h.append("Content-Type", "application/x-www-form-urlencoded");
 
+    
     var b = new URLSearchParams();
     b.append("token", _token);
     b.append("password", _password);
