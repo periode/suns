@@ -5,6 +5,7 @@
     - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846a'
       status: "listed"
       name: "Combining first times"
+      max_users: 2
       lat: 300.300
       lng: 300.400
       modules:

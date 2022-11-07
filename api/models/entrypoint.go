@@ -8,13 +8,14 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/gosimple/slug"
+	"github.com/lib/pq"
 	"gorm.io/gorm"
 )
 
 const (
-	EntrypointPending   string = "pending"
-	EntrypointConfirmed string = "closed"
-	EntrypointDeleted   string = "open"
+	EntrypointPending string = "pending"
+	EntrypointClosed  string = "closed"
+	EntrypointOpen    string = "open"
 )
 
 type Entrypoint struct {
@@ -35,20 +36,26 @@ type Entrypoint struct {
 	//-- has many modules
 	Modules       []Module `gorm:"foreignKey:EntrypointUUID;references:UUID" json:"modules"`
 	CurrentModule int      `gorm:"default:0" json:"current_module" form:"current_module"`
+	StatusModule  string   `gorm:"default:open" json:"status_module"`
 
 	//-- has many-to-many users (0, 1 or 2)
-	Users    []*User `gorm:"many2many:entrypoints_users;" json:"users"`
-	MaxUsers int     `gorm:"default:1" json:"max_users"`
+	Users         []*User       `gorm:"many2many:entrypoints_users;" json:"users"`
+	MaxUsers      int           `gorm:"default:1" json:"max_users" yaml:"max_users"`
+	UserCompleted pq.Int32Array `gorm:"type:integer[]"` //-- 1 means user has completed the module, 0 means not yet
 
 	Lat float32 `json:"lat"`
 	Lng float32 `json:"lng"`
 }
 
-func (c *Entrypoint) BeforeCreate(tx *gorm.DB) (err error) {
-	sp := strings.Split(slug.Make(c.Name), "-")
+func (e *Entrypoint) BeforeCreate(tx *gorm.DB) (err error) {
+	sp := strings.Split(slug.Make(e.Name), "-")
 	i := math.Min(float64(len(sp)), 5)
 
-	c.Slug = fmt.Sprintf("%s-%s", strings.Join(sp[:int(i)], "-"), c.UUID.String()[:8])
+	e.Slug = fmt.Sprintf("%s-%s", strings.Join(sp[:int(i)], "-"), e.UUID.String()[:8])
+
+	for i := 0; i < e.MaxUsers; i++ {
+		e.UserCompleted = append(e.UserCompleted, 0)
+	}
 
 	return nil
 }

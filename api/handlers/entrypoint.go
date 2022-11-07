@@ -90,6 +90,66 @@ func UpdateEntrypoint(c echo.Context) error {
 	return c.JSON(http.StatusOK, updated)
 }
 
+func ProgressEntrypoint(c echo.Context) error {
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
+		return c.String(http.StatusUnauthorized, "unauthorized")
+	}
+
+	id := c.Param("id")
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		zero.Error(err.Error())
+		return c.String(http.StatusBadRequest, "Not a valid ID")
+	}
+
+	var empty = new(models.Entrypoint)
+	var input models.Entrypoint
+	err = c.Bind(&input)
+	if err != nil || reflect.DeepEqual(&input, empty) {
+		zero.Errorf("There was an error binding the update input %v", err)
+		return c.String(http.StatusBadRequest, "There was an error parsing the updated information.")
+	}
+
+	entrypoint, err := models.GetEntrypoint(uid, user_uuid)
+	if err != nil {
+		return c.String(http.StatusNotFound, "We couldn't find the Entrypoint to update.")
+	}
+
+	if entrypoint.CurrentModule == len(entrypoint.Modules)-1 {
+		return c.String(http.StatusPreconditionFailed, "The entrypoint has all modules completed.")
+	}
+
+	//-- this is where we make the update logic.
+	if entrypoint.MaxUsers == 1 {
+		entrypoint.CurrentModule += 1
+	} else if entrypoint.MaxUsers == 2 {
+		//-- we update one user
+		for i := 0; i < len(entrypoint.Users); i++ {
+			if entrypoint.Users[i].UUID == user_uuid {
+				entrypoint.UserCompleted[i] = 1
+			}
+		}
+
+		//-- if both users are updated, we increase the current_module by 1
+		if entrypoint.UserCompleted[0] == entrypoint.UserCompleted[1] {
+			entrypoint.CurrentModule += 1
+			entrypoint.UserCompleted[0] = 0
+			entrypoint.UserCompleted[1] = 0
+			entrypoint.StatusModule = models.EntrypointOpen
+		} else { //-- if only one, we set the status as pending
+			entrypoint.StatusModule = models.EntrypointPending
+		}
+	}
+
+	updated, err := models.UpdateEntrypoint(uid, user_uuid, &entrypoint)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "Error updating the Entrypoint. Please try again later.")
+	}
+
+	return c.JSON(http.StatusOK, updated)
+}
+
 func ClaimEntrypoint(c echo.Context) error {
 	user_uuid := mustGetUser(c)
 	if user_uuid == uuid.Nil {
