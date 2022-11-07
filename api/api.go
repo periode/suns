@@ -122,6 +122,11 @@ func SetupRouter() *echo.Echo {
 		modules.DELETE("/:id", handlers.DeleteModule)
 	}
 
+	uploads := r.Group("/uploads")
+	{
+		uploads.POST("/", handlers.CreateUpload)
+	}
+
 	r.GET("/", handleNotFound)
 	r.POST("/", handleNotFound)
 

@@ -72,7 +72,7 @@ func UpdateModule(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "There was an error parsing the updated information.")
 	}
 
-	coll, err := models.GetModule(uid, user_uuid)
+	coll, err := models.GetModule(uid)
 	if err != nil {
 		return c.String(http.StatusNotFound, "We couldn't find the Module to update.")
 	}
@@ -108,7 +108,7 @@ func GetModule(c echo.Context) error {
 
 	}
 
-	coll, err := models.GetModule(uid, user_uuid)
+	coll, err := models.GetModule(uid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusNotFound, "We couldn't find the Module.")

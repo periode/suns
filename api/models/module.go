@@ -17,23 +17,28 @@ type Module struct {
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 	UUID      uuid.UUID      `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
-	Status    string         `gorm:"default:unlisted" json:"status"`
+	Status    string         `gorm:"default:listed" json:"status"`
 
-	Name string `gorm:"not null" json:"name" form:"name" binding:"required"`
-	Slug string `gorm:"" json:"slug"`
+	Name    string   `gorm:"not null" json:"name" form:"name" binding:"required"`
+	Slug    string   `gorm:"" json:"slug"`
+	Uploads []Upload `gorm:"foreignKey:ModuleUUID;references:UUID" json:"uploads"`
 
 	//-- belongs to an entrypoint
 	EntrypointUUID uuid.UUID  `gorm:"type:uuid;default:uuid_generate_v4()" json:"entrypoint_uuid" yaml:"entrypoint_uuid"`
-	Entrypoint     Entrypoint `gorm:"foreignKey:EntrypointUUID;references:UUID" json:"cluster"`
+	Entrypoint     Entrypoint `gorm:"foreignKey:EntrypointUUID;references:UUID" json:"entrypoint"`
 
 	Content string `json:"content"`
 }
 
-func (c *Module) BeforeCreate(tx *gorm.DB) (err error) {
-	sp := strings.Split(slug.Make(c.Name), "-")
+func (m *Module) BeforeCreate(tx *gorm.DB) (err error) {
+	if m.UUID == uuid.Nil {
+		m.UUID = uuid.New()
+	}
+
+	sp := strings.Split(slug.Make(m.Name), "-")
 	i := math.Min(float64(len(sp)), 5)
 
-	c.Slug = fmt.Sprintf("%s-%s", strings.Join(sp[:int(i)], "-"), c.UUID.String()[:8])
+	m.Slug = fmt.Sprintf("%s-%s", strings.Join(sp[:int(i)], "-"), m.UUID.String()[:8])
 
 	return nil
 }
@@ -43,9 +48,9 @@ func CreateModule(entry *Module) (Module, error) {
 	return *entry, result.Error
 }
 
-func GetModule(uuid uuid.UUID, user_uuid uuid.UUID) (Module, error) {
+func GetModule(uuid uuid.UUID) (Module, error) {
 	var entry Module
-	result := db.Where("uuid = ? AND (status = 'listed' OR user_uuid = ?)", uuid, user_uuid).First(&entry)
+	result := db.Preload("Uploads").Where("uuid = ?", uuid).First(&entry)
 	if result.Error != nil {
 		return entry, result.Error
 	}
@@ -78,6 +83,16 @@ func UpdateModule(uuid uuid.UUID, user_uuid uuid.UUID, entry *Module) (Module, e
 
 	result = db.Model(&existing).Where("uuid = ?", uuid).Updates(&entry)
 	return existing, result.Error
+}
+
+func AddModuleUpload(uuid uuid.UUID, upload Upload) (Module, error) {
+	module, err := GetModule(uuid)
+	if err != nil {
+		return Module{}, err
+	}
+
+	err = db.Model(&module).Association("Uploads").Append(&upload)
+	return module, err
 }
 
 func DeleteModule(uuid uuid.UUID, user_uuid uuid.UUID) (Module, error) {

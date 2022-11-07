@@ -34,6 +34,12 @@ var (
 	attachmentDeleteID  uuid.UUID
 	attachmentUnknownID uuid.UUID
 
+	moduleID        uuid.UUID
+	moduleSlug      string
+	moduleName      string
+	moduleDeleteID  uuid.UUID
+	moduleUnknownID uuid.UUID
+
 	userID         uuid.UUID
 	userSlug       string
 	userDeleteID   uuid.UUID
@@ -69,6 +75,12 @@ func setup(t *testing.T) func(t *testing.T) {
 	clusterName = "Good public stuff"
 	clusterDeleteID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a7")
 	clusterUnknownID = uuid.New()
+
+	moduleID = uuid.MustParse("2a73291d-559f-47c1-b24d-92a3606deb50")
+	moduleSlug = "module-b-2a73291d"
+	moduleName = "Module B"
+	moduleDeleteID = uuid.MustParse("2a73291d-559f-47c1-b24d-92a3606deb49")
+	moduleUnknownID = uuid.New()
 
 	attachmentID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab21")
 	attachmentSlug = "chair-website-c55f0baf"

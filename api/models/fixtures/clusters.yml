@@ -4,16 +4,22 @@
   entrypoints:
     - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846a'
       status: "listed"
-      name: "Entrypoint 2"
-      lat: 200.300
-      lng: 200.400
+      name: "Combining first times"
+      lat: 300.300
+      lng: 300.400
       modules:
-        - name: "Module A"
+        - uuid: "2a73291d-559f-47c1-b24d-92a3606deb49"
+          name: "Module A"
           status: "listed"
           content: "This is the first content"
-        - name: "Module B"
+        - uuid: "2a73291d-559f-47c1-b24d-92a3606deb50"
+          name: "Module B"
+          slug: "module-b-2a73291d"
           status: "listed"
-          content: "This is the second content"
+          content: "This is the second content, with an audio cue"
+          uploads:
+            - path: "https://static.enframed.net/vertiges/proletaire.mp3"
+              user: "0"
         - name: "Module C"
           status: "listed"
           content: "This is the third content"
