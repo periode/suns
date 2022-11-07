@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { signin, signup } from '../utils/auth'
-import "../styles/auth.css"
-import { useNavigate } from 'react-router-dom';
+import { signin, signup } from '../../utils/auth'
+import "../../styles/auth.css"
+import { Link, useNavigate } from 'react-router-dom';
 
 const Auth = () => {
     const navigate = useNavigate()
@@ -95,6 +95,9 @@ const Auth = () => {
                                 <button onClick={handleSignin}>Login</button>
                             </div>
                         </form>
+                        <div>
+                            <Link to="/auth/lost-password" state={{preFilledEmail : email}}>Forgot your Password?</Link>
+                        </div>
                         <hr />
                         <h2>Sign up</h2>
                         <form action="">

@@ -1,8 +1,8 @@
 FROM golang:1.18-alpine AS go
 
 RUN mkdir /app
-COPY go.mod /app
 COPY go.sum /app
+COPY go.mod /app
 WORKDIR /app
 RUN go mod download
 

@@ -191,7 +191,7 @@ func RequestRecover(c echo.Context) error {
 		mailer.SendMail(email.Address, "Account recovery", "account_recovery", body)
 	}
 
-	return c.String(http.StatusOK, "recovery email sent!")
+	return c.String(http.StatusOK, "Recovery email sent!")
 }
 
 // Recover takes a token and checks if it exists in the token table, and an optional password to update the associated user password

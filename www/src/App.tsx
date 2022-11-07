@@ -5,7 +5,7 @@ import { CRS, LeafletMouseEvent } from 'leaflet';
 import L from "leaflet";
 
 import { getSession, signout } from './utils/auth'
-import Auth from './components/Auth'
+import Auth from './components/auth/Auth'
 import EntrypointMarker from './components/EntrypointMarker';
 import Entrypoint from './components/Entrypoint';
 

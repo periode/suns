@@ -9,7 +9,6 @@ var user: IUser
 
 const ConfirmToken = async (_token : string) => {
     const endpoint = new URL('auth/confirm', process.env.REACT_APP_API_URL)
-    console.log(_token)
     const h = new Headers();
     var b = new URLSearchParams();
     b.append("token", _token);
@@ -27,6 +26,59 @@ const ConfirmToken = async (_token : string) => {
     {
         console.error(`Could not confirm! ${res.statusText} (removing token)`)
         return Promise.reject("We could not confirm your account.")
+    }
+}
+
+const recoverConfirm = async(_token: string, _password: string) => {
+    const endpoint = new URL('auth/check-recover', process.env.REACT_APP_API_URL)
+    const h = new Headers();
+    h.append("Content-Type", "application/x-www-form-urlencoded");
+
+    var b = new URLSearchParams();
+    b.append("token", _token);
+    b.append("password", _password);
+    const options = {
+        method: 'POST',
+        headers: h,
+        body: b,
+    }
+    console.log(_token)
+    console.log(_password)
+    console.log(options)
+    const res = await fetch(endpoint, options)
+    if (res.ok)
+    {
+        return Promise.resolve("New password was created sucessfully!")
+    }
+    else
+    {
+        console.error(`Could not confirm! ${res.statusText} (removing token)`)
+        return Promise.reject("We could not create a new password.")
+    }
+}
+
+const recoverRequest = async(_email: string) => {
+    const endpoint = new URL('auth/request-recover', process.env.REACT_APP_API_URL);
+    var h = new Headers();
+    h.append("Content-Type", "application/x-www-form-urlencoded");
+
+    var b = new URLSearchParams();
+    b.append("email", _email);
+
+    var options = {
+        method: 'POST',
+        headers: h,
+        body: b
+    };
+
+    const res = await fetch(endpoint, options)
+    console.log(res)
+    if (res.ok)
+        return Promise.resolve(`${res.statusText}`)
+    else
+    {
+        
+        return Promise.reject(`${res.statusText}`)
     }
 }
 
@@ -123,4 +175,4 @@ const getSession = () => {
         return { user: JSON.parse(u), token: t }
 }
 
-export { signin, signout, signup, getSession, ConfirmToken }
+export { signin, signout, signup, getSession, ConfirmToken, recoverRequest, recoverConfirm }
