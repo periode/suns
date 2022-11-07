@@ -16,6 +16,7 @@ interface EntrypointInterface {
   lng: number,
   name: string,
   modules: [],
+  max_users: number
 }
 
 const WIDTH = 1000;
