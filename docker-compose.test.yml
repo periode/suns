@@ -4,53 +4,62 @@ services:
     user: postgres
     container_name: db_test_suns
     environment:
-      POSTGRES_USER: cosyl
-      POSTGRES_PASSWORD: cosyl
+      POSTGRES_USER: suns
+      POSTGRES_PASSWORD: suns
       POSTGRES_DB: suns-test
-      PGPORT: "5433"
+      PGPORT: "5432"
     expose:
-      - "5433"
+      - "5432"
     volumes:
       - pgdata_suns_test:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U cosyl -d suns-test && psql -U cosyl suns-test" ]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U suns -d suns-test && psql -U suns suns-test"
+        ]
       interval: 5s
       timeout: 3s
       retries: 10
 
-  backend_suns:
-    container_name: backend_suns
+  backend_test_suns:
+    container_name: backend_test_suns
     build: .
     depends_on:
       db_test_suns:
         condition: service_healthy
     ports:
-     - ${PORT}:${PORT}
+      - ${PORT}:${PORT}
     env_file:
-     - ./.secrets
+      - ./.secrets
     environment:
-      DATABASE_TEST_URL: "postgres://cosyl:cosyl@db_test_suns:5433/suns-test"
+      DATABASE_URL: "postgres://suns:suns@db_test_suns:5432/suns-test"
+      DATABASE_TEST_URL: "postgres://suns:suns@db_test_suns:5432/suns-test"
       PORT: "3046"
-      DB_PORT: "5433"
+      DB_USER: "suns"
+      DB_PASSWORD: "suns"
+      DB_HOST: "db_test_suns"
+      DB_PORT: "5432"
+      DB_NAME: "suns-test"
       DEBUG: "false"
-      API_MODE: "test"
+      API_MODE: "debug"
       RUN_FIXTURES: "true"
     tmpfs:
       - /tmp
 
-  frontend_test_suns:
-    container_name: frontend_test_suns
+  front_test_suns:
+    container_name: front_test_suns
+    depends_on:
+      - backend_test_suns
     build:
       context: .
-      dockerfile: tests/Dockertest.next.front
-    environment:
-      API_URL: "http://backend_suns:3046"
-      NEXT_PUBLIC_API_URL: "http://backend_suns:3046"
-      NEXTAUTH_URL: "http://backend_suns:3046/auth"
-    depends_on:
-      - backend_suns
+      dockerfile: Dockerfront
     ports:
-     - 3000:3000
+      - "3000:80"
+    restart: always
+    environment:
+      REACT_APP_API_URL: http://backend_test_suns:3046
+
 
 volumes:
   pgdata_suns_test:
