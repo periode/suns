@@ -191,21 +191,22 @@ func RequestRecover(c echo.Context) error {
 		mailer.SendMail(email.Address, "Account recovery", "account_recovery", body)
 	}
 
-	return c.String(http.StatusOK, "recovery email sent!")
+	return c.String(http.StatusOK, "Recovery email sent!")
 }
 
 // Recover takes a token and checks if it exists in the token table, and an optional password to update the associated user password
 func Recover(c echo.Context) error {
-	token, err := uuid.Parse(c.QueryParam("token"))
+	token, err := uuid.Parse(c.FormValue("token"))
 	if err != nil {
-		c.String(http.StatusNotFound, "token not found")
 		zero.Errorf("token not found %s", err)
+		return c.String(http.StatusNotFound, "token not found")
 	}
 
 	user, err := models.GetTokenUser(token)
 	if err != nil {
-		c.String(http.StatusNotFound, "token not found")
 		zero.Errorf("token not found %s", err)
+		return c.String(http.StatusNotFound, "token not found")
+
 	}
 
 	var password struct {
@@ -214,12 +215,12 @@ func Recover(c echo.Context) error {
 
 	err = c.Bind(&password)
 	if err != nil {
-		c.String(http.StatusBadRequest, "couldn't parse password")
 		zero.Errorf("couldn't parse password %s", err)
+		return c.String(http.StatusBadRequest, "couldn't parse password")
 	}
 
 	if password.Value == "" {
-		c.String(http.StatusNotModified, "password not modified")
+		return c.String(http.StatusNotModified, "password not modified")
 	}
 
 	// hash and update the password
@@ -231,14 +232,14 @@ func Recover(c echo.Context) error {
 	user.Password = hashed
 	updated, err := models.UpdateUser(user.UUID, user.UUID, &user)
 	if err != nil {
-		c.String(http.StatusBadRequest, "couldn't update password")
 		zero.Errorf("couldn't update password %s", err)
+		return c.String(http.StatusBadRequest, "couldn't update password")
 	}
 
 	err = models.DeleteToken(token)
 	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
 		zero.Errorf(err.Error())
+		return c.String(http.StatusInternalServerError, err.Error())
 	}
 
 	return c.JSON(http.StatusPartialContent, updated)

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { signin, signup } from '../utils/auth'
 import "../styles/auth.css"
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Airtable from 'airtable';
 
 const Auth = () => {
@@ -29,7 +29,6 @@ const Auth = () => {
             // This function (`page`) will get called for each page of records.
 
             records.forEach(function(record) {
-                console.log('Retrieved', record.get('Name'));
                 if(record.get('Name') == 'signinWelcomeMessage')
                     setGreetingMessage(record.get('Content') as string)
             });
@@ -49,12 +48,12 @@ const Auth = () => {
         e.stopPropagation()
 
         signin(email, password)
-            .then(result => {
-                setMessage(result)
+            .then(res : string => {
+                setMessage(res)
                 setSuccess(true)
                 navigate("/")
             })
-            .catch((err) => {
+            .catch((err :  string) => {
                 setMessage(err)
             })
     }
@@ -64,11 +63,11 @@ const Auth = () => {
         e.stopPropagation()
 
         signup(signupEmail, signupEmailConf, signupPassword, signupPasswordConf)
-            .then((res) => {
+            .then((res : string) => {
                 setMessage(res)
                 setSuccess(true)
             })
-            .catch((err) => {
+            .catch((err : string) => {
                 setMessage(err)
             })
     }
@@ -125,6 +124,9 @@ const Auth = () => {
                                 <button onClick={handleSignin}>Login</button>
                             </div>
                         </form>
+                        <div>
+                            <Link to="/auth/lost-password" state={{preFilledEmail : email}}>Forgot your Password?</Link>
+                        </div>
                         <hr />
                         <h2>Sign up</h2>
                         <form action="">
