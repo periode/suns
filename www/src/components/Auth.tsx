@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { signin, signup } from '../utils/auth'
 import "../styles/auth.css"
 import { useNavigate } from 'react-router-dom';
+import Airtable from 'airtable';
 
 const Auth = () => {
     const navigate = useNavigate()
@@ -14,6 +15,34 @@ const Auth = () => {
     const [signupPassword, setSignupPassword] = useState("")
     const [signupEmailConf, setSignupEmailConf] = useState("")
     const [signupPasswordConf, setSignupPasswordConf] = useState("")
+    const [greetingMessage, setGreetingMessage] = useState("")
+
+    useEffect(() => {
+        Airtable.configure({
+            endpointUrl: 'https://api.airtable.com',
+            apiKey: process.env.REACT_APP_AIRTABLE_KEY
+        })
+        var base = Airtable.base('appO4245S69TqEnGW');
+
+        const nameOfSpreadsheet = 'Text'
+        base(nameOfSpreadsheet).select().eachPage(function page(records, fetchNextPage) {
+            // This function (`page`) will get called for each page of records.
+
+            records.forEach(function(record) {
+                console.log('Retrieved', record.get('Name'));
+                if(record.get('Name') == 'signinWelcomeMessage')
+                    setGreetingMessage(record.get('Content') as string)
+            });
+
+            // To fetch the next page of records, call `fetchNextPage`.
+            // If there are more records, `page` will get called again.
+            // If there are no more records, `done` will get called.
+            fetchNextPage();
+
+        }, function done(err) {
+            if (err) { console.error(err); return; }
+        });
+    }, [])
 
     const handleSignin = (e: React.BaseSyntheticEvent) => {
         e.preventDefault()
@@ -81,7 +110,8 @@ const Auth = () => {
                     <div className="status-info">{message}</div>
                     :
                     <>
-                    <h2>Sign in</h2>
+                        <h2>Sign in</h2>
+                        <p>{greetingMessage}</p>
                         <form action="">
                             <div className="form-group">
                                 <label htmlFor="email">Email</label>
