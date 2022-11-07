@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { signin, signup } from '../utils/auth'
-import "../styles/auth.css"
+import { signin, signup } from '../../utils/auth'
+import "../../styles/auth.css"
 import { Link, useNavigate } from 'react-router-dom';
 import Airtable from 'airtable';
 
@@ -48,7 +48,7 @@ const Auth = () => {
         e.stopPropagation()
 
         signin(email, password)
-            .then(res : string => {
+            .then((res : string) => {
                 setMessage(res)
                 setSuccess(true)
                 navigate("/")
