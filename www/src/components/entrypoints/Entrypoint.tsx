@@ -124,9 +124,9 @@ const Entrypoint = (props: any) => {
 
     return (
     <div className="absolute w-full h-full p-4">
-        <div className=" absolute z-100
+        <div className="
                         flex flex-col
-                        w-full h-full m-4
+                        w-full h-full 
                         border border-amber-800
                         text-amber-800
                         bg-amber-50
@@ -135,16 +135,18 @@ const Entrypoint = (props: any) => {
                             p-4
                             border-b border-amber-800">
                 <div className="w-full flex justify-between items-center">
-                    <div className="flex gap-4">
-                        <FiCommand className="text-2xl"/>
+                    <div className="flex items-center gap-4">
+                        <FiCommand className="text-[32px]"/>
                         <h1>{data.name}</h1>
                     </div>
                     <button onClick={props.onClose}>
-                        <FiX className="text-2xl"/>
+                        <FiX className="text-[32px]"/>
                     </button>
                 </div>
             </div>
-            {getPartners()}
+            <div>
+                {getPartners()}
+            </div>
             <hr />
             {isOwned ?
                 getModules()

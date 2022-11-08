@@ -54,7 +54,7 @@ const AccountRecoveryConfirm = () => {
 		<form action="">
 				<div className="">
 					<label htmlFor="email">New Password</label>
-					<input onChange={ handlePasswordChange } type="password" name="email" />
+					<input className="border border-amber-800 bg-amber-50" onChange={ handlePasswordChange } type="password" name="email" />
 				</div>
 				<div className="form-group">
 					<button onClick={ handleRecover }>Change password</button>

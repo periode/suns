@@ -114,11 +114,11 @@ const Auth = () => {
                         <form action="">
                             <div className="form-group">
                                 <label htmlFor="email">Email</label>
-                                <input onChange={handleEmailChange} type="text" name="email" />
+                                <input className="border border-amber-800 bg-amber-50" onChange={handleEmailChange} type="text" name="email" />
                             </div>
                             <div className="form-group">
                                 <label htmlFor="password">Password</label>
-                                <input onChange={handlePasswordChange} type="password" name="password" />
+                                <input className="border border-amber-800 bg-amber-50" onChange={handlePasswordChange} type="password" name="password" />
                             </div>
                             <div className="form-group">
                                 <button onClick={handleSignin}>Login</button>
@@ -132,19 +132,19 @@ const Auth = () => {
                         <form action="">
                             <div className="form-group">
                                 <label htmlFor="signupEmail">Email</label>
-                                <input onChange={handleSignupEmailChange} type="text" name="signupEmail" />
+                                <input className="border border-amber-800 bg-amber-50" onChange={handleSignupEmailChange} type="text" name="signupEmail" />
                             </div>
                             <div className="form-group">
                                 <label htmlFor="signupEmailConf">Email</label>
-                                <input onChange={handleSignupEmailConfChange} type="text" name="signupEmailConf" />
+                                <input className="border border-amber-800 bg-amber-50" onChange={handleSignupEmailConfChange} type="text" name="signupEmailConf" />
                             </div>
                             <div className="form-group">
                                 <label htmlFor="signupPassword">Password</label>
-                                <input onChange={handleSignupPasswordChange} type="password" name="signupPassword" />
+                                <input className="border border-amber-800 bg-amber-50" onChange={handleSignupPasswordChange} type="password" name="signupPassword" />
                             </div>
                             <div className="form-group">
                                 <label htmlFor="signupPasswordConf">Password</label>
-                                <input onChange={handleSignupPasswordConfChange} type="password" name="signupPasswordConf" />
+                                <input className="border border-amber-800 bg-amber-50" onChange={handleSignupPasswordConfChange} type="password" name="signupPasswordConf" />
                             </div>
                             <div className="form-group">
                                 <button onClick={handleSignup}>Sign up</button>
