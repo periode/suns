@@ -9,7 +9,7 @@ import EntrypointActions from "./EntrypointActions";
 
 enum ENTRYPOINT_STATUS {
     EntrypointPending   = "pending",
-    EntrypointClosed    = "closed",
+    EntrypointCompleted = "completed",
     EntrypointOpen      = "open",
 }
 
@@ -207,9 +207,17 @@ const Entrypoint = (props: any) => {
                             </>
                 }
             </div>
-            <div className="flex items-center justify-between
+            <div className="h-12
+                            pl-4 pr-4
+                            relative
+                            flex items-center justify-between
                             border-t border-amber-800">
-                <EntrypointActions status={data.status}/>
+                <EntrypointActions 
+                    status={data.status}
+                    isOwner={isOwned}
+                    lastStepIndex={data.modules.length}
+                    currentStepIndex={data.current_module}
+                />
             </div>
         </div>
     </div>
