@@ -59,7 +59,7 @@ function EntrypointActions({
 	</p>
 
 	const rightButtonDisplay = () => {
-		if (status === ENTRYPOINT_STATUS.EntrypointOpen && isOwner)
+		if (status === ENTRYPOINT_STATUS.EntrypointPending && isOwner)
 		{
 			if (currentStepIndex === lastStepIndex)
 				return FinishButton
@@ -68,7 +68,7 @@ function EntrypointActions({
 		}	
 		else
 		{
-			if (status === ENTRYPOINT_STATUS.EntrypointPending)
+			if (status === ENTRYPOINT_STATUS.EntrypointOpen)
 				return StartButton
 			else
 				return <></>
@@ -85,7 +85,7 @@ function EntrypointActions({
 	return ( 
 	<>
 		{	
-			status === ENTRYPOINT_STATUS.EntrypointOpen && isOwner &&
+			status === ENTRYPOINT_STATUS.EntrypointPending && isOwner &&
 				Step 
 		}
 		{ 

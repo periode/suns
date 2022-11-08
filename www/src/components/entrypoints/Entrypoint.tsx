@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 
-import {FiCommand, FiX, FiShare2 } from "react-icons/fi"
+import {FiCommand, FiX } from "react-icons/fi"
 
 import "../../styles/entrypoint.css"
 import { getSession } from "../../utils/auth";
@@ -11,6 +11,12 @@ enum ENTRYPOINT_STATUS {
     EntrypointPending   = "pending",
     EntrypointCompleted = "completed",
     EntrypointOpen      = "open",
+}
+
+enum PARTNER_STATUS {
+    PartnerNone     = "none",
+    PartnerPartial  = "partial",
+    PartnerFull     = "full",
 }
 
 interface IUser {
@@ -34,6 +40,7 @@ interface IEntrypoint {
     }],
     users: Array<IUser>
     max_users: number
+    partner_status: PARTNER_STATUS
 }
 
 const Entrypoint = (props: any) => {
@@ -133,6 +140,10 @@ const Entrypoint = (props: any) => {
         return mods
     }
 
+    const updatePartners = () {
+        if ()
+    }
+
     const getPartners = () => {
         if (data.users.length === 0) { //-- no owners
             return (<>
@@ -213,10 +224,12 @@ const Entrypoint = (props: any) => {
                             flex items-center justify-between
                             border-t border-amber-800">
                 <EntrypointActions 
-                    status={data.status}
-                    isOwner={isOwned}
-                    lastStepIndex={data.modules.length}
-                    currentStepIndex={data.current_module}
+                    status={ data.status }
+                    users={ data.users }
+                    isOwner={ isOwned }
+                    lastStepIndex={ data.modules.length }
+                    currentStepIndex={ data.current_module }
+                    claimEntryPoint={ claimEntrypoint }
                 />
             </div>
         </div>

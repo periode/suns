@@ -18,6 +18,12 @@ const (
 	EntrypointOpen    string = "open"
 )
 
+const (
+	PartnerNone    string = "none"
+	PartnerPartial string = "partial"
+	PartnerFull    string = "full"
+)
+
 type Entrypoint struct {
 	ID        uint           `gorm:"primaryKey"`
 	CreatedAt time.Time      `json:"created_at"`
@@ -42,6 +48,7 @@ type Entrypoint struct {
 	Users         []*User       `gorm:"many2many:entrypoints_users;" json:"users"`
 	MaxUsers      int           `gorm:"default:1" json:"max_users" yaml:"max_users"`
 	UserCompleted pq.Int32Array `gorm:"type:integer[]"` //-- 1 means user has completed the module, 0 means not yet
+	PartnerStatus string        `gorm:"default:none" json:"partner_status"`
 
 	Lat float32 `json:"lat"`
 	Lng float32 `json:"lng"`
@@ -105,6 +112,12 @@ func UpdateEntrypoint(uuid uuid.UUID, user_uuid uuid.UUID, entry *Entrypoint) (E
 func ClaimEntrypoint(entry *Entrypoint, user *User) (Entrypoint, error) {
 	err := db.Model(&entry).Association("Users").Append(user)
 
+	if len(entry.Users) < entry.MaxUsers {
+		entry.StatusModule = PartnerPartial
+	}
+	if len(entry.Users) == entry.MaxUsers {
+		entry.StatusModule = PartnerPartial
+	}
 	return *entry, err
 }
 
