@@ -1,10 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { Navigate } from "react-router-dom";
 
-import {FiCommand, FiX } from "react-icons/fi"
+import {FiCommand, FiX, FiShare2 } from "react-icons/fi"
 
 import "../../styles/entrypoint.css"
 import { getSession } from "../../utils/auth";
+import EntrypointActions from "./EntrypointActions";
+
+enum ENTRYPOINT_STATUS {
+    EntrypointPending   = "pending",
+    EntrypointClosed    = "closed",
+    EntrypointOpen      = "open",
+}
 
 interface IUser {
     name: string,
@@ -14,7 +21,7 @@ interface IUser {
 interface IEntrypoint {
     uuid: String,
     name: String,
-    status: String,
+    status: ENTRYPOINT_STATUS,
     content: String,
     current_module: number,
     status_module: String,
@@ -168,28 +175,47 @@ const Entrypoint = (props: any) => {
                         <FiCommand className="text-[32px]"/>
                         <h1>{data.name}</h1>
                     </div>
-                    <button onClick={props.onClose}>
+                    <div    className="cursor-pointer"
+                            onClick={props.onClose}>
                         <FiX className="text-[32px]"/>
-                    </button>
+                    </div>
                 </div>
             </div>
-            <div>
-                {getPartners()}
+            <div className="w-full h-12 
+                            flex items-center justify-center
+                            font-mono
+                            border-b border-amber-800
+                            ">
+                <p>00 : 00 : 00</p>
             </div>
-            <hr />
-            {isOwned ?
-                getModules()
-                : data.users.length < data.max_users ? <>
-                    {parseModule(data.modules[0])}
-                </> :
-                    <>
-                        <div>here goes the public view (the current view is at {data.current_module})</div>
-                    </>}
-            <hr />
-
+            <div className="w-full h-12 
+                            flex items-center justify-center
+                            font-mono
+                            border-b border-amber-800
+                            ">
+                { getPartners() }
+            </div>
+            <div className="w-full h-full">
+                {
+                    isOwned ?
+                        getModules()
+                        : data.users.length < data.max_users ? <>
+                            {parseModule(data.modules[0])}
+                        </> :
+                            <>
+                                <div>here goes the public view (the current view is at {data.current_module})</div>
+                            </>
+                }
+            </div>
+            <div className="flex items-center justify-between
+                            border-t border-amber-800">
+                <EntrypointActions status={data.status}/>
+            </div>
         </div>
     </div>
     )
 }
 
 export default Entrypoint
+
+export { ENTRYPOINT_STATUS }
