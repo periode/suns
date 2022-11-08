@@ -22,12 +22,19 @@ type Module struct {
 	Name    string   `gorm:"not null" json:"name" form:"name" binding:"required"`
 	Slug    string   `gorm:"" json:"slug"`
 	Uploads []Upload `gorm:"foreignKey:ModuleUUID;references:UUID" json:"uploads"`
+	Type    string   `json:"type"`
+	Media   Media    `gorm:"embedded;embeddedPrefix:media_" json:"media"`
 
 	//-- belongs to an entrypoint
 	EntrypointUUID uuid.UUID  `gorm:"type:uuid;default:uuid_generate_v4()" json:"entrypoint_uuid" yaml:"entrypoint_uuid"`
 	Entrypoint     Entrypoint `gorm:"foreignKey:EntrypointUUID;references:UUID" json:"entrypoint"`
 
 	Content string `json:"content"`
+}
+
+type Media struct {
+	Type string `json:"type"`
+	URL  string `json:"url"`
 }
 
 func (m *Module) BeforeCreate(tx *gorm.DB) (err error) {

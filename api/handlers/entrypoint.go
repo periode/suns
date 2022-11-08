@@ -139,6 +139,7 @@ func ProgressEntrypoint(c echo.Context) error {
 			entrypoint.StatusModule = models.EntrypointOpen
 		} else { //-- if only one, we set the status as pending
 			entrypoint.StatusModule = models.EntrypointPending
+			zero.Warn("An entrypoint has had some progress! We should send an email")
 		}
 	}
 
@@ -162,8 +163,6 @@ func ClaimEntrypoint(c echo.Context) error {
 		zero.Error(err.Error())
 		return c.String(http.StatusBadRequest, "Not a valid ID")
 	}
-
-	// find the entry, find the user, check if max users is over, add the user, update
 
 	entrypoint, err := models.GetEntrypoint(uid, user_uuid)
 	if err != nil {
