@@ -2,8 +2,8 @@
     position: absolute;
     z-index: 10;
     top: 5vh;
-    left: 5vw;
-    right: 5vw;
+    left: 15vw;
+    right: 15vw;
     bottom: 5vh;
 
     border: 2px solid black;

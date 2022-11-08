@@ -57,7 +57,7 @@ func CreateUpload(c echo.Context) error {
 
 	upload := models.Upload{
 		Name:     file.Filename,
-		Path:     target,
+		URL:      target,
 		UserUUID: user_uuid.String(),
 		Index:    index,
 	}
