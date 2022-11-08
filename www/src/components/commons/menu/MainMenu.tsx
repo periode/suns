@@ -19,15 +19,17 @@ const MainMenu = () => {
 								flex flex-col
 								bg-amber-50 
 								text-amber-800
+								font-serif
 								">
 						<div className="absolute top-2 right-2
 								w-12 h-12 
 								flex items-center justify-center
+								cursor-pointer
 								"
 							onClick={ () => setIsCollapsed(false) }>
 							<FiX className="text-2xl"/>
 						</div>
-						<div className="h-16 w-full
+						<div className="h-20 w-full
 										border border-b-amber-800">
 
 						</div>
@@ -43,14 +45,17 @@ const MainMenu = () => {
 							</div>
 						</div>
 						<div className="w-full h-24
-										flex flex-col items-center justify-center text-4xl">
+										flex flex-col items-center justify-center text-4xl
+										border border-t-amber-800">
 							<h2 onClick={signout}>Log out</h2>
 						</div>
 				</div>
 					:
 				<div className="absolute top-2 right-2
 								w-12 h-12 
-								text-amber-800"
+								flex items-center justify-center
+								text-amber-800
+								cursor-pointer"
 						onClick={ () => setIsCollapsed(true) }>
 					<FiMenu className="text-2xl"/>
 				</div>
