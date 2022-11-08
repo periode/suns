@@ -1,10 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import { Navigate } from "react-router-dom";
 
-import {FiCommand, FiX } from "react-icons/fi"
+import { FiCommand, FiX, FiShare2 } from "react-icons/fi"
 
 import "../../styles/entrypoint.css"
 import { getSession } from "../../utils/auth";
+import EntrypointActions from "./EntrypointActions";
+import PublicView from "./PublicView";
+
+enum ENTRYPOINT_STATUS {
+    EntrypointPending = "pending",
+    EntrypointCompleted = "closed",
+    EntrypointOpen = "open",
+}
 
 interface IUser {
     name: string,
@@ -14,7 +22,7 @@ interface IUser {
 interface IEntrypoint {
     uuid: String,
     name: String,
-    status: String,
+    status: ENTRYPOINT_STATUS,
     content: String,
     current_module: number,
     status_module: String,
@@ -67,19 +75,19 @@ const Entrypoint = (props: any) => {
         }
     }
 
-    const completeModule = async (data: any, session : any) => {
+    const completeModule = async (data: any, session: any) => {
         const current = (data.current_module + 1)
         const endpoint = new URL(`entrypoints/${data.uuid}/progress`, process.env.REACT_APP_API_URL)
-    
+
         if (session.token === "")
             Navigate({ to: "/auth" })
-    
+
         const h = new Headers();
         h.append("Authorization", `Bearer ${session.token}`);
-    
+
         const b = new FormData()
         b.append("current_module", current.toString())
-    
+
         var options = {
             method: 'PATCH',
             headers: h,
@@ -119,10 +127,10 @@ const Entrypoint = (props: any) => {
             const m = data.modules[i]
             mods.push(parseModule(m))
         }
-    
+
         if (data.current_module < data.modules.length - 1)
             mods.push(<button onClick={() => completeModule(data, session)}>complete module</button>)
-    
+
         return mods
     }
 
@@ -152,42 +160,67 @@ const Entrypoint = (props: any) => {
     }
 
     return (
-    <div className="absolute w-full h-full p-4">
-        <div className="
+        <div className="absolute w-full h-full p-4">
+            <div className="
                         flex flex-col
                         w-full h-full 
                         border border-amber-800
                         text-amber-800
                         bg-amber-50
                         ">
-            <div className="w-full flex justify-between 
+                <div className="w-full flex justify-between 
                             p-4
                             border-b border-amber-800">
-                <div className="w-full flex justify-between items-center">
-                    <div className="flex items-center gap-4">
-                        <FiCommand className="text-[32px]"/>
-                        <h1>{data.name}</h1>
+                    <div className="w-full flex justify-between items-center">
+                        <div className="flex items-center gap-4">
+                            <FiCommand className="text-[32px]" />
+                            <h1>{data.name}</h1>
+                        </div>
+                        <div className="cursor-pointer"
+                            onClick={props.onClose}>
+                            <FiX className="text-[32px]" />
+                        </div>
                     </div>
-                    <button onClick={props.onClose}>
-                        <FiX className="text-[32px]"/>
-                    </button>
+                </div>
+                <div className="w-full h-12 
+                            flex items-center justify-center
+                            font-mono
+                            border-b border-amber-800
+                            ">
+                    <p>00 : 00 : 00</p>
+                </div>
+                <div className="w-full h-12 
+                            flex items-center justify-center
+                            font-mono
+                            border-b border-amber-800
+                            ">
+                    {getPartners()}
+                </div>
+                <div className="w-full h-full">
+                    {
+                        data.status === ENTRYPOINT_STATUS.EntrypointCompleted ?
+                            <>
+                                <PublicView entrypoint={data}/>
+                            </>
+                            : isOwned ?
+                                getModules()
+                                : data.users.length < data.max_users ? <>
+                                    {parseModule(data.modules[0])}
+                                </> :
+                                    <>
+                                        <div>This entrypoint is currently being done by {data.users.length == 2 ? `${data.users[0].name} and ${data.users[1].name}.` : `${data.users[0].name}.`}</div>
+                                    </>
+                    }
+                </div>
+                <div className="flex items-center justify-between
+                            border-t border-amber-800">
+                    <EntrypointActions status={data.status} />
                 </div>
             </div>
-            <div className="w-90 margin-auto">
-                {getPartners()}
-                <hr className="border-black m-3" />
-                {isOwned ?
-                    getModules()
-                    : data.users.length < data.max_users ? <>
-                        {parseModule(data.modules[0])}
-                    </> :
-                        <>
-                            <div>here goes the public view (the current view is at {data.current_module})</div>
-                        </>}
-            </div>
         </div>
-    </div>
     )
 }
 
 export default Entrypoint
+
+export { ENTRYPOINT_STATUS }
