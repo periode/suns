@@ -10,7 +10,7 @@ import PublicView from "./PublicView";
 
 enum ENTRYPOINT_STATUS {
     EntrypointPending = "pending",
-    EntrypointCompleted = "closed",
+    EntrypointCompleted = "completed",
     EntrypointOpen = "open",
 }
 

@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -8,6 +9,7 @@ import (
 	"strconv"
 
 	"github.com/google/uuid"
+	"github.com/gosimple/slug"
 	"github.com/labstack/echo/v4"
 	"github.com/periode/suns/api/config"
 	zero "github.com/periode/suns/api/logger"
@@ -43,7 +45,8 @@ func CreateUpload(c echo.Context) error {
 	defer src.Close()
 
 	// Destination
-	target := filepath.Join(conf.UploadsDir, file.Filename)
+	var fname = fmt.Sprintf("%s-%s", module_uuid.String()[:13], slug.Make(file.Filename))
+	target := filepath.Join(conf.UploadsDir, fname)
 	dst, err := os.Create(target)
 	if err != nil {
 		return err

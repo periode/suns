@@ -34,18 +34,18 @@
           content: "This is the final countdown"
           type: "final"
     - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846b'
-      status: "listed"
-      name: "Entrypoint 3"
+      status: "completed"
+      name: "Completed entrypoint"
       lat: 240.300
       lng: 240.400
       modules:
-        - name: "Module A"
+        - name: "Completed module 1"
           status: "listed"
           content: "This is the first content"
-        - name: "Module B"
+        - name: "Completed module B"
           status: "listed"
           content: "This is the second content"
-        - name: "Module C"
+        - name: "Completed C"
           status: "listed"
           content: "This is the third content"
     - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846c'
