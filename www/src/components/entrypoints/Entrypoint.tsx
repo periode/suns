@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Navigate } from "react-router-dom";
 
 import "../styles/entrypoint.css"
-import { getSession } from "../utils/auth";
+import { getSession } from "../../utils/auth";
 
 interface IUser {
     name: string,
