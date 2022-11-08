@@ -1,8 +1,7 @@
-import { Draggable } from "leaflet";
 import { useEffect, useRef, useState } from "react";
 import { Navigate } from "react-router-dom";
 
-import "../styles/entrypoint.css"
+import "../../styles/entrypoint.css"
 import { getSession } from "../../utils/auth";
 
 interface IUser {
@@ -19,7 +18,10 @@ interface IEntrypoint {
     status_module: String,
     modules: [{
         name: String,
-        content: String
+        content: String,
+        type: String,
+        media: Object,
+        uploads: Array<Object>
     }],
     users: Array<IUser>
     max_users: number
@@ -63,19 +65,19 @@ const Entrypoint = (props: any) => {
         }
     }
 
-    const completeModule = async () => {
+    const completeModule = async (data: any, session : any) => {
         const current = (data.current_module + 1)
         const endpoint = new URL(`entrypoints/${data.uuid}/progress`, process.env.REACT_APP_API_URL)
-
+    
         if (session.token === "")
             Navigate({ to: "/auth" })
-
+    
         const h = new Headers();
         h.append("Authorization", `Bearer ${session.token}`);
-
+    
         const b = new FormData()
         b.append("current_module", current.toString())
-
+    
         var options = {
             method: 'PATCH',
             headers: h,
@@ -84,7 +86,7 @@ const Entrypoint = (props: any) => {
         const res = await fetch(endpoint, options)
         if (res.ok) {
             console.log(`successfully completed entrypoint!`);
-            //-- todo here pares the response to assess the status of the entrypoint (open, pending)
+            //-- todo here parse the response to assess the status of the entrypoint (open, pending)
             const updated = await res.json()
             setData({ ...data, current_module: updated.current_module, status_module: updated.status_module })
         } else {
@@ -92,24 +94,51 @@ const Entrypoint = (props: any) => {
         }
     }
 
+    const parseModule = (data: any) => {
+        return (
+            <div key={`mod-${data.name}`}>
+                <h3>{data.name}</h3>
+                <p>
+                    {data.content}
+                </p>
+                {data.media ?
+                    data.media.type === "video" ?
+                        <iframe src={data.media.url} width="640" height="360" frameBorder="0"></iframe>
+                        : <audio src={data.media.url}></audio>
+                    : <></>
+                }
+            </div>
+        )
+    }
+
     const getModules = () => {
         let mods = []
         for (let i = 0; i <= data.current_module; i++) {
             const m = data.modules[i]
-            mods.push(<div key={`mod-${m.name}`}>{m.content}</div>)
+            mods.push(parseModule(m))
         }
-
+    
         if (data.current_module < data.modules.length - 1)
-            mods.push(<button onClick={completeModule}>complete module</button>)
-
+            mods.push(<button onClick={() => completeModule(data, session)}>complete module</button>)
+    
         return mods
     }
 
     const getPartners = () => {
         if (data.users.length === 0) { //-- no owners
-            return (<div>No users! <button onClick={claimEntrypoint}>claim</button></div>)
+            return (<>
+                <div className="m-2">No users!</div>
+                <div>
+                    <button className="rounded-lg bg-white p-2 border-black border-2" onClick={claimEntrypoint}>claim</button>
+                </div>
+            </>)
         } else if (data.users.length < data.max_users) { //-- partial owners
-            return (<div>Owned by {data.users[0].uuid === session.user.uuid ? "you" : data.users[0].name}, and waiting for another partner. {!isOwned ? <button onClick={claimEntrypoint}>claim</button> : <></>}</div>)
+            return (<>
+                <div>Owned by {data.users[0].uuid === session.user.uuid ? "you" : data.users[0].name}, and waiting for another partner. {!isOwned ?
+                    <div>
+                        <button onClick={claimEntrypoint}>claim</button>
+                    </div> : <></>}</div>
+            </>)
         } else if (data.users.length == data.max_users) { //-- full session
             if (data.max_users === 2)
                 return (<div>Owned by {data.users[0].uuid === session.user.uuid ? `you and ${data.users[1].name}` : data.users[1].uuid === session.user.uuid ? `${data.users[0].name} and you` : `${data.users[0].name} and ${data.users[1].name}`}</div>)
@@ -121,18 +150,21 @@ const Entrypoint = (props: any) => {
     }
 
     return (
-        <div className="current-entrypoint">
-            <h1>{data.name}</h1>
-            {getPartners()}
-            <hr />
-            {isOwned ?
-                getModules()
-                :
-                <>
-                    <div>here goes the public view (the current view is at {data.current_module})</div>
-                </>}
-            <hr />
-            <button onClick={props.onClose}>close</button>
+        <div className="current-entrypoint flex flex-col items-center">
+            <h1 className="m-3 text-3xl">{data.name}</h1>
+            <div className="w-90 margin-auto">
+                {getPartners()}
+                <hr className="border-black m-3" />
+                {isOwned ?
+                    getModules()
+                    : data.users.length < data.max_users ? <>
+                        {parseModule(data.modules[0])}
+                    </> :
+                        <>
+                            <div>here goes the public view (the current view is at {data.current_module})</div>
+                        </>}
+            </div>
+            <button className="absolute top-3 right-3 text-2xl" onClick={props.onClose}>X</button>
         </div>
     )
 }

@@ -10,20 +10,29 @@
       lng: 300.400
       modules:
         - uuid: "2a73291d-559f-47c1-b24d-92a3606deb49"
-          name: "Module A"
+          name: "For the first time - 1"
           status: "listed"
+          type: "Intro"
+          media:
+            type: "video"
+            url: "https://player.vimeo.com/video/139922433?h=07c88a080c"
           content: "This is the first content"
         - uuid: "2a73291d-559f-47c1-b24d-92a3606deb50"
-          name: "Module B"
+          name: "For the first time - 2"
           slug: "module-b-2a73291d"
           status: "listed"
+          type: "upload_recording"
           content: "This is the second content, with an audio cue"
-          uploads:
-            - path: "https://static.enframed.net/vertiges/proletaire.mp3"
-              user: "0"
-        - name: "Module C"
+        - name: "For the first time - 3"
           status: "listed"
           content: "This is the third content"
+          uploads:
+            - url: "https://static.enframed.net/vertiges/proletaire.mp3"
+              user: "0"
+        - name: "For the first time - 4"
+          status: "listed"
+          content: "This is the final countdown"
+          type: "final"
     - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846b'
       status: "listed"
       name: "Entrypoint 3"

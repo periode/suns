@@ -6,7 +6,7 @@ import L from "leaflet";
 
 import { getSession, signout } from './utils/auth'
 import Auth from './components/auth/Auth'
-import EntrypointMarker from './components/EntrypointMarker';
+import EntrypointMarker from './components/entrypoints/EntrypointMarker';
 import Entrypoint from './components/entrypoints/Entrypoint';
 
 import backgroundMap from './map.png'
