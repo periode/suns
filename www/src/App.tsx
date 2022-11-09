@@ -1,18 +1,20 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './App.css';
-import { ImageOverlay, MapContainer, Marker, Popup } from 'react-leaflet'
-import { CRS, LeafletMouseEvent } from 'leaflet';
+import { ImageOverlay, MapContainer } from 'react-leaflet'
+import { CRS } from 'leaflet';
 import L from "leaflet";
 
-import { getSession, signout } from './utils/auth'
+import { getSession } from './utils/auth'
 import Auth from './components/auth/Auth'
 import EntrypointMarker from './components/entrypoints/EntrypointMarker';
 import Entrypoint from './components/entrypoints/Entrypoint';
 
 import backgroundMap from './map.png'
 import MainMenu from './components/commons/menu/MainMenu';
+import { Route, Routes } from 'react-router-dom';
 
 interface EntrypointInterface {
+  uuid: string
   lat: number,
   lng: number,
   name: string,
@@ -60,49 +62,44 @@ const App = () => {
 
   }, [session.token])
 
-  const handleEntrypointSelect = (ep: EntrypointInterface) => {
-    setCurrentEntrypoint(ep)
-  }
-
-  const handleEntrypointClose = () => {
-    setCurrentEntrypoint({} as EntrypointInterface)
-  }
-
-  return (
-    <div className="App">
-      {session.token === '' ?
-        <Auth />
-        :
-        <>
-          <MainMenu/>
-          <div className="map-container" id="map">
-            <MapContainer center={[WIDTH/2, HEIGHT/2]} minZoom={MIN_ZOOOM} maxZoom={MAX_ZOOM} zoom={2} scrollWheelZoom={true} crs={CRS.Simple} maxBounds={bounds} inertia={false}>
-              <ImageOverlay url={backgroundMap} bounds={bounds} />
-              <>
-                {entrypoints.map(ep => {
-                  return (
-                    <EntrypointMarker
-                      key={`ep-${ep.name}`}
-                      data={ep}
-                      onSelect={handleEntrypointSelect} />
-                  )
-                })
-                }
-              </>
-            </MapContainer>
-          </div>
+    return (
+      <div className="App">
+        {session.token === '' ?
+          <Auth />
+          :
           <>
-            {
-              Object.keys(currentEntrypoint).length > 0 ?
-                <Entrypoint onClose={handleEntrypointClose} data={currentEntrypoint}/>
-                :
-                <></>
-            }
+            <MainMenu />
+            <div className="map-container" id="map">
+              <MapContainer center={[WIDTH / 2, HEIGHT / 2]} minZoom={MIN_ZOOOM} maxZoom={MAX_ZOOM} zoom={2} scrollWheelZoom={true} crs={CRS.Simple} maxBounds={bounds} inertia={false}>
+                <ImageOverlay url={backgroundMap} bounds={bounds} />
+                <>
+                  {entrypoints.map(ep => {
+                    return (
+                      <EntrypointMarker
+                        key={`ep-${ep.name}`}
+                        data={ep}
+                        />
+                    )
+                  })
+                  }
+                </>
+              </MapContainer>
+            </div>
+            <Routes>
+              <Route path=":id" element={<Entrypoint />} />
+            </Routes>
+            <>
+              {
+                Object.keys(currentEntrypoint).length > 0 ?
+                  <Entrypoint data={currentEntrypoint} />
+                  :
+                  <></>
+              }
+            </>
           </>
-        </>
-      }
-    </div>
-  );
+        }
+      </div>
+    );
 }
 
 export default App;

@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import { FiCommand, FiX } from "react-icons/fi"
 
@@ -9,6 +9,7 @@ import EntrypointActions from "./EntrypointActions";
 import EntrypointPartners from "./EntrypointPartners";
 import EntrypointCountdown from "./EntrypointCountdown";
 import PublicView from "./PublicView";
+import NotFound from "../../NotFound";
 
 export enum ENTRYPOINT_STATUS {
     EntrypointPending = "pending",
@@ -47,17 +48,49 @@ interface IEntrypoint {
 }
 
 const Entrypoint = (props: any) => {
+    const params = useParams()
+    const hasData = useRef(false)
+    const navigate = useNavigate()
     const session = getSession()
     const [data, setData] = useState(props.data as IEntrypoint)
     const [isOwned, setOwned] = useState(false)
 
     useEffect(() => {
-        // checking if current user is an owener of the entrypoint
+        if(data === undefined)
+            return
+        // checking if current user is an owner of the entrypoint
         if (data.users.length > 0 && session.user.uuid !== "")
             for (let u of data.users)
                 if (u.uuid === session.user.uuid)
                     setOwned(true)
     }, [data, session])
+
+    useEffect(() => {
+        const endpoint = new URL(`entrypoints/${params.id}`, process.env.REACT_APP_API_URL)
+
+        async function fetchEntrypoint() {
+            const h = new Headers();
+            if (session.token !== "")
+              h.append("Authorization", `Bearer ${session.token}`);
+      
+            var options = {
+              method: 'GET',
+              headers: h
+            };
+            const res = await fetch(endpoint, options)
+            if (res.ok) {
+              const e = await res.json()
+              setData(e as IEntrypoint)
+            } else {
+              console.warn('error', res.status)
+            }
+          }
+      
+          if (hasData.current === false) {
+            fetchEntrypoint()
+            hasData.current = true
+          }
+    }, [params.id])
 
     const claimEntrypoint = async () => {
         const endpoint = new URL(`entrypoints/${data.uuid}/claim`, process.env.REACT_APP_API_URL)
@@ -132,7 +165,7 @@ const Entrypoint = (props: any) => {
         }
 
         if (data.current_module < data.modules.length - 1)
-            mods.push(<button className="border-2 border-amber-800 rounded-md p-2" onClick={() => completeModule(data, session)}>complete module</button>)
+            mods.push(<button key="complete-module" className="border-2 border-amber-800 rounded-md p-2" onClick={() => completeModule(data, session)}>complete module</button>)
 
         return mods
     }
@@ -157,9 +190,10 @@ const Entrypoint = (props: any) => {
         result += (minutes + " : ")
         result += (seconds)
         return (result)
-    }
+    }    
 
-    return (
+    if(data !== undefined)
+        return (
         <div className="absolute w-full h-full p-4">
             <div className="
                         flex flex-col
@@ -177,7 +211,7 @@ const Entrypoint = (props: any) => {
                             <h1>{data.name}</h1>
                         </div>
                         <div className="cursor-pointer"
-                            onClick={props.onClose}>
+                            onClick={() => navigate('/', {replace: true})}>
                             <FiX className="text-[32px]" />
                         </div>
                     </div>
@@ -214,6 +248,8 @@ const Entrypoint = (props: any) => {
 
         </div>
     )
+
+    return(<NotFound/>) //-- if data is not defined, it means we're still fetching it from the backend (so this should be a spinner instead)
 }
 
 export default Entrypoint

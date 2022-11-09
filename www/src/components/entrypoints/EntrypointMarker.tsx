@@ -1,24 +1,17 @@
-import { LeafletMouseEvent } from "leaflet"
-import { useState } from "react";
-import { Marker, Popup } from "react-leaflet"
+import { Marker } from "react-leaflet"
+import { useNavigate } from "react-router-dom";
 
 const EntrypointMarker = (props: any) => {
-    const [entrypoint, setEntrypoint] = useState(props.data)    
-
-    const handleMarkerClick = (e: LeafletMouseEvent, mod: any) => {
-        props.onSelect(entrypoint)
-    }
+    const navigate = useNavigate()
+    const entrypoint = props.data
 
     return (
         <Marker
             position={[entrypoint.lat, entrypoint.lng]}
             key={`marker-${entrypoint.name}`}
             eventHandlers={{
-                click: (e) => { handleMarkerClick(e, entrypoint.modules) },
+                click: (e) => { navigate(`/entrypoints/${entrypoint.uuid}`, {replace: true}) },
             }}>
-            {/* <Popup>
-                {entrypoint.name}
-            </Popup> */}
         </Marker>
     )
 }

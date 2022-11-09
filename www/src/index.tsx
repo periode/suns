@@ -13,10 +13,11 @@ import About from './About';
 import AccountConfirm from './pages/auth/AccountConfirm';
 import AccountRecovery from './pages/auth/AccountRecovery';
 import AccountRecoveryConfirm from './pages/auth/AccountRecoveryConfirm';
+import Entrypoint from './components/entrypoints/Entrypoint';
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: '/*',
     element: <App/>,
   },
   {
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
   {
     path: '/about',
     element: <About />
+  },
+  {
+    path: '/entrypoints/*',
+    element: <App />
   },
   {
     path: "*",
