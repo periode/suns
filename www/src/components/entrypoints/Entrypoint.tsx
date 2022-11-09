@@ -6,6 +6,8 @@ import {FiCommand, FiX } from "react-icons/fi"
 import "../../styles/entrypoint.css"
 import { getSession } from "../../utils/auth";
 import EntrypointActions from "./EntrypointActions";
+import EntrypointPartners from "./EntrypointPartners";
+import EntrypointCountdown from "./EntrypointCountdown";
 
 export enum ENTRYPOINT_STATUS {
     EntrypointPending   = "pending",
@@ -46,10 +48,10 @@ interface IEntrypoint {
 const Entrypoint = (props: any) => {
     const session = getSession()
     const [data, setData] = useState(props.data as IEntrypoint)
-    const [isClaimed, setClaimed] = useState(data.users.length > 0)
     const [isOwned, setOwned] = useState(false)
 
     useEffect(() => {
+    // checking if current user is an owener of the entrypoint
         if (data.users.length > 0 && session.user.uuid !== "")
             for (let u of data.users)
                 if (u.uuid === session.user.uuid)
@@ -75,7 +77,6 @@ const Entrypoint = (props: any) => {
             console.log(`successfully claimed entrypoint!`);
             const updated = await res.json()
             setData(updated)
-            setClaimed(true)
         } else {
             console.warn('error', res.status)
         }
@@ -119,7 +120,7 @@ const Entrypoint = (props: any) => {
                 </p>
                 {data.media ?
                     data.media.type === "video" ?
-                        <iframe src={data.media.url} width="640" height="360" frameBorder="0"></iframe>
+                        <iframe title={data.media.type + "title"} src={data.media.url} width="640" height="360"></iframe>
                         : <audio src={data.media.url}></audio>
                     : <></>
                 }
@@ -140,30 +141,27 @@ const Entrypoint = (props: any) => {
         return mods
     }
 
-    const getPartners = () => {
-        if (data.partner_status === "none") { //-- no owners
-            return (<>
-                <div className="m-2">No users!</div>
-                <div>
-                    <button className="rounded-lg bg-white p-2 border-black border-2" onClick={claimEntrypoint}>claim</button>
-                </div>
-            </>)
-        } 
-        else if (data.partner_status === "partial") { //-- partial owners
-            return (<>
-                <div>Owned by {data.users[0].uuid === session.user.uuid ? "you" : data.users[0].name}, and waiting for another partner. {!isOwned ?
-                    <div>
-                        <button onClick={claimEntrypoint}>claim</button>
-                    </div> : <></>}</div>
-            </>)
-        } else if (data.partner_status === "full") { //-- full session
-            if (data.max_users === 2)
-                return (<div>Owned by {data.users[0].uuid === session.user.uuid ? `you and ${data.users[1].name}` : data.users[1].uuid === session.user.uuid ? `${data.users[0].name} and you` : `${data.users[0].name} and ${data.users[1].name}`}</div>)
-            else if (data.max_users === 1)
-                return (<div>Owned by {data.users[0].uuid === session.user.uuid ? `you` : data.users[0].name}</div>)
-        } else {
-            return (<div>Not sure what happened</div>)
-        }
+
+
+    const getCountdown = () : string =>
+    {
+        var countDownDate = new Date("Jan 5, 2024 15:37:25").getTime();
+        // Get today's date and time
+        var now = new Date().getTime();
+        var distance = countDownDate - now;
+
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+
+        var result : string = ""
+        result += (days     + " : ")
+        result += (hours    + " : ")
+        result += (minutes  + " : ")
+        result += (seconds)
+        return (result)
     }
 
     return (
@@ -189,20 +187,8 @@ const Entrypoint = (props: any) => {
                     </div>
                 </div>
             </div>
-            <div className="w-full h-12 
-                            flex items-center justify-center
-                            font-mono
-                            border-b border-amber-800
-                            ">
-                <p>00 : 00 : 00</p>
-            </div>
-            <div className="w-full h-12 
-                            flex items-center justify-center
-                            font-mono
-                            border-b border-amber-800
-                            ">
-                { getPartners() }
-            </div>
+            <EntrypointCountdown endDate="Jan 5, 2024 15:37:25"/>
+            <EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid}/>
             <div className="w-full h-full">
                 {
                     isOwned ?

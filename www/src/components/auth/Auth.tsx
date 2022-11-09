@@ -29,7 +29,7 @@ const Auth = () => {
             // This function (`page`) will get called for each page of records.
 
             records.forEach(function(record) {
-                if(record.get('Name') == 'signinWelcomeMessage')
+                if(record.get('Name') === 'signinWelcomeMessage')
                     setGreetingMessage(record.get('Content') as string)
             });
 
