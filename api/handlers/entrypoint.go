@@ -103,14 +103,6 @@ func ProgressEntrypoint(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Not a valid ID")
 	}
 
-	var empty = new(models.Entrypoint)
-	var input models.Entrypoint
-	err = c.Bind(&input)
-	if err != nil || reflect.DeepEqual(&input, empty) {
-		zero.Errorf("There was an error binding the update input %v", err)
-		return c.String(http.StatusBadRequest, "There was an error parsing the updated information.")
-	}
-
 	entrypoint, err := models.GetEntrypoint(uid, user_uuid)
 	if err != nil {
 		return c.String(http.StatusNotFound, "We couldn't find the Entrypoint to update.")

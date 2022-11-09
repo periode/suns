@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 
-import {FiCommand, FiX } from "react-icons/fi"
+import { FiCommand, FiX } from "react-icons/fi"
 
 import "../../styles/entrypoint.css"
 import { getSession } from "../../utils/auth";
@@ -11,15 +11,15 @@ import EntrypointCountdown from "./EntrypointCountdown";
 import PublicView from "./PublicView";
 
 export enum ENTRYPOINT_STATUS {
-    EntrypointPending   = "pending",
+    EntrypointPending = "pending",
     EntrypointCompleted = "completed",
-    EntrypointOpen      = "open",
+    EntrypointOpen = "open",
 }
 
 export enum PARTNER_STATUS {
-    PartnerNone     = "none",
-    PartnerPartial  = "partial",
-    PartnerFull     = "full",
+    PartnerNone = "none",
+    PartnerPartial = "partial",
+    PartnerFull = "full",
 }
 
 export interface IUser {
@@ -52,7 +52,7 @@ const Entrypoint = (props: any) => {
     const [isOwned, setOwned] = useState(false)
 
     useEffect(() => {
-    // checking if current user is an owener of the entrypoint
+        // checking if current user is an owener of the entrypoint
         if (data.users.length > 0 && session.user.uuid !== "")
             for (let u of data.users)
                 if (u.uuid === session.user.uuid)
@@ -84,7 +84,6 @@ const Entrypoint = (props: any) => {
     }
 
     const completeModule = async (data: any, session: any) => {
-        const current = (data.current_module + 1)
         const endpoint = new URL(`entrypoints/${data.uuid}/progress`, process.env.REACT_APP_API_URL)
 
         if (session.token === "")
@@ -93,13 +92,9 @@ const Entrypoint = (props: any) => {
         const h = new Headers();
         h.append("Authorization", `Bearer ${session.token}`);
 
-        const b = new FormData()
-        b.append("current_module", current.toString())
-
         var options = {
             method: 'PATCH',
-            headers: h,
-            body: b
+            headers: h
         };
         const res = await fetch(endpoint, options)
         if (res.ok) {
@@ -137,15 +132,14 @@ const Entrypoint = (props: any) => {
         }
 
         if (data.current_module < data.modules.length - 1)
-            mods.push(<button onClick={() => completeModule(data, session)}>complete module</button>)
+            mods.push(<button className="border-2 border-amber-800 rounded-md p-2" onClick={() => completeModule(data, session)}>complete module</button>)
 
         return mods
     }
 
 
 
-    const getCountdown = () : string =>
-    {
+    const getCountdown = (): string => {
         var countDownDate = new Date("Jan 5, 2024 15:37:25").getTime();
         // Get today's date and time
         var now = new Date().getTime();
@@ -157,10 +151,10 @@ const Entrypoint = (props: any) => {
         var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
 
-        var result : string = ""
-        result += (days     + " : ")
-        result += (hours    + " : ")
-        result += (minutes  + " : ")
+        var result: string = ""
+        result += (days + " : ")
+        result += (hours + " : ")
+        result += (minutes + " : ")
         result += (seconds)
         return (result)
     }
@@ -188,35 +182,36 @@ const Entrypoint = (props: any) => {
                         </div>
                     </div>
                 </div>
-            </div>
-            <EntrypointCountdown endDate="Jan 5, 2024 15:37:25"/>
-            <EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid}/>
-            <div className="w-full h-full">
-                {
-                    isOwned ?
-                        getModules()
-                        : data.users.length < data.max_users ? <>
-                            {parseModule(data.modules[0])}
-                        </> :
-                            <>
-                                <PublicView entrypoint={data}/>
-                            </>
-                }
-            </div>
-            <div className="h-12
+                <EntrypointCountdown endDate="Jan 5, 2024 15:37:25" />
+                <EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
+                <div className="w-full h-full">
+                    {
+                        isOwned ?
+                            getModules()
+                            : data.users.length < data.max_users ? <>
+                                {parseModule(data.modules[0])}
+                            </> :
+                                <>
+                                    <PublicView entrypoint={data} />
+                                </>
+                    }
+                </div>
+                <div className="h-12
                             pl-4 pr-4
                             relative
                             flex items-center justify-between
                             border-t border-amber-800">
-                <EntrypointActions 
-                    status={ data.status }
-                    users={ data.users }
-                    isOwner={ isOwned }
-                    lastStepIndex={ data.modules.length }
-                    currentStepIndex={ data.current_module }
-                    claimEntryPoint={ claimEntrypoint }
-                />
+                    <EntrypointActions
+                        status={data.status}
+                        users={data.users}
+                        isOwner={isOwned}
+                        lastStepIndex={data.modules.length}
+                        currentStepIndex={data.current_module}
+                        claimEntryPoint={claimEntrypoint}
+                    />
+                </div>
             </div>
+
         </div>
     )
 }
