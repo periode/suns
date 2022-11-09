@@ -1,20 +1,28 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 
-import { FiCommand, FiX, FiShare2 } from "react-icons/fi"
+import {FiCommand, FiX } from "react-icons/fi"
 
 import "../../styles/entrypoint.css"
 import { getSession } from "../../utils/auth";
 import EntrypointActions from "./EntrypointActions";
+import EntrypointPartners from "./EntrypointPartners";
+import EntrypointCountdown from "./EntrypointCountdown";
 import PublicView from "./PublicView";
 
-enum ENTRYPOINT_STATUS {
-    EntrypointPending = "pending",
+export enum ENTRYPOINT_STATUS {
+    EntrypointPending   = "pending",
     EntrypointCompleted = "completed",
-    EntrypointOpen = "open",
+    EntrypointOpen      = "open",
 }
 
-interface IUser {
+export enum PARTNER_STATUS {
+    PartnerNone     = "none",
+    PartnerPartial  = "partial",
+    PartnerFull     = "full",
+}
+
+export interface IUser {
     name: string,
     uuid: string,
 }
@@ -35,15 +43,16 @@ interface IEntrypoint {
     }],
     users: Array<IUser>
     max_users: number
+    partner_status: PARTNER_STATUS
 }
 
 const Entrypoint = (props: any) => {
     const session = getSession()
     const [data, setData] = useState(props.data as IEntrypoint)
-    const [isClaimed, setClaimed] = useState(data.users.length > 0)
     const [isOwned, setOwned] = useState(false)
 
     useEffect(() => {
+    // checking if current user is an owener of the entrypoint
         if (data.users.length > 0 && session.user.uuid !== "")
             for (let u of data.users)
                 if (u.uuid === session.user.uuid)
@@ -69,7 +78,6 @@ const Entrypoint = (props: any) => {
             console.log(`successfully claimed entrypoint!`);
             const updated = await res.json()
             setData(updated)
-            setClaimed(true)
         } else {
             console.warn('error', res.status)
         }
@@ -113,7 +121,7 @@ const Entrypoint = (props: any) => {
                 </p>
                 {data.media ?
                     data.media.type === "video" ?
-                        <iframe src={data.media.url} width="640" height="360" frameBorder="0"></iframe>
+                        <iframe title={data.media.type + "title"} src={data.media.url} width="640" height="360"></iframe>
                         : <audio src={data.media.url}></audio>
                     : <></>
                 }
@@ -134,29 +142,27 @@ const Entrypoint = (props: any) => {
         return mods
     }
 
-    const getPartners = () => {
-        if (data.users.length === 0) { //-- no owners
-            return (<>
-                <div className="m-2">No users!</div>
-                <div>
-                    <button className="rounded-lg bg-white p-2 border-black border-2" onClick={claimEntrypoint}>claim</button>
-                </div>
-            </>)
-        } else if (data.users.length < data.max_users) { //-- partial owners
-            return (<>
-                <div>Owned by {data.users[0].uuid === session.user.uuid ? "you" : data.users[0].name}, and waiting for another partner. {!isOwned ?
-                    <div>
-                        <button onClick={claimEntrypoint}>claim</button>
-                    </div> : <></>}</div>
-            </>)
-        } else if (data.users.length == data.max_users) { //-- full session
-            if (data.max_users === 2)
-                return (<div>Owned by {data.users[0].uuid === session.user.uuid ? `you and ${data.users[1].name}` : data.users[1].uuid === session.user.uuid ? `${data.users[0].name} and you` : `${data.users[0].name} and ${data.users[1].name}`}</div>)
-            else if (data.max_users === 1)
-                return (<div>Owned by {data.users[0].uuid === session.user.uuid ? `you` : data.users[0].name}</div>)
-        } else {
-            return (<div>Not sure what happened</div>)
-        }
+
+
+    const getCountdown = () : string =>
+    {
+        var countDownDate = new Date("Jan 5, 2024 15:37:25").getTime();
+        // Get today's date and time
+        var now = new Date().getTime();
+        var distance = countDownDate - now;
+
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+
+        var result : string = ""
+        result += (days     + " : ")
+        result += (hours    + " : ")
+        result += (minutes  + " : ")
+        result += (seconds)
+        return (result)
     }
 
     return (
@@ -182,45 +188,37 @@ const Entrypoint = (props: any) => {
                         </div>
                     </div>
                 </div>
-                <div className="w-full h-12 
-                            flex items-center justify-center
-                            font-mono
-                            border-b border-amber-800
-                            ">
-                    <p>00 : 00 : 00</p>
-                </div>
-                <div className="w-full h-12 
-                            flex items-center justify-center
-                            font-mono
-                            border-b border-amber-800
-                            ">
-                    {getPartners()}
-                </div>
-                <div className="w-full h-full">
-                    {
-                        data.status === ENTRYPOINT_STATUS.EntrypointCompleted ?
+            </div>
+            <EntrypointCountdown endDate="Jan 5, 2024 15:37:25"/>
+            <EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid}/>
+            <div className="w-full h-full">
+                {
+                    isOwned ?
+                        getModules()
+                        : data.users.length < data.max_users ? <>
+                            {parseModule(data.modules[0])}
+                        </> :
                             <>
                                 <PublicView entrypoint={data}/>
                             </>
-                            : isOwned ?
-                                getModules()
-                                : data.users.length < data.max_users ? <>
-                                    {parseModule(data.modules[0])}
-                                </> :
-                                    <>
-                                        <div>This entrypoint is currently being done by {data.users.length == 2 ? `${data.users[0].name} and ${data.users[1].name}.` : `${data.users[0].name}.`}</div>
-                                    </>
-                    }
-                </div>
-                <div className="flex items-center justify-between
+                }
+            </div>
+            <div className="h-12
+                            pl-4 pr-4
+                            relative
+                            flex items-center justify-between
                             border-t border-amber-800">
-                    <EntrypointActions status={data.status} />
-                </div>
+                <EntrypointActions 
+                    status={ data.status }
+                    users={ data.users }
+                    isOwner={ isOwned }
+                    lastStepIndex={ data.modules.length }
+                    currentStepIndex={ data.current_module }
+                    claimEntryPoint={ claimEntrypoint }
+                />
             </div>
         </div>
     )
 }
 
 export default Entrypoint
-
-export { ENTRYPOINT_STATUS }

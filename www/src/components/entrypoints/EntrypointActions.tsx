@@ -1,11 +1,23 @@
-import { ENTRYPOINT_STATUS } from "./Entrypoint"
+import { ENTRYPOINT_STATUS, IUser } from "./Entrypoint"
 import { FiShare2, FiArrowRight } from "react-icons/fi"
+
 interface EntrypointActionsProps {
 	status : ENTRYPOINT_STATUS,
-
+	users : IUser[]
+	isOwner : boolean,
+	lastStepIndex : number,
+	currentStepIndex : number,
+	claimEntryPoint : () => {}
 }
 
-function EntrypointActions({} : EntrypointActionsProps) {
+function EntrypointActions({
+	status,
+	users,
+	isOwner,
+	lastStepIndex,
+	currentStepIndex,
+	claimEntryPoint,
+} : EntrypointActionsProps) {
 	
 	const ShareButton = 
 		<div    className="cursor-pointer
@@ -14,6 +26,15 @@ function EntrypointActions({} : EntrypointActionsProps) {
                 onClick={ () => {  } }>
             <FiShare2 className="text-xs"/>
 			<p>Share</p>
+        </div>
+
+	const StartButton =
+		<div    className="cursor-pointer
+							flex items-center
+							gap-1"
+                onClick={ claimEntryPoint }>
+			<p>Start</p>
+            <FiArrowRight className="text-xs"/>
         </div>
 
 	const NextButton =
@@ -35,14 +56,45 @@ function EntrypointActions({} : EntrypointActionsProps) {
 		</div>
 
 	const Step = 
-	<div className="absolute text-center
-					text-mono">
+	<p className="absolute 
+					w-full h-full
+					text-center text-mono
+					opacity-50">
+			{ currentStepIndex } / { lastStepIndex }
+	</p>
 
-	</div>
+	const rightButtonDisplay = () => {
+		if (status === ENTRYPOINT_STATUS.EntrypointPending && isOwner)
+		{
+			if (currentStepIndex === lastStepIndex)
+				return FinishButton
+			else
+				return NextButton
+		}	
+		else
+		{
+			if (status === ENTRYPOINT_STATUS.EntrypointOpen)
+				return StartButton
+			else
+				return <></>
+		}
+	}
 	
+	console.log(
+		"status: "				+ status,
+		"isOwner: "				+ isOwner,
+		"lastStepIndex: "		+ lastStepIndex,
+		"currentStepIndex: "	+ currentStepIndex 
+	)
+
 	return ( 
 	<>
-		{ ShareButton }
+		{	
+			status === ENTRYPOINT_STATUS.EntrypointPending && isOwner &&
+				Step 
+		}
+		{ ShareButton } 
+		{ rightButtonDisplay() }
 	</> 
 	);
 }

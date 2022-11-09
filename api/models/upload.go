@@ -12,7 +12,7 @@ type Upload struct {
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
-	UUID      uuid.UUID      `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
+	UUID      uuid.UUID      `gorm:"uniqwueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
 	Status    string         `gorm:"default:unlisted" json:"status"`
 	Name      string         `json:"name" form:"name"`
 	URL       string         `json:"url" form:"uploads_url"`

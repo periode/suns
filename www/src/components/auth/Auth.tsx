@@ -29,7 +29,7 @@ const Auth = () => {
             // This function (`page`) will get called for each page of records.
 
             records.forEach(function(record) {
-                if(record.get('Name') == 'signinWelcomeMessage')
+                if(record.get('Name') === 'signinWelcomeMessage')
                     setGreetingMessage(record.get('Content') as string)
             });
 
@@ -103,7 +103,7 @@ const Auth = () => {
     }
 
     return (
-        <div className="auth-container">
+        <div className="w-full">
             {
                 success === true ?
                     <div className="status-info">{message}</div>
@@ -111,16 +111,16 @@ const Auth = () => {
                     <>
                         <h2>Sign in</h2>
                         <p>{greetingMessage}</p>
-                        <form action="">
-                            <div className="form-group">
+                        <form className="flex flex-col w-full" action="">
+                            <div className="flex flex-col w-full">
                                 <label htmlFor="email">Email</label>
                                 <input className="border border-amber-800 bg-amber-50" onChange={handleEmailChange} type="text" name="email" />
                             </div>
-                            <div className="form-group">
+                            <div className="flex flex-col w-full">
                                 <label htmlFor="password">Password</label>
                                 <input className="border border-amber-800 bg-amber-50" onChange={handlePasswordChange} type="password" name="password" />
                             </div>
-                            <div className="form-group">
+                            <div className="flex flex-col w-full">
                                 <button onClick={handleSignin}>Login</button>
                             </div>
                         </form>
@@ -129,24 +129,24 @@ const Auth = () => {
                         </div>
                         <hr />
                         <h2>Sign up</h2>
-                        <form action="">
-                            <div className="form-group">
+                        <form className="flex flex-col w-full" action="">
+                            <div className="flex flex-col w-full">
                                 <label htmlFor="signupEmail">Email</label>
                                 <input className="border border-amber-800 bg-amber-50" onChange={handleSignupEmailChange} type="text" name="signupEmail" />
                             </div>
-                            <div className="form-group">
+                            <div className="flex flex-col w-full">
                                 <label htmlFor="signupEmailConf">Email</label>
                                 <input className="border border-amber-800 bg-amber-50" onChange={handleSignupEmailConfChange} type="text" name="signupEmailConf" />
                             </div>
-                            <div className="form-group">
+                            <div className="flex flex-col w-full">
                                 <label htmlFor="signupPassword">Password</label>
                                 <input className="border border-amber-800 bg-amber-50" onChange={handleSignupPasswordChange} type="password" name="signupPassword" />
                             </div>
-                            <div className="form-group">
+                            <div className="flex flex-col w-full">
                                 <label htmlFor="signupPasswordConf">Password</label>
                                 <input className="border border-amber-800 bg-amber-50" onChange={handleSignupPasswordConfChange} type="password" name="signupPasswordConf" />
                             </div>
-                            <div className="form-group">
+                            <div className="flex flex-col w-full">
                                 <button onClick={handleSignup}>Sign up</button>
                             </div>
                         </form>
