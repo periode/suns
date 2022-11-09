@@ -1,17 +1,22 @@
-import { ENTRYPOINT_STATUS } from "./Entrypoint"
+import { ENTRYPOINT_STATUS, IUser } from "./Entrypoint"
 import { FiShare2, FiArrowRight } from "react-icons/fi"
+
 interface EntrypointActionsProps {
 	status : ENTRYPOINT_STATUS,
+	users : IUser[]
 	isOwner : boolean,
 	lastStepIndex : number,
 	currentStepIndex : number,
+	claimEntryPoint : () => {}
 }
 
 function EntrypointActions({
 	status,
+	users,
 	isOwner,
 	lastStepIndex,
 	currentStepIndex,
+	claimEntryPoint,
 } : EntrypointActionsProps) {
 	
 	const ShareButton = 
@@ -27,7 +32,7 @@ function EntrypointActions({
 		<div    className="cursor-pointer
 							flex items-center
 							gap-1"
-                onClick={ () => {  } }>
+                onClick={ claimEntryPoint }>
 			<p>Start</p>
             <FiArrowRight className="text-xs"/>
         </div>
@@ -88,13 +93,8 @@ function EntrypointActions({
 			status === ENTRYPOINT_STATUS.EntrypointPending && isOwner &&
 				Step 
 		}
-		{ 
-			// Always present
-			ShareButton
-		} 
-		{
-			rightButtonDisplay()
-		}
+		{ ShareButton } 
+		{ rightButtonDisplay() }
 	</> 
 	);
 }

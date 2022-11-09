@@ -7,19 +7,19 @@ import "../../styles/entrypoint.css"
 import { getSession } from "../../utils/auth";
 import EntrypointActions from "./EntrypointActions";
 
-enum ENTRYPOINT_STATUS {
+export enum ENTRYPOINT_STATUS {
     EntrypointPending   = "pending",
     EntrypointCompleted = "completed",
     EntrypointOpen      = "open",
 }
 
-enum PARTNER_STATUS {
+export enum PARTNER_STATUS {
     PartnerNone     = "none",
     PartnerPartial  = "partial",
     PartnerFull     = "full",
 }
 
-interface IUser {
+export interface IUser {
     name: string,
     uuid: string,
 }
@@ -140,26 +140,23 @@ const Entrypoint = (props: any) => {
         return mods
     }
 
-    const updatePartners = () {
-        if ()
-    }
-
     const getPartners = () => {
-        if (data.users.length === 0) { //-- no owners
+        if (data.partner_status === "none") { //-- no owners
             return (<>
                 <div className="m-2">No users!</div>
                 <div>
                     <button className="rounded-lg bg-white p-2 border-black border-2" onClick={claimEntrypoint}>claim</button>
                 </div>
             </>)
-        } else if (data.users.length < data.max_users) { //-- partial owners
+        } 
+        else if (data.partner_status === "partial") { //-- partial owners
             return (<>
                 <div>Owned by {data.users[0].uuid === session.user.uuid ? "you" : data.users[0].name}, and waiting for another partner. {!isOwned ?
                     <div>
                         <button onClick={claimEntrypoint}>claim</button>
                     </div> : <></>}</div>
             </>)
-        } else if (data.users.length == data.max_users) { //-- full session
+        } else if (data.partner_status === "full") { //-- full session
             if (data.max_users === 2)
                 return (<div>Owned by {data.users[0].uuid === session.user.uuid ? `you and ${data.users[1].name}` : data.users[1].uuid === session.user.uuid ? `${data.users[0].name} and you` : `${data.users[0].name} and ${data.users[1].name}`}</div>)
             else if (data.max_users === 1)
@@ -238,5 +235,3 @@ const Entrypoint = (props: any) => {
 }
 
 export default Entrypoint
-
-export { ENTRYPOINT_STATUS }
