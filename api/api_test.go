@@ -47,7 +47,8 @@ func TestApi(t *testing.T) {
 		var conf config.Config
 		conf.DefaultConf()
 		conf.TemplatesDir = "./templates"
-		StartServer("2046", conf)
+		var ch chan string
+		StartServer("2046", conf, ch)
 	})
 
 	t.Run("Testing ping", func(t *testing.T) {

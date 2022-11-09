@@ -21,7 +21,7 @@ import (
 var conf config.Config
 
 // StartServer gets his port and debug in the environment, registers the router, and registers the database closing on exit.
-func StartServer(port string, c config.Config) {
+func StartServer(port string, c config.Config, engine_chan chan string) {
 	conf = c
 
 	err := os.MkdirAll(c.UploadsDir, os.ModePerm)
@@ -45,14 +45,24 @@ func StartServer(port string, c config.Config) {
 		}
 	}()
 
+	shutdown := make(chan os.Signal, 2)
 	if os.Getenv("API_MODE") != "test" {
-		ch := make(chan os.Signal, 2)
-		signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
-		<-ch // block until signal received
+		signal.Notify(shutdown, os.Interrupt, syscall.SIGTERM)
 	}
 
-	zero.Info("shutting down...")
-	s.Shutdown(context.Background())
+	//-- wait for messages from the engine to know what to do
+	for {
+		time.Sleep(100 * time.Millisecond)
+
+		select {
+		case msg := <-engine_chan:
+			zero.Debugf("engine event: %s", msg)
+		case <-shutdown: // block until signal received
+			zero.Info("shutting down...")
+			s.Shutdown(context.Background())
+			return
+		}
+	}
 }
 
 // SetupRouter registers all middleware, templates, logging route groups and settings
