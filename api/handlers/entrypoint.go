@@ -165,6 +165,12 @@ func ClaimEntrypoint(c echo.Context) error {
 		return c.String(http.StatusPreconditionFailed, "This entrypoint has already been claimed")
 	}
 
+	for _, u := range entrypoint.Users {
+		if u.UUID == user_uuid {
+			return c.String(http.StatusPreconditionFailed, "You have already claimed this entrypoint")
+		}
+	}
+
 	user, err := models.GetUser(user_uuid, user_uuid)
 	if err != nil {
 		return c.String(http.StatusNotFound, "We couldn't find the User to update.")

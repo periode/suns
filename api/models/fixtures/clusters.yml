@@ -12,7 +12,7 @@
         - uuid: "2a73291d-559f-47c1-b24d-92a3606deb49"
           name: "For the first time - 1"
           status: "listed"
-          type: "Intro"
+          type: "intro"
           media:
             type: "video"
             url: "https://player.vimeo.com/video/139922433?h=07c88a080c"
@@ -22,13 +22,14 @@
           slug: "module-b-2a73291d"
           status: "listed"
           type: "upload_recording"
-          content: "This is the second content, with an audio cue"
+          content: "Window with audio recording appears. Permission to use the user's microphone. Record yourself narrating the memory. Start with the sentence, \"For The First Time...\" Be sure your computer microphone is turned on; your voice will be recorded and laid over a background music score. English is a prefered language for a global audience. Feel free to speak in any kind of English you prefer. (max 3 minutes)"
         - name: "For the first time - 3"
           status: "listed"
           content: "This is the third content"
-          uploads:
-            - url: "https://static.enframed.net/vertiges/proletaire.mp3"
-              user: "0"
+          type: "media_display"
+          media:
+              url: "https://static.enframed.net/vertiges/proletaire.mp3"
+              user: "audio"
         - name: "For the first time - 4"
           status: "listed"
           content: "This is the final countdown"
@@ -40,12 +41,15 @@
       lng: 240.400
       modules:
         - name: "Completed module 1"
+          type: "intro"
           status: "listed"
           content: "This is the first content"
         - name: "Completed module B"
+          type: "text"
           status: "listed"
           content: "This is the second content"
         - name: "Completed C"
+          type: "final"
           status: "listed"
           content: "This is the third content"
     - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846c'
@@ -55,12 +59,15 @@
       lng: 150.400
       modules:
         - name: "Module A"
+          type: "intro"
           status: "listed"
           content: "This is the first content"
         - name: "Module B"
+          type: "text"
           status: "listed"
           content: "This is the second content"
         - name: "Module C"
+          type: "final"
           status: "listed"
           content: "This is the third content"
     - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846d'
@@ -70,11 +77,14 @@
       lng: 150.400
       modules:
         - name: "Module A"
+          type: "intro"
           status: "listed"
           content: "This is the first content"
         - name: "Module B"
+          type: "text"
           status: "listed"
           content: "This is the second content"
         - name: "Module C"
+          type: "final"
           status: "listed"
           content: "This is the third content"

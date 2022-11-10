@@ -16,7 +16,6 @@ type Upload struct {
 	Status    string         `gorm:"default:unlisted" json:"status"`
 	Name      string         `json:"name" form:"name"`
 	URL       string         `json:"url" form:"uploads_url"`
-	Index     int            `json:"index" form:"index"` //-- the index keeps track of the position within the module
 
 	//-- has a user
 	UserUUID string `gorm:"type:uuid;default:uuid_generate_v4()" json:"user_uuid" form:"user_uuid"`

@@ -10,6 +10,7 @@ import EntrypointPartners from "./EntrypointPartners";
 import EntrypointCountdown from "./EntrypointCountdown";
 import PublicView from "./PublicView";
 import NotFound from "../../NotFound";
+import AudioRecorder from "../modules/AudioRecorder";
 
 export enum ENTRYPOINT_STATUS {
     EntrypointPending = "pending",
@@ -36,6 +37,7 @@ interface IEntrypoint {
     current_module: number,
     status_module: String,
     modules: [{
+        uuid: String,
         name: String,
         content: String,
         type: String,
@@ -43,7 +45,8 @@ interface IEntrypoint {
         uploads: Array<Object>
     }],
     users: Array<IUser>
-    max_users: number
+    max_users: number,
+    user_completed: Array<number>,
     partner_status: PARTNER_STATUS
 }
 
@@ -54,9 +57,11 @@ const Entrypoint = (props: any) => {
     const session = getSession()
     const [data, setData] = useState(props.data as IEntrypoint)
     const [isOwned, setOwned] = useState(false)
+    const [hasCompleted, setHasCompleted] = useState(false)
+    const [uploads, setUploads] = useState(Array<File>)
 
     useEffect(() => {
-        if(data === undefined)
+        if (data === undefined)
             return
         // checking if current user is an owner of the entrypoint
         if (data.users.length > 0 && session.user.uuid !== "")
@@ -66,30 +71,43 @@ const Entrypoint = (props: any) => {
     }, [data, session])
 
     useEffect(() => {
+        if (data === undefined)
+            return
+        // when an entrypoint is owned, we check for the completion status per user
+        for (let i = 0; i < data.users.length; i++) {
+            const u = data.users[i];
+            if (u.uuid === session.user.uuid && data.user_completed[i] === 1) {
+                setHasCompleted(true)
+                return
+            }
+        }
+    }, [isOwned])
+
+    useEffect(() => {
         const endpoint = new URL(`entrypoints/${params.id}`, process.env.REACT_APP_API_URL)
 
         async function fetchEntrypoint() {
             const h = new Headers();
             if (session.token !== "")
-              h.append("Authorization", `Bearer ${session.token}`);
-      
+                h.append("Authorization", `Bearer ${session.token}`);
+
             var options = {
-              method: 'GET',
-              headers: h
+                method: 'GET',
+                headers: h
             };
             const res = await fetch(endpoint, options)
             if (res.ok) {
-              const e = await res.json()
-              setData(e as IEntrypoint)
+                const e = await res.json()
+                setData(e as IEntrypoint)
             } else {
-              console.warn('error', res.status)
+                console.warn('error', res.status)
             }
-          }
-      
-          if (hasData.current === false) {
+        }
+
+        if (hasData.current === false) {
             fetchEntrypoint()
             hasData.current = true
-          }
+        }
     }, [params.id])
 
     const claimEntrypoint = async () => {
@@ -116,7 +134,37 @@ const Entrypoint = (props: any) => {
         }
     }
 
+    const submitUploads = async (files: Array<File>) => {
+        console.log(uploads);
+        const endpoint = new URL(`uploads/`, process.env.REACT_APP_API_URL)
+
+        if (session.token === "")
+            Navigate({ to: "/auth" })
+
+        const h = new Headers();
+        h.append("Authorization", `Bearer ${session.token}`);
+
+        const b = new FormData()
+        b.append("module_uuid", data.modules[data.current_module].uuid as string)
+        b.append("file", uploads[0])
+
+        var options = {
+            method: 'POST',
+            headers: h,
+            body: b
+        };
+        const res = await fetch(endpoint, options)
+        if (res.ok)
+            console.log('uploaded files');
+        else
+            console.log(res.statusText)
+
+    }
+
     const completeModule = async (data: any, session: any) => {
+        if (uploads.length > 0)
+            submitUploads(uploads)
+
         const endpoint = new URL(`entrypoints/${data.uuid}/progress`, process.env.REACT_APP_API_URL)
 
         if (session.token === "")
@@ -140,37 +188,83 @@ const Entrypoint = (props: any) => {
         }
     }
 
-    const parseModule = (data: any) => {
-        return (
-            <div key={`mod-${data.name}`}>
-                <h3>{data.name}</h3>
-                <p>
-                    {data.content}
-                </p>
-                {data.media ?
-                    data.media.type === "video" ?
-                        <iframe title={data.media.type + "title"} src={data.media.url} width="640" height="360"></iframe>
-                        : <audio src={data.media.url}></audio>
-                    : <></>
-                }
-            </div>
-        )
+    const parseModule = (index : number, data: any) => {
+        switch (data.type) {
+            case "upload_recording":
+                return (
+                    <AudioRecorder data={data} setUploads={setUploads} />
+                )
+            case "intro":
+                return (
+                    <>
+                        <div className="absolute text-sm l-0">{index}</div>
+                        <p>
+                            {data.content}
+                        </p>
+                        {data.media ?
+                            data.media.type === "video" ?
+                                <iframe title={data.media.type + "title"} src={data.media.url} width="640" height="360"></iframe>
+                                : <audio src={data.media.url}></audio>
+                            : <></>
+                        }
+                    </>
+                )
+            case "text":
+                return (
+                    <>
+                        <div className="absolute text-sm l-0">{index}</div>
+                        <p>
+                            {data.content}
+                        </p>
+                    </>
+                )
+            case "media_display":
+                return (
+                    <>
+                        <div className="absolute text-sm l-0">{index}</div>
+                        <p>
+                            {data.content}
+                        </p>
+                        <p>This is where we should be displaying the media that was previously uploaded by the users</p>
+                    </>
+                )
+            case "final":
+                return (
+                    <>
+                        <div className="absolute text-sm l-0">{index}</div>
+                        <p>This is the final module, should be made public</p>
+                        <p>
+                            {data.content}
+                        </p>
+                    </>
+                )
+            default:
+                return (
+                    <>
+                        <div className="absolute text-sm l-0">{index}</div>
+                        <p>
+                            <b>Could not parse module type!</b>
+                        </p>
+                    </>
+                )
+        }
     }
 
     const getModules = () => {
         let mods = []
         for (let i = 0; i <= data.current_module; i++) {
             const m = data.modules[i]
-            mods.push(parseModule(m))
+            mods.push(<div key={`mod-${data.name}`} className="border border-amber-800 border-3 m-1 p-1">{parseModule(i, m)}</div>)
         }
+
+        if (hasCompleted)
+            mods.push(<div className="border border-amber-800 border-3 m-1 p-1">T'as fini frère</div>)
 
         if (data.current_module < data.modules.length - 1)
             mods.push(<button key="complete-module" className="border-2 border-amber-800 rounded-md p-2" onClick={() => completeModule(data, session)}>complete module</button>)
 
         return mods
     }
-
-
 
     const getCountdown = (): string => {
         var countDownDate = new Date("Jan 5, 2024 15:37:25").getTime();
@@ -190,66 +284,66 @@ const Entrypoint = (props: any) => {
         result += (minutes + " : ")
         result += (seconds)
         return (result)
-    }    
+    }
 
-    if(data !== undefined)
+    if (data !== undefined)
         return (
-        <div className="absolute w-full h-full p-4">
-            <div className="
+            <div className="absolute w-full h-full p-4">
+                <div className="
                         flex flex-col
                         w-full h-full 
                         border border-amber-800
                         text-amber-800
                         bg-amber-50
                         ">
-                <div className="w-full flex justify-between 
+                    <div className="w-full flex justify-between 
                             p-4
                             border-b border-amber-800">
-                    <div className="w-full flex justify-between items-center">
-                        <div className="flex items-center gap-4">
-                            <FiCommand className="text-[32px]" />
-                            <h1>{data.name}</h1>
-                        </div>
-                        <div className="cursor-pointer"
-                            onClick={() => navigate('/', {replace: true})}>
-                            <FiX className="text-[32px]" />
+                        <div className="w-full flex justify-between items-center">
+                            <div className="flex items-center gap-4">
+                                <FiCommand className="text-[32px]" />
+                                <h1>{data.name}</h1>
+                            </div>
+                            <div className="cursor-pointer"
+                                onClick={() => navigate('/', { replace: true })}>
+                                <FiX className="text-[32px]" />
+                            </div>
                         </div>
                     </div>
-                </div>
-                <EntrypointCountdown endDate="Jan 5, 2024 15:37:25" />
-                <EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
-                <div className="w-full h-full">
-                    {
-                        isOwned ?
-                            getModules()
-                            : data.users.length < data.max_users ? <>
-                                {parseModule(data.modules[0])}
-                            </> :
-                                <>
-                                    <PublicView entrypoint={data} />
-                                </>
-                    }
-                </div>
-                <div className="h-12
+                    <EntrypointCountdown endDate="Jan 5, 2024 15:37:25" />
+                    <EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
+                    <div className="w-full h-full">
+                        {
+                            isOwned ?
+                                getModules()
+                                : data.users.length < data.max_users ? <>
+                                    {parseModule(0, data.modules[0])}
+                                </> :
+                                    <>
+                                        <PublicView entrypoint={data} />
+                                    </>
+                        }
+                    </div>
+                    <div className="h-12
                             pl-4 pr-4
                             relative
                             flex items-center justify-between
                             border-t border-amber-800">
-                    <EntrypointActions
-                        status={data.status}
-                        users={data.users}
-                        isOwner={isOwned}
-                        lastStepIndex={data.modules.length}
-                        currentStepIndex={data.current_module}
-                        claimEntryPoint={claimEntrypoint}
-                    />
+                        <EntrypointActions
+                            status={data.status}
+                            users={data.users}
+                            isOwner={isOwned}
+                            lastStepIndex={data.modules.length}
+                            currentStepIndex={data.current_module}
+                            claimEntryPoint={claimEntrypoint}
+                        />
+                    </div>
                 </div>
+
             </div>
+        )
 
-        </div>
-    )
-
-    return(<NotFound/>) //-- if data is not defined, it means we're still fetching it from the backend (so this should be a spinner instead)
+    return (<NotFound />) //-- if data is not defined, it means we're still fetching it from the backend (so this should be a spinner instead)
 }
 
 export default Entrypoint

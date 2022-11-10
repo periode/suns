@@ -6,10 +6,8 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"strconv"
 
 	"github.com/google/uuid"
-	"github.com/gosimple/slug"
 	"github.com/labstack/echo/v4"
 	"github.com/periode/suns/api/config"
 	zero "github.com/periode/suns/api/logger"
@@ -27,11 +25,6 @@ func CreateUpload(c echo.Context) error {
 		zero.Warn("error getting the module UUID")
 		return c.String(http.StatusBadRequest, "Cannot parse the module UUID")
 	}
-	index, err := strconv.Atoi(c.FormValue("partner_index"))
-	if err != nil {
-		zero.Warn("error getting the partner index")
-		return c.String(http.StatusBadRequest, "Cannot parse the partner index")
-	}
 
 	// Source
 	file, err := c.FormFile("file")
@@ -45,7 +38,7 @@ func CreateUpload(c echo.Context) error {
 	defer src.Close()
 
 	// Destination
-	var fname = fmt.Sprintf("%s-%s", module_uuid.String()[:13], slug.Make(file.Filename))
+	var fname = fmt.Sprintf("%s_%s_%s", module_uuid.String()[:13], user_uuid.String()[5:], file.Filename)
 	target := filepath.Join(conf.UploadsDir, fname)
 	dst, err := os.Create(target)
 	if err != nil {
@@ -60,9 +53,8 @@ func CreateUpload(c echo.Context) error {
 
 	upload := models.Upload{
 		Name:     file.Filename,
-		URL:      target,
+		URL:      fname,
 		UserUUID: user_uuid.String(),
-		Index:    index,
 	}
 
 	//-- then get the module, append the upload, and update it

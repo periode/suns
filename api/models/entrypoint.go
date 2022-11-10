@@ -47,7 +47,7 @@ type Entrypoint struct {
 	//-- has many-to-many users (0, 1 or 2)
 	Users         []*User       `gorm:"many2many:entrypoints_users;" json:"users"`
 	MaxUsers      int           `gorm:"default:1" json:"max_users" yaml:"max_users"`
-	UserCompleted pq.Int32Array `gorm:"type:integer[]"` //-- 1 means user has completed the module, 0 means not yet
+	UserCompleted pq.Int32Array `gorm:"type:integer[]" json:"user_completed"` //-- 1 means user has completed the module, 0 means not yet
 	PartnerStatus string        `gorm:"default:none" json:"partner_status"`
 
 	Lat float32 `json:"lat"`
@@ -77,6 +77,14 @@ func GetEntrypoint(uuid uuid.UUID, user_uuid uuid.UUID) (Entrypoint, error) {
 	result := db.Preload("Modules").Preload("Users").Where("uuid = ?", uuid).First(&entry)
 	if result.Error != nil {
 		return entry, result.Error
+	}
+
+	for i, m := range entry.Modules {
+		mod, err := GetModule(m.UUID)
+		if err != nil {
+			return entry, err
+		}
+		entry.Modules[i] = mod
 	}
 
 	return entry, nil
