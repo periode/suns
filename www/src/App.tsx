@@ -12,8 +12,9 @@ import Entrypoint from './components/entrypoints/Entrypoint';
 import backgroundMap from './map.png'
 import MainMenu from './components/commons/menu/MainMenu';
 import { Route, Routes } from 'react-router-dom';
+import UILayout from './components/commons/layout/UILayout';
 
-interface EntrypointInterface {
+export interface EntrypointInterface {
   uuid: string
   lat: number,
   lng: number,
@@ -28,9 +29,9 @@ const MIN_ZOOOM = 0.5;
 const MAX_ZOOM = 6;
 
 const App = () => {
+  var currentEntrypoint : EntrypointInterface = {} as EntrypointInterface
   const hasData = useRef(false)
   const [entrypoints, setEntrypoints] = useState(Array<EntrypointInterface>)
-  const [currentEntrypoint, setCurrentEntrypoint] = useState({} as EntrypointInterface)
   const bounds = new L.LatLngBounds(new L.LatLng(0, 0), new L.LatLng(WIDTH, HEIGHT))
   const session = getSession()
 
@@ -88,14 +89,7 @@ const App = () => {
             <Routes>
               <Route path=":id" element={<Entrypoint />} />
             </Routes>
-            <>
-              {
-                Object.keys(currentEntrypoint).length > 0 ?
-                  <Entrypoint data={currentEntrypoint} />
-                  :
-                  <></>
-              }
-            </>
+            <UILayout currentEntrypoint={currentEntrypoint}/>
           </>
         }
       </div>
