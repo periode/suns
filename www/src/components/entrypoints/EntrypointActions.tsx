@@ -7,7 +7,8 @@ interface EntrypointActionsProps {
 	isOwner : boolean,
 	lastStepIndex : number,
 	currentStepIndex : number,
-	claimEntryPoint : () => {}
+	claimEntryPoint : () => {},
+	entrypointID: string
 }
 
 function EntrypointActions({
@@ -17,19 +18,26 @@ function EntrypointActions({
 	lastStepIndex,
 	currentStepIndex,
 	claimEntryPoint,
+	entrypointID,
 } : EntrypointActionsProps) {
+
+	const copyToClipboard = (text : string) => {
+		window.prompt("You can share this link: ", text);
+	}
 	
 	const ShareButton = 
-		<div    className="cursor-pointer
+		<div    className=" font-mono
+							cursor-pointer
 							flex items-center
 							gap-1"
-                onClick={ () => {  } }>
+                onClick={ () => { copyToClipboard( window.location.href ) } }>
             <FiShare2 className="text-xs"/>
 			<p>Share</p>
         </div>
 
 	const StartButton =
-		<div    className="cursor-pointer
+		<div    className=" font-mono
+							cursor-pointer
 							flex items-center
 							gap-1"
                 onClick={ claimEntryPoint }>
@@ -38,7 +46,8 @@ function EntrypointActions({
         </div>
 
 	const NextButton =
-		<div    className="cursor-pointer
+		<div    className=" font-mono
+							cursor-pointer
 							flex items-center
 							gap-1"
                 onClick={ () => {  } }>
@@ -47,7 +56,8 @@ function EntrypointActions({
         </div>
 
 	const FinishButton =
-		<div	className="cursor-pointer
+		<div	className=" font-mono
+							cursor-pointer
 							flex items-center
 							gap-1"
 				onClick={ () => {  } }>
@@ -58,7 +68,8 @@ function EntrypointActions({
 	const Step = 
 	<p className="absolute 
 					w-full h-full
-					text-center text-mono
+					flex items-center justify-center
+					text-center  font-mono
 					opacity-50">
 			{ currentStepIndex } / { lastStepIndex }
 	</p>
@@ -79,13 +90,7 @@ function EntrypointActions({
 				return <></>
 		}
 	}
-	
-	console.log(
-		"status: "				+ status,
-		"isOwner: "				+ isOwner,
-		"lastStepIndex: "		+ lastStepIndex,
-		"currentStepIndex: "	+ currentStepIndex 
-	)
+
 
 	return ( 
 	<>

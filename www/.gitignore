@@ -3,6 +3,7 @@
 .env
 
 # dependencies
+/fonts
 /node_modules
 /.pnp
 .pnp.js

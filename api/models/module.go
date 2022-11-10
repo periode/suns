@@ -11,6 +11,13 @@ import (
 	"gorm.io/gorm"
 )
 
+const (
+	// Status of Module completion
+	ModuleNone      string = "none"      // No one did this module yet
+	ModulePartial   string = "partial"   // Only one person did this module
+	ModuleCompleted string = "completed" // Everyone did this module
+)
+
 type Module struct {
 	ID        uint           `gorm:"primaryKey"`
 	CreatedAt time.Time      `json:"created_at"`

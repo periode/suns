@@ -30,12 +30,12 @@ export interface IUser {
 }
 
 interface IEntrypoint {
-    uuid: String,
-    name: String,
+    uuid: string,
+    name: string,
     status: ENTRYPOINT_STATUS,
     content: String,
     current_module: number,
-    status_module: String,
+    status_module: string,
     modules: [{
         uuid: String,
         name: String,
@@ -264,32 +264,12 @@ const Entrypoint = (props: any) => {
             mods.push(<button key="complete-module" className="border-2 border-amber-800 rounded-md p-2" onClick={() => completeModule(data, session)}>complete module</button>)
 
         return mods
-    }
+    } 
 
-    const getCountdown = (): string => {
-        var countDownDate = new Date("Jan 5, 2024 15:37:25").getTime();
-        // Get today's date and time
-        var now = new Date().getTime();
-        var distance = countDownDate - now;
-
-        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-
-        var result: string = ""
-        result += (days + " : ")
-        result += (hours + " : ")
-        result += (minutes + " : ")
-        result += (seconds)
-        return (result)
-    }
-
-    if (data !== undefined)
+    if(data !== undefined)
         return (
-            <div className="absolute w-full h-full p-4">
-                <div className="
+        <div className="absolute w-full h-full p-4">
+            <div className="
                         flex flex-col
                         w-full h-full 
                         border border-amber-800
@@ -299,15 +279,14 @@ const Entrypoint = (props: any) => {
                     <div className="w-full flex justify-between 
                             p-4
                             border-b border-amber-800">
-                        <div className="w-full flex justify-between items-center">
-                            <div className="flex items-center gap-4">
-                                <FiCommand className="text-[32px]" />
-                                <h1>{data.name}</h1>
-                            </div>
-                            <div className="cursor-pointer"
-                                onClick={() => navigate('/', { replace: true })}>
-                                <FiX className="text-[32px]" />
-                            </div>
+                    <div className="w-full flex justify-between items-center">
+                        <div className="flex items-center gap-4">
+                            <FiCommand className="text-[32px]" />
+                            <h1 className="text-xl font-bold">{data.name}</h1>
+                        </div>
+                        <div className="cursor-pointer"
+                            onClick={() => navigate('/', {replace: true})}>
+                            <FiX className="text-[32px]" />
                         </div>
                     </div>
                     <EntrypointCountdown endDate="Jan 5, 2024 15:37:25" />
@@ -329,15 +308,15 @@ const Entrypoint = (props: any) => {
                             relative
                             flex items-center justify-between
                             border-t border-amber-800">
-                        <EntrypointActions
-                            status={data.status}
-                            users={data.users}
-                            isOwner={isOwned}
-                            lastStepIndex={data.modules.length}
-                            currentStepIndex={data.current_module}
-                            claimEntryPoint={claimEntrypoint}
-                        />
-                    </div>
+                    <EntrypointActions
+                        status={data.status}
+                        users={data.users}
+                        isOwner={isOwned}
+                        lastStepIndex={data.modules.length}
+                        currentStepIndex={data.current_module}
+                        claimEntryPoint={claimEntrypoint}
+                        entrypointID={data.uuid}
+                    />
                 </div>
 
             </div>
