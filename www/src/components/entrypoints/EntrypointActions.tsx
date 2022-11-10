@@ -26,7 +26,8 @@ function EntrypointActions({
 	}
 	
 	const ShareButton = 
-		<div    className="cursor-pointer
+		<div    className=" font-mono
+							cursor-pointer
 							flex items-center
 							gap-1"
                 onClick={ () => { copyToClipboard( window.location.href ) } }>
@@ -35,7 +36,8 @@ function EntrypointActions({
         </div>
 
 	const StartButton =
-		<div    className="cursor-pointer
+		<div    className=" font-mono
+							cursor-pointer
 							flex items-center
 							gap-1"
                 onClick={ claimEntryPoint }>
@@ -44,7 +46,8 @@ function EntrypointActions({
         </div>
 
 	const NextButton =
-		<div    className="cursor-pointer
+		<div    className=" font-mono
+							cursor-pointer
 							flex items-center
 							gap-1"
                 onClick={ () => {  } }>
@@ -53,7 +56,8 @@ function EntrypointActions({
         </div>
 
 	const FinishButton =
-		<div	className="cursor-pointer
+		<div	className=" font-mono
+							cursor-pointer
 							flex items-center
 							gap-1"
 				onClick={ () => {  } }>
@@ -65,7 +69,7 @@ function EntrypointActions({
 	<p className="absolute 
 					w-full h-full
 					flex items-center justify-center
-					text-center  text-mono font-
+					text-center  font-mono
 					opacity-50">
 			{ currentStepIndex } / { lastStepIndex }
 	</p>
@@ -86,15 +90,7 @@ function EntrypointActions({
 				return <></>
 		}
 	}
-	
-	
 
-	console.log(
-		"status: "				+ status + "\n",
-		"isOwner: "				+ isOwner + "\n",
-		"lastStepIndex: "		+ lastStepIndex + "\n",
-		"currentStepIndex: "	+ currentStepIndex + "\n",
-	)
 
 	return ( 
 	<>

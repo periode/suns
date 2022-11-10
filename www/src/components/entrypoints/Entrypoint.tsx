@@ -186,7 +186,7 @@ const Entrypoint = (props: any) => {
                     <div className="w-full flex justify-between items-center">
                         <div className="flex items-center gap-4">
                             <FiCommand className="text-[32px]" />
-                            <h1>{data.name}</h1>
+                            <h1 className="text-xl font-bold">{data.name}</h1>
                         </div>
                         <div className="cursor-pointer"
                             onClick={() => navigate('/', {replace: true})}>
