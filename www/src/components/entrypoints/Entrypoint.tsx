@@ -188,7 +188,7 @@ const Entrypoint = (props: any) => {
         }
     }
 
-    const parseModule = (index : number, data: any) => {
+    const parseModule = (index: number, data: any) => {
         switch (data.type) {
             case "upload_recording":
                 return (
@@ -264,61 +264,62 @@ const Entrypoint = (props: any) => {
             mods.push(<button key="complete-module" className="border-2 border-amber-800 rounded-md p-2" onClick={() => completeModule(data, session)}>complete module</button>)
 
         return mods
-    } 
+    }
 
-    if(data !== undefined)
+    if (data !== undefined)
         return (
-        <div className="absolute w-full h-full p-4">
-            <div className="
+            <div className="absolute w-full h-full p-4 md:w-[720px]">
+                <div className="
                         flex flex-col
                         w-full h-full 
                         border border-amber-800
                         text-amber-800
                         bg-amber-50
                         ">
-                    <div className="w-full flex justify-between 
+                    <div className="w-full flex justify-between flex-col
                             p-4
                             border-b border-amber-800">
-                    <div className="w-full flex justify-between items-center">
-                        <div className="flex items-center gap-4">
-                            <FiCommand className="text-[32px]" />
-                            <h1 className="text-xl font-bold">{data.name}</h1>
+                        <div className="w-full flex justify-between items-center">
+                            <div className="flex items-center gap-4">
+                                <FiCommand className="text-[32px]" />
+                                <h1 className="text-xl font-bold">{data.name}</h1>
+                            </div>
+                            <div className="cursor-pointer"
+                                onClick={() => navigate('/', { replace: true })}>
+                                <FiX className="text-[32px]" />
+                            </div>
                         </div>
-                        <div className="cursor-pointer"
-                            onClick={() => navigate('/', {replace: true})}>
-                            <FiX className="text-[32px]" />
+                        <EntrypointCountdown endDate="Jan 5, 2024 15:37:25" />
+                        <EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
+                        <div className="w-full h-full">
+                            {
+                                isOwned ?
+                                    getModules()
+                                    : data.users.length < data.max_users ? <>
+                                        {parseModule(0, data.modules[0])}
+                                    </> :
+                                        <>
+                                            <PublicView entrypoint={data} />
+                                        </>
+                            }
                         </div>
-                    </div>
-                    <EntrypointCountdown endDate="Jan 5, 2024 15:37:25" />
-                    <EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
-                    <div className="w-full h-full">
-                        {
-                            isOwned ?
-                                getModules()
-                                : data.users.length < data.max_users ? <>
-                                    {parseModule(0, data.modules[0])}
-                                </> :
-                                    <>
-                                        <PublicView entrypoint={data} />
-                                    </>
-                        }
-                    </div>
-                    <div className="h-12
+                        <div className="h-12
                             pl-4 pr-4
                             relative
                             flex items-center justify-between
                             border-t border-amber-800">
-                    <EntrypointActions
-                        status={data.status}
-                        users={data.users}
-                        isOwner={isOwned}
-                        lastStepIndex={data.modules.length}
-                        currentStepIndex={data.current_module}
-                        claimEntryPoint={claimEntrypoint}
-                        entrypointID={data.uuid}
-                    />
+                            <EntrypointActions
+                                status={data.status}
+                                users={data.users}
+                                isOwner={isOwned}
+                                lastStepIndex={data.modules.length}
+                                currentStepIndex={data.current_module}
+                                claimEntryPoint={claimEntrypoint}
+                                entrypointID={data.uuid}
+                            />
+                        </div>
+                    </div>
                 </div>
-
             </div>
         )
 
