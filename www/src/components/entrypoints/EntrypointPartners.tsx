@@ -29,7 +29,7 @@ const EntrypointPartners = ( {
 	{	
 		userString = checkUserName(users[0])
 		if (max_users === 2)
-			userString += "and waiting for someone else"
+			userString += " and waiting for someone else"
 	}
 		
 	else if (partner_status === PARTNER_STATUS.PartnerFull)
@@ -60,7 +60,7 @@ const EntrypointPartners = ( {
 			</div>
 			{
 				partner_status !== PARTNER_STATUS.PartnerNone &&
-				<p>Owned by: {userString}</p>
+				<p>{userString}</p>
 			}
 		</div>
 	 );
