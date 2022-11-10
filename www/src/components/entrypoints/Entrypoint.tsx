@@ -29,16 +29,16 @@ export interface IUser {
 }
 
 interface IEntrypoint {
-    uuid: String,
-    name: String,
+    uuid: string,
+    name: string,
     status: ENTRYPOINT_STATUS,
     content: String,
     current_module: number,
-    status_module: String,
+    status_module: string,
     modules: [{
-        name: String,
-        content: String,
-        type: String,
+        name: string,
+        content: string,
+        type: string,
         media: Object,
         uploads: Array<Object>
     }],
@@ -168,29 +168,7 @@ const Entrypoint = (props: any) => {
             mods.push(<button key="complete-module" className="border-2 border-amber-800 rounded-md p-2" onClick={() => completeModule(data, session)}>complete module</button>)
 
         return mods
-    }
-
-
-
-    const getCountdown = (): string => {
-        var countDownDate = new Date("Jan 5, 2024 15:37:25").getTime();
-        // Get today's date and time
-        var now = new Date().getTime();
-        var distance = countDownDate - now;
-
-        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-
-        var result: string = ""
-        result += (days + " : ")
-        result += (hours + " : ")
-        result += (minutes + " : ")
-        result += (seconds)
-        return (result)
-    }    
+    } 
 
     if(data !== undefined)
         return (
@@ -242,6 +220,7 @@ const Entrypoint = (props: any) => {
                         lastStepIndex={data.modules.length}
                         currentStepIndex={data.current_module}
                         claimEntryPoint={claimEntrypoint}
+                        entrypointID={data.uuid}
                     />
                 </div>
             </div>

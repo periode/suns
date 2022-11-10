@@ -64,7 +64,7 @@ const App = () => {
   }, [session.token])
 
     return (
-      <div className="App">
+      <div className="App font-serif">
         {session.token === '' ?
           <Auth />
           :

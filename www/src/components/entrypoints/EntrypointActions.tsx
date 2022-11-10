@@ -7,7 +7,8 @@ interface EntrypointActionsProps {
 	isOwner : boolean,
 	lastStepIndex : number,
 	currentStepIndex : number,
-	claimEntryPoint : () => {}
+	claimEntryPoint : () => {},
+	entrypointID: string
 }
 
 function EntrypointActions({
@@ -17,13 +18,18 @@ function EntrypointActions({
 	lastStepIndex,
 	currentStepIndex,
 	claimEntryPoint,
+	entrypointID,
 } : EntrypointActionsProps) {
+
+	const copyToClipboard = (text : string) => {
+		window.prompt("You can share this link: ", text);
+	}
 	
 	const ShareButton = 
 		<div    className="cursor-pointer
 							flex items-center
 							gap-1"
-                onClick={ () => {  } }>
+                onClick={ () => { copyToClipboard( window.location.href ) } }>
             <FiShare2 className="text-xs"/>
 			<p>Share</p>
         </div>
@@ -58,7 +64,8 @@ function EntrypointActions({
 	const Step = 
 	<p className="absolute 
 					w-full h-full
-					text-center text-mono
+					flex items-center justify-center
+					text-center  text-mono font-
 					opacity-50">
 			{ currentStepIndex } / { lastStepIndex }
 	</p>
@@ -80,11 +87,13 @@ function EntrypointActions({
 		}
 	}
 	
+	
+
 	console.log(
-		"status: "				+ status,
-		"isOwner: "				+ isOwner,
-		"lastStepIndex: "		+ lastStepIndex,
-		"currentStepIndex: "	+ currentStepIndex 
+		"status: "				+ status + "\n",
+		"isOwner: "				+ isOwner + "\n",
+		"lastStepIndex: "		+ lastStepIndex + "\n",
+		"currentStepIndex: "	+ currentStepIndex + "\n",
 	)
 
 	return ( 

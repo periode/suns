@@ -16,6 +16,134 @@ code {
     monospace;
 }
 
+@layer base {
+  /* Untitled Serif */
+  @font-face {
+    font-family: UntitledSerif;
+    font-weight: 700;
+    font-style: italic;
+    src: url(/fonts/Test-Untitled-Serif/test-untitled-serif-bold-italic.woff2) format("woff");
+  }
+  @font-face {
+    font-family: UntitledSerif;
+    font-weight: 700;
+     font-style: normal;
+    src: url(/fonts/Test-Untitled-Serif/test-untitled-serif-bold.woff2) format("woff");
+  }
+  @font-face {
+    font-family: UntitledSerif;
+    font-weight: 500;
+     font-style: italic;
+    src: url(/fonts/Test-Untitled-Serif/test-untitled-serif-medium-italic.woff2) format("woff");
+  }
+  @font-face {
+    font-family: UntitledSerif;
+    font-weight: 500;
+     font-style: normal;
+    src: url(/fonts/Test-Untitled-Serif/test-untitled-serif-medium.woff2) format("woff");
+  }
+  @font-face {
+    font-family: UntitledSerif;
+    font-weight: 400;
+     font-style: italic;
+    src: url(/fonts/Test-Untitled-Serif/test-untitled-serif-regular-italic.woff2) format("woff");
+  }
+  @font-face {
+    font-family: UntitledSerif;
+    font-weight: 400;
+     font-style: normal;
+    src: url(/fonts/Test-Untitled-Serif/test-untitled-serif-regular.woff2) format("woff");
+  }
+
+  /* IBM PLex Mono */
+  @font-face {
+    font-family: IBMPlexMono;
+    font-weight: 100;
+    font-style: normal;
+    src: url(/fonts/IBM_Plex_Mono/IBMPlexMono-Thin.ttf) format("woff");
+  }
+  @font-face {
+    font-family: IBMPlexMono;
+    font-weight: 100;
+    font-style: italic;
+    src: url(/fonts/IBM_Plex_Mono/IBMPlexMono-ThinItalic.ttf) format("woff");
+  }
+  @font-face {
+    font-family: IBMPlexMono;
+    font-weight: 200;
+    font-style: normal;
+    src: url(/fonts/IBM_Plex_Mono/IBMPlexMono-ExtraLight.ttf) format("woff");
+  }
+  @font-face {
+    font-family: IBMPlexMono;
+    font-weight: 200;
+    font-style: italic;
+    src: url(/fonts/IBM_Plex_Mono/IBMPlexMono-ExtraLightItalic.ttf) format("woff");
+  }
+  @font-face {
+    font-family: IBMPlexMono;
+    font-weight: 300;
+    font-style: normal;
+    src: url(/fonts/IBM_Plex_Mono/IBMPlexMono-Light.ttf) format("woff");
+  }
+  @font-face {
+    font-family: IBMPlexMono;
+    font-weight: 300;
+    font-style: italic;
+    src: url(/fonts/IBM_Plex_Mono/IBMPlexMono-LightItalic.ttf) format("woff");
+  }
+  @font-face {
+    font-family: IBMPlexMono;
+    font-weight: 400;
+    font-style: normal;
+    src: url(/fonts/IBM_Plex_Mono/IBMPlexMono-Regular.ttf) format("woff");
+  }
+  @font-face {
+    font-family: IBMPlexMono;
+    font-weight: 400;
+    font-style: italic;
+    src: url(/fonts/IBM_Plex_Mono/IBMPlexMono-Italic.ttf) format("woff");
+  }
+  @font-face {
+    font-family: IBMPlexMono;
+    font-weight: 500;
+    font-style: normal;
+    src: url(/fonts/IBM_Plex_Mono/IBMPlexMono-Medium.ttf) format("woff");
+  }
+  @font-face {
+    font-family: IBMPlexMono;
+    font-weight: 500;
+    font-style: italic;
+    src: url(/fonts/IBM_Plex_Mono/IBMPlexMono-MediumItalic.ttf) format("woff");
+  }
+  @font-face {
+    font-family: IBMPlexMono;
+    font-weight: 600;
+    font-style: normal;
+    src: url(/fonts/IBM_Plex_Mono/IBMPlexMono-SemiBold.ttf) format("woff");
+  }
+  @font-face {
+    font-family: IBMPlexMono;
+    font-weight: 600;
+    font-style: italic;
+    src: url(/fonts/IBM_Plex_Mono/IBMPlexMono-SemiBoldItalic.ttf) format("woff");
+  }
+  @font-face {
+    font-family: IBMPlexMono;
+    font-weight: 700;
+    font-style: normal;
+    src: url(/fonts/IBM_Plex_Mono/IBMPlexMono-Bold.ttf) format("woff");
+  }
+  @font-face {
+    font-family: IBMPlexMono;
+    font-weight: 700;
+    font-style: italic;
+    src: url(/fonts/IBM_Plex_Mono/IBMPlexMono-BoldItalic.ttf) format("woff");
+  }
+}
+
+/* old stuff below */
+
 .leaflet-container {
   width: 100%;
   height: 100vh;

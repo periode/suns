@@ -6,6 +6,12 @@ interface EntrypointCountdownProps {
 
 function EntrypointCountdown( {endDate} : EntrypointCountdownProps ) {
 	const [days, hours, minutes, seconds] = useCountdown(endDate)
+
+	const doubleDigits = (digit : number) : string =>{
+		if (digit < 10)
+			return (String("0" + digit))
+		return(String(digit))
+	}
 	return ( 
 		<div className="w-full h-12 
 						flex items-center justify-center
@@ -14,9 +20,9 @@ function EntrypointCountdown( {endDate} : EntrypointCountdownProps ) {
 						">
 			{
 				days + " : " + 
-				hours + " : " + 
-				minutes + " : " + 
-				seconds
+				doubleDigits(hours) + " : " + 
+				doubleDigits(minutes) + " : " + 
+				doubleDigits(seconds)
 			}
 		</div>
 	 );

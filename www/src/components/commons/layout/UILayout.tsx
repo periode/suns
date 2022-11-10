@@ -7,6 +7,7 @@ interface UILayoutProps
 }
 
 const UILayout = ({currentEntrypoint} : UILayoutProps) => {
+	console.log("UI Layout gets rendered :)")
 	return ( 
 		<>
 			{

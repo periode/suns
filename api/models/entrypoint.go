@@ -13,12 +13,15 @@ import (
 )
 
 const (
-	EntrypointPending   string = "pending"
-	EntrypointCompleted string = "completed"
-	EntrypointOpen      string = "open"
+	// Status of Entrypoint with regards to completion
+	EntrypointUnlisted  string = "unlisted"  // Entrypoint exists but is not displayed yet
+	EntrypointOpen      string = "open"      // Entrypoint is ready to be claimed
+	EntrypointPending   string = "pending"   // Entrypoint is claimed and someone is working on it
+	EntrypointCompleted string = "completed" // Entrypoint has been completed
 )
 
 const (
+	// Status of Partners of the Entrypoint
 	PartnerNone    string = "none"
 	PartnerPartial string = "partial"
 	PartnerFull    string = "full"
@@ -112,11 +115,15 @@ func UpdateEntrypoint(uuid uuid.UUID, user_uuid uuid.UUID, entry *Entrypoint) (E
 func ClaimEntrypoint(entry *Entrypoint, user *User) (Entrypoint, error) {
 	err := db.Model(&entry).Association("Users").Append(user)
 
+	// Handle entrypoint status
+	entry.Status = EntrypointPending
+
+	// Handle partner status
 	if len(entry.Users) < entry.MaxUsers {
-		entry.StatusModule = PartnerPartial
+		entry.PartnerStatus = PartnerPartial
 	}
 	if len(entry.Users) == entry.MaxUsers {
-		entry.StatusModule = PartnerPartial
+		entry.PartnerStatus = PartnerFull
 	}
 	return *entry, err
 }
