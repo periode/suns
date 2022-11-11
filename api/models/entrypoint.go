@@ -122,7 +122,9 @@ func UpdateEntrypoint(uuid uuid.UUID, user_uuid uuid.UUID, entry *Entrypoint) (E
 
 func ClaimEntrypoint(entry *Entrypoint, user *User) (Entrypoint, error) {
 	err := db.Model(&entry).Association("Users").Append(user)
-
+	if err != nil {
+		return *entry, err
+	}
 	// Handle entrypoint status
 	entry.Status = EntrypointPending
 
@@ -133,7 +135,8 @@ func ClaimEntrypoint(entry *Entrypoint, user *User) (Entrypoint, error) {
 	if len(entry.Users) == entry.MaxUsers {
 		entry.PartnerStatus = PartnerFull
 	}
-	return *entry, err
+	result, err := UpdateEntrypoint(entry.UUID, user.UUID, entry)
+	return result, err
 }
 
 func DeleteEntrypoint(uuid uuid.UUID, user_uuid uuid.UUID) (Entrypoint, error) {
