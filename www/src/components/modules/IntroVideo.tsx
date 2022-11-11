@@ -6,9 +6,9 @@ const IntroVideo = (props: any) => {
     useEffect(() => {
         props.setUserCompleted(true)
     }, [])
-    
+
     return (<>
-        <div className="absolute text-sm l-0">{props.index}</div>
+        <div className="w-100 text-left  text-sm l-0">{props.index + 1}</div>
         <p>
             {data.content}
         </p>

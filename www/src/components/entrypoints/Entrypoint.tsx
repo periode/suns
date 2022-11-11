@@ -12,6 +12,8 @@ import PublicView from "./PublicView";
 import NotFound from "../../NotFound";
 import AudioRecorder from "../modules/AudioRecorder";
 import IntroVideo from "../modules/IntroVideo";
+import { EntrypointInterface } from "../../App";
+import FinalFirstTimes from "../modules/FinalFirstTimes";
 
 export enum ENTRYPOINT_STATUS {
     EntrypointPending = "pending",
@@ -138,7 +140,6 @@ const Entrypoint = (props: any) => {
     }
 
     const submitUploads = async (files: Array<File>) => {
-        console.log(uploads);
         const endpoint = new URL(`uploads/`, process.env.REACT_APP_API_URL)
 
         if (session.token === "")
@@ -185,8 +186,15 @@ const Entrypoint = (props: any) => {
             console.log(`successfully completed entrypoint!`);
             //-- todo here parse the response to assess the status of the entrypoint (open, pending)
             const updated = await res.json()
-            setData({ ...data, current_module: updated.current_module, status_module: updated.status_module })
-            if(updated.current_module === data.current_module)
+
+            //-- first check if we're done with the whole entrypoint
+            if(updated.status === ENTRYPOINT_STATUS.EntrypointCompleted)
+                navigate(0)
+            else
+                setData({ ...data, current_module: updated.current_module, status_module: updated.status_module })
+
+            //-- check if we're done with the module
+            if (updated.current_module === data.current_module)
                 setHasCompleted(true) //-- we have a partial state
             else
                 setHasCompleted(false) //-- we move on to the next module
@@ -195,11 +203,11 @@ const Entrypoint = (props: any) => {
         }
     }
 
-    const parseModule = (index: number, data: any) => {
+    const parseModule = (index: number, data: any, ep?: IEntrypoint) => {
         switch (data.type) {
             case "upload_recording":
                 return (
-                    <AudioRecorder index={index} data={data} hasCompleted={hasCompleted} setUploads={setUploads} setUserCompleted={setUserCompleted} />
+                    <AudioRecorder index={index} data={data} hasCompleted={hasCompleted} setUploads={setUploads} setUserCompleted={setUserCompleted} input={ep} />
                 )
             case "intro":
                 return (
@@ -234,6 +242,10 @@ const Entrypoint = (props: any) => {
                         </p>
                     </>
                 )
+            case "final_first_times":
+                return (
+                    <FinalFirstTimes data={ep}/>
+                )
             default:
                 return (
                     <>
@@ -248,18 +260,16 @@ const Entrypoint = (props: any) => {
 
     const getModules = () => {
         let mods = []
-
         //-- if all modules are displayed and the status of the entrypoint is completed, we return the public view
-        if(data.status === ENTRYPOINT_STATUS.EntrypointCompleted){
-            console.log("all modules done!", data.status, data.status_module);
-            mods.push(<div>The entrypoints are done!</div>)
+        if (data.status === ENTRYPOINT_STATUS.EntrypointCompleted) {
+            mods.push(<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}`} className="border border-amber-800 border-3 m-1 p-1">{parseModule(data.current_module, data.modules[data.current_module], data)}</div>)
 
             return mods
         }
-        
+
         for (let i = 0; i <= data.current_module; i++) {
             const m = data.modules[i]
-            mods.push(<div key={`mod-${data.name.split(' ').join('-')}-${i}`} className="border border-amber-800 border-3 m-1 p-1">{parseModule(i, m)}</div>)
+            mods.push(<div key={`mod-${data.name.split(' ').join('-')}-${i}`} className="border border-amber-800 border-3 m-1 p-1">{parseModule(i, m, data)}</div>)
         }
 
         if (hasCompleted)
@@ -295,30 +305,30 @@ const Entrypoint = (props: any) => {
                     <EntrypointCountdown endDate="Jan 5, 2024 15:37:25" />
                     <EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
                     <div className="w-full h-full">
-                            {
-                                isOwned ?
-                                    getModules()
-                                    : data.users.length < data.max_users ? <>
-                                        {parseModule(0, data.modules[0])}
-                                    </> :
-                                        <>
-                                            <PublicView entrypoint={data} />
-                                        </>
-                            }
-                   </div>
-                   <div className="h-12
+                        {
+                            isOwned || data.status === ENTRYPOINT_STATUS.EntrypointCompleted ?
+                                getModules()
+                                : data.users.length < data.max_users ? <>
+                                    {parseModule(0, data.modules[0])}
+                                </> :
+                                    <>
+                                        <PublicView entrypoint={data} />
+                                    </>
+                        }
+                    </div>
+                    <div className="h-12
                             pl-4 pr-4
                             relative
                             flex items-center justify-between
                             border-t border-amber-800">
-                            <EntrypointActions
-                                entryPointData={data}
-                                session={session}
-                                isOwner={isOwned}
-                                claimEntryPointFunction={ claimEntrypoint }
-                                completeModuleFunction={completeModule}
-                                isUserComplete={isUserComplete}
-                            />
+                        <EntrypointActions
+                            entryPointData={data}
+                            session={session}
+                            isOwner={isOwned}
+                            claimEntryPointFunction={claimEntrypoint}
+                            completeModuleFunction={completeModule}
+                            isUserComplete={isUserComplete}
+                        />
                     </div>
                 </div>
             </div>

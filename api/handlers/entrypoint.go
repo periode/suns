@@ -134,7 +134,6 @@ func ProgressEntrypoint(c echo.Context) error {
 			ep.StatusModule = models.EntrypointOpen
 		} else { //-- if only one, we set the status as pending
 			mod.Status = models.ModulePartial
-			ep.StatusModule = models.EntrypointPending
 			zero.Warn("An entrypoint has had some progress! We should send an email")
 		}
 
@@ -145,7 +144,7 @@ func ProgressEntrypoint(c echo.Context) error {
 	}
 
 	//-- check for entrypoint completion
-	if ep.CurrentModule == len(ep.Modules) {
+	if ep.CurrentModule == len(ep.Modules)-1 {
 		zero.Info("Entrypoint has been completed!")
 		ep.Status = models.EntrypointCompleted
 	}
@@ -191,12 +190,15 @@ func ClaimEntrypoint(c echo.Context) error {
 		return c.String(http.StatusNotFound, "We couldn't find the User to update.")
 	}
 
+	if len(entrypoint.Users) == entrypoint.MaxUsers-1 {
+		entrypoint.Status = models.EntrypointPending
+		entrypoint.CurrentModule += 1
+	}
+
 	updated, err := models.ClaimEntrypoint(&entrypoint, &user)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error updating the Entrypoint. Please try again later.")
 	}
-
-	//-- here claim entrypoint
 
 	return c.JSON(http.StatusOK, updated)
 }

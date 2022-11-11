@@ -8,6 +8,7 @@ var recorder: any
 
 const AudioRecorder = (props: any) => {
     const data = props.data
+    const uploads = props.input.modules[props.index - 1].uploads ? props.input.modules[props.index - 1].uploads : null
     const [hasCompleted, setHasCompleted] = useState(props.data.status)
     const session = getSession()
     const [recordingState, setRecordingState] = useState("idle")
@@ -78,26 +79,46 @@ const AudioRecorder = (props: any) => {
         props.setUploads([])
     }
 
+    const getUploadedMedia = () => {
+        if (data.uploads.length === 0) return (<></>)
+        const session = getSession()
+        if (data.uploads[0].user_uuid === session.user.uuid)
+            return (<audio src={`${process.env.REACT_APP_API_URL}/static/${data.uploads[0].url}`} controls></audio>)
+
+        if (data.uploads.length === 1) return (<></>)
+
+        if (data.uploads[1].user_uuid === session.user.uuid)
+            return (<audio src={`${process.env.REACT_APP_API_URL}/static/${data.uploads[1].url}`} controls></audio>)
+        return (<></>)
+    }
+
+    const getInputPrompt = () => {
+        if (uploads === null || uploads.length === 0) return (<></>)
+
+        if (uploads[0].user_uuid !== session.user.uuid)
+            return (<audio src={`${process.env.REACT_APP_API_URL}/static/${uploads[0].url}`} controls></audio>)
+
+        if (uploads.length === 1) return (<></>)
+
+        if (uploads[1].user_uuid !== session.user.uuid)
+            return (<audio src={`${process.env.REACT_APP_API_URL}/static/${uploads[1].url}`} controls></audio>)
+
+        return (<>Could not find proper prompt</>)
+    }
+
     return (
         <div key={`mod-${data.name}`}>
-            <h3>{data.name}</h3>
+            <div className="w-100 text-left text-sm l-0">{props.index + 1}</div>
             <p>
                 {data.content}
             </p>
             <div>
-                <h4>Audio recorder</h4>
-                {
-                    data.uploads.length === 1 && data.uploads[0].user_uuid !== session.user.uuid ?
-                        <div>
-                            <h3>Listen to the audio of your partner</h3>
-                            <audio src={`${process.env.REACT_APP_API_URL}/static/${data.uploads[0].url}`} controls></audio>
-                        </div>
-                        : <></>
-                }
+                {getUploadedMedia()}
+                {getInputPrompt()}
                 <div>
-                    {hasCompleted !== "completed" && recordingState === "idle" ? <button className="bg-amber-800 text-white p-1 m-1" onClick={startRecording}>record</button> : <></>}
-                    {hasCompleted !== "completed" && recordingState === "recording" ? <button className="bg-amber-800 text-white p-1 m-1" onClick={stopRecording}>stop</button> : <></>}
-                    {hasCompleted !== "completed" && recordingState === "done" ? <button className="bg-amber-800 text-white p-1 m-1" onClick={resetRecording}>restart</button> : <></>}
+                    {data.status !== "completed" && recordingState === "idle" ? <button className="bg-amber-800 text-white p-1 m-1" onClick={startRecording}>record</button> : <></>}
+                    {data.status !== "completed" && recordingState === "recording" ? <button className="bg-amber-800 text-white p-1 m-1" onClick={stopRecording}>stop</button> : <></>}
+                    {data.status !== "completed" && recordingState === "done" ? <button className="bg-amber-800 text-white p-1 m-1" onClick={resetRecording}>restart</button> : <></>}
                 </div>
 
                 <p>{hasCompleted !== "completed" ? recordingMessage : ""}</p>
