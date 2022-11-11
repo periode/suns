@@ -4,8 +4,9 @@ import { FiShare2, FiArrowRight } from "react-icons/fi"
 interface EntrypointActionsProps {
 	entryPointData: IEntrypoint,
 	isOwner : boolean,
+	session : Object,
 	claimEntryPointFunction : () => {},
-	completeModuleFunction : () => {},
+	completeModuleFunction : (data : any, session : Object) => Promise<void>,
 }
 
 function EntrypointActions({
@@ -13,6 +14,7 @@ function EntrypointActions({
 	claimEntryPointFunction,
 	completeModuleFunction,
 	isOwner,
+	session
 } : EntrypointActionsProps) {
 
 	const copyToClipboard = (text : string) => {
@@ -44,7 +46,7 @@ function EntrypointActions({
 							cursor-pointer
 							flex items-center
 							gap-1"
-                onClick={ completeModuleFunction }>
+                onClick={ () => completeModuleFunction(entryPointData, session) }>
 			<p>Next</p>
             <FiArrowRight className="text-xs"/>
         </div>
@@ -54,7 +56,7 @@ function EntrypointActions({
 							cursor-pointer
 							flex items-center
 							gap-1"
-				onClick={ completeModuleFunction }>
+				onClick={ () => completeModuleFunction(entryPointData, session) }>
 			<p>Finish</p>
 			<FiArrowRight className="text-xs"/>
 		</div>
