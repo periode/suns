@@ -42,7 +42,8 @@ export interface IEntrypoint {
         content: String,
         type: String,
         media: Object,
-        uploads: Array<Object>
+        uploads: Array<Object>,
+        status: string,
     }],
     users: Array<IUser>
     max_users: number,
@@ -183,6 +184,10 @@ const Entrypoint = (props: any) => {
             //-- todo here parse the response to assess the status of the entrypoint (open, pending)
             const updated = await res.json()
             setData({ ...data, current_module: updated.current_module, status_module: updated.status_module })
+            if(updated.current_module === data.current_module)
+                setHasCompleted(true) //-- we have a partial state
+            else
+                setHasCompleted(false) //-- we move on to the next module
         } else {
             console.warn('error', res.status)
         }
@@ -192,7 +197,7 @@ const Entrypoint = (props: any) => {
         switch (data.type) {
             case "upload_recording":
                 return (
-                    <AudioRecorder data={data} setUploads={setUploads} />
+                    <AudioRecorder data={data} hasCompleted={hasCompleted} setUploads={setUploads} />
                 )
             case "intro":
                 return (
@@ -258,7 +263,7 @@ const Entrypoint = (props: any) => {
         }
 
         if (hasCompleted)
-            mods.push(<div className="border border-amber-800 border-3 m-1 p-1">T'as fini frère</div>)
+            mods.push(<div className="border border-amber-800 border-3 m-1 p-1">You have completed this module! Please wait for your partner to complete it as well.</div>)
 
         return mods
     }
