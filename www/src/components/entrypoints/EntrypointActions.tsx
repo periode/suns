@@ -20,6 +20,13 @@ function EntrypointActions({
 	const copyToClipboard = (text : string) => {
 		window.prompt("You can share this link: ", text);
 	}
+
+	console.log(entryPointData.status, isOwner);
+	
+
+	const handleNext = () => {
+		completeModuleFunction(entryPointData, session)
+	}
 	
 	const ShareButton = 
 		<div    className=" font-mono
@@ -46,7 +53,7 @@ function EntrypointActions({
 							cursor-pointer
 							flex items-center
 							gap-1"
-                onClick={ () => completeModuleFunction(entryPointData, session) }>
+                onClick={ handleNext }>
 			<p>Next</p>
             <FiArrowRight className="text-xs"/>
         </div>
@@ -56,7 +63,7 @@ function EntrypointActions({
 							cursor-pointer
 							flex items-center
 							gap-1"
-				onClick={ () => completeModuleFunction(entryPointData, session) }>
+				onClick={ handleNext }>
 			<p>Finish</p>
 			<FiArrowRight className="text-xs"/>
 		</div>
