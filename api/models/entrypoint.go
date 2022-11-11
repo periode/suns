@@ -95,7 +95,7 @@ func GetEntrypoint(uuid uuid.UUID, user_uuid uuid.UUID) (Entrypoint, error) {
 
 func GetEntrypointBySlug(slug string, user_uuid uuid.UUID) (Entrypoint, error) {
 	var entry Entrypoint
-	result := db.Where("slug = ?", slug).First(&entry)
+	result := db.Preload("Modules").Preload("Users").Where("slug = ?", slug).First(&entry)
 	if result.Error != nil {
 		return entry, result.Error
 	}
@@ -135,8 +135,13 @@ func ClaimEntrypoint(entry *Entrypoint, user *User) (Entrypoint, error) {
 	if len(entry.Users) == entry.MaxUsers {
 		entry.PartnerStatus = PartnerFull
 	}
-	result, err := UpdateEntrypoint(entry.UUID, user.UUID, entry)
-	return result, err
+	_, err = UpdateEntrypoint(entry.UUID, user.UUID, entry)
+	if err != nil {
+		return *entry, err
+	}
+
+	updated, err := GetEntrypoint(entry.UUID, user.UUID)
+	return updated, err
 }
 
 func DeleteEntrypoint(uuid uuid.UUID, user_uuid uuid.UUID) (Entrypoint, error) {

@@ -144,6 +144,12 @@ func ProgressEntrypoint(c echo.Context) error {
 		}
 	}
 
+	//-- check for entrypoint completion
+	if ep.CurrentModule == len(ep.Modules) {
+		zero.Info("Entrypoint has been completed!")
+		ep.Status = models.EntrypointCompleted
+	}
+
 	updated, err := models.UpdateEntrypoint(uid, user_uuid, &ep)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error updating the Entrypoint. Please try again later.")

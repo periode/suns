@@ -257,9 +257,18 @@ const Entrypoint = (props: any) => {
 
     const getModules = () => {
         let mods = []
+
+        //-- if all modules are displayed and the status of the entrypoint is completed, we return the public view
+        if(data.status === ENTRYPOINT_STATUS.EntrypointCompleted){
+            console.log("all modules done!", data.status, data.status_module);
+            mods.push(<div>The entrypoints are done!</div>)
+
+            return mods
+        }
+        
         for (let i = 0; i <= data.current_module; i++) {
             const m = data.modules[i]
-            mods.push(<div key={`mod-${data.name}`} className="border border-amber-800 border-3 m-1 p-1">{parseModule(i, m)}</div>)
+            mods.push(<div key={`mod-${data.name.split(' ').join('-')}-${i}`} className="border border-amber-800 border-3 m-1 p-1">{parseModule(i, m)}</div>)
         }
 
         if (hasCompleted)

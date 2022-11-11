@@ -3,10 +3,10 @@ import { FiShare2, FiArrowRight } from "react-icons/fi"
 
 interface EntrypointActionsProps {
 	entryPointData: IEntrypoint,
-	isOwner : boolean,
-	session : Object,
-	claimEntryPointFunction : () => {},
-	completeModuleFunction : (data : any, session : Object) => Promise<void>,
+	isOwner: boolean,
+	session: Object,
+	claimEntryPointFunction: () => {},
+	completeModuleFunction: (data: any, session: Object) => Promise<void>,
 }
 
 function EntrypointActions({
@@ -15,50 +15,55 @@ function EntrypointActions({
 	completeModuleFunction,
 	isOwner,
 	session
-} : EntrypointActionsProps) {
+}: EntrypointActionsProps) {
 
-	const copyToClipboard = (text : string) => {
+	const copyToClipboard = (text: string) => {
 		window.prompt("You can share this link: ", text);
 	}
-	
-	const ShareButton = 
-		<div    className=" font-mono
+
+	const handleNext = () => {
+		console.log('clicking next')
+		// completeModuleFunction(entryPointData, session)
+	}
+
+	const ShareButton =
+		<div className=" font-mono
 							cursor-pointer
 							flex items-center
 							gap-1"
-                onClick={ () => { copyToClipboard( window.location.href ) } }>
-            <FiShare2 className="text-xs"/>
+			onClick={() => { copyToClipboard(window.location.href) }}>
+			<FiShare2 className="text-xs" />
 			<p>Share</p>
-        </div>
+		</div>
 
 	const StartButton =
-		<div    className=" font-mono
+		<div className=" font-mono
 							cursor-pointer
 							flex items-center
 							gap-1"
-                onClick={ claimEntryPointFunction }>
+			onClick={claimEntryPointFunction}>
 			<p>Start</p>
-            <FiArrowRight className="text-xs"/>
-        </div>
+			<FiArrowRight className="text-xs" />
+		</div>
 
 	const NextButton =
-		<div    className=" font-mono
+		<button className=" font-mono
 							cursor-pointer
 							flex items-center
 							gap-1"
-                onClick={ () => completeModuleFunction(entryPointData, session) }>
+			onClick={handleNext}>
 			<p>Next</p>
-            <FiArrowRight className="text-xs"/>
-        </div>
+			<FiArrowRight className="text-xs" />
+		</button>
 
 	const FinishButton =
-		<div	className=" font-mono
+		<div className=" font-mono
 							cursor-pointer
 							flex items-center
 							gap-1"
-				onClick={ () => completeModuleFunction(entryPointData, session) }>
+			onClick={handleNext}>
 			<p>Finish</p>
-			<FiArrowRight className="text-xs"/>
+			<FiArrowRight className="text-xs" />
 		</div>
 
 	const Step = 
@@ -66,19 +71,17 @@ function EntrypointActions({
 					flex items-center justify-center
 					text-center  font-mono
 					opacity-50">
-			{ entryPointData.current_module } / { entryPointData.modules.length }
-	</p>
+			{entryPointData.current_module} / {entryPointData.modules.length}
+		</p>
 
 	const rightButtonDisplay = () => {
-		if (entryPointData.status === ENTRYPOINT_STATUS.EntrypointPending && isOwner)
-		{
+		if (entryPointData.status === ENTRYPOINT_STATUS.EntrypointPending && isOwner) {
 			if (entryPointData.current_module === entryPointData.modules.length)
 				return FinishButton
 			else
 				return NextButton
-		}	
-		else
-		{
+		}
+		else {
 			if (entryPointData.status === ENTRYPOINT_STATUS.EntrypointOpen)
 				return StartButton
 			else
