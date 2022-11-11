@@ -62,8 +62,7 @@ function EntrypointActions({
 		</div>
 
 	const Step = 
-	<p className="absolute 
-					w-full h-full
+	<p className=" 	w-full h-full
 					flex items-center justify-center
 					text-center  font-mono
 					opacity-50">
@@ -89,14 +88,19 @@ function EntrypointActions({
 
 
 	return ( 
-	<>
+	<div className="w-full flex items-center justify-between">
+		<div className="w-16">
+			
+			{ ShareButton } 
+		</div>
 		{	
 			entryPointData.status === ENTRYPOINT_STATUS.EntrypointPending && isOwner &&
 				Step 
 		}
-		{ ShareButton } 
-		{ rightButtonDisplay() }
-	</> 
+		<div className="w-16">
+			{ rightButtonDisplay() }
+		</div>
+	</div> 
 	);
 }
 

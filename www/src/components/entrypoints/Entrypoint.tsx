@@ -316,7 +316,7 @@ const Entrypoint = (props: any) => {
                                 session={session}
                                 isOwner={isOwned}
                                 claimEntryPointFunction={ claimEntrypoint }
-                                completeModuleFunction={completeModule}
+                                completeModuleFunction={ completeModule }
                             />
                     </div>
                 </div>
