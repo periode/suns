@@ -1,7 +1,8 @@
 import { useEffect } from "react"
+import { IModule } from "../../utils/types"
 
 const IntroVideo = (props: any) => {
-    const data = props.data
+    const data = props.data as IModule
 
     useEffect(() => {
         props.setUserCompleted(true)

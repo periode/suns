@@ -1,13 +1,13 @@
-import { ENTRYPOINT_STATUS, IEntrypoint, IUser, PARTNER_STATUS } from "../../utils/types"
+import { ENTRYPOINT_STATUS, IEntrypoint, ISession, IUser, PARTNER_STATUS } from "../../utils/types"
 import { FiShare2, FiArrowRight } from "react-icons/fi"
 
 interface EntrypointActionsProps {
 	entryPointData: IEntrypoint,
 	isOwner: boolean,
-	session: Object,
+	session: ISession,
 	isUserComplete: boolean,
 	claimEntryPointFunction: () => {},
-	completeModuleFunction: (data: any, session: Object) => Promise<void>,
+	completeModuleFunction: (data: any, session: ISession) => Promise<void>,
 }
 
 function EntrypointActions({

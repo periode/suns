@@ -1,4 +1,4 @@
-import { IUser, PARTNER_STATUS } from "./Entrypoint";
+import { IUser, PARTNER_STATUS } from "../../utils/types";
 import { FiUsers, FiUser  } from "react-icons/fi"
 
 interface EntrypointPartnersProps {

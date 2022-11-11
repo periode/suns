@@ -1,15 +1,23 @@
-import { useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { getSession } from "../../utils/auth"
+import { IEntrypoint, IModule, IUpload } from "../../utils/types"
 
 const MediaStreamRecorder = require('msr')
+
+interface AudioRecorderProps {
+    index: number,
+    mod: IModule,
+    ep: IEntrypoint,
+    setUploads: Dispatch<SetStateAction<File[]>>,
+    setUserCompleted: Dispatch<SetStateAction<boolean>>
+}
 
 const MAX_RECORD_TIME = 180
 var recorder: any
 
-const AudioRecorder = (props: any) => {
-    const data = props.data
-    const uploads = props.input.modules[props.index - 1].uploads ? props.input.modules[props.index - 1].uploads : null
-    const [hasCompleted, setHasCompleted] = useState(props.data.status)
+const AudioRecorder = ({index, mod, ep, setUploads, setUserCompleted}:AudioRecorderProps) => {
+    const uploads = ep.modules[index - 1].uploads ? ep.modules[index - 1].uploads : null
+    const [hasCompleted, setHasCompleted] = useState(mod.status)
     const session = getSession()
     const [recordingState, setRecordingState] = useState("idle")
     const [recordingMessage, setRecordingMessage] = useState("ready to record")
@@ -17,7 +25,7 @@ const AudioRecorder = (props: any) => {
     const [blobURL, setBlobURL] = useState("")
 
     useEffect(() => {
-        props.setUserCompleted(false)
+        setUserCompleted(false)
     }, [])
 
     var audioBlob = {} as Blob
@@ -67,8 +75,8 @@ const AudioRecorder = (props: any) => {
         setRecordingState("done")
         setBlobURL(URL.createObjectURL(audioBlob as Blob))
 
-        props.setUploads([new File([audioBlob], "recording.wav")])
-        props.setUserCompleted(true)
+        setUploads([new File([audioBlob], "recording.wav")])
+        setUserCompleted(true)
     }
 
     const resetRecording = () => {
@@ -76,19 +84,19 @@ const AudioRecorder = (props: any) => {
         setBlobURL("")
         setRecordingMessage("complete the module or start again")
         setRecordingState("idle")
-        props.setUploads([])
+        setUploads([])
     }
 
     const getUploadedMedia = () => {
-        if (data.uploads.length === 0) return (<></>)
+        if (mod.uploads.length === 0) return (<></>)
         const session = getSession()
-        if (data.uploads[0].user_uuid === session.user.uuid)
-            return (<audio src={`${process.env.REACT_APP_API_URL}/static/${data.uploads[0].url}`} controls></audio>)
+        if (mod.uploads[0].user_uuid === session.user.uuid)
+            return (<audio src={`${process.env.REACT_APP_API_URL}/static/${mod.uploads[0].url}`} controls></audio>)
 
-        if (data.uploads.length === 1) return (<></>)
+        if (mod.uploads.length === 1) return (<></>)
 
-        if (data.uploads[1].user_uuid === session.user.uuid)
-            return (<audio src={`${process.env.REACT_APP_API_URL}/static/${data.uploads[1].url}`} controls></audio>)
+        if (mod.uploads[1].user_uuid === session.user.uuid)
+            return (<audio src={`${process.env.REACT_APP_API_URL}/static/${mod.uploads[1].url}`} controls></audio>)
         return (<></>)
     }
 
@@ -107,18 +115,18 @@ const AudioRecorder = (props: any) => {
     }
 
     return (
-        <div key={`mod-${data.name}`}>
-            <div className="w-100 text-left text-sm l-0">{props.index + 1}</div>
+        <div key={`mod-${mod.name}`}>
+            <div className="w-100 text-left text-sm l-0">{index + 1}</div>
             <p>
-                {data.content}
+                {mod.content}
             </p>
             <div>
                 {getUploadedMedia()}
                 {getInputPrompt()}
                 <div>
-                    {data.status !== "completed" && recordingState === "idle" ? <button className="bg-amber-800 text-white p-1 m-1" onClick={startRecording}>record</button> : <></>}
-                    {data.status !== "completed" && recordingState === "recording" ? <button className="bg-amber-800 text-white p-1 m-1" onClick={stopRecording}>stop</button> : <></>}
-                    {data.status !== "completed" && recordingState === "done" ? <button className="bg-amber-800 text-white p-1 m-1" onClick={resetRecording}>restart</button> : <></>}
+                    {mod.status !== "completed" && recordingState === "idle" ? <button className="bg-amber-800 text-white p-1 m-1" onClick={startRecording}>record</button> : <></>}
+                    {mod.status !== "completed" && recordingState === "recording" ? <button className="bg-amber-800 text-white p-1 m-1" onClick={stopRecording}>stop</button> : <></>}
+                    {mod.status !== "completed" && recordingState === "done" ? <button className="bg-amber-800 text-white p-1 m-1" onClick={resetRecording}>restart</button> : <></>}
                 </div>
 
                 <p>{hasCompleted !== "completed" ? recordingMessage : ""}</p>

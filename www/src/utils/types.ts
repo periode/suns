@@ -33,7 +33,14 @@ export interface IEntrypoint {
     users: Array<IUser>
     max_users: number,
     user_completed: Array<number>,
-    partner_status: PARTNER_STATUS
+    partner_status: PARTNER_STATUS,
+    lat: number,
+    lng: number
+}
+
+export interface IUpload {
+    user_uuid: string,
+    url: string,
 }
 
 export interface IModule {
@@ -41,9 +48,12 @@ export interface IModule {
     name: String,
     content: String,
     type: String,
-    media: Object,
-    uploads: Array<Object>,
+    uploads: Array<IUpload>,
     status: string,
+    media: {
+        type: string,
+        url: string,
+    }
 }
 
 export interface IUser {

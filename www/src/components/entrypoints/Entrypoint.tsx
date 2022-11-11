@@ -13,7 +13,7 @@ import NotFound from "../../NotFound";
 import AudioRecorder from "../modules/AudioRecorder";
 import IntroVideo from "../modules/IntroVideo";
 import FinalFirstTimes from "../modules/FinalFirstTimes";
-import { ENTRYPOINT_STATUS, IEntrypoint } from "../../utils/types";
+import { ENTRYPOINT_STATUS, IEntrypoint, IModule, ISession } from "../../utils/types";
 
 const Entrypoint = (props: any) => {
     const params = useParams()
@@ -92,7 +92,6 @@ const Entrypoint = (props: any) => {
         };
         const res = await fetch(endpoint, options)
         if (res.ok) {
-            console.log(`successfully claimed entrypoint!`);
             const updated = await res.json()
             setData(updated)
         } else {
@@ -126,11 +125,11 @@ const Entrypoint = (props: any) => {
 
     }
 
-    const completeModule = async (data: any, session: any) => {
+    const completeModule = async (ep: IEntrypoint, session: ISession) => {
         if (uploads.length > 0)
             submitUploads(uploads)
 
-        const endpoint = new URL(`entrypoints/${data.uuid}/progress`, process.env.REACT_APP_API_URL)
+        const endpoint = new URL(`entrypoints/${ep.uuid}/progress`, process.env.REACT_APP_API_URL)
 
         if (session.token === "")
             Navigate({ to: "/auth" })
@@ -151,10 +150,10 @@ const Entrypoint = (props: any) => {
             if(updated.status === ENTRYPOINT_STATUS.EntrypointCompleted)
                 navigate(0)
             else
-                setData({ ...data, current_module: updated.current_module, status_module: updated.status_module })
+                setData({ ...ep, current_module: updated.current_module, status_module: updated.status_module })
 
             //-- check if we're done with the module
-            if (updated.current_module === data.current_module)
+            if (updated.current_module === ep.current_module)
                 setHasCompleted(true) //-- we have a partial state
             else
                 setHasCompleted(false) //-- we move on to the next module
@@ -163,22 +162,24 @@ const Entrypoint = (props: any) => {
         }
     }
 
-    const parseModule = (index: number, data: any, ep?: IEntrypoint) => {
-        switch (data.type) {
+    const parseModule = (index: number, ep: IEntrypoint) => {
+        const mod = ep.modules[index]
+
+        switch (mod.type) {
             case "upload_recording":
                 return (
-                    <AudioRecorder index={index} data={data} hasCompleted={hasCompleted} setUploads={setUploads} setUserCompleted={setUserCompleted} input={ep} />
+                    <AudioRecorder index={index} mod={mod} ep={ep} setUploads={setUploads} setUserCompleted={setUserCompleted} />
                 )
             case "intro":
                 return (
-                    <IntroVideo index={index} data={data} hasCompleted={hasCompleted} setUserCompleted={setUserCompleted} />
+                    <IntroVideo index={index} data={mod} hasCompleted={hasCompleted} setUserCompleted={setUserCompleted} />
                 )
             case "text":
                 return (
                     <>
                         <div className="absolute text-sm l-0">{index}</div>
                         <p>
-                            {data.content}
+                            {mod.content}
                         </p>
                     </>
                 )
@@ -187,7 +188,7 @@ const Entrypoint = (props: any) => {
                     <>
                         <div className="absolute text-sm l-0">{index}</div>
                         <p>
-                            {data.content}
+                            {mod.content}
                         </p>
                         <p>This is where we should be displaying the media that was previously uploaded by the users</p>
                     </>
@@ -198,7 +199,7 @@ const Entrypoint = (props: any) => {
                         <div className="absolute text-sm l-0">{index}</div>
                         <p>This is the final module, should be made public</p>
                         <p>
-                            {data.content}
+                            {mod.content}
                         </p>
                     </>
                 )
@@ -222,14 +223,13 @@ const Entrypoint = (props: any) => {
         let mods = []
         //-- if all modules are displayed and the status of the entrypoint is completed, we return the public view
         if (data.status === ENTRYPOINT_STATUS.EntrypointCompleted) {
-            mods.push(<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}`} className="border border-amber-800 border-3 m-1 p-1">{parseModule(data.current_module, data.modules[data.current_module], data)}</div>)
+            mods.push(<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}`} className="border border-amber-800 border-3 m-1 p-1">{parseModule(data.current_module, data)}</div>)
 
             return mods
         }
 
         for (let i = 0; i <= data.current_module; i++) {
-            const m = data.modules[i]
-            mods.push(<div key={`mod-${data.name.split(' ').join('-')}-${i}`} className="border border-amber-800 border-3 m-1 p-1">{parseModule(i, m, data)}</div>)
+            mods.push(<div key={`mod-${data.name.split(' ').join('-')}-${i}`} className="border border-amber-800 border-3 m-1 p-1">{parseModule(i, data)}</div>)
         }
 
         if (hasCompleted)
@@ -269,7 +269,7 @@ const Entrypoint = (props: any) => {
                             isOwned || data.status === ENTRYPOINT_STATUS.EntrypointCompleted ?
                                 getModules()
                                 : data.users.length < data.max_users ? <>
-                                    {parseModule(0, data.modules[0])}
+                                    {parseModule(0, data)}
                                 </> :
                                     <>
                                         <PublicView entrypoint={data} />
