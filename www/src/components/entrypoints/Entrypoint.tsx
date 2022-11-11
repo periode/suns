@@ -184,7 +184,6 @@ const Entrypoint = (props: any) => {
         const res = await fetch(endpoint, options)
         if (res.ok) {
             console.log(`successfully completed entrypoint!`);
-            //-- todo here parse the response to assess the status of the entrypoint (open, pending)
             const updated = await res.json()
 
             //-- first check if we're done with the whole entrypoint
