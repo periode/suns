@@ -322,9 +322,10 @@ const Entrypoint = (props: any) => {
                             border-t border-amber-800">
                             <EntrypointActions
                                 entryPointData={data}
+                                session={session}
                                 isOwner={isOwned}
                                 claimEntryPointFunction={ claimEntrypoint }
-                                completeModuleFunction={() => completeModule(data, session)}
+                                completeModuleFunction={completeModule}
                             />
                     </div>
                 </div>
