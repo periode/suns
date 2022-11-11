@@ -196,6 +196,8 @@ func ClaimEntrypoint(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "Error updating the Entrypoint. Please try again later.")
 	}
 
+	//-- here claim entrypoint
+
 	return c.JSON(http.StatusOK, updated)
 }
 

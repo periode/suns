@@ -23,13 +23,6 @@
           status: "listed"
           type: "upload_recording"
           content: "Window with audio recording appears. Permission to use the user's microphone. Record yourself narrating the memory. Start with the sentence, \"For The First Time...\" Be sure your computer microphone is turned on; your voice will be recorded and laid over a background music score. English is a prefered language for a global audience. Feel free to speak in any kind of English you prefer. (max 3 minutes)"
-        - name: "For the first time - 3"
-          status: "listed"
-          content: "This is the third content"
-          type: "media_display"
-          media:
-              url: "https://static.enframed.net/vertiges/proletaire.mp3"
-              user: "audio"
         - name: "For the first time - 4"
           status: "listed"
           content: "This is the final countdown"

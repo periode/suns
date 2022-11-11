@@ -11,6 +11,7 @@ import EntrypointCountdown from "./EntrypointCountdown";
 import PublicView from "./PublicView";
 import NotFound from "../../NotFound";
 import AudioRecorder from "../modules/AudioRecorder";
+import IntroVideo from "../modules/IntroVideo";
 
 export enum ENTRYPOINT_STATUS {
     EntrypointPending = "pending",
@@ -60,6 +61,7 @@ const Entrypoint = (props: any) => {
     const [isOwned, setOwned] = useState(false)
     const [hasCompleted, setHasCompleted] = useState(false)
     const [uploads, setUploads] = useState(Array<File>)
+    const [isUserComplete, setUserCompleted] = useState(false)
 
     useEffect(() => {
         if (data === undefined)
@@ -197,22 +199,11 @@ const Entrypoint = (props: any) => {
         switch (data.type) {
             case "upload_recording":
                 return (
-                    <AudioRecorder data={data} hasCompleted={hasCompleted} setUploads={setUploads} />
+                    <AudioRecorder index={index} data={data} hasCompleted={hasCompleted} setUploads={setUploads} setUserCompleted={setUserCompleted} />
                 )
             case "intro":
                 return (
-                    <>
-                        <div className="absolute text-sm l-0">{index}</div>
-                        <p>
-                            {data.content}
-                        </p>
-                        {data.media ?
-                            data.media.type === "video" ?
-                                <iframe title={data.media.type + "title"} src={data.media.url} width="640" height="360"></iframe>
-                                : <audio src={data.media.url}></audio>
-                            : <></>
-                        }
-                    </>
+                    <IntroVideo index={index} data={data} hasCompleted={hasCompleted} setUserCompleted={setUserCompleted} />
                 )
             case "text":
                 return (
@@ -326,6 +317,7 @@ const Entrypoint = (props: any) => {
                                 isOwner={isOwned}
                                 claimEntryPointFunction={ claimEntrypoint }
                                 completeModuleFunction={completeModule}
+                                isUserComplete={isUserComplete}
                             />
                     </div>
                 </div>

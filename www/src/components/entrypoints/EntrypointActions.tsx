@@ -5,6 +5,7 @@ interface EntrypointActionsProps {
 	entryPointData: IEntrypoint,
 	isOwner: boolean,
 	session: Object,
+	isUserComplete: boolean,
 	claimEntryPointFunction: () => {},
 	completeModuleFunction: (data: any, session: Object) => Promise<void>,
 }
@@ -14,57 +15,53 @@ function EntrypointActions({
 	claimEntryPointFunction,
 	completeModuleFunction,
 	isOwner,
-	session
+	session,
+	isUserComplete
 }: EntrypointActionsProps) {
 
 	const copyToClipboard = (text: string) => {
 		window.prompt("You can share this link: ", text);
 	}
 
-	const handleNext = () => {
-		console.log('clicking next')
-		// completeModuleFunction(entryPointData, session)
-	}
-
 	const ShareButton =
-		<div className=" font-mono
+		<button className=" font-mono
 							cursor-pointer
 							flex items-center
 							gap-1"
 			onClick={() => { copyToClipboard(window.location.href) }}>
 			<FiShare2 className="text-xs" />
 			<p>Share</p>
-		</div>
+		</button>
 
 	const StartButton =
-		<div className=" font-mono
+		<button className=" font-mono
 							cursor-pointer
 							flex items-center
 							gap-1"
 			onClick={claimEntryPointFunction}>
 			<p>Start</p>
 			<FiArrowRight className="text-xs" />
-		</div>
+		</button>
 
 	const NextButton =
-		<button className=" font-mono
+		<button className={`font-mono
 							cursor-pointer
 							flex items-center
-							gap-1"
-			onClick={handleNext}>
+							gap-1 ${isUserComplete ? '': 'opacity-50'}`}
+			onClick={() => completeModuleFunction(entryPointData, session)} disabled={!isUserComplete}>
 			<p>Next</p>
 			<FiArrowRight className="text-xs" />
 		</button>
 
 	const FinishButton =
-		<div className=" font-mono
+		<button className=" font-mono
 							cursor-pointer
 							flex items-center
 							gap-1"
-			onClick={handleNext}>
+			onClick={() => completeModuleFunction(entryPointData, session)}>
 			<p>Finish</p>
 			<FiArrowRight className="text-xs" />
-		</div>
+		</button>
 
 	const Step =
 		<p className=" 
@@ -83,7 +80,7 @@ function EntrypointActions({
 				return NextButton
 		}
 		else {
-			if (entryPointData.status === ENTRYPOINT_STATUS.EntrypointOpen)
+			if (entryPointData.status === ENTRYPOINT_STATUS.EntrypointOpen || entryPointData.status === ENTRYPOINT_STATUS.EntrypointPending)
 				return StartButton
 			else
 				return <></>
