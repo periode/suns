@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { getSession } from "../../utils/auth"
 
 const MediaStreamRecorder = require('msr')
@@ -14,6 +14,10 @@ const AudioRecorder = (props: any) => {
     const [recordingMessage, setRecordingMessage] = useState("ready to record")
     const [stream, setStream] = useState({} as MediaStream)
     const [blobURL, setBlobURL] = useState("")
+
+    useEffect(() => {
+        props.setUserCompleted(false)
+    }, [])
 
     var audioBlob = {} as Blob
 
@@ -63,6 +67,7 @@ const AudioRecorder = (props: any) => {
         setBlobURL(URL.createObjectURL(audioBlob as Blob))
 
         props.setUploads([new File([audioBlob], "recording.wav")])
+        props.setUserCompleted(true)
     }
 
     const resetRecording = () => {
