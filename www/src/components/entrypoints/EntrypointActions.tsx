@@ -1,4 +1,4 @@
-import { ENTRYPOINT_STATUS, IEntrypoint, IUser, PARTNER_STATUS } from "./Entrypoint"
+import { ENTRYPOINT_STATUS, IEntrypoint, IUser, PARTNER_STATUS } from "../../utils/types"
 import { FiShare2, FiArrowRight } from "react-icons/fi"
 
 interface EntrypointActionsProps {

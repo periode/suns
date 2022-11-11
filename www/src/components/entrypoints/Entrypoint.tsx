@@ -12,47 +12,8 @@ import PublicView from "./PublicView";
 import NotFound from "../../NotFound";
 import AudioRecorder from "../modules/AudioRecorder";
 import IntroVideo from "../modules/IntroVideo";
-import { EntrypointInterface } from "../../App";
 import FinalFirstTimes from "../modules/FinalFirstTimes";
-
-export enum ENTRYPOINT_STATUS {
-    EntrypointPending = "pending",
-    EntrypointCompleted = "completed",
-    EntrypointOpen = "open",
-}
-
-export enum PARTNER_STATUS {
-    PartnerNone = "none",
-    PartnerPartial = "partial",
-    PartnerFull = "full",
-}
-
-export interface IUser {
-    name: string,
-    uuid: string,
-}
-
-export interface IEntrypoint {
-    uuid: string,
-    name: string,
-    status: ENTRYPOINT_STATUS,
-    content: String,
-    current_module: number,
-    status_module: string,
-    modules: [{
-        uuid: String,
-        name: String,
-        content: String,
-        type: String,
-        media: Object,
-        uploads: Array<Object>,
-        status: string,
-    }],
-    users: Array<IUser>
-    max_users: number,
-    user_completed: Array<number>,
-    partner_status: PARTNER_STATUS
-}
+import { ENTRYPOINT_STATUS, IEntrypoint } from "../../utils/types";
 
 const Entrypoint = (props: any) => {
     const params = useParams()
