@@ -29,7 +29,7 @@ export interface IUser {
     uuid: string,
 }
 
-interface IEntrypoint {
+export interface IEntrypoint {
     uuid: string,
     name: string,
     status: ENTRYPOINT_STATUS,
@@ -274,9 +274,6 @@ const Entrypoint = (props: any) => {
         if (hasCompleted)
             mods.push(<div className="border border-amber-800 border-3 m-1 p-1">You have completed this module! Please wait for your partner to complete it as well.</div>)
 
-        if (data.current_module < data.modules.length - 1)
-            mods.push(<button key="complete-module" className="border-2 border-amber-800 rounded-md p-2" onClick={() => completeModule(data, session)}>complete module</button>)
-
         return mods
     }
 
@@ -324,13 +321,10 @@ const Entrypoint = (props: any) => {
                             flex items-center justify-between
                             border-t border-amber-800">
                             <EntrypointActions
-                                status={data.status}
-                                users={data.users}
+                                entryPointData={data}
                                 isOwner={isOwned}
-                                lastStepIndex={data.modules.length}
-                                currentStepIndex={data.current_module}
-                                claimEntryPoint={claimEntrypoint}
-                                entrypointID={data.uuid}
+                                claimEntryPointFunction={ claimEntrypoint }
+                                completeModuleFunction={() => completeModule(data, session)}
                             />
                     </div>
                 </div>

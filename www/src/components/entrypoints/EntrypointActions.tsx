@@ -1,24 +1,18 @@
-import { ENTRYPOINT_STATUS, IUser } from "./Entrypoint"
+import { ENTRYPOINT_STATUS, IEntrypoint, IUser } from "./Entrypoint"
 import { FiShare2, FiArrowRight } from "react-icons/fi"
 
 interface EntrypointActionsProps {
-	status : ENTRYPOINT_STATUS,
-	users : IUser[]
+	entryPointData: IEntrypoint,
 	isOwner : boolean,
-	lastStepIndex : number,
-	currentStepIndex : number,
-	claimEntryPoint : () => {},
-	entrypointID: string
+	claimEntryPointFunction : () => {},
+	completeModuleFunction : () => {},
 }
 
 function EntrypointActions({
-	status,
-	users,
+	entryPointData,
+	claimEntryPointFunction,
+	completeModuleFunction,
 	isOwner,
-	lastStepIndex,
-	currentStepIndex,
-	claimEntryPoint,
-	entrypointID,
 } : EntrypointActionsProps) {
 
 	const copyToClipboard = (text : string) => {
@@ -40,7 +34,7 @@ function EntrypointActions({
 							cursor-pointer
 							flex items-center
 							gap-1"
-                onClick={ claimEntryPoint }>
+                onClick={ claimEntryPointFunction }>
 			<p>Start</p>
             <FiArrowRight className="text-xs"/>
         </div>
@@ -50,7 +44,7 @@ function EntrypointActions({
 							cursor-pointer
 							flex items-center
 							gap-1"
-                onClick={ () => {  } }>
+                onClick={ completeModuleFunction }>
 			<p>Next</p>
             <FiArrowRight className="text-xs"/>
         </div>
@@ -60,7 +54,7 @@ function EntrypointActions({
 							cursor-pointer
 							flex items-center
 							gap-1"
-				onClick={ () => {  } }>
+				onClick={ completeModuleFunction }>
 			<p>Finish</p>
 			<FiArrowRight className="text-xs"/>
 		</div>
@@ -71,20 +65,20 @@ function EntrypointActions({
 					flex items-center justify-center
 					text-center  font-mono
 					opacity-50">
-			{ currentStepIndex } / { lastStepIndex }
+			{ entryPointData.current_module } / { entryPointData.modules.length }
 	</p>
 
 	const rightButtonDisplay = () => {
-		if (status === ENTRYPOINT_STATUS.EntrypointPending && isOwner)
+		if (entryPointData.status === ENTRYPOINT_STATUS.EntrypointPending && isOwner)
 		{
-			if (currentStepIndex === lastStepIndex)
+			if (entryPointData.current_module === entryPointData.modules.length)
 				return FinishButton
 			else
 				return NextButton
 		}	
 		else
 		{
-			if (status === ENTRYPOINT_STATUS.EntrypointOpen)
+			if (entryPointData.status === ENTRYPOINT_STATUS.EntrypointOpen)
 				return StartButton
 			else
 				return <></>
@@ -95,7 +89,7 @@ function EntrypointActions({
 	return ( 
 	<>
 		{	
-			status === ENTRYPOINT_STATUS.EntrypointPending && isOwner &&
+			entryPointData.status === ENTRYPOINT_STATUS.EntrypointPending && isOwner &&
 				Step 
 		}
 		{ ShareButton } 
