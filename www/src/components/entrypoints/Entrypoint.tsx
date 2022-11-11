@@ -314,7 +314,7 @@ const Entrypoint = (props: any) => {
                             <EntrypointActions
                                 entryPointData={data}
                                 isOwner={isOwned}
-                                claimEntryPointFunction={() => claimEntrypoint}
+                                claimEntryPointFunction={ claimEntrypoint }
                                 completeModuleFunction={() => completeModule(data, session)}
                             />
                     </div>
