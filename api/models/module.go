@@ -24,7 +24,7 @@ type Module struct {
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 	UUID      uuid.UUID      `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
-	Status    string         `gorm:"default:listed" json:"status"`
+	Status    string         `gorm:"default:none" json:"status"`
 
 	Name    string   `gorm:"not null" json:"name" form:"name" binding:"required"`
 	Slug    string   `gorm:"" json:"slug"`
@@ -95,7 +95,7 @@ func UpdateModule(uuid uuid.UUID, user_uuid uuid.UUID, entry *Module) (Module, e
 		return *entry, result.Error
 	}
 
-	result = db.Model(&existing).Where("uuid = ?", uuid).Updates(&entry)
+	result = db.Model(&existing).Updates(&entry)
 	return existing, result.Error
 }
 
