@@ -26,8 +26,9 @@ type Entrypoint struct {
 	UUID      uuid.UUID      `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
 	Status    string         `gorm:"default:unlisted" json:"status"`
 
-	Name string `gorm:"not null" json:"name" form:"name" binding:"required"`
-	Slug string `gorm:"" json:"slug"`
+	Name       string `gorm:"not null" json:"name" form:"name" binding:"required"`
+	Slug       string `gorm:"" json:"slug"`
+	Generation int    `gorm:"default:0" json:"generation"`
 
 	//-- belongs to a cluster
 	ClusterUUID uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()" json:"cluster_uuid" yaml:"cluster_uuid"`
@@ -86,9 +87,15 @@ func GetEntrypointBySlug(slug string, user_uuid uuid.UUID) (Entrypoint, error) {
 }
 
 func GetAllEntrypoints(user_uuid uuid.UUID) ([]Entrypoint, error) {
-	entry := make([]Entrypoint, 0)
-	result := db.Preload("Modules").Preload("Users").Find(&entry)
-	return entry, result.Error
+	eps := make([]Entrypoint, 0)
+	result := db.Preload("Modules").Preload("Users").Find(&eps)
+	return eps, result.Error
+}
+
+func GetEntrypointsByGeneration(gen int) ([]Entrypoint, error) {
+	eps := make([]Entrypoint, 0)
+	result := db.Where("generation = ?", gen).Find(&eps)
+	return eps, result.Error
 }
 
 func UpdateEntrypoint(uuid uuid.UUID, user_uuid uuid.UUID, entry *Entrypoint) (Entrypoint, error) {

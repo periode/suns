@@ -1,5 +1,5 @@
 - uuid: '57ed6a2b-aacb-4c24-b1e1-3495821f846a'
-  name: "Cluster 1"
+  name: "Combining first times"
   status: "listed"
   entrypoints:
     - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846a'
@@ -33,6 +33,11 @@
           status: "listed"
           content: "This is the final countdown"
           type: "final"
+
+- uuid: '57ed6a2b-aacb-4c24-b1e1-3495821f846b'
+  name: "Test Cluster"
+  status: "listed"
+  entrypoints: 
     - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846b'
       status: "completed"
       name: "Completed entrypoint"
@@ -49,8 +54,8 @@
           status: "listed"
           content: "This is the third content"
     - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846c'
-      status: "listed"
-      name: "Entrypoint 4"
+      status: "completed"
+      name: "Test entrypoint 1"
       lat: 150.300
       lng: 150.400
       modules:
@@ -64,8 +69,8 @@
           status: "listed"
           content: "This is the third content"
     - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846d'
-      status: "listed"
-      name: "Entrypoint 5"
+      status: "pending"
+      name: "Pending entrypoint 2"
       lat: 140.300
       lng: 150.400
       modules:

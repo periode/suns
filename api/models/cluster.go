@@ -67,15 +67,26 @@ func GetAllClusters(user_uuid uuid.UUID) ([]Cluster, error) {
 	return clusters, result.Error
 }
 
-func UpdateCluster(uuid uuid.UUID, user_uuid uuid.UUID, coll *Cluster) (Cluster, error) {
+func UpdateCluster(uuid uuid.UUID, user_uuid uuid.UUID, cluster *Cluster) (Cluster, error) {
 	var existing Cluster
 	result := db.Where("uuid = ?", uuid).First(&existing)
 	if result.Error != nil {
-		return *coll, result.Error
+		return *cluster, result.Error
 	}
 
-	result = db.Model(&existing).Where("uuid = ?", uuid).Updates(&coll)
+	result = db.Model(&existing).Where("uuid = ?", uuid).Updates(&cluster)
 	return existing, result.Error
+}
+
+func AddClusterEntrypoints(uuid string, eps []Entrypoint) error {
+	var existing Cluster
+	result := db.Where("uuid = ?", uuid).First(&existing)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	err := db.Model(&existing).Where("uuid = ?", uuid).Association("Entrypoints").Append(&eps)
+	return err
 }
 
 func DeleteCluster(uuid uuid.UUID, user_uuid uuid.UUID) (Cluster, error) {
