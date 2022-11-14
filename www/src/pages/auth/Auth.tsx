@@ -16,34 +16,6 @@ const Auth = () => {
     const [signupEmailConf, setSignupEmailConf] = useState("")
     const [signupPasswordConf, setSignupPasswordConf] = useState("")
 
-
-    const airtable = useContext(AirTableContext)
-    // useEffect(() => {
-    //     Airtable.configure({
-    //         endpointUrl: 'https://api.airtable.com',
-    //         apiKey: process.env.REACT_APP_AIRTABLE_KEY
-    //     })
-    //     var base = Airtable.base('appO4245S69TqEnGW');
-
-    //     const nameOfSpreadsheet = 'Main'
-    //     base(nameOfSpreadsheet).select().eachPage(function page(records, fetchNextPage) {
-    //         // This function (`page`) will get called for each page of records.
-
-    //         records.forEach(function(record) {
-    //             if(record.get('Name') === 'signinWelcomeMessage')
-    //                 setGreetingMessage(record.get('Content') as string)
-    //         });
-
-    //         // To fetch the next page of records, call `fetchNextPage`.
-    //         // If there are more records, `page` will get called again.
-    //         // If there are no more records, `done` will get called.
-    //         fetchNextPage();
-
-    //     }, function done(err) {
-    //         if (err) { console.error(err); return; }
-    //     });
-    // }, [])
-
     const handleSignin = (e: React.BaseSyntheticEvent) => {
         e.preventDefault()
         e.stopPropagation()
@@ -107,7 +79,6 @@ const Auth = () => {
 
     return (
         <div className="w-full">
-            <p>{ airtable.get("ForTheFirstTime")?.get("EntryPoint0module0Video") }</p>
             {
                 success === true ?
                     <div className="status-info">{message}</div>
