@@ -115,7 +115,7 @@ func ClaimEntrypoint(entry *Entrypoint, user *User) (Entrypoint, error) {
 	return *entry, err
 }
 
-func DeleteEntrypoint(uuid uuid.UUID, user_uuid uuid.UUID) (Entrypoint, error) {
+func DeleteEntrypoint(uuid uuid.UUID) (Entrypoint, error) {
 	var entry Entrypoint
 	result := db.Where("uuid = ?", uuid).First(&entry)
 	if result.Error != nil {

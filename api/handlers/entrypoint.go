@@ -225,7 +225,7 @@ func DeleteEntrypoint(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Not a valid ID")
 	}
 
-	coll, err := models.DeleteEntrypoint(uid, user_uuid)
+	coll, err := models.DeleteEntrypoint(uid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusNotFound, "There was an error deleting the Entrypoint.")

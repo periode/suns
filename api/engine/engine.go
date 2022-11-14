@@ -16,11 +16,12 @@ import (
 const (
 	CREATE_INTERVAL    = 3 * time.Second
 	DELETE_INTERVAL    = 10 * time.Second
-	SACRIFICE_INTERVAL = 15 * time.Second
-	EMAIL_INTERVAL     = 10 * time.Second
+	SACRIFICE_INTERVAL = 15 * time.Minute
+	EMAIL_INTERVAL     = 10 * time.Minute
 	MAP_INTERVAL       = 10 * time.Second
 
-	CREATION_THRESHOLD = 0.25
+	CREATION_THRESHOLD  = 0.25
+	ENTRYPOINT_LIFETIME = 1 * time.Minute
 
 	CLUSTER_FIRST_TIMES_UUID = "57ed6a2b-aacb-4c24-b1e1-3495821f846a"
 )
@@ -90,7 +91,7 @@ func createEntrypoints(ch chan string) {
 		}
 
 		remaining := float32(open) / float32(len(eps))
-		zero.Debug(fmt.Sprintf("Found remaining entrypoints: %f, open %d total %d", remaining, open, len(eps)))
+		zero.Debug(fmt.Sprintf("Remaining entrypoints: %f%% (open %d, total %d)", remaining, open, len(eps)))
 		if float64(remaining) > CREATION_THRESHOLD {
 			continue
 		}
@@ -114,14 +115,14 @@ func createEntrypoints(ch chan string) {
 		for i, _ := range new {
 			new[i].Lat = rand.Float32() * 400
 			new[i].Lng = rand.Float32() * 400
-			fmt.Println(new[i].Modules)
 		}
 
-		//-- todo figure out why the modules do not get appended/created, maybe appending them separately in the method below?
 		err = models.AddClusterEntrypoints(CLUSTER_FIRST_TIMES_UUID, new)
 		if err != nil {
 			zero.Errorf("Failed to create new entrypoint: %s", err.Error())
 		}
+
+		//-- finally, regenerate the map
 	}
 }
 
@@ -131,6 +132,22 @@ func deleteEntrypoints(ch chan string) {
 	for {
 		time.Sleep(DELETE_INTERVAL)
 		ch <- "delete new entrypoints"
+
+		eps, err := models.GetEntrypointsByGeneration(state.generation)
+		if err != nil {
+			zero.Errorf("Failed getting current generation entrypoints", err.Error())
+		}
+
+		for _, ep := range eps {
+			if time.Since(ep.CreatedAt) > ENTRYPOINT_LIFETIME {
+				_, err = models.DeleteEntrypoint(ep.UUID)
+				if err != nil {
+					zero.Errorf("Failed to delete expired entrypoints", err.Error())
+				}
+			}
+		}
+
+		//-- finally, regenerate the map
 	}
 }
 
