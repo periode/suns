@@ -5,7 +5,8 @@ interface EntrypointActionsProps {
 	entryPointData: IEntrypoint,
 	isOwner: boolean,
 	session: ISession,
-	isUserComplete: boolean,
+	hasUserCompleted: boolean,
+	isUserDone: boolean,
 	claimEntryPointFunction: () => {},
 	completeModuleFunction: (data: any, session: ISession) => Promise<void>,
 }
@@ -16,7 +17,8 @@ function EntrypointActions({
 	completeModuleFunction,
 	isOwner,
 	session,
-	isUserComplete
+	hasUserCompleted,
+	isUserDone
 }: EntrypointActionsProps) {
 
 	const copyToClipboard = (text: string) => {
@@ -47,8 +49,8 @@ function EntrypointActions({
 		<button className={`font-mono
 							cursor-pointer
 							flex items-center
-							gap-1 ${isUserComplete ? '': 'opacity-50'}`}
-			onClick={() => completeModuleFunction(entryPointData, session)} disabled={!isUserComplete}>
+							gap-1`}
+			onClick={() => { if (!hasUserCompleted) completeModuleFunction(entryPointData, session) }} disabled={hasUserCompleted}>
 			<p>Next</p>
 			<FiArrowRight className="text-xs" />
 		</button>
@@ -63,8 +65,8 @@ function EntrypointActions({
 			<FiArrowRight className="text-xs" />
 		</button>
 
-	const Step = 
-	<p className=" 	w-full h-full
+	const Step =
+		<p className=" 	w-full h-full
 					flex items-center justify-center
 					text-center  font-mono
 					opacity-50">
@@ -72,37 +74,37 @@ function EntrypointActions({
 		</p>
 
 	const rightButtonDisplay = () => {
-		if (entryPointData.status === ENTRYPOINT_STATUS.EntrypointPending && isOwner) {
-			if (entryPointData.current_module === entryPointData.modules.length - 2 && isUserComplete)
+		if (entryPointData.status === ENTRYPOINT_STATUS.EntrypointOpen || (!isOwner && entryPointData.status === ENTRYPOINT_STATUS.EntrypointPending))
+			return StartButton
+
+		if (hasUserCompleted)
+			return <></>
+
+		if (isOwner && isUserDone && entryPointData.status === ENTRYPOINT_STATUS.EntrypointPending) {
+			if (entryPointData.current_module === entryPointData.modules.length - 2)
 				return FinishButton
-			else if(entryPointData.partner_status == PARTNER_STATUS.PartnerFull && isUserComplete)
+			else if (entryPointData.partner_status == PARTNER_STATUS.PartnerFull)
 				return NextButton
-			else
-				return <></>
 		}
-		else {
-			if (entryPointData.status === ENTRYPOINT_STATUS.EntrypointOpen || entryPointData.status === ENTRYPOINT_STATUS.EntrypointPending)
-				return StartButton
-			else
-				return <></>
-		}
+
+		return <></>
 	}
 
 
-	return ( 
-	<div className="w-full flex items-center justify-between">
-		<div className="w-16">
-			
-			{ ShareButton } 
+	return (
+		<div className="w-full flex items-center justify-between">
+			<div className="w-16">
+
+				{ShareButton}
+			</div>
+			{
+				entryPointData.status === ENTRYPOINT_STATUS.EntrypointPending && isOwner &&
+				Step
+			}
+			<div className="w-16">
+				{rightButtonDisplay()}
+			</div>
 		</div>
-		{	
-			entryPointData.status === ENTRYPOINT_STATUS.EntrypointPending && isOwner &&
-				Step 
-		}
-		<div className="w-16">
-			{ rightButtonDisplay() }
-		</div>
-	</div> 
 	);
 }
 

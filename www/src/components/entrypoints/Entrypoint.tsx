@@ -21,10 +21,14 @@ const Entrypoint = (props: any) => {
     const navigate = useNavigate()
     const session = getSession()
     const [data, setData] = useState(props.data as IEntrypoint)
-    const [isOwned, setOwned] = useState(false)
-    const [hasCompleted, setHasCompleted] = useState(false)
     const [uploads, setUploads] = useState(Array<File>)
-    const [isUserComplete, setUserCompleted] = useState(false)
+
+    const [isOwned, setOwned] = useState(false)
+    //-- userDone keeps track of when the user can submit the module
+    const [isUserDone, setUserDone] = useState(false)
+    //-- userCompleted keeps track of when the module is completed
+    const [hasUserCompleted, setUserCompleted] = useState(false)
+
 
     useEffect(() => {
         if (data === undefined)
@@ -43,7 +47,7 @@ const Entrypoint = (props: any) => {
         for (let i = 0; i < data.users.length; i++) {
             const u = data.users[i];
             if (u.uuid === session.user.uuid && data.user_completed[i] === 1) {
-                setHasCompleted(true)
+                setUserCompleted(true)
                 return
             }
         }
@@ -64,7 +68,7 @@ const Entrypoint = (props: any) => {
             const res = await fetch(endpoint, options)
             if (res.ok) {
                 const e = await res.json()
-                e.modules = e.modules.sort((a: IModule, b : IModule) => {return parseInt(a.ID) - parseInt(b.ID) })
+                e.modules = e.modules.sort((a: IModule, b: IModule) => { return parseInt(a.ID) - parseInt(b.ID) })
 
                 setData(e as IEntrypoint)
             } else {
@@ -148,17 +152,20 @@ const Entrypoint = (props: any) => {
             console.log(`successfully completed module!`);
             const updated = await res.json()
 
+            //-- completion always means the user is done with their input
+            setUserDone(false)
+
             //-- check if we're done with the module
             if (updated.current_module === ep.current_module)
-                setHasCompleted(true) //-- we have a partial state
+                setUserCompleted(true) //-- we have a partial state
             else
-                setHasCompleted(false) //-- we move on to the next module
+                setUserCompleted(false) //-- we move on to the next module
 
             //-- first check if we're done with the whole entrypoint
             if (updated.status === ENTRYPOINT_STATUS.EntrypointCompleted)
                 navigate(0)
             else
-                setData({ ...ep, current_module: updated.current_module})
+                setData({ ...ep, current_module: updated.current_module })
         } else {
             console.warn('error', res.status)
         }
@@ -170,7 +177,7 @@ const Entrypoint = (props: any) => {
         switch (mod.type) {
             case "upload_recording":
                 return (
-                    <AudioRecorder index={index} mod={mod} ep={ep} setUploads={setUploads} setUserCompleted={setUserCompleted} />
+                    <AudioRecorder index={index} mod={mod} ep={ep} setUploads={setUploads} setUserDone={setUserDone} />
                 )
             case "intro":
                 return (
@@ -230,11 +237,11 @@ const Entrypoint = (props: any) => {
             return mods
         }
 
-        for (let i = 0; i <= data.current_module; i++) {
-            mods.push(<div key={`mod-${data.name.split(' ').join('-')}-${i}`} className="border border-amber-800 border-3 m-1 p-1">{parseModule(i, data)}</div>)
-        }
 
-        if (hasCompleted)
+        mods.push(<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}`} className="border border-amber-800 border-3 m-1 p-1">{parseModule(data.current_module, data)}</div>)
+
+
+        if (hasUserCompleted)
             mods.push(<div className="border border-amber-800 border-3 m-1 p-1">You have completed this module! Please wait for your partner to complete it as well.</div>)
 
         return mods
@@ -244,7 +251,7 @@ const Entrypoint = (props: any) => {
         return (
             <div className="absolute w-full h-full p-4 
                             md:flex md:flex-col md:items-center md:justify-center ">
-                
+
                 <div className="
                         flex flex-col
                         w-full h-full md:w-[720px] md:h-4/5 
@@ -291,7 +298,8 @@ const Entrypoint = (props: any) => {
                             isOwner={isOwned}
                             claimEntryPointFunction={claimEntrypoint}
                             completeModuleFunction={completeModule}
-                            isUserComplete={isUserComplete}
+                            hasUserCompleted={hasUserCompleted}
+                            isUserDone={isUserDone}
                         />
                     </div>
                 </div>

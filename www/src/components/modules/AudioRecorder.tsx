@@ -9,13 +9,13 @@ interface AudioRecorderProps {
     mod: IModule,
     ep: IEntrypoint,
     setUploads: Dispatch<SetStateAction<File[]>>,
-    setUserCompleted: Dispatch<SetStateAction<boolean>>
+    setUserDone: Dispatch<SetStateAction<boolean>>
 }
 
 const MAX_RECORD_TIME = 180 * 1000
 var recorder: any
 
-const AudioRecorder = ({index, mod, ep, setUploads, setUserCompleted}:AudioRecorderProps) => {
+const AudioRecorder = ({index, mod, ep, setUploads, setUserDone}:AudioRecorderProps) => {
     const uploads = ep.modules[index - 1].uploads ? ep.modules[index - 1].uploads : null
     const [hasCompleted, setHasCompleted] = useState(mod.status)
     const session = getSession()
@@ -25,7 +25,7 @@ const AudioRecorder = ({index, mod, ep, setUploads, setUserCompleted}:AudioRecor
     const [blobURL, setBlobURL] = useState("")
 
     useEffect(() => {
-        setUserCompleted(false)
+        setUserDone(false)
     }, [])
 
     var audioBlob = {} as Blob
@@ -81,7 +81,7 @@ const AudioRecorder = ({index, mod, ep, setUploads, setUserCompleted}:AudioRecor
         setBlobURL(URL.createObjectURL(audioBlob as Blob))
 
         setUploads([new File([audioBlob], "recording.wav")])
-        setUserCompleted(true)
+        setUserDone(true)
     }
 
     const resetRecording = () => {
@@ -119,8 +119,6 @@ const AudioRecorder = ({index, mod, ep, setUploads, setUserCompleted}:AudioRecor
         return (<>Could not find proper prompt</>)
     }
 
-    console.log(index, mod.status)
-
     return (
         <div key={`mod-${mod.name}`}>
             <div className="w-100 text-left text-sm l-0">{index + 1}</div>
@@ -131,12 +129,12 @@ const AudioRecorder = ({index, mod, ep, setUploads, setUserCompleted}:AudioRecor
                 {getUploadedMedia()}
                 {getInputPrompt()}
                 <div>
-                    {mod.status !== "completed" && recordingState === "idle" ? <button className="bg-amber-800 text-white p-1 m-1" onClick={startRecording}>record</button> : <></>}
-                    {mod.status !== "completed" && recordingState === "recording" ? <button className="bg-amber-800 text-white p-1 m-1" onClick={stopRecording}>stop</button> : <></>}
-                    {mod.status !== "completed" && recordingState === "done" ? <button className="bg-amber-800 text-white p-1 m-1" onClick={resetRecording}>restart</button> : <></>}
+                    {recordingState === "idle" ? <button className="bg-amber-800 text-white p-1 m-1" onClick={startRecording}>record</button> : <></>}
+                    {recordingState === "recording" ? <button className="bg-amber-800 text-white p-1 m-1" onClick={stopRecording}>stop</button> : <></>}
+                    {recordingState === "done" ? <button className="bg-amber-800 text-white p-1 m-1" onClick={resetRecording}>restart</button> : <></>}
                 </div>
 
-                <p>{hasCompleted !== "completed" ? recordingMessage : ""}</p>
+                <p>{recordingMessage}</p>
                 {
                     blobURL !== "" ?
                         <audio src={blobURL} controls></audio>
