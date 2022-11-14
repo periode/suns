@@ -1,13 +1,13 @@
-import { ENTRYPOINT_STATUS, IEntrypoint, IUser } from "./Entrypoint"
+import { ENTRYPOINT_STATUS, IEntrypoint, ISession, IUser, PARTNER_STATUS } from "../../utils/types"
 import { FiShare2, FiArrowRight } from "react-icons/fi"
 
 interface EntrypointActionsProps {
 	entryPointData: IEntrypoint,
 	isOwner: boolean,
-	session: Object,
+	session: ISession,
 	isUserComplete: boolean,
 	claimEntryPointFunction: () => {},
-	completeModuleFunction: (data: any, session: Object) => Promise<void>,
+	completeModuleFunction: (data: any, session: ISession) => Promise<void>,
 }
 
 function EntrypointActions({
@@ -68,15 +68,17 @@ function EntrypointActions({
 					flex items-center justify-center
 					text-center  font-mono
 					opacity-50">
-			{entryPointData.current_module} / {entryPointData.modules.length}
+			{entryPointData.current_module + 1} / {entryPointData.modules.length}
 		</p>
 
 	const rightButtonDisplay = () => {
 		if (entryPointData.status === ENTRYPOINT_STATUS.EntrypointPending && isOwner) {
-			if (entryPointData.current_module === entryPointData.modules.length)
+			if (entryPointData.current_module === entryPointData.modules.length - 2 && isUserComplete)
 				return FinishButton
-			else
+			else if(entryPointData.partner_status == PARTNER_STATUS.PartnerFull && isUserComplete)
 				return NextButton
+			else
+				return <></>
 		}
 		else {
 			if (entryPointData.status === ENTRYPOINT_STATUS.EntrypointOpen || entryPointData.status === ENTRYPOINT_STATUS.EntrypointPending)

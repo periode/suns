@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
@@ -38,7 +39,7 @@ func CreateUpload(c echo.Context) error {
 	defer src.Close()
 
 	// Destination
-	var fname = fmt.Sprintf("%s_%s_%s", module_uuid.String()[:13], user_uuid.String()[5:], file.Filename)
+	var fname = fmt.Sprintf("%d_%s_%s_%s", time.Now().Unix(), module_uuid.String()[:8], user_uuid.String()[:8], file.Filename)
 	target := filepath.Join(conf.UploadsDir, fname)
 	dst, err := os.Create(target)
 	if err != nil {

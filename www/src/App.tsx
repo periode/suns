@@ -13,10 +13,9 @@ import backgroundMap from './map.png'
 import MainMenu from './components/commons/menu/MainMenu';
 import { Route, Routes } from 'react-router-dom';
 import UILayout from './components/commons/layout/UILayout';
-
 import AirContext from './contexts/AirContext';
 
-
+import { IEntrypoint } from './utils/types';
 
 export interface EntrypointInterface {
   uuid: string
@@ -33,9 +32,9 @@ const MIN_ZOOOM = 0.5;
 const MAX_ZOOM = 6;
 
 const App = () => {
-  var currentEntrypoint : EntrypointInterface = {} as EntrypointInterface
+  var currentEntrypoint : IEntrypoint = {} as IEntrypoint
   const hasData = useRef(false)
-  const [entrypoints, setEntrypoints] = useState(Array<EntrypointInterface>)
+  const [entrypoints, setEntrypoints] = useState(Array<IEntrypoint>)
   const bounds = new L.LatLngBounds(new L.LatLng(0, 0), new L.LatLng(WIDTH, HEIGHT))
   const session = getSession()
 
@@ -58,7 +57,7 @@ const App = () => {
       const res = await fetch(endpoint, options)
       if (res.ok) {
         const c = await res.json()
-        setEntrypoints(c as Array<EntrypointInterface>)
+        setEntrypoints(c as Array<IEntrypoint>)
       } else {
         console.warn('error', res.status)
       }

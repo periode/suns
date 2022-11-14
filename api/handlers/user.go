@@ -59,12 +59,7 @@ func CreateUser(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "There was an error completing your account creation. Please try again later.")
 	}
 
-	var host string
-	if os.Getenv("API_MODE") == "release" {
-		host = ""
-	} else {
-		host = "http://localhost:3000"
-	}
+	var host = os.Getenv("FRONTEND_HOST")
 
 	payload := mailer.ConfirmationPayload{
 		Name:  user.Name,

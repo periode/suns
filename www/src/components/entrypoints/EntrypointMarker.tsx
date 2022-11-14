@@ -1,16 +1,17 @@
 import { Marker } from "react-leaflet"
 import { useNavigate } from "react-router-dom";
+import { IEntrypoint } from "../../utils/types";
 
 const EntrypointMarker = (props: any) => {
     const navigate = useNavigate()
-    const entrypoint = props.data
-
+    const ep = props.ep as IEntrypoint
+    
     return (
         <Marker
-            position={[entrypoint.lat, entrypoint.lng]}
-            key={`marker-${entrypoint.name}`}
+            position={[ep.lat, ep.lng]}
+            key={`marker-${ep.name}`}
             eventHandlers={{
-                click: (e) => { navigate(`/entrypoints/${entrypoint.uuid}`, {replace: true}) },
+                click: (e) => { navigate(`/entrypoints/${ep.uuid}`, {replace: true}) },
             }}>
         </Marker>
     )

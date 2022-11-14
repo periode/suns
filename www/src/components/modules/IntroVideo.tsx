@@ -1,14 +1,15 @@
 import { useEffect } from "react"
+import { IModule } from "../../utils/types"
 
 const IntroVideo = (props: any) => {
-    const data = props.data
+    const data = props.data as IModule
 
     useEffect(() => {
         props.setUserCompleted(true)
     }, [])
-    
+
     return (<>
-        <div className="absolute text-sm l-0">{props.index}</div>
+        <div className="w-100 text-left  text-sm l-0">{props.index + 1}</div>
         <p>
             {data.content}
         </p>

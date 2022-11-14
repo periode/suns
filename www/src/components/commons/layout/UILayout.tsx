@@ -1,9 +1,9 @@
-import { EntrypointInterface } from "../../../App";
+import { IEntrypoint } from "../../../../src/utils/types";
 import Entrypoint from "../../entrypoints/Entrypoint";
 
 interface UILayoutProps
 {
-	currentEntrypoint : EntrypointInterface
+	currentEntrypoint : IEntrypoint
 }
 
 const UILayout = ({currentEntrypoint} : UILayoutProps) => {

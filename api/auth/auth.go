@@ -173,12 +173,7 @@ func RequestRecover(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, err)
 	}
 
-	var host string
-	if os.Getenv("API_MODE") == "release" {
-		host = ""
-	} else {
-		host = "http://localhost:3000"
-	}
+	var host = os.Getenv("FRONTEND_HOST")
 
 	// send email with link
 	if os.Getenv("API_MODE") != "test" {
