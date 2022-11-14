@@ -8,6 +8,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/gosimple/slug"
+	"github.com/lib/pq"
 	"gorm.io/gorm"
 )
 
@@ -37,6 +38,9 @@ type Module struct {
 	Entrypoint     Entrypoint `gorm:"foreignKey:EntrypointUUID;references:UUID" json:"entrypoint"`
 
 	Content string `json:"content"`
+
+	MaxUsers      int           `gorm:"default:1" json:"max_users" yaml:"max_users"`
+	UserCompleted pq.Int32Array `gorm:"type:integer[]" json:"user_completed"` //-- 1 means user has completed the module, 0 means not yet
 }
 
 type Media struct {
@@ -53,6 +57,13 @@ func (m *Module) BeforeCreate(tx *gorm.DB) (err error) {
 	i := math.Min(float64(len(sp)), 5)
 
 	m.Slug = fmt.Sprintf("%s-%s", strings.Join(sp[:int(i)], "-"), m.UUID.String()[:8])
+
+	if m.MaxUsers == 0 {
+		m.MaxUsers = 1
+	}
+	for i := 0; i < m.MaxUsers; i++ {
+		m.UserCompleted = append(m.UserCompleted, 0)
+	}
 
 	return nil
 }

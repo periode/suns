@@ -10,7 +10,7 @@
       lng: 300.400
       modules:
         - uuid: "2a73291d-559f-47c1-b24d-92a3606deb49"
-          name: "For the first time - 1"
+          name: "For the first time - Intro"
           status: "listed"
           type: "intro"
           media:
@@ -18,16 +18,16 @@
             url: "https://player.vimeo.com/video/139922433?h=07c88a080c"
           content: "This is the first content"
         - uuid: "2a73291d-559f-47c1-b24d-92a3606deb50"
-          name: "For the first time - 2"
+          name: "For the first time - Prompt recording"
           status: "listed"
           type: "upload_recording"
           content: "Please record a moment that happened to you for the first time. This recording will then be sent to your partner."
         - uuid: "2a73291d-559f-47c1-b24d-92a3606deb51"
-          name: "For the first time - 3"
+          name: "For the first time - Response recording"
           status: "listed"
           type: "upload_recording"
           content: "This is what your partner has recorded, please tell the story of when the same thing happened to you."
-        - name: "For the first time - 4"
+        - name: "For the first time - Final"
           status: "listed"
           content: "This is the final countdown"
           type: "final_first_times"

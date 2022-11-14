@@ -45,7 +45,6 @@ type Entrypoint struct {
 	//-- has many modules
 	Modules       []Module `gorm:"foreignKey:EntrypointUUID;references:UUID" json:"modules"`
 	CurrentModule int      `gorm:"default:0" json:"current_module" form:"current_module"`
-	StatusModule  string   `gorm:"default:open" json:"status_module"`
 
 	//-- has many-to-many users (0, 1 or 2)
 	Users         []*User       `gorm:"many2many:entrypoints_users;" json:"users"`
@@ -63,6 +62,9 @@ func (e *Entrypoint) BeforeCreate(tx *gorm.DB) (err error) {
 
 	e.Slug = fmt.Sprintf("%s-%s", strings.Join(sp[:int(i)], "-"), e.UUID.String()[:8])
 
+	if e.MaxUsers == 0 {
+		e.MaxUsers = 1
+	}
 	for i := 0; i < e.MaxUsers; i++ {
 		e.UserCompleted = append(e.UserCompleted, 0)
 	}
@@ -75,7 +77,7 @@ func CreateEntrypoint(entry *Entrypoint) (Entrypoint, error) {
 	return *entry, result.Error
 }
 
-func GetEntrypoint(uuid uuid.UUID, user_uuid uuid.UUID) (Entrypoint, error) {
+func GetEntrypoint(uuid uuid.UUID) (Entrypoint, error) {
 	var entry Entrypoint
 	result := db.Preload("Modules").Preload("Users").Where("uuid = ?", uuid).First(&entry)
 	if result.Error != nil {
@@ -109,7 +111,7 @@ func GetAllEntrypoints(user_uuid uuid.UUID) ([]Entrypoint, error) {
 	return entry, result.Error
 }
 
-func UpdateEntrypoint(uuid uuid.UUID, user_uuid uuid.UUID, entry *Entrypoint) (Entrypoint, error) {
+func UpdateEntrypoint(uuid uuid.UUID, entry *Entrypoint) (Entrypoint, error) {
 	var existing Entrypoint
 	result := db.Where("uuid = ?", uuid).First(&existing)
 	if result.Error != nil {
@@ -135,12 +137,12 @@ func ClaimEntrypoint(entry *Entrypoint, user *User) (Entrypoint, error) {
 	if len(entry.Users) == entry.MaxUsers {
 		entry.PartnerStatus = PartnerFull
 	}
-	_, err = UpdateEntrypoint(entry.UUID, user.UUID, entry)
+	_, err = UpdateEntrypoint(entry.UUID, entry)
 	if err != nil {
 		return *entry, err
 	}
 
-	updated, err := GetEntrypoint(entry.UUID, user.UUID)
+	updated, err := GetEntrypoint(entry.UUID)
 	return updated, err
 }
 

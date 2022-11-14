@@ -158,7 +158,7 @@ const Entrypoint = (props: any) => {
             if (updated.status === ENTRYPOINT_STATUS.EntrypointCompleted)
                 navigate(0)
             else
-                setData({ ...ep, current_module: updated.current_module, status_module: updated.status_module })
+                setData({ ...ep, current_module: updated.current_module})
         } else {
             console.warn('error', res.status)
         }

@@ -27,7 +27,6 @@ const AirContext = ({children} : AirContextProps) => {
 	const renderOnce = useRef(false)
 
 	useEffect(() => {
-		console.log ("Calling use effect")
 		if (renderOnce.current === true)
 			return
 		setIsLoading(true)
@@ -55,10 +54,6 @@ const AirContext = ({children} : AirContextProps) => {
 			})
 		});
 		renderOnce.current = true
-	}, [mainContext])
-	
-	useEffect(() => {
-		console.log("mainContext: ", mainContext)
 	}, [mainContext])
 
 	return ( 

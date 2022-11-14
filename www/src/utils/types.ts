@@ -28,7 +28,6 @@ export interface IEntrypoint {
     status: ENTRYPOINT_STATUS,
     content: String,
     current_module: number,
-    status_module: string,
     modules: Array<IModule>,
     users: Array<IUser>
     max_users: number,

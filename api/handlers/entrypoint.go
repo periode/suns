@@ -72,7 +72,7 @@ func UpdateEntrypoint(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "There was an error parsing the updated information.")
 	}
 
-	entrypoint, err := models.GetEntrypoint(uid, user_uuid)
+	entrypoint, err := models.GetEntrypoint(uid)
 	if err != nil {
 		return c.String(http.StatusNotFound, "We couldn't find the Entrypoint to update.")
 	}
@@ -82,7 +82,7 @@ func UpdateEntrypoint(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Error binding to the Entrypoint to update.")
 	}
 
-	updated, err := models.UpdateEntrypoint(uid, user_uuid, &entrypoint)
+	updated, err := models.UpdateEntrypoint(uid, &entrypoint)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error updating the Entrypoint. Please try again later.")
 	}
@@ -103,7 +103,7 @@ func ProgressEntrypoint(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Not a valid ID")
 	}
 
-	ep, err := models.GetEntrypoint(uid, user_uuid)
+	ep, err := models.GetEntrypoint(uid)
 	if err != nil {
 		return c.String(http.StatusNotFound, "We couldn't find the Entrypoint to update.")
 	}
@@ -112,6 +112,7 @@ func ProgressEntrypoint(c echo.Context) error {
 		return c.String(http.StatusPreconditionFailed, "The entrypoint has all modules completed.")
 	}
 
+	mod := ep.Modules[ep.CurrentModule]
 	//-- this is where we make the update logic.
 	if ep.MaxUsers == 1 {
 		ep.CurrentModule += 1
@@ -124,14 +125,13 @@ func ProgressEntrypoint(c echo.Context) error {
 		}
 
 		//-- if both users are updated, we increase the current_module by 1 and update the status of the module itself
-		mod := ep.Modules[ep.CurrentModule]
-		if ep.UserCompleted[0] == 1 && ep.UserCompleted[0] == ep.UserCompleted[1] {
+		if ep.UserCompleted[0] == ep.UserCompleted[1] {
 			mod.Status = models.ModuleCompleted
 
-			ep.CurrentModule += 1
 			ep.UserCompleted[0] = 0
 			ep.UserCompleted[1] = 0
-			ep.StatusModule = models.EntrypointOpen
+
+			ep.CurrentModule += 1
 		} else { //-- if only one, we set the status as pending
 			mod.Status = models.ModulePartial
 		}
@@ -155,7 +155,7 @@ func ProgressEntrypoint(c echo.Context) error {
 		ep.Status = models.EntrypointCompleted
 	}
 
-	updated, err := models.UpdateEntrypoint(uid, user_uuid, &ep)
+	updated, err := models.UpdateEntrypoint(uid, &ep)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error updating the Entrypoint. Please try again later.")
 	}
@@ -176,7 +176,7 @@ func ClaimEntrypoint(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Not a valid ID")
 	}
 
-	entrypoint, err := models.GetEntrypoint(uid, user_uuid)
+	entrypoint, err := models.GetEntrypoint(uid)
 	if err != nil {
 		return c.String(http.StatusNotFound, "We couldn't find the Entrypoint to update.")
 	}
@@ -227,7 +227,7 @@ func GetEntrypoint(c echo.Context) error {
 
 	}
 
-	coll, err := models.GetEntrypoint(uid, user_uuid)
+	coll, err := models.GetEntrypoint(uid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusNotFound, "We couldn't find the Entrypoint.")
