@@ -13,7 +13,7 @@ import (
 	"github.com/periode/suns/api/models"
 )
 
-const DOMAIN = "post.enframed.net"
+const DOMAIN = "sandbox5300b8e5b84a44f786333b559fb444b6.mailgun.org"
 const SENDER = "Suns - Test <suns@post.enframed.net>"
 
 type Payload interface {
