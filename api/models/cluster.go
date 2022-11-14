@@ -85,8 +85,19 @@ func AddClusterEntrypoints(uuid string, eps []Entrypoint) error {
 		return result.Error
 	}
 
-	err := db.Model(&existing).Where("uuid = ?", uuid).Association("Entrypoints").Append(&eps)
-	return err
+	for _, ep := range eps {
+		err := db.Model(&existing).Where("uuid = ?", uuid).Association("Entrypoints").Append(&ep)
+		if err != nil {
+			return err
+		}
+
+		err = db.Model(&ep).Where("uuid = ?", ep.UUID).Association("Modules").Append(&ep.Modules)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func DeleteCluster(uuid uuid.UUID, user_uuid uuid.UUID) (Cluster, error) {
