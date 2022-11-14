@@ -152,6 +152,8 @@ const Entrypoint = (props: any) => {
             console.log(`successfully completed module!`);
             const updated = await res.json()
 
+            updated.modules = updated.modules.sort((a: IModule, b: IModule) => { return parseInt(a.ID) - parseInt(b.ID) })
+
             //-- completion always means the user is done with their input
             setUserDone(false)
 
@@ -161,11 +163,7 @@ const Entrypoint = (props: any) => {
             else
                 setUserCompleted(false) //-- we move on to the next module
 
-            //-- first check if we're done with the whole entrypoint
-            if (updated.status === ENTRYPOINT_STATUS.EntrypointCompleted)
-                navigate(0)
-            else
-                setData({ ...ep, current_module: updated.current_module })
+            setData(updated)
         } else {
             console.warn('error', res.status)
         }
@@ -177,11 +175,11 @@ const Entrypoint = (props: any) => {
         switch (mod.type) {
             case "upload_recording":
                 return (
-                    <AudioRecorder index={index} mod={mod} ep={ep} setUploads={setUploads} setUserDone={setUserDone} />
+                    <AudioRecorder index={index} mod={mod} ep={ep} setUploads={setUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted}/>
                 )
             case "intro":
                 return (
-                    <IntroVideo index={index} data={mod} setUserCompleted={setUserCompleted} />
+                    <IntroVideo index={index} data={mod} setUserDone={setUserDone} />
                 )
             case "text":
                 return (
@@ -237,12 +235,10 @@ const Entrypoint = (props: any) => {
             return mods
         }
 
-
         mods.push(<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}`} className="border border-amber-800 border-3 m-1 p-1">{parseModule(data.current_module, data)}</div>)
 
-
         if (hasUserCompleted)
-            mods.push(<div className="border border-amber-800 border-3 m-1 p-1">You have completed this module! Please wait for your partner to complete it as well.</div>)
+            mods.push(<div key="module-complete-message" className="border border-amber-800 border-3 m-1 p-1">You have completed this module! Please wait for your partner to complete it as well.</div>)
 
         return mods
     }

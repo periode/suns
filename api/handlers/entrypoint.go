@@ -155,9 +155,14 @@ func ProgressEntrypoint(c echo.Context) error {
 		ep.Status = models.EntrypointCompleted
 	}
 
-	updated, err := models.UpdateEntrypoint(uid, &ep)
+	_, err = models.UpdateEntrypoint(uid, &ep)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error updating the Entrypoint. Please try again later.")
+	}
+
+	updated, err := models.GetEntrypoint(uid)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "Error getting the updated Entrypoint. Please try again later.")
 	}
 
 	return c.JSON(http.StatusOK, updated)

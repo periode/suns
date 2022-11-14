@@ -9,15 +9,15 @@ interface AudioRecorderProps {
     mod: IModule,
     ep: IEntrypoint,
     setUploads: Dispatch<SetStateAction<File[]>>,
-    setUserDone: Dispatch<SetStateAction<boolean>>
+    setUserDone: Dispatch<SetStateAction<boolean>>,
+    hasUserCompleted: boolean
 }
 
 const MAX_RECORD_TIME = 180 * 1000
 var recorder: any
 
-const AudioRecorder = ({index, mod, ep, setUploads, setUserDone}:AudioRecorderProps) => {
+const AudioRecorder = ({ index, mod, ep, setUploads, setUserDone, hasUserCompleted }: AudioRecorderProps) => {
     const uploads = ep.modules[index - 1].uploads ? ep.modules[index - 1].uploads : null
-    const [hasCompleted, setHasCompleted] = useState(mod.status)
     const session = getSession()
     const [recordingState, setRecordingState] = useState("idle")
     const [recordingMessage, setRecordingMessage] = useState("ready to record")
@@ -68,7 +68,7 @@ const AudioRecorder = ({index, mod, ep, setUploads, setUserDone}:AudioRecorderPr
     }
 
     const stopRecording = () => {
-        if(recordingState === "done")
+        if (recordingState === "done")
             return
 
         recorder.ondataavailable = function (blob: Blob) {
@@ -93,15 +93,16 @@ const AudioRecorder = ({index, mod, ep, setUploads, setUserDone}:AudioRecorderPr
     }
 
     const getUploadedMedia = () => {
-        if (mod.uploads.length === 0) return (<></>)
         const session = getSession()
-        if (mod.uploads[0].user_uuid === session.user.uuid)
+
+        if (mod.uploads.length === 0) return (<></>)
+        else if (mod.uploads[0].user_uuid === session.user.uuid)
             return (<audio src={`${process.env.REACT_APP_API_URL}/static/${mod.uploads[0].url}`} controls></audio>)
 
         if (mod.uploads.length === 1) return (<></>)
-
-        if (mod.uploads[1].user_uuid === session.user.uuid)
+        else if (mod.uploads[1].user_uuid === session.user.uuid)
             return (<audio src={`${process.env.REACT_APP_API_URL}/static/${mod.uploads[1].url}`} controls></audio>)
+
         return (<></>)
     }
 
@@ -125,22 +126,31 @@ const AudioRecorder = ({index, mod, ep, setUploads, setUserDone}:AudioRecorderPr
             <p>
                 {mod.content}
             </p>
-            <div>
-                {getUploadedMedia()}
-                {getInputPrompt()}
-                <div>
-                    {recordingState === "idle" ? <button className="bg-amber-800 text-white p-1 m-1" onClick={startRecording}>record</button> : <></>}
-                    {recordingState === "recording" ? <button className="bg-amber-800 text-white p-1 m-1" onClick={stopRecording}>stop</button> : <></>}
-                    {recordingState === "done" ? <button className="bg-amber-800 text-white p-1 m-1" onClick={resetRecording}>restart</button> : <></>}
-                </div>
+            <div className="flex flex-row mt-10">
+                <div className="flex-1">
+                    {
+                        uploads && uploads.length > 0 ?
+                            <>
+                                {getInputPrompt()}
+                            </> : <></>
+                    }
 
-                <p>{recordingMessage}</p>
-                {
-                    blobURL !== "" ?
-                        <audio src={blobURL} controls></audio>
-                        :
-                        <></>
-                }
+                </div>
+                <div className="flex-1">
+                    {!hasUserCompleted && recordingState === "idle" ? <button className="bg-amber-800 text-white p-1 m-1" onClick={startRecording}>record</button> : <></>}
+                    {!hasUserCompleted && recordingState === "recording" ? <button className="bg-amber-800 text-white p-1 m-1" onClick={stopRecording}>stop</button> : <></>}
+                    {!hasUserCompleted && recordingState === "done" ? <button className="bg-amber-800 text-white p-1 m-1" onClick={resetRecording}>restart</button> : <></>}
+                    <p>{recordingMessage}</p>
+                </div>
+                <div className="flex-1">
+                        {
+                            blobURL !== "" && !hasUserCompleted ?
+                                <audio src={blobURL} controls></audio>
+                                :
+                                <></>
+                        }
+                    </div>
+
             </div>
         </div>
     )

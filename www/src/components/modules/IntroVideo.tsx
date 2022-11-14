@@ -4,13 +4,13 @@ import { IModule } from "../../utils/types"
 interface IntroVideoProps {
     data: IModule,
     index: number,
-    setUserCompleted: Dispatch<SetStateAction<boolean>>
+    setUserDone: Dispatch<SetStateAction<boolean>>
 }
 
-const IntroVideo = ({ data, index, setUserCompleted }: IntroVideoProps) => {
+const IntroVideo = ({ data, index, setUserDone }: IntroVideoProps) => {
 
     useEffect(() => {
-        setUserCompleted(true)
+        setUserDone(true)
     }, [])
 
     return (<>
