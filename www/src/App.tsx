@@ -1,11 +1,11 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './App.css';
 import { ImageOverlay, MapContainer } from 'react-leaflet'
 import { CRS } from 'leaflet';
 import L from "leaflet";
 
 import { getSession } from './utils/auth'
-import Auth from './components/auth/Auth'
+import Auth from './pages/auth/Auth'
 import EntrypointMarker from './components/entrypoints/EntrypointMarker';
 import Entrypoint from './components/entrypoints/Entrypoint';
 

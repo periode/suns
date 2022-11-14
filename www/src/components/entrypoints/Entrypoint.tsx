@@ -174,7 +174,7 @@ const Entrypoint = (props: any) => {
                 )
             case "intro":
                 return (
-                    <IntroVideo index={index} data={mod} hasCompleted={hasCompleted} setUserCompleted={setUserCompleted} />
+                    <IntroVideo index={index} data={mod} setUserCompleted={setUserCompleted} />
                 )
             case "text":
                 return (
@@ -242,10 +242,12 @@ const Entrypoint = (props: any) => {
 
     if (data !== undefined)
         return (
-            <div className="absolute w-full h-full p-4 md:w-[720px]">
+            <div className="absolute w-full h-full p-4 
+                            md:flex md:flex-col md:items-center md:justify-center ">
+                
                 <div className="
                         flex flex-col
-                        w-full h-full 
+                        w-full h-full md:w-[720px] md:h-4/5 
                         border border-amber-800 
                         text-amber-800
                         bg-amber-50
