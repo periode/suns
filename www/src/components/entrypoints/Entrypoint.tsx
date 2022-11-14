@@ -15,6 +15,8 @@ import IntroVideo from "../modules/IntroVideo";
 import FinalFirstTimes from "../modules/FinalFirstTimes";
 import { ENTRYPOINT_STATUS, IEntrypoint, IModule, ISession } from "../../utils/types";
 
+const FETCH_INTERVAL = 5 * 1000
+
 const Entrypoint = (props: any) => {
     const params = useParams()
     const hasData = useRef(false)
@@ -71,6 +73,8 @@ const Entrypoint = (props: any) => {
                 e.modules = e.modules.sort((a: IModule, b: IModule) => { return parseInt(a.ID) - parseInt(b.ID) })
 
                 setData(e as IEntrypoint)
+                if(isUserDone) setUserDone(false)
+                setTimeout(fetchEntrypoint, FETCH_INTERVAL)
             } else {
                 console.warn('error', res.status)
             }
