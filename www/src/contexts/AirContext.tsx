@@ -1,5 +1,6 @@
 import Airtable from "airtable"
 import React, {createContext, useEffect, useRef, useState} from "react"
+import LoadingApp from "../components/commons/laoding/LoadingApp"
 
 
 const AirTablePages : string[] = [
@@ -20,6 +21,7 @@ interface AirContextProps {
 const AirContext = ({children} : AirContextProps) => {
 	
 	const [mainContext, setMainContext] = useState(AirTableMap)
+	const [isLoading, setIsLoading] = useState(false)
 
 
 	const renderOnce = useRef(false)
@@ -28,6 +30,7 @@ const AirContext = ({children} : AirContextProps) => {
 		console.log ("Calling use effect")
 		if (renderOnce.current === true)
 			return
+		setIsLoading(true)
 		Airtable.configure({
 			endpointUrl: 'https://api.airtable.com',
 			apiKey: process.env.REACT_APP_AIRTABLE_KEY
@@ -47,6 +50,7 @@ const AirContext = ({children} : AirContextProps) => {
 				setMainContext(new Map(mainContext.set(pageName, newMap)))
 				fetchNextPage();
 			}, function done(err) {
+				setIsLoading(false)
 				if (err) { console.error(err); return; }
 			})
 		});
@@ -60,6 +64,9 @@ const AirContext = ({children} : AirContextProps) => {
 	return ( 
 		<>
 		{
+			isLoading ? 
+			<LoadingApp/>
+			:
 			mainContext ? 
 			<AirTableContext.Provider value={mainContext}>
 				{ children }
