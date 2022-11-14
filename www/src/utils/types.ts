@@ -44,6 +44,7 @@ export interface IUpload {
 }
 
 export interface IModule {
+    ID: string,
     uuid: String,
     name: String,
     content: String,

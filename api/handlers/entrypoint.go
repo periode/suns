@@ -125,7 +125,7 @@ func ProgressEntrypoint(c echo.Context) error {
 
 		//-- if both users are updated, we increase the current_module by 1 and update the status of the module itself
 		mod := ep.Modules[ep.CurrentModule]
-		if ep.UserCompleted[0] == ep.UserCompleted[1] {
+		if ep.UserCompleted[0] == 1 && ep.UserCompleted[0] == ep.UserCompleted[1] {
 			mod.Status = models.ModuleCompleted
 
 			ep.CurrentModule += 1

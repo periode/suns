@@ -119,6 +119,8 @@ const AudioRecorder = ({index, mod, ep, setUploads, setUserCompleted}:AudioRecor
         return (<>Could not find proper prompt</>)
     }
 
+    console.log(index, mod.status)
+
     return (
         <div key={`mod-${mod.name}`}>
             <div className="w-100 text-left text-sm l-0">{index + 1}</div>

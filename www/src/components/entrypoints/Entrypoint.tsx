@@ -64,6 +64,8 @@ const Entrypoint = (props: any) => {
             const res = await fetch(endpoint, options)
             if (res.ok) {
                 const e = await res.json()
+                e.modules = e.modules.sort((a: IModule, b : IModule) => {return parseInt(a.ID) - parseInt(b.ID) })
+
                 setData(e as IEntrypoint)
             } else {
                 console.warn('error', res.status)
@@ -153,7 +155,7 @@ const Entrypoint = (props: any) => {
                 setHasCompleted(false) //-- we move on to the next module
 
             //-- first check if we're done with the whole entrypoint
-            if (updated.status !== ENTRYPOINT_STATUS.EntrypointCompleted)
+            if (updated.status === ENTRYPOINT_STATUS.EntrypointCompleted)
                 navigate(0)
             else
                 setData({ ...ep, current_module: updated.current_module, status_module: updated.status_module })
@@ -220,7 +222,6 @@ const Entrypoint = (props: any) => {
     }
 
     const getModules = () => {
-        console.log(data.modules, data.status)
         let mods = []
         //-- if all modules are displayed and the status of the entrypoint is completed, we return the public view
         if (data.status === ENTRYPOINT_STATUS.EntrypointCompleted) {
