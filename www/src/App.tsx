@@ -76,7 +76,7 @@ const App = () => {
           <div className="App font-serif">
 
             
-            {session.token === '' ?
+            { session.token === '' ?
                 <Auth />        
               :
               <>

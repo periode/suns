@@ -1,54 +1,75 @@
 import Airtable from "airtable"
-import React, {createContext, useEffect, useState} from "react"
+import React, {createContext, useEffect, useRef, useState} from "react"
+
+
+const AirTablePages : string[] = [
+	"Main",
+	"ForTheFirstTime",
+]
+
+var AirTableMap = new Map<string, Map<string, string>>()
+
+export const AirTableContext = createContext(AirTableMap)
 
 interface AirContextProps {
 	children : React.ReactNode;
 }
 
-interface IRecord {
-	// Interface fprr name : value
-	[ key: string ]: string
-}
 
-const AirTableContext = createContext<IRecord[]>([])
 
 const AirContext = ({children} : AirContextProps) => {
 	
+	const [mainContext, setMainContext] = useState(AirTableMap)
 
-	const [mainContext, setMainContext] = useState<IRecord[]>([])
 
+	const renderOnce = useRef(false)
 
 	useEffect(() => {
+		console.log ("Calling use effect")
+		if (renderOnce.current === true)
+			return
 		Airtable.configure({
 			endpointUrl: 'https://api.airtable.com',
 			apiKey: process.env.REACT_APP_AIRTABLE_KEY
 		})
 		var base = Airtable.base('appO4245S69TqEnGW');
-	
-		const nameOfSpreadsheet = 'Main'
-		base(nameOfSpreadsheet).select().eachPage(function page(records, fetchNextPage) {
-			// This function (`page`) will get called for each page of records.
-	
-	
-			records.forEach(function(record) {
-				const newElement : IRecord = { name: String(record.get('Name')), content: String(record.get('Content'))}
-				setMainContext(oldArray => [...oldArray,  newElement])
-			});
-			// To fetch the next page of records, call `fetchNextPage`.
-			// If there are more records, `page` will get called again.
-			// If there are no more records, `done` will get called.
-			fetchNextPage();
-	
-		}, function done(err) {
-			if (err) { console.error(err); return; }
+		
+		AirTablePages.forEach( pageName => {
+			base(pageName).select().eachPage(function page(records, fetchNextPage) {
+				
+				var newMap = new Map();
+				records.forEach( (record) => {
+					var Name = 		String(record.get('Name'))
+					var Content = 	String(record.get('Content'))
+					if (Name && Content)
+						newMap.set(Name, Content)
+				})
+				setMainContext(new Map(mainContext.set(pageName, newMap)))
+				fetchNextPage();
+			}, function done(err) {
+				if (err) { console.error(err); return; }
+			})
 		});
-		console.log(mainContext)
+		renderOnce.current = true
+	}, [mainContext])
+	
+	useEffect(() => {
+		console.log("mainContext: ", mainContext)
 	}, [mainContext])
 
 	return ( 
-		<AirTableContext.Provider value={mainContext}>
+		<>
+		{
+			mainContext ? 
+			<AirTableContext.Provider value={mainContext}>
+				{ children }
+			</AirTableContext.Provider> 
+			: 
 			{ children }
-		</AirTableContext.Provider> );
+		}
+		</>
+
+		);
 }
 
 export default AirContext;

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { signin, signup } from '../../utils/auth'
 import "../../styles/auth.css"
 import { Link, useNavigate } from 'react-router-dom';
-import Airtable from 'airtable';
+import { AirTableContext }from '../../contexts/AirContext';
 
 const Auth = () => {
     const navigate = useNavigate()
@@ -16,6 +16,8 @@ const Auth = () => {
     const [signupEmailConf, setSignupEmailConf] = useState("")
     const [signupPasswordConf, setSignupPasswordConf] = useState("")
 
+
+    const airtable = useContext(AirTableContext)
     // useEffect(() => {
     //     Airtable.configure({
     //         endpointUrl: 'https://api.airtable.com',
@@ -105,12 +107,14 @@ const Auth = () => {
 
     return (
         <div className="w-full">
+            <p>{ airtable.get("ForTheFirstTime")?.get("EntryPoint0module0Video") }</p>
             {
                 success === true ?
                     <div className="status-info">{message}</div>
                     :
                     <>
                         <h2>Sign in</h2>
+                        {/* <p>{ airtable.Test }</p> */}
                         <form className="flex flex-col w-full" action="">
                             <div className="flex flex-col w-full">
                                 <label htmlFor="email">Email</label>
