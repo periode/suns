@@ -1,7 +1,5 @@
 const FinalFirstTimes = (props: any) => {
     const data = props.data
-    console.log('data from final first time', data);
-
     const getUserContent = (user: any) => {
         if (data === undefined || data.modules.length === 0 || data.modules[1].uploads.length === 0 || data.modules[2].uploads.length === 0) return (<></>)
 

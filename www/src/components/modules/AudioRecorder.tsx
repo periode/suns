@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
 import { getSession } from "../../utils/auth"
 import { IEntrypoint, IModule, IUpload } from "../../utils/types"
 
@@ -12,7 +12,7 @@ interface AudioRecorderProps {
     setUserCompleted: Dispatch<SetStateAction<boolean>>
 }
 
-const MAX_RECORD_TIME = 180
+const MAX_RECORD_TIME = 180 * 1000
 var recorder: any
 
 const AudioRecorder = ({index, mod, ep, setUploads, setUserCompleted}:AudioRecorderProps) => {
@@ -61,11 +61,16 @@ const AudioRecorder = ({index, mod, ep, setUploads, setUserCompleted}:AudioRecor
             recorder.ondataavailable = function (blob: Blob) {
                 audioBlob = blob
             };
-            recorder.start(MAX_RECORD_TIME * 1000)
+            recorder.start(MAX_RECORD_TIME)
+
+            setTimeout(stopRecording, MAX_RECORD_TIME + 1)
         }
     }
 
     const stopRecording = () => {
+        if(recordingState === "done")
+            return
+
         recorder.ondataavailable = function (blob: Blob) {
             audioBlob = blob
         };

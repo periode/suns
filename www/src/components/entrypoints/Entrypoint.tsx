@@ -143,20 +143,20 @@ const Entrypoint = (props: any) => {
         };
         const res = await fetch(endpoint, options)
         if (res.ok) {
-            console.log(`successfully completed entrypoint!`);
+            console.log(`successfully completed module!`);
             const updated = await res.json()
-
-            //-- first check if we're done with the whole entrypoint
-            if(updated.status === ENTRYPOINT_STATUS.EntrypointCompleted)
-                navigate(0)
-            else
-                setData({ ...ep, current_module: updated.current_module, status_module: updated.status_module })
 
             //-- check if we're done with the module
             if (updated.current_module === ep.current_module)
                 setHasCompleted(true) //-- we have a partial state
             else
                 setHasCompleted(false) //-- we move on to the next module
+
+            //-- first check if we're done with the whole entrypoint
+            if (updated.status !== ENTRYPOINT_STATUS.EntrypointCompleted)
+                navigate(0)
+            else
+                setData({ ...ep, current_module: updated.current_module, status_module: updated.status_module })
         } else {
             console.warn('error', res.status)
         }
@@ -205,7 +205,7 @@ const Entrypoint = (props: any) => {
                 )
             case "final_first_times":
                 return (
-                    <FinalFirstTimes data={ep}/>
+                    <FinalFirstTimes data={ep} />
                 )
             default:
                 return (
@@ -220,10 +220,11 @@ const Entrypoint = (props: any) => {
     }
 
     const getModules = () => {
+        console.log(data.modules, data.status)
         let mods = []
         //-- if all modules are displayed and the status of the entrypoint is completed, we return the public view
         if (data.status === ENTRYPOINT_STATUS.EntrypointCompleted) {
-            mods.push(<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}`} className="border border-amber-800 border-3 m-1 p-1">{parseModule(data.current_module, data)}</div>)
+            mods.push(<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}-final`} className="border border-amber-800 border-3 m-1 p-1">{parseModule(data.current_module, data)}</div>)
 
             return mods
         }
