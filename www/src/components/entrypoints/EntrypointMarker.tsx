@@ -4,7 +4,7 @@ import { IEntrypoint } from "../../utils/types";
 
 const EntrypointMarker = (props: any) => {
     const navigate = useNavigate()
-    const ep = props.ep as IEntrypoint
+    const ep = props.data as IEntrypoint
     
     return (
         <Marker

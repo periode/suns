@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { signin, signup } from '../../utils/auth'
 import "../../styles/auth.css"
 import { Link, useNavigate } from 'react-router-dom';
-import Airtable from 'airtable';
+import { AirTableContext }from '../../contexts/AirContext';
 
 const Auth = () => {
     const navigate = useNavigate()
@@ -15,33 +15,34 @@ const Auth = () => {
     const [signupPassword, setSignupPassword] = useState("")
     const [signupEmailConf, setSignupEmailConf] = useState("")
     const [signupPasswordConf, setSignupPasswordConf] = useState("")
-    const [greetingMessage, setGreetingMessage] = useState("")
 
-    useEffect(() => {
-        Airtable.configure({
-            endpointUrl: 'https://api.airtable.com',
-            apiKey: process.env.REACT_APP_AIRTABLE_KEY
-        })
-        var base = Airtable.base('appO4245S69TqEnGW');
 
-        const nameOfSpreadsheet = 'Text'
-        base(nameOfSpreadsheet).select().eachPage(function page(records, fetchNextPage) {
-            // This function (`page`) will get called for each page of records.
+    const airtable = useContext(AirTableContext)
+    // useEffect(() => {
+    //     Airtable.configure({
+    //         endpointUrl: 'https://api.airtable.com',
+    //         apiKey: process.env.REACT_APP_AIRTABLE_KEY
+    //     })
+    //     var base = Airtable.base('appO4245S69TqEnGW');
 
-            records.forEach(function(record) {
-                if(record.get('Name') === 'signinWelcomeMessage')
-                    setGreetingMessage(record.get('Content') as string)
-            });
+    //     const nameOfSpreadsheet = 'Main'
+    //     base(nameOfSpreadsheet).select().eachPage(function page(records, fetchNextPage) {
+    //         // This function (`page`) will get called for each page of records.
 
-            // To fetch the next page of records, call `fetchNextPage`.
-            // If there are more records, `page` will get called again.
-            // If there are no more records, `done` will get called.
-            fetchNextPage();
+    //         records.forEach(function(record) {
+    //             if(record.get('Name') === 'signinWelcomeMessage')
+    //                 setGreetingMessage(record.get('Content') as string)
+    //         });
 
-        }, function done(err) {
-            if (err) { console.error(err); return; }
-        });
-    }, [])
+    //         // To fetch the next page of records, call `fetchNextPage`.
+    //         // If there are more records, `page` will get called again.
+    //         // If there are no more records, `done` will get called.
+    //         fetchNextPage();
+
+    //     }, function done(err) {
+    //         if (err) { console.error(err); return; }
+    //     });
+    // }, [])
 
     const handleSignin = (e: React.BaseSyntheticEvent) => {
         e.preventDefault()
@@ -102,15 +103,18 @@ const Auth = () => {
         setSignupPasswordConf(v)
     }
 
+
+
     return (
         <div className="w-full">
+            <p>{ airtable.get("ForTheFirstTime")?.get("EntryPoint0module0Video") }</p>
             {
                 success === true ?
                     <div className="status-info">{message}</div>
                     :
                     <>
                         <h2>Sign in</h2>
-                        <p>{greetingMessage}</p>
+                        {/* <p>{ airtable.Test }</p> */}
                         <form className="flex flex-col w-full" action="">
                             <div className="flex flex-col w-full">
                                 <label htmlFor="email">Email</label>
