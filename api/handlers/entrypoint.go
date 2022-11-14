@@ -10,6 +10,7 @@ import (
 	"github.com/labstack/echo/v4"
 	zero "github.com/periode/suns/api/logger"
 	"github.com/periode/suns/api/models"
+	"github.com/periode/suns/mailer"
 )
 
 func GetAllEntrypoints(c echo.Context) error {
@@ -125,7 +126,7 @@ func ProgressEntrypoint(c echo.Context) error {
 
 		//-- if both users are updated, we increase the current_module by 1 and update the status of the module itself
 		mod := ep.Modules[ep.CurrentModule]
-		if ep.UserCompleted[0] == ep.UserCompleted[1] {
+		if ep.UserCompleted[0] == 1 && ep.UserCompleted[0] == ep.UserCompleted[1] {
 			mod.Status = models.ModuleCompleted
 
 			ep.CurrentModule += 1
@@ -134,12 +135,18 @@ func ProgressEntrypoint(c echo.Context) error {
 			ep.StatusModule = models.EntrypointOpen
 		} else { //-- if only one, we set the status as pending
 			mod.Status = models.ModulePartial
-			zero.Warn("An entrypoint has had some progress! We should send an email")
 		}
 
 		_, err := models.UpdateModule(mod.UUID, user_uuid, &mod)
 		if err != nil {
 			return c.String(http.StatusInternalServerError, "Error updating the module status. Please try again later.")
+		}
+
+		//-- send emails to whoever is not the user doing the current completion
+		for i := 0; i < len(ep.Users); i++ {
+			if ep.Users[i].UUID != user_uuid {
+				mailer.SendModuleProgress(ep.Users[i], &ep)
+			}
 		}
 	}
 
