@@ -12,7 +12,7 @@ import NotFound from './NotFound';
 
 import About from './About';
 
-import Auth from './pages/auth/Auth';
+import Auth from './components/auth/Auth';
 import AccountConfirm from './pages/auth/AccountConfirm';
 import AccountRecovery from './pages/auth/AccountRecovery';
 import AccountRecoveryConfirm from './pages/auth/AccountRecoveryConfirm';
