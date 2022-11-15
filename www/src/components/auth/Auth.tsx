@@ -1,8 +1,8 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { signin, signup } from '../../utils/auth'
 import "../../styles/auth.css"
 import { Link, useNavigate } from 'react-router-dom';
-import { AirTableContext }from '../../contexts/AirContext';
+import Login from './Login';
 
 const Auth = () => {
     const navigate = useNavigate()
@@ -78,7 +78,8 @@ const Auth = () => {
 
 
     return (
-        <div className="w-full">
+        <div className="w-full 
+                        font-serif text-amber-900">
             {
                 success === true ?
                     <div className="status-info">{message}</div>
@@ -86,23 +87,7 @@ const Auth = () => {
                     <>
                         <h2>Sign in</h2>
                         {/* <p>{ airtable.Test }</p> */}
-                        <form className="flex flex-col w-full" action="">
-                            <div className="flex flex-col w-full">
-                                <label htmlFor="email">Email</label>
-                                <input className="border border-amber-800 bg-amber-50" onChange={handleEmailChange} type="text" name="email" />
-                            </div>
-                            <div className="flex flex-col w-full">
-                                <label htmlFor="password">Password</label>
-                                <input className="border border-amber-800 bg-amber-50" onChange={handlePasswordChange} type="password" name="password" />
-                            </div>
-                            <div className="flex flex-col w-full">
-                                <button onClick={handleSignin}>Login</button>
-                            </div>
-                        </form>
-                        <div>
-                            <Link to="/auth/lost-password" state={{preFilledEmail : email}}>Forgot your Password?</Link>
-                        </div>
-                        <hr />
+                        <Login/>
                         <h2>Sign up</h2>
                         <form className="flex flex-col w-full" action="">
                             <div className="flex flex-col w-full">
@@ -129,7 +114,6 @@ const Auth = () => {
                         <div className="status-info">{message}</div>
                     </>
             }
-
         </div>
     )
 }

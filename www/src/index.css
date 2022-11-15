@@ -9,6 +9,12 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+}
+
+*::selection {
+  color:#fffbeb;
+  background-color:#f59e0b;
 }
 
 code {
@@ -60,85 +66,85 @@ code {
     font-family: IBMPlexMono;
     font-weight: 100;
     font-style: normal;
-    src: url(https://static.enframed.net/suns/IBM_Plex_Mono/IBMPlexMono-Thin.ttf) format("ttf");
+    src: url(https://static.enframed.net/suns/IBM_Plex_Mono/IBMPlexMono-Thin.ttf) format("woff2");
   }
   @font-face {
     font-family: IBMPlexMono;
     font-weight: 100;
     font-style: italic;
-    src: url(https://static.enframed.net/suns/IBM_Plex_Mono/IBMPlexMono-ThinItalic.ttf) format("ttf");
+    src: url(https://static.enframed.net/suns/IBM_Plex_Mono/IBMPlexMono-ThinItalic.ttf) format("woff2");
   }
   @font-face {
     font-family: IBMPlexMono;
     font-weight: 200;
     font-style: normal;
-    src: url(https://static.enframed.net/suns/IBM_Plex_Mono/IBMPlexMono-ExtraLight.ttf) format("ttf");
+    src: url(https://static.enframed.net/suns/IBM_Plex_Mono/IBMPlexMono-ExtraLight.ttf) format("woff2");
   }
   @font-face {
     font-family: IBMPlexMono;
     font-weight: 200;
     font-style: italic;
-    src: url(https://static.enframed.net/suns/IBM_Plex_Mono/IBMPlexMono-ExtraLightItalic.ttf) format("ttf");
+    src: url(https://static.enframed.net/suns/IBM_Plex_Mono/IBMPlexMono-ExtraLightItalic.ttf) format("woff2");
   }
   @font-face {
     font-family: IBMPlexMono;
     font-weight: 300;
     font-style: normal;
-    src: url(https://static.enframed.net/suns/IBM_Plex_Mono/IBMPlexMono-Light.ttf) format("ttf");
+    src: url(https://static.enframed.net/suns/IBM_Plex_Mono/IBMPlexMono-Light.ttf) format("woff2");
   }
   @font-face {
     font-family: IBMPlexMono;
     font-weight: 300;
     font-style: italic;
-    src: url(https://static.enframed.net/suns/IBM_Plex_Mono/IBMPlexMono-LightItalic.ttf) format("ttf");
+    src: url(https://static.enframed.net/suns/IBM_Plex_Mono/IBMPlexMono-LightItalic.ttf) format("woff2");
   }
   @font-face {
     font-family: IBMPlexMono;
     font-weight: 400;
     font-style: normal;
-    src: url(https://static.enframed.net/suns/IBM_Plex_Mono/IBMPlexMono-Regular.ttf) format("ttf");
+    src: url(https://static.enframed.net/suns/IBM_Plex_Mono/IBMPlexMono-Regular.ttf) format("woff2");
   }
   @font-face {
     font-family: IBMPlexMono;
     font-weight: 400;
     font-style: italic;
-    src: url(https://static.enframed.net/suns/IBM_Plex_Mono/IBMPlexMono-Italic.ttf) format("ttf");
+    src: url(https://static.enframed.net/suns/IBM_Plex_Mono/IBMPlexMono-Italic.ttf) format("woff2");
   }
   @font-face {
     font-family: IBMPlexMono;
     font-weight: 500;
     font-style: normal;
-    src: url(https://static.enframed.net/suns/IBM_Plex_Mono/IBMPlexMono-Medium.ttf) format("ttf");
+    src: url(https://static.enframed.net/suns/IBM_Plex_Mono/IBMPlexMono-Medium.ttf) format("woff2");
   }
   @font-face {
     font-family: IBMPlexMono;
     font-weight: 500;
     font-style: italic;
-    src: url(https://static.enframed.net/suns/IBM_Plex_Mono/IBMPlexMono-MediumItalic.ttf) format("ttf");
+    src: url(https://static.enframed.net/suns/IBM_Plex_Mono/IBMPlexMono-MediumItalic.ttf) format("woff2");
   }
   @font-face {
     font-family: IBMPlexMono;
     font-weight: 600;
     font-style: normal;
-    src: url(https://static.enframed.net/suns/IBM_Plex_Mono/IBMPlexMono-SemiBold.ttf) format("ttf");
+    src: url(https://static.enframed.net/suns/IBM_Plex_Mono/IBMPlexMono-SemiBold.ttf) format("woff2");
   }
   @font-face {
     font-family: IBMPlexMono;
     font-weight: 600;
     font-style: italic;
-    src: url(https://static.enframed.net/suns/IBM_Plex_Mono/IBMPlexMono-SemiBoldItalic.ttf) format("ttf");
+    src: url(https://static.enframed.net/suns/IBM_Plex_Mono/IBMPlexMono-SemiBoldItalic.ttf) format("woff2");
   }
   @font-face {
     font-family: IBMPlexMono;
     font-weight: 700;
     font-style: normal;
-    src: url(https://static.enframed.net/suns/IBM_Plex_Mono/IBMPlexMono-Bold.ttf) format("ttf");
+    src: url(https://static.enframed.net/suns/IBM_Plex_Mono/IBMPlexMono-Bold.ttf) format("woff2");
   }
   @font-face {
     font-family: IBMPlexMono;
     font-weight: 700;
     font-style: italic;
-    src: url(https://static.enframed.net/suns/IBM_Plex_Mono/IBMPlexMono-BoldItalic.ttf) format("ttf");
+    src: url(https://static.enframed.net/suns/IBM_Plex_Mono/IBMPlexMono-BoldItalic.ttf) format("woff2");
   }
 }
 

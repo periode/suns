@@ -5,7 +5,6 @@ import { CRS } from 'leaflet';
 import L from "leaflet";
 
 import { getSession } from './utils/auth'
-import Auth from './pages/auth/Auth'
 import EntrypointMarker from './components/entrypoints/EntrypointMarker';
 import Entrypoint from './components/entrypoints/Entrypoint';
 
@@ -16,6 +15,7 @@ import UILayout from './components/commons/layout/UILayout';
 import AirContext from './contexts/AirContext';
 
 import { IEntrypoint } from './utils/types';
+import Auth from './components/auth/Auth';
 
 export interface EntrypointInterface {
   uuid: string
@@ -37,10 +37,6 @@ const App = () => {
   const [entrypoints, setEntrypoints] = useState(Array<IEntrypoint>)
   const bounds = new L.LatLngBounds(new L.LatLng(0, 0), new L.LatLng(WIDTH, HEIGHT))
   const session = getSession()
-
-// Fetch Airtable content at launch of app and put it inside of a context
-  // const [airtableContent, setAirtableContent] = useState(Array<Records<FieldSet>>)
-
 
   useEffect(() => {
     const endpoint = new URL('entrypoints/', process.env.REACT_APP_API_URL)

@@ -5,7 +5,7 @@ module.exports = {
     extend: {
       fontFamily: {
         'serif' : ['UntitledSerif', 'serif'],
-        'mono' : ['IBMPlexMono', 'mono']
+        'mono' : ['IBMPlexMono', 'monospace' , 'mono']
       }
     },
   },
