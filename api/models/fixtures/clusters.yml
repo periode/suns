@@ -7,6 +7,7 @@
       max_users: 2
       lat: 300.300
       lng: 300.400
+      icon: "blue.svg"
       modules:
         - uuid: "2a73291d-559f-47c1-b24d-92a3606deb49"
           name: "For the first time - Intro"
@@ -43,6 +44,7 @@
       name: "Symbiosis - GAZE"
       lat: 240.300
       lng: 240.400
+      icon: "green.svg"
       modules:
         - name: "Start Symbiosis Gaze"
           type: "intro"
@@ -78,6 +80,7 @@
       name: "Symbiosis - TASK"
       lat: 150.300
       lng: 150.400
+      icon: "green.svg"
       modules:
         - name: "Start Symbiosis Task"
           type: "intro"
@@ -112,6 +115,7 @@
       name: "Symbiosis - DARE"
       lat: 140.300
       lng: 150.400
+      icon: "green.svg"
       modules:
         - name: "Start Symbiosis Dare"
           type: "intro"
@@ -143,6 +147,7 @@
       name: "Symbiosis - MEAN"
       lat: 540.300
       lng: 550.400
+      icon: "green.svg"
       modules:
         - name: "Start Symbiosis Mean"
           type: "intro"

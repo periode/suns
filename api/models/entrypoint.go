@@ -37,6 +37,7 @@ type Entrypoint struct {
 
 	Name string `gorm:"not null" json:"name" form:"name" binding:"required"`
 	Slug string `gorm:"" json:"slug"`
+	Icon string `json:"icon" yaml:"icon"`
 
 	//-- belongs to a cluster
 	ClusterUUID uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()" json:"cluster_uuid" yaml:"cluster_uuid"`

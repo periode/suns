@@ -34,7 +34,8 @@ export interface IEntrypoint {
     user_completed: Array<number>,
     partner_status: PARTNER_STATUS,
     lat: number,
-    lng: number
+    lng: number,
+    icon: string,
 }
 
 export interface IUpload {
