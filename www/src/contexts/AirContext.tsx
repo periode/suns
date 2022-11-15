@@ -6,6 +6,10 @@ import LoadingApp from "../components/commons/loading/LoadingApp"
 const AirTablePages : string[] = [
 	"Main",
 	"CombiningFirstTimes",
+	"SymbiosisGaze",
+	"SymbiosisTask",
+	"SymbiosisDare",
+	"SymbiosisMean",
 ]
 
 var AirTableMap = new Map<string, Map<string, string>>()

@@ -54,7 +54,6 @@ const App = () => {
       if (res.ok) {
         const c = await res.json()
         setEntrypoints(c as Array<IEntrypoint>)
-        console.log(entrypoints[0].icon);
       } else {
         console.warn('error', res.status)
       }

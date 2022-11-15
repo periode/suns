@@ -16,7 +16,7 @@ const IntroModule = ({ data, epName, index, setUserDone }: IntroModuleProps) => 
         setUserDone(true)
     }, [])
 
-    const ctx = useContext(AirTableContext)
+    const ctx = useContext(AirTableContext)    
     const contents = ctx.get(epName)
 
     if(contents == undefined){
@@ -26,7 +26,6 @@ const IntroModule = ({ data, epName, index, setUserDone }: IntroModuleProps) => 
     }
 
     return (<>
-        <div className="w-100 text-left  text-sm l-0">{index + 1}</div>
         <div className="flex flex-col">
             {
                 data.contents.map((c) => {
