@@ -22,12 +22,14 @@
           type: "task"
           tasks:
             - type: "audio_input"
+              key: "combining_task_0"
           hint: "Please record a moment that happened to you for the first time. This recording will then be sent to your partner."
         - uuid: "2a73291d-559f-47c1-b24d-92a3606deb51"
           name: "For the first time - Response recording"
           type: "task"
           tasks:
             - type: "audio_input"
+              key: "combining_task_1"
           hint: "This is what your partner has recorded, please tell the story of when the same thing happened to you."
         - name: "For the first time - Final"
           hint: "This is the final countdown"

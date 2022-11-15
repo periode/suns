@@ -49,6 +49,7 @@ export interface IContent {
 
 export interface ITask {
     type: string,
+    key: string,
     max_uploads: number
 }
 

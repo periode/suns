@@ -15,6 +15,7 @@ type Task struct {
 	UUID      uuid.UUID      `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
 
 	Type       string `json:"type" yaml:"type"`
+	Key        string `json:"key" yaml:"key"`
 	MaxUploads int    `gorm:"default:1" json:"max_uploads" yaml:"max_uploads"`
 
 	//-- belongs to a module

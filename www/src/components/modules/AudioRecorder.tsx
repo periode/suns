@@ -122,7 +122,6 @@ const AudioRecorder = ({ index, mod, ep, setUploads, setUserDone, hasUserComplet
 
     return (
         <div key={`mod-${mod.name}`}>
-            <div className="w-100 text-left text-sm l-0">{index + 1}</div>
             <p>
                 {mod.content}
             </p>
@@ -134,7 +133,6 @@ const AudioRecorder = ({ index, mod, ep, setUploads, setUserDone, hasUserComplet
                                 {getInputPrompt()}
                             </> : <></>
                     }
-
                 </div>
                 <div className="flex-1">
                     {!hasUserCompleted && recordingState === "idle" ? <button className="bg-amber-800 text-white p-1 m-1" onClick={startRecording}>record</button> : <></>}
