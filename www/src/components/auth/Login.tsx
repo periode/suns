@@ -43,7 +43,7 @@ const Login = () => {
 	return ( 
 		<>
 			<Toaster message={message} type={success ? ToasterType.success : ToasterType.error} display={isToasterDisplayed}></Toaster>
-			<div className="bg-amber-50 h-screen text-amber-900 w-full flex items-center justify-center">
+			<div className="bg-amber-50 w-full h-screen text-amber-900 flex items-center justify-center">
 				<form className="	w-full h-full md:w-[720px] md:h-4/5
 									flex flex-col p-4 justify-between md:justify-center md:gap-4" action="">
 					<div className="flex flex-col items-start justify-center w-full h-full md:h-auto gap-4">
@@ -64,7 +64,8 @@ const Login = () => {
 							<Link className="self-end text-sm" to="/auth/lost-password" state={{preFilledEmail : email}}>Forgot your Password?</Link>
 						</div>
 					</div>
-					<div className="flex flex-col md:flex-row-reverse w-full gap-4">
+					<div className="sticky bottom-4 md:static 
+									flex flex-col md:flex-row-reverse w-full gap-4">
 						<button className="flex items-center justify-center w-full h-14 bg-transparent text-amber-500 font-mono font-bold border borde-1 border-amber-500">
 							Sign up
 						</button>
@@ -74,7 +75,7 @@ const Login = () => {
 						</button>
 					</div>
 				</form>
-			</div>;
+			</div>
 		</>
 	)
 }
