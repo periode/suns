@@ -68,7 +68,7 @@ const App = () => {
 
     return (
         <AirContext>
-          <div className="App font-serif">
+          <div className="App w-full h-full font-serif">
             { session.token === '' ?
                 <Auth />        
               :
