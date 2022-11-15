@@ -26,7 +26,7 @@ export interface IEntrypoint {
     uuid: string,
     name: string,
     status: ENTRYPOINT_STATUS,
-    content: String,
+    content: string,
     current_module: number,
     modules: Array<IModule>,
     users: Array<IUser>
@@ -42,18 +42,26 @@ export interface IUpload {
     url: string,
 }
 
+export interface IContent {
+    type: string,
+    key: string
+}
+
+export interface ITask {
+    type: string,
+    max_uploads: number
+}
+
 export interface IModule {
     ID: string,
-    uuid: String,
-    name: String,
-    content: String,
-    type: String,
+    uuid: string,
+    name: string,
+    content: string,
+    type: string,
     uploads: Array<IUpload>,
     status: string,
-    media: {
-        type: string,
-        url: string,
-    }
+    contents: Array<IContent>,
+    tasks: Array<ITask>
 }
 
 export interface IUser {

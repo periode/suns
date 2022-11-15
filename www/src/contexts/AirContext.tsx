@@ -1,11 +1,11 @@
 import Airtable from "airtable"
 import React, {createContext, useEffect, useRef, useState} from "react"
-import LoadingApp from "../components/commons/laoding/LoadingApp"
+import LoadingApp from "../components/commons/loading/LoadingApp"
 
 
 const AirTablePages : string[] = [
 	"Main",
-	"ForTheFirstTime",
+	"CombiningFirstTimes",
 ]
 
 var AirTableMap = new Map<string, Map<string, string>>()

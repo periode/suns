@@ -11,11 +11,13 @@ import EntrypointCountdown from "./EntrypointCountdown";
 import PublicView from "./PublicView";
 import NotFound from "../../NotFound";
 import AudioRecorder from "../modules/AudioRecorder";
-import IntroVideo from "../modules/IntroVideo";
+import IntroVideo from "../modules/IntroModule";
 import FinalFirstTimes from "../modules/FinalFirstTimes";
 import { ENTRYPOINT_STATUS, IEntrypoint, IModule, ISession } from "../../utils/types";
+import IntroModule from "../modules/IntroModule";
+import TaskModule from "../modules/TaskModule";
 
-const FETCH_INTERVAL = 5 * 1000
+const FETCH_INTERVAL = 50 * 1000
 
 const Entrypoint = (props: any) => {
     const params = useParams()
@@ -177,13 +179,17 @@ const Entrypoint = (props: any) => {
         const mod = ep.modules[index]
 
         switch (mod.type) {
+            case "intro":
+                return (
+                    <IntroModule index={index} epName={ep.name} data={mod} setUserDone={setUserDone} />
+                )
+                case "task":
+                return (
+                    <TaskModule index={index} epName={ep.name} data={mod} setUserDone={setUserDone} />
+                )
             case "upload_recording":
                 return (
                     <AudioRecorder index={index} mod={mod} ep={ep} setUploads={setUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted}/>
-                )
-            case "intro":
-                return (
-                    <IntroVideo index={index} data={mod} setUserDone={setUserDone} />
                 )
             case "text":
                 return (
