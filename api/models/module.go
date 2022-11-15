@@ -31,21 +31,19 @@ type Module struct {
 	Slug    string   `gorm:"" json:"slug"`
 	Uploads []Upload `gorm:"foreignKey:ModuleUUID;references:UUID" json:"uploads"`
 	Type    string   `json:"type"`
-	Media   Media    `gorm:"embedded;embeddedPrefix:media_" json:"media"`
 
 	//-- belongs to an entrypoint
 	EntrypointUUID uuid.UUID  `gorm:"type:uuid;default:uuid_generate_v4()" json:"entrypoint_uuid" yaml:"entrypoint_uuid"`
 	Entrypoint     Entrypoint `gorm:"foreignKey:EntrypointUUID;references:UUID" json:"entrypoint"`
 
-	Content string `json:"content"`
+	//-- has many content and tasks
+	Tasks    []Task    `gorm:"foreignKey:ModuleUUID;references:UUID" json:"tasks"`
+	Contents []Content `gorm:"foreignKey:ModuleUUID;references:UUID" json:"contents"`
+
+	Hint string `json:"hint"`
 
 	MaxUsers      int           `gorm:"default:1" json:"max_users" yaml:"max_users"`
 	UserCompleted pq.Int32Array `gorm:"type:integer[]" json:"user_completed"` //-- 1 means user has completed the module, 0 means not yet
-}
-
-type Media struct {
-	Type string `json:"type"`
-	URL  string `json:"url"`
 }
 
 func (m *Module) BeforeCreate(tx *gorm.DB) (err error) {
@@ -75,7 +73,7 @@ func CreateModule(entry *Module) (Module, error) {
 
 func GetModule(uuid uuid.UUID) (Module, error) {
 	var entry Module
-	result := db.Preload("Uploads").Where("uuid = ?", uuid).First(&entry)
+	result := db.Preload("Uploads").Preload("Tasks").Preload("Contents").Where("uuid = ?", uuid).First(&entry)
 	if result.Error != nil {
 		return entry, result.Error
 	}
@@ -95,7 +93,7 @@ func GetModuleBySlug(slug string, user_uuid uuid.UUID) (Module, error) {
 
 func GetAllModules(user_uuid uuid.UUID) ([]Module, error) {
 	entry := make([]Module, 0)
-	result := db.Where("status = 'listed'").Find(&entry)
+	result := db.Preload("Uploads").Preload("Tasks").Preload("Contents").Find(&entry)
 	return entry, result.Error
 }
 

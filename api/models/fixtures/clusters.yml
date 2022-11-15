@@ -1,6 +1,5 @@
 - uuid: '57ed6a2b-aacb-4c24-b1e1-3495821f846a'
-  name: "Cluster 1"
-  status: "listed"
+  name: "Combining first times"
   entrypoints:
     - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846a'
       status: "open"
@@ -11,77 +10,160 @@
       modules:
         - uuid: "2a73291d-559f-47c1-b24d-92a3606deb49"
           name: "For the first time - Intro"
-          status: "listed"
           type: "intro"
-          media:
-            type: "video"
-            url: "https://player.vimeo.com/video/139922433?h=07c88a080c"
-          content: "This is the first content"
+          contents:
+            - type: "vid"
+              key: "combining_intro_0"
+            - type: "text"
+              key: "combining_intro_1"
+          hint: "This is the first content"
         - uuid: "2a73291d-559f-47c1-b24d-92a3606deb50"
           name: "For the first time - Prompt recording"
-          status: "listed"
-          type: "upload_recording"
-          content: "Please record a moment that happened to you for the first time. This recording will then be sent to your partner."
+          type: "task"
+          tasks:
+            - type: "audio_input"
+          hint: "Please record a moment that happened to you for the first time. This recording will then be sent to your partner."
         - uuid: "2a73291d-559f-47c1-b24d-92a3606deb51"
           name: "For the first time - Response recording"
-          status: "listed"
-          type: "upload_recording"
-          content: "This is what your partner has recorded, please tell the story of when the same thing happened to you."
+          type: "task"
+          tasks:
+            - type: "audio_recording"
+          hint: "This is what your partner has recorded, please tell the story of when the same thing happened to you."
         - name: "For the first time - Final"
-          status: "listed"
-          content: "This is the final countdown"
+          hint: "This is the final countdown"
           type: "final_first_times"
+
+- uuid: '57ed6a2b-aacb-4c24-b1e1-349581f8457b'
+  name: "Symbiosis"
+  entrypoints:
     - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846b'
-      status: "completed"
-      name: "Completed entrypoint"
+      status: "open"
+      name: "Symbiosis - GAZE"
       lat: 240.300
       lng: 240.400
       modules:
-        - name: "Completed module 1"
+        - name: "Start Symbiosis Gaze"
           type: "intro"
-          status: "listed"
-          content: "This is the first content"
-        - name: "Completed module B"
-          type: "text"
-          status: "listed"
-          content: "This is the second content"
-        - name: "Completed C"
-          type: "final"
-          status: "listed"
-          content: "This is the third content"
+          contents:
+            - type: "img"
+              key: "gaze_intro_img"
+            - type: "txt"
+              key: "gaze_intro_txt"
+            - type: "vid"
+              key: "gaze_intro_vid"
+        - name: "Text input 1"
+          type: "task"
+          tasks:
+            - type: "text_input"
+              max_uploads: 1
+          hint: "This is the second content"
+        - name: "Upload 9 Images"
+          type : "task"
+          tasks:
+            - type: "image_input"
+              max_uploads: 9
+          hint: "This is the 9x9 grid image input"
+        - name: "Label random image from the 9 previous"
+          type: "task"
+          tasks:
+            - type: "text_input"
+          hint: "This is the 9x9 grid image input"
+        - name: "Final Symbiosis Gaze"
+          type: "final_symbiosis_gaze"
+          hint: "This is the final view for the symbiosis - gaze"
     - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846c'
       status: "open"
-      name: "Entrypoint 4"
+      name: "Symbiosis - TASK"
       lat: 150.300
       lng: 150.400
       modules:
-        - name: "Module A"
+        - name: "Start Symbiosis Task"
           type: "intro"
-          status: "listed"
-          content: "This is the first content"
-        - name: "Module B"
-          type: "text"
-          status: "listed"
-          content: "This is the second content"
-        - name: "Module C"
-          type: "final"
-          status: "listed"
-          content: "This is the third content"
+          contents:
+            - type: "img"
+              key: "symbiosis_task_intro_img"
+            - type: "txt"
+              key: "symbiosis_task_intro_txt"
+            - type: "vid"
+              key: "symbiosis_task_intro_vid"
+        - name: "Text input 1"
+          type: "task"
+          tasks:
+            - type: "text_input"
+          hint: "This is the text input"
+          contents:
+            - type: "txt"
+              key: "symbiosis_task_1"
+        - name: "Upload 1 Video"
+          type: "task"
+          tasks:
+            - type: "video_input"
+              max_uploads: 1
+          contents:
+            - type: "txt"
+              key: "symbiosis_task_2"
+        - name: "Final Symbiosis Task"
+          type: "final_symbiosis_task"
+          hint: "This is the final view for the symbiosis - Task. It should show the videos"
     - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846d'
       status: "open"
-      name: "Entrypoint 5"
+      name: "Symbiosis - DARE"
       lat: 140.300
       lng: 150.400
       modules:
-        - name: "Module A"
+        - name: "Start Symbiosis Dare"
           type: "intro"
-          status: "listed"
-          content: "This is the first content"
-        - name: "Module B"
-          type: "text"
-          status: "listed"
-          content: "This is the second content"
-        - name: "Module C"
-          type: "final"
-          status: "listed"
-          content: "This is the third content"
+          contents:
+            - type: "img"
+              key: "dare_intro_img"
+            - type: "txt"
+              key: "dare_intro_txt"
+            - type: "vid"
+              key: "dare_intro_vid"
+        - name: "Upload Video"
+          type: "task"
+          tasks:
+            - type: "video_input"
+              max_uploads: 1
+          hint: "This is the video input"
+        - name: "Upload Audio"
+          type: "task"
+          tasks:
+            - type: "audio_input"
+              max_uploads: 1
+          hint: "this is the audio commentary on the video"
+        - name: "Completed Dare"
+          type: "final_symbiosis_dare"
+          hint: "This is the final view for the symbiosis - Dare. It should show the videos with combined audio"
+
+    - uuid: '46df7b2b-aacb-4c24-b1e1-3495821f846d'
+      status: "open"
+      name: "Symbiosis - MEAN"
+      lat: 540.300
+      lng: 550.400
+      modules:
+        - name: "Start Symbiosis Mean"
+          type: "intro"
+          contents:
+            - type: "img"
+              key: "mean_intro_img"
+            - type: "txt"
+              key: "mean_intro_txt"
+            - type: "vid"
+              key: "mean_intro_vid"
+        - name: "Upload Text"
+          type: "task"
+          tasks:
+            - type: "text_input"
+          hint: "This is the text input"
+        - name: "Upload Audio"
+          type: "task"
+          tasks:
+            - type: "audio_input"
+              max_uploads: 1
+          contents:
+            - type: "txt"
+              key: "symbiosis_mean_2"
+        - name: "Final Symbiosis mean"
+          type: "final_symbiosis_mean"
+          hint: "This is the final view for the symbiosis - Mean"
