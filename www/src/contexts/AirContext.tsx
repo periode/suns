@@ -8,7 +8,6 @@ const AirTablePages : string[] = [
 	"CombiningFirstTimes",
 	"SymbiosisGaze",
 	"SymbiosisTask",
-	"SymbiosisDare",
 	"SymbiosisMean",
 ]
 

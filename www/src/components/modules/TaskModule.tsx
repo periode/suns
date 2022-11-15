@@ -22,24 +22,27 @@ const TaskModule = ({ data, ep, index, setUploads, setUserDone, hasUserCompleted
             switch (task.type) {
                 case "audio_input":
                     return (
-                        <>
-                            <p key={`${task.type}-${task.key}-prompt`}>{contents?.get(task.key)}</p>
+                        <div key={`${task.type}-key`}>
+                            <p>{contents?.get(task.key)}</p>
 
                             <AudioRecorder key={`${data.ID}-${data.name}`} mod={data} index={index} ep={ep} setUploads={setUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted} />
-                        </>
+                        </div>
                     )
                 case "video_input":
-                    return (<>
-                        video input
-                    </>)
+                    return (<div key={`${task.type}-key`}>
+                        <p>{contents?.get(task.key)}</p>
+                        <div>video input</div>
+                    </div>)
                 case "image_input":
-                    return (<>
-                        image input
-                    </>)
+                    return (<div key={`${task.type}-key`}>
+                        <p>{contents?.get(task.key)}</p>
+                        <div>image input</div>
+                    </div>)
                 case "text_input":
-                    return (<>
+                    return (<div key={`${task.type}-key`}>
+                        <p>{contents?.get(task.key)}</p>
                         <input type="text" />
-                    </>)
+                    </div>)
                 default:
                     return (<>Could not find task type ({task.type})</>)
             }
