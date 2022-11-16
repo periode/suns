@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { signin } from "../../utils/auth";
 import LoginPrimary from "../commons/buttons/LoginPrimary";
 import LoginSecondary from "../commons/buttons/LoginSecondary";
-import InputField from "../commons/forms/InputField";
+import InputField from "../commons/forms/inputs/InputField";
 import Toaster, { ToasterType } from "../commons/toaster/Toaster";
 
 
@@ -57,7 +57,7 @@ const Login = () => {
 						<div className="flex flex-col gap-1 items-start w-full">
 							<InputField onChange={handlePasswordChange} label="Password" placeholder="•••••" type="password"/>
 							
-							<Link className="font-mono self-end text-" to="/auth/lost-password" state={{preFilledEmail : email}}>Forgot your Password?</Link>
+							<Link className="font-mono self-end text-xs hover:text-amber-500 transition-all ease-in duration-300" to="/auth/lost-password" state={{preFilledEmail : email}}>Forgot your Password?</Link>
 						</div>
 					</div>
 					<div className="sticky bottom-4 md:static 
