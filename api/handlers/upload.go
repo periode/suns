@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -58,15 +59,13 @@ func CreateUpload(c echo.Context) error {
 		}
 		defer dst.Close()
 
-		m, err := mimetype.DetectFile(target)
+		bytes, err := ioutil.ReadAll(src)
 		if err != nil {
 			zero.Error(err.Error())
 			return c.String(http.StatusBadRequest, "Error uploading the file")
 		}
-		fmt.Println(m)
-
+		m := mimetype.Detect(bytes)
 		ftype = m.String()
-		fmt.Println(ftype)
 
 		// Copy
 		if _, err = io.Copy(dst, src); err != nil {
@@ -82,8 +81,6 @@ func CreateUpload(c echo.Context) error {
 		Text:     txt,
 		Type:     ftype,
 	}
-
-	zero.Debugf("%v\n", upload)
 
 	//-- then get the module, append the upload, and update it
 	module, err := models.AddModuleUpload(module_uuid, upload)
