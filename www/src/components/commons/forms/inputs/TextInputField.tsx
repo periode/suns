@@ -1,19 +1,21 @@
 import { Dispatch, SetStateAction, useEffect } from "react";
+import { IFile } from "../../../../utils/types";
 
 interface TextInputFieldProps {
 	label? : string,
 	placeholder? : string,
 	type? : string
-	setUploads: Dispatch<SetStateAction<string>>,
+	setUploads: Dispatch<SetStateAction<IFile[]>>,
     setUserDone: Dispatch<SetStateAction<boolean>>,
+	hasUserCompleted: boolean,
 }
 
 const TextInputField = ({
 	label,
 	placeholder,
-	type = "text",
 	setUploads,
 	setUserDone,
+	hasUserCompleted
  } : TextInputFieldProps) => {
 
 	useEffect(() => {
@@ -21,11 +23,12 @@ const TextInputField = ({
     }, [])
 
 	const onChange = (e: React.BaseSyntheticEvent) => {
+		const t = e.target as HTMLInputElement
 		e.preventDefault()
-        e.stopPropagation()
-
-		setUploads(e.currentTarget.value)
-		if (e.currentTarget.value !== "")
+        e.stopPropagation()	
+		
+		setUploads([{file: undefined, text: t.value}])
+		if (t.value !== "")
 			setUserDone(true)
 	}
 
@@ -45,7 +48,7 @@ const TextInputField = ({
 								placeholder:text-amber-900/50
 								transition-all ease-in duration-300
 								"
-				onChange={onChange} placeholder={placeholder} type={type} name={ label? label.toLowerCase() : type.toLowerCase() }/>
+				onChange={onChange} placeholder={placeholder} type='text' name={ label? label.toLowerCase() : 'text' } disabled={hasUserCompleted}/>
 		</>						
 	)	
 }

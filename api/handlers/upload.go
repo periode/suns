@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/gabriel-vasile/mimetype"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/periode/suns/api/config"
@@ -27,34 +28,50 @@ func CreateUpload(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Cannot parse the module UUID")
 	}
 
-	var fname, fpath string
+	var ftype, fname, fpath string
 	txt := c.FormValue("text")
+	ftype = "text/plain"
 	//-- if there is an empty string, it means we have to deal with a file
 	if txt == "" {
 		// Source
 		file, err := c.FormFile("file")
 		if err != nil {
-			return err
+			zero.Error(err.Error())
+			return c.String(http.StatusBadRequest, "Error uploading the file")
 		}
+
 		src, err := file.Open()
 		if err != nil {
-			return err
+			zero.Error(err.Error())
+			return c.String(http.StatusBadRequest, "Error uploading the file")
 		}
 		defer src.Close()
 
 		// Destination
 		fname = file.Filename
 		fpath = fmt.Sprintf("%d_%s_%s_%s", time.Now().Unix(), module_uuid.String()[:8], user_uuid.String()[:8], fname)
-		target := filepath.Join(conf.UploadsDir, fname)
+		target := filepath.Join(conf.UploadsDir, fpath)
 		dst, err := os.Create(target)
 		if err != nil {
-			return err
+			zero.Error(err.Error())
+			return c.String(http.StatusBadRequest, "Error uploading the file")
 		}
 		defer dst.Close()
 
+		m, err := mimetype.DetectFile(target)
+		if err != nil {
+			zero.Error(err.Error())
+			return c.String(http.StatusBadRequest, "Error uploading the file")
+		}
+		fmt.Println(m)
+
+		ftype = m.String()
+		fmt.Println(ftype)
+
 		// Copy
 		if _, err = io.Copy(dst, src); err != nil {
-			return err
+			zero.Error(err.Error())
+			return c.String(http.StatusBadRequest, "Error uploading the file")
 		}
 	}
 
@@ -63,7 +80,10 @@ func CreateUpload(c echo.Context) error {
 		URL:      fpath,
 		UserUUID: user_uuid.String(),
 		Text:     txt,
+		Type:     ftype,
 	}
+
+	zero.Debugf("%v\n", upload)
 
 	//-- then get the module, append the upload, and update it
 	module, err := models.AddModuleUpload(module_uuid, upload)

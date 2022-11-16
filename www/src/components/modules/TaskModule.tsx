@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction, useContext, useEffect } from "react"
 import { AirTableContext } from "../../contexts/AirContext"
 import { IEntrypoint, IFile, IModule } from "../../utils/types"
+import TextInputField from "../commons/forms/inputs/TextInputField"
 import AudioRecorder from "./AudioRecorder"
 import FileUploader from "./FileUploader"
 
@@ -55,9 +56,8 @@ const TaskModule = ({ data, ep, index, setUploads, setUserDone, hasUserCompleted
                                     flex flex-col gap-4
                                             " key={`${task.type}-key`}>
                         <p>{contents?.get(task.key)}</p>
-                        <input type="text"></input>
-                    </div>
-                    )
+                        <TextInputField setUploads={setUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted}/>
+                    </div>)
                 default:
                     return (<>Could not find task type ({task.type})</>)
             }
