@@ -246,13 +246,13 @@ const Entrypoint = (props: any) => {
                 <div className="
                         flex flex-col
                         w-full h-full md:w-[720px] md:h-4/5 
-                        border border-amber-800 
-                        text-amber-800
+                        border border-amber-900 
+                        text-amber-900
                         bg-amber-50
                         ">
                     <div className="w-full flex justify-between flex-col
                             p-4
-                            border-b border-amber-800">
+                            border-b border-amber-900">
                         <div className="w-full  flex justify-between items-center">
                             <div className="full flex items-center gap-4  ">
                                 <FiCommand className="text-[32px]" />
@@ -264,25 +264,28 @@ const Entrypoint = (props: any) => {
                             </div>
                         </div>
                     </div>
-                    <EntrypointCountdown endDate="Jan 5, 2024 15:37:25" />
-                    <EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
-                    <div className="w-full h-full">
+                    <div className="w-full md:flex">
+                        <EntrypointCountdown endDate="Jan 5, 2024 15:37:25" />
+                        <div className="md:w-[1px] md:h-full  bg-amber-900"></div>
+                        <EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
+                    </div>
+                    <div className="w-full h-full p-4 overflow-scroll">
                         {
                             isOwned || data.status === ENTRYPOINT_STATUS.EntrypointCompleted ?
-                                getModules()
+                                     getModules()
                                 : data.users.length < data.max_users ? <>
-                                    {parseModule(0, data)}
+                                    { parseModule(0, data) }
                                 </> :
                                     <>
                                         <PublicView entrypoint={data} />
                                     </>
                         }
                     </div>
-                    <div className="h-12
+                    <div className="h-20
                             pl-4 pr-4
                             relative
                             flex items-center justify-between
-                            border-t border-amber-800">
+                            border-t border-amber-900">
                         <EntrypointActions
                             entryPointData={data}
                             session={session}

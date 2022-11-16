@@ -18,7 +18,7 @@ const MainMenu = () => {
 				<div className="absolute w-full h-full
 								flex flex-col
 								bg-amber-50 
-								text-amber-800
+								text-amber-900
 								font-serif
 								">
 						<div className="absolute top-2 right-2
@@ -30,7 +30,7 @@ const MainMenu = () => {
 							<FiX className="text-2xl"/>
 						</div>
 						<div className="h-20 w-full
-										border border-b-amber-800">
+										border border-b-amber-900">
 
 						</div>
 						<div className="w-full h-full flex flex-col items-center justify-center text-6xl regular
@@ -48,15 +48,15 @@ const MainMenu = () => {
 						<div className="w-full h-24
 										font-mono
 										flex flex-col items-center justify-center text-2xl
-										border border-t-amber-800">
+										border border-t-amber-900">
 							<h2 onClick={signout}>Log out</h2>
 						</div>
 				</div>
 					:
-				<div className="absolute top-2 right-2
+				<div className="absolute z-10 top-2 right-2
 								w-12 h-12 
 								flex items-center justify-center
-								text-amber-800
+								text-amber-900
 								cursor-pointer"
 						onClick={ () => setIsCollapsed(true) }>
 					<FiMenu className="text-2xl"/>

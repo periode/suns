@@ -45,7 +45,7 @@ const Login = () => {
 
 	return ( 
 		<>
-			<Toaster message={message} type={success ? ToasterType.success : ToasterType.error} display={isToasterDisplayed} timeoutms={3000}></Toaster>
+			<Toaster message={message} type={success ? ToasterType.success : ToasterType.error} display={isToasterDisplayed} setDisplay={setIsToasterDisplayed} timeoutms={3000}></Toaster>
 			<div className="bg-amber-50 w-full h-screen text-amber-900 flex items-center justify-center">
 				<form className="	w-full h-full md:w-[720px] md:h-4/5
 									flex flex-col p-4 justify-between md:justify-center md:gap-4" onSubmit={handleSignin}>

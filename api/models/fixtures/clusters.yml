@@ -61,7 +61,7 @@
           tasks:
             - type: "text_input"
               key: "input_0"
-              max_uploads: 1
+              placeholder: "placeholder_0"
           hint: "This is the second content"
         - name: "Upload 9 Images"
           type: "task"
@@ -75,6 +75,7 @@
           tasks:
             - type: "text_input"
               key: "input_2"
+              placeholder: "placeholder_2"
           hint: "This is the 9x9 grid image input"
         - name: "Final Symbiosis Gaze"
           type: "final_symbiosis_gaze"
@@ -102,6 +103,7 @@
           tasks:
             - type: "text_input"
               key: "input_0"
+              placeholder: "placeholder_0"
           hint: "This is the text input"
         - name: "Upload 1 Video"
           type: "task"
@@ -135,13 +137,14 @@
           tasks:
             - type: "text_input"
               key: "input_0"
+              placeholder: "placeholder_0"
           hint: "This is the text input"
         - name: "Upload Audio"
           type: "task"
           tasks:
             - type: "audio_input"
               key: "input_1"
-              max_uploads: 1
+              placeholder: "placeholder_1"
         - name: "Final Symbiosis mean"
           type: "final_symbiosis_mean"
           hint: "This is the final view for the symbiosis - Mean"

@@ -48,13 +48,14 @@ const EntrypointPartners = ( {
 		<div className="h-12
 						pl-4 pr-4
 						relative
+						flex-1
 						flex items-center justify-center gap-2
-						border-b border-amber-800">
+						border-b border-amber-900">
 			<div className="flex items-center
 							font-mono text-sm
 							gap-1">
 				{
-					max_users > 1 ? <FiUsers className=""/> : <FiUser className=""/>
+					max_users > 1 ? <FiUsers className="text-[20px]"/> : <FiUser className="text-[20px]"/>
 				}
 				<p>{users.length}/{max_users}</p>
 			</div>

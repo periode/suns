@@ -145,9 +145,9 @@ const AudioRecorder = ({ index, mod, ep, setUploads, setUserDone, hasUserComplet
                     }
                 </div>
                 <div className="flex-1">
-                    {!hasUserCompleted && recordingState === "idle" ? <button className="bg-amber-800 text-white p-1 m-1" onClick={startRecording}>record</button> : <></>}
-                    {!hasUserCompleted && recordingState === "recording" ? <button className="bg-amber-800 text-white p-1 m-1" onClick={stopRecording}>stop</button> : <></>}
-                    {!hasUserCompleted && recordingState === "done" ? <button className="bg-amber-800 text-white p-1 m-1" onClick={resetRecording}>restart</button> : <></>}
+                    {!hasUserCompleted && recordingState === "idle" ? <button className="bg-amber-900 text-white p-1 m-1" onClick={startRecording}>record</button> : <></>}
+                    {!hasUserCompleted && recordingState === "recording" ? <button className="bg-amber-900 text-white p-1 m-1" onClick={stopRecording}>stop</button> : <></>}
+                    {!hasUserCompleted && recordingState === "done" ? <button className="bg-amber-900 text-white p-1 m-1" onClick={resetRecording}>restart</button> : <></>}
                     <p>{recordingMessage}</p>
                 </div>
                 <div className="flex-1">

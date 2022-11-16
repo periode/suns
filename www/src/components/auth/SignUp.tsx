@@ -53,19 +53,19 @@ const SignUp = () => {
 				<form className="flex flex-col w-full" action="">
 					<div className="flex flex-col w-full">
 						<label htmlFor="signupEmail">Email</label>
-						<input className="border border-amber-800 bg-amber-50" onChange={ handleSignupEmailChange } type="text" name="signupEmail" />
+						<input className="border border-amber-900 bg-amber-50" onChange={ handleSignupEmailChange } type="text" name="signupEmail" />
 					</div>
 					<div className="flex flex-col w-full">
 						<label htmlFor="signupEmailConf">Email</label>
-						<input className="border border-amber-800 bg-amber-50" onChange={ handleSignupEmailConfChange } type="text" name="signupEmailConf" />
+						<input className="border border-amber-900 bg-amber-50" onChange={ handleSignupEmailConfChange } type="text" name="signupEmailConf" />
 					</div>
 					<div className="flex flex-col w-full">
 						<label htmlFor="signupPassword">Password</label>
-						<input className="border border-amber-800 bg-amber-50" onChange={ handleSignupPasswordChange } type="password" name="signupPassword" />
+						<input className="border border-amber-900 bg-amber-50" onChange={ handleSignupPasswordChange } type="password" name="signupPassword" />
 					</div>
 					<div className="flex flex-col w-full">
 						<label htmlFor="signupPasswordConf">Password</label>
-						<input className="border border-amber-800 bg-amber-50" onChange={ handleSignupPasswordConfChange } type="password" name="signupPasswordConf" />
+						<input className="border border-amber-900 bg-amber-50" onChange={ handleSignupPasswordConfChange } type="password" name="signupPasswordConf" />
 					</div>
 					<div className="flex flex-col w-full">
 						<button onClick={ handleSignup }>Sign up</button>

@@ -35,7 +35,7 @@ const AccountRecovery = () => {
 		<form action="">
 				<div className="">
 					<label htmlFor="email">Email</label>
-					<input className="border border-amber-800 bg-amber-50" onChange={ handleEmailChange } type="text" name="email" value={ recoverEmail }/>
+					<input className="border border-amber-900 bg-amber-50" onChange={ handleEmailChange } type="text" name="email" value={ recoverEmail }/>
 				</div>
 				<div className="form-group">
 					<button onClick={ handleRecover }>Recover my account</button>
