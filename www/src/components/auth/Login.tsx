@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { signin } from "../../utils/auth";
 import LoginPrimary from "../commons/buttons/LoginPrimary";
 import LoginSecondary from "../commons/buttons/LoginSecondary";
-import InputField from "../commons/forms/InputField";
+import InputField from "../commons/forms/inputs/InputField";
 import Toaster, { ToasterType } from "../commons/toaster/Toaster";
 
 

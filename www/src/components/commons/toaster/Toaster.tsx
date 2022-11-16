@@ -89,7 +89,7 @@ const Toaster = ({ type, message, display, timeoutms } : ToasterProps) => {
 	return (
 		displayed ? 
 		<div className="absolute z-100
-						animate-fadeintop">
+						animate-bounce">
 			{ content }
 		</div>
 		:
