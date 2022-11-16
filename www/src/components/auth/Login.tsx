@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signin } from "../../utils/auth";
+import LoginPrimary from "../commons/buttons/LoginPrimary";
+import LoginSecondary from "../commons/buttons/LoginSecondary";
+import InputField from "../commons/forms/InputField";
 import Toaster, { ToasterType } from "../commons/toaster/Toaster";
 
 
@@ -42,39 +45,28 @@ const Login = () => {
 
 	return ( 
 		<>
-			<Toaster message={message} type={success ? ToasterType.success : ToasterType.error} display={isToasterDisplayed}></Toaster>
-			<div className="bg-amber-50 h-screen text-amber-900 w-full flex items-center justify-center">
+			<Toaster message={message} type={success ? ToasterType.success : ToasterType.error} display={isToasterDisplayed} timeoutms={3000}></Toaster>
+			<div className="bg-amber-50 w-full h-screen text-amber-900 flex items-center justify-center">
 				<form className="	w-full h-full md:w-[720px] md:h-4/5
-									flex flex-col p-4 justify-between md:justify-center md:gap-4" action="">
+									flex flex-col p-4 justify-between md:justify-center md:gap-4" onSubmit={handleSignin}>
 					<div className="flex flex-col items-start justify-center w-full h-full md:h-auto gap-4">
 						<h2 className="text-6xl ">Login</h2>
 						<div className="flex flex-col gap-1 items-start w-full">
-							<label className="" htmlFor="email">Email</label>
-							<input className="	w-full h-14 p-1 pr-2 pl-3
-												border border-amber-800 bg-amber-50 font-mono
-												placeholder:text-amber-900/50
-									" onChange={handleEmailChange} placeholder="enter your email" type="text" name="email" />
+							<InputField label="Email" onChange={handleEmailChange} placeholder="example@example.com" type="text"/>
 						</div>
 						<div className="flex flex-col gap-1 items-start w-full">
-							<label htmlFor="password">Password</label>
-							<input className="	w-full h-14 p-1 pr-2 pl-3
-												border border-amber-800 bg-amber-50 font-mono
-												placeholder:text-amber-900/50
-									" onChange={handlePasswordChange} placeholder="•••••" type="password" name="password" />
-							<Link className="self-end text-sm" to="/auth/lost-password" state={{preFilledEmail : email}}>Forgot your Password?</Link>
+							<InputField onChange={handlePasswordChange} label="Password" placeholder="•••••" type="password"/>
+							
+							<Link className="font-mono self-end text-" to="/auth/lost-password" state={{preFilledEmail : email}}>Forgot your Password?</Link>
 						</div>
 					</div>
-					<div className="flex flex-col md:flex-row-reverse w-full gap-4">
-						<button className="flex items-center justify-center w-full h-14 bg-transparent text-amber-500 font-mono font-bold border borde-1 border-amber-500">
-							Sign up
-						</button>
-						<button className="flex items-center justify-center w-full h-14 bg-amber-500 text-amber-100 font-mono font-bold"
-								onClick={handleSignin}>
-							Login
-						</button>
+					<div className="sticky bottom-4 md:static 
+									flex flex-col-reverse md:flex-row w-full gap-4">
+						<LoginPrimary text="Login" onClick={handleSignin}/>
+						<LoginSecondary text="Sign up"/>
 					</div>
 				</form>
-			</div>;
+			</div>
 		</>
 	)
 }

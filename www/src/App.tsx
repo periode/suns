@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import './App.css';
 import { ImageOverlay, MapContainer } from 'react-leaflet'
 import { CRS } from 'leaflet';
 import L from "leaflet";
@@ -15,7 +14,7 @@ import UILayout from './components/commons/layout/UILayout';
 import AirContext from './contexts/AirContext';
 
 import { IEntrypoint } from './utils/types';
-import Auth from './components/auth/Auth';
+import Login from './components/auth/Login';
 
 export interface EntrypointInterface {
   uuid: string
@@ -67,10 +66,11 @@ const App = () => {
   }, [session.token])
 
     return (
+
         <AirContext>
           <div className="App w-full h-full font-serif">
             { session.token === '' ?
-                <Auth />        
+                <Login />        
               :
               <>
                 <MainMenu />
