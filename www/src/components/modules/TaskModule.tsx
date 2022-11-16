@@ -33,12 +33,12 @@ const TaskModule = ({ data, ep, index, setUploads, setUserDone, hasUserCompleted
                 case "video_input":
                     return (<div key={`${task.type}-key`}>
                         <p>{contents?.get(task.key)}</p>
-                        <FileUploader type="video" setUploads={setUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted}/>
+                        <FileUploader type="video" maxUploads={task.max_uploads} setUploads={setUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted}/>
                     </div>)
                 case "image_input":
                     return (<div key={`${task.type}-key`}>
                         <p>{contents?.get(task.key)}</p>
-                        <FileUploader type="image" setUploads={setUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted}/>
+                        <FileUploader type="image" maxUploads={task.max_uploads} setUploads={setUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted}/>
                     </div>)
                 case "text_input":
                     return (<div key={`${task.type}-key`}>

@@ -108,7 +108,7 @@
           tasks:
             - type: "video_input"
               key: "input_1"
-              max_uploads: 1
+              max_uploads: 3
         - name: "Final Symbiosis Task"
           type: "final_symbiosis_task"
           hint: "This is the final view for the symbiosis - Task. It should show the videos"

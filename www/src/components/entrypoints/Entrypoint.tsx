@@ -120,10 +120,13 @@ const Entrypoint = (props: any) => {
 
         const b = new FormData()
         b.append("module_uuid", data.modules[data.current_module].uuid as string)
-        if (files[0].file !== undefined)
-            b.append("file", files[0].file)
-        else
-            b.append("text", files[0].text)
+
+        for (const f of files) {
+            if (f.file !== undefined)
+                b.append("files[]", f.file)
+            else
+                b.append("text[]", f.text)
+        }
 
         var options = {
             method: 'POST',
