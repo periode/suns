@@ -43,10 +43,11 @@ export interface IUpload {
     url: string,
     name: string,
     text: string,
+    type: string,
 }
 
 export interface IFile {
-    file: File,
+    file?: File,
     text: string
 }
 

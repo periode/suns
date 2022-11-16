@@ -80,7 +80,7 @@ const AudioRecorder = ({ index, mod, ep, setUploads, setUserDone, hasUserComplet
         setRecordingState("done")
         setBlobURL(URL.createObjectURL(audioBlob as Blob))
 
-        setUploads([{file: new File([audioBlob], "recording.wav"), text: ""}])
+        setUploads([{ file: new File([audioBlob], "recording.wav"), text: "" }])
         setUserDone(true)
     }
 
@@ -92,30 +92,40 @@ const AudioRecorder = ({ index, mod, ep, setUploads, setUserDone, hasUserComplet
         setUploads([])
     }
 
-    const getUploadedMedia = () => {
-        const session = getSession()
-
-        if (mod.uploads.length === 0) return (<></>)
-        else if (mod.uploads[0].user_uuid === session.user.uuid)
-            return (<audio src={`${process.env.REACT_APP_API_URL}/static/${mod.uploads[0].url}`} controls></audio>)
-
-        if (mod.uploads.length === 1) return (<></>)
-        else if (mod.uploads[1].user_uuid === session.user.uuid)
-            return (<audio src={`${process.env.REACT_APP_API_URL}/static/${mod.uploads[1].url}`} controls></audio>)
-
-        return (<></>)
-    }
-
     const getInputPrompt = () => {
         if (uploads === null || uploads.length === 0) return (<></>)
 
         if (uploads[0].user_uuid !== session.user.uuid)
-            return (<audio src={`${process.env.REACT_APP_API_URL}/static/${uploads[0].url}`} controls></audio>)
+            switch (uploads[0].type) {
+                case "text/plain":
+                    return (<>{uploads[0].text}</>)
+                case "audio/*":
+                    return (<audio src={`${process.env.REACT_APP_API_URL}/static/${uploads[0].url}`} controls></audio>)
+                case "video/*":
+                    return (<video src={`${process.env.REACT_APP_API_URL}/static/${uploads[0].url}`} controls></video>)
+                case "image/*":
+                    return (<img src={`${process.env.REACT_APP_API_URL}/static/${uploads[0].url}`} />)
+
+                default:
+                    break;
+            }
 
         if (uploads.length === 1) return (<></>)
 
         if (uploads[1].user_uuid !== session.user.uuid)
-            return (<audio src={`${process.env.REACT_APP_API_URL}/static/${uploads[1].url}`} controls></audio>)
+            switch (uploads[1].type) {
+                case "text/plain":
+                    return (<>{uploads[1].text}</>)
+                case "audio/*":
+                    return (<audio src={`${process.env.REACT_APP_API_URL}/static/${uploads[1].url}`} controls></audio>)
+                case "video/*":
+                    return (<video src={`${process.env.REACT_APP_API_URL}/static/${uploads[1].url}`} controls></video>)
+                case "image/*":
+                    return (<img src={`${process.env.REACT_APP_API_URL}/static/${uploads[1].url}`} />)
+
+                default:
+                    break;
+            }
 
         return (<>Could not find proper prompt</>)
     }
@@ -141,13 +151,13 @@ const AudioRecorder = ({ index, mod, ep, setUploads, setUserDone, hasUserComplet
                     <p>{recordingMessage}</p>
                 </div>
                 <div className="flex-1">
-                        {
-                            blobURL !== "" && !hasUserCompleted ?
-                                <audio src={blobURL} controls></audio>
-                                :
-                                <></>
-                        }
-                    </div>
+                    {
+                        blobURL !== "" && !hasUserCompleted ?
+                            <audio src={blobURL} controls></audio>
+                            :
+                            <></>
+                    }
+                </div>
 
             </div>
         </div>

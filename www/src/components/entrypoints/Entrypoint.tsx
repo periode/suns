@@ -10,8 +10,6 @@ import EntrypointPartners from "./EntrypointPartners";
 import EntrypointCountdown from "./EntrypointCountdown";
 import PublicView from "./PublicView";
 import NotFound from "../../NotFound";
-import AudioRecorder from "../modules/AudioRecorder";
-import IntroVideo from "../modules/IntroModule";
 import FinalFirstTimes from "../modules/FinalFirstTimes";
 import { ENTRYPOINT_STATUS, IEntrypoint, IFile, IModule, ISession } from "../../utils/types";
 import IntroModule from "../modules/IntroModule";
@@ -122,7 +120,10 @@ const Entrypoint = (props: any) => {
 
         const b = new FormData()
         b.append("module_uuid", data.modules[data.current_module].uuid as string)
-        b.append("file", files[0].file)
+        if (files[0].file !== undefined)
+            b.append("file", files[0].file)
+        else
+            b.append("text", files[0].text)
 
         var options = {
             method: 'POST',
@@ -196,6 +197,10 @@ const Entrypoint = (props: any) => {
                             {mod.content}
                         </p>
                     </>
+                )
+            case "final_symbiosis_mean":
+                return (
+                    <FinalFirstTimes data={ep} />
                 )
             case "final_first_times":
                 return (
