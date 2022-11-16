@@ -3,7 +3,7 @@
   max_users: 1
   lat: 300.300
   lng: 300.400
-  icon: "blue.svg"
+  icon: "purple.svg"
   modules:
     - name: "Cracks - Intro"
       type: "task"

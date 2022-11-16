@@ -2,26 +2,23 @@ package engine
 
 import (
 	"fmt"
-	"math/rand"
-	"os"
 	"path/filepath"
 	"runtime"
 	"time"
 
 	zero "github.com/periode/suns/api/logger"
 	"github.com/periode/suns/api/models"
-	"gopkg.in/yaml.v2"
 )
 
 const (
-	CREATE_INTERVAL    = 3 * time.Second
-	DELETE_INTERVAL    = 10 * time.Second
+	CREATE_INTERVAL    = 30 * time.Second
+	DELETE_INTERVAL    = 1 * time.Minute
 	SACRIFICE_INTERVAL = 15 * time.Minute
 	EMAIL_INTERVAL     = 10 * time.Minute
 	MAP_INTERVAL       = 10 * time.Second
 
 	CREATION_THRESHOLD  = 0.25
-	ENTRYPOINT_LIFETIME = 1 * time.Minute
+	ENTRYPOINT_LIFETIME = 10 * time.Minute
 
 	CLUSTER_FIRST_TIMES_UUID = "57ed6a2b-aacb-4c24-b1e1-3495821f846a"
 )
@@ -32,6 +29,7 @@ type State struct {
 
 var (
 	state State
+	pool  Pool
 
 	_, b, _, _ = runtime.Caller(0)
 	Basepath   = filepath.Dir(b)
@@ -41,6 +39,10 @@ func StartEngine(channel chan string) {
 	zero.Info("starting engine...")
 
 	state = State{generation: 0}
+	err := pool.Generate()
+	if err != nil {
+		zero.Errorf("error generating pool: %s", err.Error())
+	}
 
 	create_chan := make(chan string)
 	delete_chan := make(chan string)
@@ -91,33 +93,12 @@ func createEntrypoints(ch chan string) {
 		}
 
 		remaining := float32(open) / float32(len(eps))
-		zero.Debug(fmt.Sprintf("Remaining entrypoints: %f%% (open %d, total %d)", remaining, open, len(eps)))
+		zero.Debug(fmt.Sprintf("Open entrypoints: %d%% (open %d, total %d)", int(remaining*100), open, len(eps)))
 		if float64(remaining) > CREATION_THRESHOLD {
 			continue
 		}
 
-		//-- attach new entrypoints to map clusters
-		//-- easiest is to read from fixtures
-		bytes, err := os.ReadFile(filepath.Join(Basepath, "../models/fixtures/entrypoints", "first_times.yml"))
-		if err != nil {
-			zero.Errorf("Failed to read fixtures: %s", err.Error())
-			continue
-		}
-
-		new := make([]models.Entrypoint, 0)
-		err = yaml.Unmarshal(bytes, &new)
-		if err != nil {
-			zero.Errorf("Failed to marshal fixtures: %s", err.Error())
-			continue
-		}
-
-		//-- randomized position could happen in models BeforeCreate
-		for i, _ := range new {
-			new[i].Lat = rand.Float32() * 400
-			new[i].Lng = rand.Float32() * 400
-		}
-
-		err = models.AddClusterEntrypoints(CLUSTER_FIRST_TIMES_UUID, new)
+		err = models.AddClusterEntrypoints(CLUSTER_FIRST_TIMES_UUID, pool.Pick())
 		if err != nil {
 			zero.Errorf("Failed to create new entrypoint: %s", err.Error())
 		}
@@ -139,7 +120,7 @@ func deleteEntrypoints(ch chan string) {
 		}
 
 		for _, ep := range eps {
-			if time.Since(ep.CreatedAt) > ENTRYPOINT_LIFETIME {
+			if time.Since(ep.CreatedAt) > ENTRYPOINT_LIFETIME && ep.Status == models.EntrypointOpen {
 				_, err = models.DeleteEntrypoint(ep.UUID)
 				if err != nil {
 					zero.Errorf("Failed to delete expired entrypoints", err.Error())

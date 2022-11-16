@@ -2,7 +2,7 @@
   name: "DraughtYou"
   lat: 240.300
   lng: 240.400
-  icon: "green.svg"
+  icon: "yellow.svg"
   max_users: 2
   modules:
     - name: "Start Draught You"
@@ -32,7 +32,7 @@
   name: "DraughtWorld"
   lat: 150.300
   lng: 150.400
-  icon: "green.svg"
+  icon: "yellow.svg"
   max_users: 2
   modules:
     - name: "Start Draught World"
@@ -62,7 +62,7 @@
   name: "DraughtPersonal"
   lat: 540.300
   lng: 550.400
-  icon: "green.svg"
+  icon: "yellow.svg"
   max_users: 2
   modules:
     - name: "Start Draught Personal"
