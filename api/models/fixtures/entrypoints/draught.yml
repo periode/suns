@@ -1,0 +1,86 @@
+- status: "open"
+  name: "DraughtYou"
+  lat: 240.300
+  lng: 240.400
+  icon: "yellow.svg"
+  max_users: 2
+  modules:
+    - name: "Start Draught You"
+      type: "intro"
+      contents:
+        - type: "txt"
+          key: "intro_txt"
+    - name: "Text description of draught"
+      type: "task"
+      tasks:
+        - type: "text_input"
+          key: "input_0"
+          max_uploads: 1
+      hint: "Text description of draught"
+    - name: "Respond to text prompt"
+      type: "task"
+      tasks:
+        - type: "text_input"
+          key: "input_1"
+          max_uploads: 1
+      hint: "This is where you compare your draught stories"
+    - name: "Final Draught You"
+      type: "final_draught_you"
+      hint: "This is the final view for the draught - you"
+
+- status: "open"
+  name: "DraughtWorld"
+  lat: 150.300
+  lng: 150.400
+  icon: "yellow.svg"
+  max_users: 2
+  modules:
+    - name: "Start Draught World"
+      type: "intro"
+      contents:
+        - type: "vid"
+          key: "intro_vid"
+        - type: "txt"
+          key: "intro_txt"
+    - name: "Record an interview about draught"
+      type: "task"
+      tasks:
+        - type: "audio_input"
+          key: "input_0"
+      hint: "This is the text input of a name of a world, and how far it is"
+    - name: "Respond to your partner's recording"
+      type: "task"
+      tasks:
+        - type: "audio_input"
+          key: "input_1"
+          max_uploads: 1
+    - name: "Final Draught World"
+      type: "final_draught_world"
+      hint: "This is the final view for the draught - World. It combines both interviews together"
+
+- status: "open"
+  name: "DraughtPersonal"
+  lat: 540.300
+  lng: 550.400
+  icon: "yellow.svg"
+  max_users: 2
+  modules:
+    - name: "Start Draught Personal"
+      type: "intro"
+      contents:
+        - type: "txt"
+          key: "intro_txt"
+    - name: "Describe personal draught"
+      type: "task"
+      tasks:
+        - type: "text_input"
+          key: "input_0"
+      hint: "This is where you describe in text your personal draught."
+    - name: "Respond to personal draught"
+      type: "task"
+      tasks:
+        - type: "text_input"
+          key: "input_1"
+    - name: "Final Draught personal"
+      type: "final_draught_personal"
+      hint: "This is the final view for the draught - Personal"

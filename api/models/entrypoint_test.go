@@ -73,13 +73,13 @@ func TestEntrypointModel(t *testing.T) {
 	})
 
 	t.Run("Test delete cluster", func(t *testing.T) {
-		coll, err := models.DeleteEntrypoint(clusterDeleteID, userID)
+		coll, err := models.DeleteEntrypoint(clusterDeleteID)
 		assert.NotNil(t, coll)
 		assert.Nil(t, err)
 	})
 
 	t.Run("Test delete wrong cluster", func(t *testing.T) {
-		coll, err := models.DeleteEntrypoint(clusterUnknownID, userID)
+		coll, err := models.DeleteEntrypoint(clusterUnknownID)
 		assert.Zero(t, coll)
 		assert.NotNil(t, err)
 	})
