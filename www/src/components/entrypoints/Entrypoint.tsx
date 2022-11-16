@@ -16,6 +16,7 @@ import IntroModule from "../modules/IntroModule";
 import TaskModule from "../modules/TaskModule";
 
 const FETCH_INTERVAL = 50 * 1000
+const ENTRYPOINT_LIFETIME_MINUTES = 10
 
 const Entrypoint = (props: any) => {
     const params = useParams()
@@ -24,6 +25,7 @@ const Entrypoint = (props: any) => {
     const session = getSession()
     const [data, setData] = useState(props.data as IEntrypoint)
     const [uploads, setUploads] = useState(Array<IFile>)
+    const [endDate, setEndDate] = useState("")
 
     const [isOwned, setOwned] = useState(false)
     //-- userDone keeps track of when the user can submit the module
@@ -40,6 +42,12 @@ const Entrypoint = (props: any) => {
             for (let u of data.users)
                 if (u.uuid === session.user.uuid)
                     setOwned(true)
+
+        // setting entrypoint expiry date
+        let d = new Date(data.created_at)
+		let end = new Date()
+		end.setMinutes(d.getMinutes() + ENTRYPOINT_LIFETIME_MINUTES)
+		setEndDate(end.toString())
     }, [data, session])
 
     useEffect(() => {
@@ -265,7 +273,7 @@ const Entrypoint = (props: any) => {
                         </div>
                     </div>
                     <div className="w-full md:flex">
-                        <EntrypointCountdown endDate="Jan 5, 2024 15:37:25" />
+                        <EntrypointCountdown endDate={endDate} />
                         <div className="md:w-[1px] md:h-full  bg-amber-900"></div>
                         <EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
                     </div>

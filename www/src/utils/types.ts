@@ -24,6 +24,7 @@ export interface ICluster {
 
 export interface IEntrypoint {
     uuid: string,
+    created_at: string,
     name: string,
     status: ENTRYPOINT_STATUS,
     content: string,
