@@ -5,13 +5,12 @@ interface ContentProps {
 }
 
 const Content = ({ type, airkey, contents }: ContentProps) => {
-    // console.log(type, airkey, contents)
+    
     switch (type) {
         case "img":
-            return (<>
-                <img src="" />
-                <div>{contents.get(airkey)}</div>
-            </>)
+            return (<div className="flex h-24 m-auto w-auto">
+                <img className="object-contain" src={contents.get(airkey)} />
+            </div>)
         case "mp3":
             return (<>
                 <audio src=""></audio>

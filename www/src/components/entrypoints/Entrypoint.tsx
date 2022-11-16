@@ -13,7 +13,7 @@ import NotFound from "../../NotFound";
 import AudioRecorder from "../modules/AudioRecorder";
 import IntroVideo from "../modules/IntroModule";
 import FinalFirstTimes from "../modules/FinalFirstTimes";
-import { ENTRYPOINT_STATUS, IEntrypoint, IModule, ISession } from "../../utils/types";
+import { ENTRYPOINT_STATUS, IEntrypoint, IFile, IModule, ISession } from "../../utils/types";
 import IntroModule from "../modules/IntroModule";
 import TaskModule from "../modules/TaskModule";
 
@@ -25,7 +25,7 @@ const Entrypoint = (props: any) => {
     const navigate = useNavigate()
     const session = getSession()
     const [data, setData] = useState(props.data as IEntrypoint)
-    const [uploads, setUploads] = useState(Array<File>)
+    const [uploads, setUploads] = useState(Array<IFile>)
 
     const [isOwned, setOwned] = useState(false)
     //-- userDone keeps track of when the user can submit the module
@@ -75,7 +75,7 @@ const Entrypoint = (props: any) => {
                 e.modules = e.modules.sort((a: IModule, b: IModule) => { return parseInt(a.ID) - parseInt(b.ID) })
 
                 setData(e as IEntrypoint)
-                if(isUserDone) setUserDone(false)
+                if (isUserDone) setUserDone(false)
                 setTimeout(fetchEntrypoint, FETCH_INTERVAL)
             } else {
                 console.warn('error', res.status)
@@ -111,7 +111,7 @@ const Entrypoint = (props: any) => {
         }
     }
 
-    const submitUploads = async (files: Array<File>) => {
+    const submitUploads = async (files: Array<IFile>) => {
         const endpoint = new URL(`uploads/`, process.env.REACT_APP_API_URL)
 
         if (session.token === "")
@@ -122,7 +122,7 @@ const Entrypoint = (props: any) => {
 
         const b = new FormData()
         b.append("module_uuid", data.modules[data.current_module].uuid as string)
-        b.append("file", uploads[0])
+        b.append("file", files[0].file)
 
         var options = {
             method: 'POST',
@@ -183,32 +183,9 @@ const Entrypoint = (props: any) => {
                 return (
                     <IntroModule index={index} epName={ep.name} data={mod} setUserDone={setUserDone} />
                 )
-                case "task":
+            case "task":
                 return (
-                    <TaskModule index={index} epName={ep.name} data={mod} setUserDone={setUserDone} />
-                )
-            case "upload_recording":
-                return (
-                    <AudioRecorder index={index} mod={mod} ep={ep} setUploads={setUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted}/>
-                )
-            case "text":
-                return (
-                    <>
-                        <div className="absolute text-sm l-0">{index}</div>
-                        <p>
-                            {mod.content}
-                        </p>
-                    </>
-                )
-            case "media_display":
-                return (
-                    <>
-                        <div className="absolute text-sm l-0">{index}</div>
-                        <p>
-                            {mod.content}
-                        </p>
-                        <p>This is where we should be displaying the media that was previously uploaded by the users</p>
-                    </>
+                    <TaskModule index={index} ep={ep} data={mod} setUploads={setUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted} />
                 )
             case "final":
                 return (
@@ -240,15 +217,15 @@ const Entrypoint = (props: any) => {
         let mods = []
         //-- if all modules are displayed and the status of the entrypoint is completed, we return the public view
         if (data.status === ENTRYPOINT_STATUS.EntrypointCompleted) {
-            mods.push(<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}-final`} className="border border-amber-800 border-3 m-1 p-1">{parseModule(data.current_module, data)}</div>)
+            mods.push(<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}-final`} className="m-1 p-1">{parseModule(data.current_module, data)}</div>)
 
             return mods
         }
 
-        mods.push(<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}`} className="border border-amber-800 border-3 m-1 p-1">{parseModule(data.current_module, data)}</div>)
+        mods.push(<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}`} className="m-1 p-1">{parseModule(data.current_module, data)}</div>)
 
         if (hasUserCompleted)
-            mods.push(<div key="module-complete-message" className="border border-amber-800 border-3 m-1 p-1">You have completed this module! Please wait for your partner to complete it as well.</div>)
+            mods.push(<div key="module-complete-message" className="m-1 p-1">You have completed this module! Please wait for your partner to complete it as well.</div>)
 
         return mods
     }

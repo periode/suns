@@ -1,12 +1,13 @@
-- uuid: '57ed6a2b-aacb-4c24-b1e1-3495821f846a'
+- uuid: "57ed6a2b-aacb-4c24-b1e1-3495821f846a"
   name: "Combining first times"
   entrypoints:
-    - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846a'
+    - uuid: "46de6a2b-aacb-4c24-b1e1-3495821f846a"
       status: "open"
       name: "CombiningFirstTimes"
       max_users: 2
       lat: 300.300
       lng: 300.400
+      icon: "blue.svg"
       modules:
         - uuid: "2a73291d-559f-47c1-b24d-92a3606deb49"
           name: "For the first time - Intro"
@@ -22,148 +23,125 @@
           type: "task"
           tasks:
             - type: "audio_input"
+              key: "combining_task_0"
           hint: "Please record a moment that happened to you for the first time. This recording will then be sent to your partner."
         - uuid: "2a73291d-559f-47c1-b24d-92a3606deb51"
           name: "For the first time - Response recording"
           type: "task"
           tasks:
             - type: "audio_input"
+              key: "combining_task_1"
           hint: "This is what your partner has recorded, please tell the story of when the same thing happened to you."
         - name: "For the first time - Final"
           hint: "This is the final countdown"
           type: "final_first_times"
 
-- uuid: '57ed6a2b-aacb-4c24-b1e1-349581f8457b'
+- uuid: "57ed6a2b-aacb-4c24-b1e1-349581f8457b"
   name: "Symbiosis"
   entrypoints:
-    - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846b'
+    - uuid: "46de6a2b-aacb-4c24-b1e1-3495821f846b"
       status: "open"
-      name: "Symbiosis - GAZE"
+      name: "SymbiosisGaze"
       lat: 240.300
       lng: 240.400
+      icon: "green.svg"
+      max_users: 2
       modules:
         - name: "Start Symbiosis Gaze"
           type: "intro"
           contents:
             - type: "img"
-              key: "gaze_intro_img"
+              key: "intro_img"
             - type: "txt"
-              key: "gaze_intro_txt"
+              key: "intro_txt"
             - type: "vid"
-              key: "gaze_intro_vid"
+              key: "intro_vid"
         - name: "Text input 1"
           type: "task"
           tasks:
             - type: "text_input"
+              key: "input_0"
               max_uploads: 1
           hint: "This is the second content"
         - name: "Upload 9 Images"
-          type : "task"
+          type: "task"
           tasks:
             - type: "image_input"
+              key: "input_1"
               max_uploads: 9
           hint: "This is the 9x9 grid image input"
         - name: "Label random image from the 9 previous"
           type: "task"
           tasks:
             - type: "text_input"
+              key: "input_2"
           hint: "This is the 9x9 grid image input"
         - name: "Final Symbiosis Gaze"
           type: "final_symbiosis_gaze"
           hint: "This is the final view for the symbiosis - gaze"
-    - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846c'
+
+    - uuid: "46de6a2b-aacb-4c24-b1e1-3495821f846c"
       status: "open"
-      name: "Symbiosis - TASK"
+      name: "SymbiosisTask"
       lat: 150.300
       lng: 150.400
+      icon: "green.svg"
+      max_users: 2
       modules:
         - name: "Start Symbiosis Task"
           type: "intro"
           contents:
             - type: "img"
-              key: "symbiosis_task_intro_img"
+              key: "intro_img"
             - type: "txt"
-              key: "symbiosis_task_intro_txt"
+              key: "intro_txt"
             - type: "vid"
-              key: "symbiosis_task_intro_vid"
+              key: "intro_vid"
         - name: "Text input 1"
           type: "task"
           tasks:
             - type: "text_input"
+              key: "input_0"
           hint: "This is the text input"
-          contents:
-            - type: "txt"
-              key: "symbiosis_task_1"
         - name: "Upload 1 Video"
           type: "task"
           tasks:
             - type: "video_input"
+              key: "input_1"
               max_uploads: 1
-          contents:
-            - type: "txt"
-              key: "symbiosis_task_2"
         - name: "Final Symbiosis Task"
           type: "final_symbiosis_task"
           hint: "This is the final view for the symbiosis - Task. It should show the videos"
-    - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846d'
-      status: "open"
-      name: "Symbiosis - DARE"
-      lat: 140.300
-      lng: 150.400
-      modules:
-        - name: "Start Symbiosis Dare"
-          type: "intro"
-          contents:
-            - type: "img"
-              key: "dare_intro_img"
-            - type: "txt"
-              key: "dare_intro_txt"
-            - type: "vid"
-              key: "dare_intro_vid"
-        - name: "Upload Video"
-          type: "task"
-          tasks:
-            - type: "video_input"
-              max_uploads: 1
-          hint: "This is the video input"
-        - name: "Upload Audio"
-          type: "task"
-          tasks:
-            - type: "audio_input"
-              max_uploads: 1
-          hint: "this is the audio commentary on the video"
-        - name: "Completed Dare"
-          type: "final_symbiosis_dare"
-          hint: "This is the final view for the symbiosis - Dare. It should show the videos with combined audio"
 
-    - uuid: '46df7b2b-aacb-4c24-b1e1-3495821f846d'
+    - uuid: "46df7b2b-aacb-4c24-b1e1-3495821f846d"
       status: "open"
-      name: "Symbiosis - MEAN"
+      name: "SymbiosisMean"
       lat: 540.300
       lng: 550.400
+      icon: "green.svg"
+      max_users: 2
       modules:
         - name: "Start Symbiosis Mean"
           type: "intro"
           contents:
             - type: "img"
-              key: "mean_intro_img"
+              key: "intro_img"
             - type: "txt"
-              key: "mean_intro_txt"
+              key: "intro_txt"
             - type: "vid"
-              key: "mean_intro_vid"
+              key: "intro_vid"
         - name: "Upload Text"
           type: "task"
           tasks:
             - type: "text_input"
+              key: "input_0"
           hint: "This is the text input"
         - name: "Upload Audio"
           type: "task"
           tasks:
             - type: "audio_input"
+              key: "input_1"
               max_uploads: 1
-          contents:
-            - type: "txt"
-              key: "symbiosis_mean_2"
         - name: "Final Symbiosis mean"
           type: "final_symbiosis_mean"
           hint: "This is the final view for the symbiosis - Mean"

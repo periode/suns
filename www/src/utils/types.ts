@@ -34,12 +34,20 @@ export interface IEntrypoint {
     user_completed: Array<number>,
     partner_status: PARTNER_STATUS,
     lat: number,
-    lng: number
+    lng: number,
+    icon: string,
 }
 
 export interface IUpload {
     user_uuid: string,
     url: string,
+    name: string,
+    text: string,
+}
+
+export interface IFile {
+    file: File,
+    text: string
 }
 
 export interface IContent {
@@ -49,6 +57,7 @@ export interface IContent {
 
 export interface ITask {
     type: string,
+    key: string,
     max_uploads: number
 }
 
