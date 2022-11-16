@@ -237,7 +237,7 @@ const Entrypoint = (props: any) => {
 
     if (data !== undefined)
         return (
-            <div className="absolute w-full h-full p-4 
+            <div className="absolute z-20 w-full h-full p-4 
                             md:flex md:flex-col md:items-center md:justify-center ">
 
                 <div className="

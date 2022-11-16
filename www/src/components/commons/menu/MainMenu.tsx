@@ -15,7 +15,7 @@ const MainMenu = () => {
 	<>
 			{
 				isCollapsed ?
-				<div className="absolute w-full h-full
+				<div className="absolute z-10 w-full h-full
 								flex flex-col
 								bg-amber-50 
 								text-amber-900

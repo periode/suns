@@ -2,8 +2,8 @@ import { Dispatch, SetStateAction, useContext, useEffect } from "react"
 import { AirTableContext } from "../../contexts/AirContext"
 import { IEntrypoint, IFile, IModule } from "../../utils/types"
 import TextInputField from "../commons/forms/inputs/TextInputField"
-import AudioRecorder from "./AudioRecorder"
-import FileUploader from "./FileUploader"
+import AudioRecorder from "./tasks/AudioRecorder"
+import FileUploader from "./tasks/FileUploader"
 
 interface ITaskModuleProps {
     data: IModule,
@@ -51,7 +51,6 @@ const TaskModule = ({ data, ep, index, setUploads, setUserDone, hasUserCompleted
                     </div>
                     )
                 case "text_input":
-                    console.log("task.placeholder", task.placeholder)
                     return (
                     <div className="w-full
                                     flex flex-col gap-4
