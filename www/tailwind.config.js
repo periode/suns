@@ -7,20 +7,20 @@ module.exports = {
         'serif' : ['UntitledSerif', 'serif'],
         'mono' : ['IBMPlexMono', 'monospace' , 'mono']
       },
+      animation: {
+        fadeintop : 'fadeintop 500ms ease-in-out'
+      },
       keyframes: {
         fadeintop : {
           '0%' : {
-            transform: 'translateY(-50px)',
-            opacity: '0'
+            opacity: '0',
+            transform: 'translateY(-100%)',
           },
           '100%' : {
+            opacity: '1',
             transform: 'translateY(0)',
-            opacity: '1'
           }
         }
-      },
-      animation: {
-        fadeintop : 'fade-in-top 0.3s ease-in infinite'
       },
     },
   },

@@ -12,27 +12,25 @@ interface ToasterProps {
 	message: string,
 	display: boolean,
 	timeoutms?: number,
+	setDisplay: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const Toaster = ({ type, message, display, timeoutms } : ToasterProps) => {
+const Toaster = ({ type, message, display, timeoutms, setDisplay } : ToasterProps) => {
 	 
-	const [displayed, setDisplayed] = useState(display)
+
 
 	useEffect(() => {
 		console.log("display: " + display)
 		if (timeoutms && display)
 		{
-			setDisplayed(true)
+			setDisplay(true)
 			const timeoutDisplay = setTimeout(() => { 	
 				console.log("ho")
-				setDisplayed(false) 
+				setDisplay(false) 
 			}, timeoutms);
 			return (() => clearTimeout(timeoutDisplay));
 		}
-	}, [display, timeoutms])
-
-	if (!displayed)
-		return <></>
+	}, [display, timeoutms, setDisplay])
 
 	var content : ReactElement
 
@@ -87,9 +85,9 @@ const Toaster = ({ type, message, display, timeoutms } : ToasterProps) => {
 			break;
 	}
 	return (
-		displayed ? 
+		display ? 
 		<div className="absolute z-100
-						animate-bounce">
+						animate-fadeintop">
 			{ content }
 		</div>
 		:
