@@ -23,27 +23,41 @@ const TaskModule = ({ data, ep, index, setUploads, setUserDone, hasUserCompleted
             switch (task.type) {
                 case "audio_input":
                     return (
-                        <div key={`${task.type}-key`}>
+                        <div className="w-full
+                                        flex flex-col gap-4
+                                                " key={`${task.type}-key`}>
                             <p>{contents?.get(task.key)}</p>
 
                             <AudioRecorder key={`${data.ID}-${data.name}`} mod={data} index={index} ep={ep} setUploads={setUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted} />
                         </div>
                     )
                 case "video_input":
-                    return (<div key={`${task.type}-key`}>
+                    return (
+                    <div className="w-full
+                                    flex flex-col gap-4
+                                            " key={`${task.type}-key`}>
                         <p>{contents?.get(task.key)}</p>
                         <FileUploader type="video" setUploads={setUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted}/>
-                    </div>)
+                    </div>
+                    )
                 case "image_input":
-                    return (<div key={`${task.type}-key`}>
+                    return (
+                    <div className="w-full
+                                    flex flex-col gap-4
+                                            " key={`${task.type}-key`}>
                         <p>{contents?.get(task.key)}</p>
                         <FileUploader type="image" setUploads={setUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted}/>
-                    </div>)
+                    </div>
+                    )
                 case "text_input":
-                    return (<div key={`${task.type}-key`}>
+                    return (
+                    <div className="w-full
+                                    flex flex-col gap-4
+                                            " key={`${task.type}-key`}>
                         <p>{contents?.get(task.key)}</p>
                         <input type="text"></input>
-                    </div>)
+                    </div>
+                    )
                 default:
                     return (<>Could not find task type ({task.type})</>)
             }
@@ -53,9 +67,9 @@ const TaskModule = ({ data, ep, index, setUploads, setUserDone, hasUserCompleted
     }
 
     return (
-        <>
+        <div className="w-full h-full flex flex-col gap-6">
             {getTasks()}
-        </>
+        </div>
     )
 }
 

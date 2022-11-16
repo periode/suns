@@ -41,7 +41,7 @@ const TextInputField = ({
 								hover:border-amber-500
 								disabled:opacity-50
 								focus:outline-amber-500 focus:rounded-none focus:bg-white/50
-								border border-amber-800 bg-amber-50 font-mono
+								border border-amber-900 bg-amber-50 font-mono
 								placeholder:text-amber-900/50
 								transition-all ease-in duration-300
 								"

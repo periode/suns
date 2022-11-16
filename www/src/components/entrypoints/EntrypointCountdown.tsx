@@ -14,9 +14,10 @@ function EntrypointCountdown( {endDate} : EntrypointCountdownProps ) {
 	}
 	return ( 
 		<div className="w-full h-12 
+						flex-1
 						flex items-center justify-center
 						font-mono
-						border-b border-amber-800
+						border-b border-amber-900
 						">
 			{
 				days + " : " + 
