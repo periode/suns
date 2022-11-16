@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { FiAlertOctagon, FiCheck  } from "react-icons/fi"
 import { IconType } from "react-icons/lib";
 export enum ToasterType {
@@ -10,15 +10,28 @@ export enum ToasterType {
 interface ToasterProps {
 	type? : ToasterType,
 	message: string,
-	display: boolean
+	display: boolean,
+	timeoutms?: number,
 }
 
-const Toaster = ({ type, message, display } : ToasterProps) => {
+const Toaster = ({ type, message, display, timeoutms } : ToasterProps) => {
 	 
-	var color : string;
-	var icon : ReactElement;
+	const [displayed, setDisplayed] = useState(display)
 
-	if (!display)
+	useEffect(() => {
+		console.log("display: " + display)
+		if (timeoutms && display)
+		{
+			setDisplayed(true)
+			const timeoutDisplay = setTimeout(() => { 	
+				console.log("ho")
+				setDisplayed(false) 
+			}, timeoutms);
+			return (() => clearTimeout(timeoutDisplay));
+		}
+	}, [display, timeoutms])
+
+	if (!displayed)
 		return <></>
 
 	switch (type) {
@@ -28,7 +41,7 @@ const Toaster = ({ type, message, display } : ToasterProps) => {
 					<div className="
 						absolute m-4 p-4 border border-1 border-green-500 bg-green-500/20 text-green-500
 						flex gap-2 items-center
-						font-mono text-sm
+						font-serif 
 						z-100"
 					>
 					<FiCheck className="text-xl"/>
@@ -44,7 +57,7 @@ const Toaster = ({ type, message, display } : ToasterProps) => {
 					<div className="
 						absolute m-4 p-4 border border-1 border-red-500 bg-red-500/20 text-red-500
 						flex gap-2 items-center
-						font-mono text-sm
+						font-serif
 						z-100"
 					>
 					<FiAlertOctagon className="text-xl"/>
@@ -60,6 +73,7 @@ const Toaster = ({ type, message, display } : ToasterProps) => {
 					<div className="
 						absolute m-4 p-4 border border-1 border-stone-500 bg-stone-500/20 text-stone-500
 						flex gap-2 items-center
+						font-serif font-semibold
 						z-100"
 					>
 					<FiAlertOctagon className="text-xl"/>
