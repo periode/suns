@@ -57,7 +57,7 @@ const Login = () => {
 						<div className="flex flex-col gap-1 items-start w-full">
 							<InputField onChange={handlePasswordChange} label="Password" placeholder="•••••" type="password"/>
 							
-							<Link className="font-mono self-end text-" to="/auth/lost-password" state={{preFilledEmail : email}}>Forgot your Password?</Link>
+							<Link className="font-mono self-end text-xs hover:text-amber-500 transition-all ease-in duration-300" to="/auth/lost-password" state={{preFilledEmail : email}}>Forgot your Password?</Link>
 						</div>
 					</div>
 					<div className="sticky bottom-4 md:static 

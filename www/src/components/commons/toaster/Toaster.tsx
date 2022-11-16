@@ -34,15 +34,17 @@ const Toaster = ({ type, message, display, timeoutms } : ToasterProps) => {
 	if (!displayed)
 		return <></>
 
+	var content : ReactElement
+
 	switch (type) {
 		case ToasterType.success:
-			return(
+			content = 
 				<div>
 					<div className="
-						absolute m-4 p-4 border border-1 border-green-500 bg-green-500/20 text-green-500
+						m-4 p-4 border border-1 border-green-500 bg-green-500/20 text-green-500
 						flex gap-2 items-center
 						font-serif 
-						z-100"
+						"
 					>
 					<FiCheck className="text-xl"/>
 					<p>
@@ -50,15 +52,15 @@ const Toaster = ({ type, message, display, timeoutms } : ToasterProps) => {
 					</p>
 					</div>
 				</div>
-			);
+			break;
 		case ToasterType.error:
-			return(
+			content = 
 				<div>
 					<div className="
-						absolute m-4 p-4 border border-1 border-red-500 bg-red-500/20 text-red-500
+						m-4 p-4 border border-1 border-red-500 bg-red-500/20 text-red-500
 						flex gap-2 items-center
 						font-serif
-						z-100"
+						"
 					>
 					<FiAlertOctagon className="text-xl"/>
 					<p>
@@ -66,15 +68,15 @@ const Toaster = ({ type, message, display, timeoutms } : ToasterProps) => {
 					</p>
 					</div>
 				</div>
-			);
+			break;
 		default:
-			return(
+			content = 
 				<div>
 					<div className="
-						absolute m-4 p-4 border border-1 border-stone-500 bg-stone-500/20 text-stone-500
+						m-4 p-4 border border-1 border-stone-500 bg-stone-500/20 text-stone-500
 						flex gap-2 items-center
 						font-serif font-semibold
-						z-100"
+						"
 					>
 					<FiAlertOctagon className="text-xl"/>
 					<p>
@@ -82,9 +84,18 @@ const Toaster = ({ type, message, display, timeoutms } : ToasterProps) => {
 					</p>
 					</div>
 				</div>
-			);
-		
+			break;
 	}
+	return (
+		displayed ? 
+		<div className="absolute z-100
+						animate-fadeintop">
+			{ content }
+		</div>
+		:
+		<>
+		</>
+	)
 }
 
 export default Toaster;
