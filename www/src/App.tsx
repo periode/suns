@@ -1,18 +1,23 @@
-import React, { useEffect, useRef, useState } from 'react';
-import './App.css';
-import { ImageOverlay, MapContainer, Marker, Popup } from 'react-leaflet'
-import { CRS, LeafletMouseEvent } from 'leaflet';
+import { useEffect, useRef, useState } from 'react';
+import { ImageOverlay, MapContainer } from 'react-leaflet'
+import { CRS } from 'leaflet';
 import L from "leaflet";
 
-import { getSession, signout } from './utils/auth'
-import Auth from './components/auth/Auth'
+import { getSession } from './utils/auth'
 import EntrypointMarker from './components/entrypoints/EntrypointMarker';
 import Entrypoint from './components/entrypoints/Entrypoint';
 
 import backgroundMap from './map.png'
 import MainMenu from './components/commons/menu/MainMenu';
+import { Route, Routes } from 'react-router-dom';
+import UILayout from './components/commons/layout/UILayout';
+import AirContext from './contexts/AirContext';
 
-interface EntrypointInterface {
+import { IEntrypoint } from './utils/types';
+import Login from './components/auth/Login';
+
+export interface EntrypointInterface {
+  uuid: string
   lat: number,
   lng: number,
   name: string,
@@ -26,9 +31,9 @@ const MIN_ZOOOM = 0.5;
 const MAX_ZOOM = 6;
 
 const App = () => {
+  var currentEntrypoint : IEntrypoint = {} as IEntrypoint
   const hasData = useRef(false)
-  const [entrypoints, setEntrypoints] = useState(Array<EntrypointInterface>)
-  const [currentEntrypoint, setCurrentEntrypoint] = useState({} as EntrypointInterface)
+  const [entrypoints, setEntrypoints] = useState(Array<IEntrypoint>)
   const bounds = new L.LatLngBounds(new L.LatLng(0, 0), new L.LatLng(WIDTH, HEIGHT))
   const session = getSession()
 
@@ -47,7 +52,7 @@ const App = () => {
       const res = await fetch(endpoint, options)
       if (res.ok) {
         const c = await res.json()
-        setEntrypoints(c as Array<EntrypointInterface>)
+        setEntrypoints(c as Array<IEntrypoint>)
       } else {
         console.warn('error', res.status)
       }
@@ -60,49 +65,40 @@ const App = () => {
 
   }, [session.token])
 
-  const handleEntrypointSelect = (ep: EntrypointInterface) => {
-    setCurrentEntrypoint(ep)
-  }
+    return (
 
-  const handleEntrypointClose = () => {
-    setCurrentEntrypoint({} as EntrypointInterface)
-  }
-
-  return (
-    <div className="App">
-      {session.token === '' ?
-        <Auth />
-        :
-        <>
-          <MainMenu/>
-          <div className="map-container" id="map">
-            <MapContainer center={[WIDTH/2, HEIGHT/2]} minZoom={MIN_ZOOOM} maxZoom={MAX_ZOOM} zoom={2} scrollWheelZoom={true} crs={CRS.Simple} maxBounds={bounds} inertia={false}>
-              <ImageOverlay url={backgroundMap} bounds={bounds} />
+        <AirContext>
+          <div className="App w-full h-full font-serif">
+            { session.token === '' ?
+                <Login />        
+              :
               <>
-                {entrypoints.map(ep => {
-                  return (
-                    <EntrypointMarker
-                      key={`ep-${ep.name}`}
-                      data={ep}
-                      onSelect={handleEntrypointSelect} />
-                  )
-                })
-                }
+                <MainMenu />
+                <div className="map-container" id="map">
+                  <MapContainer center={[WIDTH / 2, HEIGHT / 2]} minZoom={MIN_ZOOOM} maxZoom={MAX_ZOOM} zoom={2} scrollWheelZoom={true} crs={CRS.Simple} maxBounds={bounds} inertia={false}>
+                    <ImageOverlay url={backgroundMap} bounds={bounds} />
+                    <>
+                      {entrypoints.map(ep => {
+                        return (
+                          <EntrypointMarker
+                            key={`ep-${ep.name}`}
+                            data={ep}
+                            />
+                        )
+                      })
+                      }
+                    </>
+                  </MapContainer>
+                </div>
+                <Routes>
+                  <Route path=":id" element={<Entrypoint />} />
+                </Routes>
+                <UILayout currentEntrypoint={currentEntrypoint}/>
               </>
-            </MapContainer>
-          </div>
-          <>
-            {
-              Object.keys(currentEntrypoint).length > 0 ?
-                <Entrypoint onClose={handleEntrypointClose} data={currentEntrypoint}/>
-                :
-                <></>
             }
-          </>
-        </>
-      }
-    </div>
-  );
+          </div>
+        </AirContext>
+    );
 }
 
 export default App;

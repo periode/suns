@@ -33,7 +33,8 @@ const MainMenu = () => {
 										border border-b-amber-800">
 
 						</div>
-						<div className="w-full h-full flex flex-col items-center justify-center text-4xl">
+						<div className="w-full h-full flex flex-col items-center justify-center text-6xl regular
+										">
 							<div className="h-24 w-full flex items-center justify-center">
 								<h2 >About</h2>
 							</div>
@@ -45,7 +46,8 @@ const MainMenu = () => {
 							</div>
 						</div>
 						<div className="w-full h-24
-										flex flex-col items-center justify-center text-4xl
+										font-mono
+										flex flex-col items-center justify-center text-2xl
 										border border-t-amber-800">
 							<h2 onClick={signout}>Log out</h2>
 						</div>

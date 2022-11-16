@@ -13,9 +13,18 @@ import (
 )
 
 const (
-	EntrypointPending   string = "pending"
-	EntrypointCompleted string = "completed"
-	EntrypointOpen      string = "open"
+	// Status of Entrypoint with regards to completion
+	EntrypointUnlisted  string = "unlisted"  // Entrypoint exists but is not displayed yet
+	EntrypointOpen      string = "open"      // Entrypoint is ready to be claimed
+	EntrypointPending   string = "pending"   // Entrypoint is claimed and someone is working on it
+	EntrypointCompleted string = "completed" // Entrypoint has been completed
+)
+
+const (
+	// Status of Partners of the Entrypoint
+	PartnerNone    string = "none"
+	PartnerPartial string = "partial"
+	PartnerFull    string = "full"
 )
 
 type Entrypoint struct {
@@ -28,6 +37,7 @@ type Entrypoint struct {
 
 	Name       string `gorm:"not null" json:"name" form:"name" binding:"required"`
 	Slug       string `gorm:"" json:"slug"`
+	Icon       string `json:"icon" yaml:"icon"`
 	Generation int    `gorm:"default:0" json:"generation"`
 
 	//-- belongs to a cluster
@@ -37,12 +47,12 @@ type Entrypoint struct {
 	//-- has many modules
 	Modules       []Module `gorm:"foreignKey:EntrypointUUID;references:UUID" json:"modules"`
 	CurrentModule int      `gorm:"default:0" json:"current_module" form:"current_module"`
-	StatusModule  string   `gorm:"default:open" json:"status_module"`
 
 	//-- has many-to-many users (0, 1 or 2)
 	Users         []*User       `gorm:"many2many:entrypoints_users;" json:"users"`
 	MaxUsers      int           `gorm:"default:1" json:"max_users" yaml:"max_users"`
-	UserCompleted pq.Int32Array `gorm:"type:integer[]"` //-- 1 means user has completed the module, 0 means not yet
+	UserCompleted pq.Int32Array `gorm:"type:integer[]" json:"user_completed"` //-- 1 means user has completed the module, 0 means not yet
+	PartnerStatus string        `gorm:"default:none" json:"partner_status"`
 
 	Lat float32 `json:"lat"`
 	Lng float32 `json:"lng"`
@@ -54,6 +64,9 @@ func (e *Entrypoint) BeforeCreate(tx *gorm.DB) (err error) {
 
 	e.Slug = fmt.Sprintf("%s-%s", strings.Join(sp[:int(i)], "-"), e.UUID.String()[:8])
 
+	if e.MaxUsers == 0 {
+		e.MaxUsers = 1
+	}
 	for i := 0; i < e.MaxUsers; i++ {
 		e.UserCompleted = append(e.UserCompleted, 0)
 	}
@@ -66,11 +79,19 @@ func CreateEntrypoint(entry *Entrypoint) (Entrypoint, error) {
 	return *entry, result.Error
 }
 
-func GetEntrypoint(uuid uuid.UUID, user_uuid uuid.UUID) (Entrypoint, error) {
+func GetEntrypoint(uuid uuid.UUID) (Entrypoint, error) {
 	var entry Entrypoint
 	result := db.Preload("Modules").Preload("Users").Where("uuid = ?", uuid).First(&entry)
 	if result.Error != nil {
 		return entry, result.Error
+	}
+
+	for i, m := range entry.Modules {
+		mod, err := GetModule(m.UUID)
+		if err != nil {
+			return entry, err
+		}
+		entry.Modules[i] = mod
 	}
 
 	return entry, nil
@@ -78,7 +99,7 @@ func GetEntrypoint(uuid uuid.UUID, user_uuid uuid.UUID) (Entrypoint, error) {
 
 func GetEntrypointBySlug(slug string, user_uuid uuid.UUID) (Entrypoint, error) {
 	var entry Entrypoint
-	result := db.Where("slug = ?", slug).First(&entry)
+	result := db.Preload("Modules").Preload("Users").Where("slug = ?", slug).First(&entry)
 	if result.Error != nil {
 		return entry, result.Error
 	}
@@ -98,7 +119,7 @@ func GetEntrypointsByGeneration(gen int) ([]Entrypoint, error) {
 	return eps, result.Error
 }
 
-func UpdateEntrypoint(uuid uuid.UUID, user_uuid uuid.UUID, entry *Entrypoint) (Entrypoint, error) {
+func UpdateEntrypoint(uuid uuid.UUID, entry *Entrypoint) (Entrypoint, error) {
 	var existing Entrypoint
 	result := db.Where("uuid = ?", uuid).First(&existing)
 	if result.Error != nil {
@@ -111,8 +132,26 @@ func UpdateEntrypoint(uuid uuid.UUID, user_uuid uuid.UUID, entry *Entrypoint) (E
 
 func ClaimEntrypoint(entry *Entrypoint, user *User) (Entrypoint, error) {
 	err := db.Model(&entry).Association("Users").Append(user)
+	if err != nil {
+		return *entry, err
+	}
+	// Handle entrypoint status
+	entry.Status = EntrypointPending
 
-	return *entry, err
+	// Handle partner status
+	if len(entry.Users) < entry.MaxUsers {
+		entry.PartnerStatus = PartnerPartial
+	}
+	if len(entry.Users) == entry.MaxUsers {
+		entry.PartnerStatus = PartnerFull
+	}
+	_, err = UpdateEntrypoint(entry.UUID, entry)
+	if err != nil {
+		return *entry, err
+	}
+
+	updated, err := GetEntrypoint(entry.UUID)
+	return updated, err
 }
 
 func DeleteEntrypoint(uuid uuid.UUID) (Entrypoint, error) {

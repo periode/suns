@@ -1,6 +1,6 @@
 const PublicView = (props: any) => {
     return (
-        <div>This module has been completed</div>
+        <div>This module is currently being done!</div>
     )
 }
 

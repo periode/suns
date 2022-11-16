@@ -1,9 +1,5 @@
 import { validateEmail } from "./helpers";
-
-interface IUser {
-    name: string,
-    uuid: string,
-}
+import { ISession, IUser } from "./types";
 
 var user: IUser
 
@@ -33,7 +29,6 @@ const recoverConfirm = async(_token: string, _password: string) => {
     const endpoint = new URL('auth/check-recover', process.env.REACT_APP_API_URL)
     const h = new Headers();
 
-    
     var b = new URLSearchParams();
     b.append("token", _token);
     b.append("password", _password);
@@ -42,9 +37,7 @@ const recoverConfirm = async(_token: string, _password: string) => {
         headers: h,
         body: b,
     }
-    console.log(_token)
-    console.log(_password)
-    console.log(options)
+
     const res = await fetch(endpoint, options)
     if (res.ok)
     {
@@ -72,7 +65,6 @@ const recoverRequest = async(_email: string) => {
     };
 
     const res = await fetch(endpoint, options)
-    console.log(res)
     if (res.ok)
         return Promise.resolve(`${res.statusText}`)
     else
@@ -165,14 +157,14 @@ const signup = async (_email: string, _email_conf: string, _password: string, _p
 }
 
 const getSession = () => {
-
     const t = sessionStorage.getItem("token")
     const u = sessionStorage.getItem("user")
+    const s : ISession = {
+        token: t ? t : '',
+        user: u ? JSON.parse(u) : {name: '', uuid: ''}
+    }
 
-    if (t == null || u == null)
-        return { user: { name: '', uuid: '' }, token: '' }
-    else
-        return { user: JSON.parse(u), token: t }
+    return s
 }
 
 export { signin, signout, signup, getSession, ConfirmToken, recoverRequest, recoverConfirm }

@@ -31,7 +31,7 @@ func TestEntrypointModel(t *testing.T) {
 	})
 
 	t.Run("Test get cluster", func(t *testing.T) {
-		coll, err := models.GetEntrypoint(clusterID, userID)
+		coll, err := models.GetEntrypoint(clusterID)
 		require.Nil(t, err)
 		assert.Equal(t, coll.UUID, clusterID)
 		assert.Equal(t, clusterName, coll.Name)
@@ -45,7 +45,7 @@ func TestEntrypointModel(t *testing.T) {
 	})
 
 	t.Run("Test get non-existing cluster", func(t *testing.T) {
-		res, err := models.GetEntrypoint(clusterUnknownID, userID)
+		res, err := models.GetEntrypoint(clusterUnknownID)
 		assert.NotNil(t, err)
 		assert.True(t, res.CreatedAt.IsZero())
 	})
@@ -54,7 +54,7 @@ func TestEntrypointModel(t *testing.T) {
 		var coll models.Entrypoint
 		updatedName := fmt.Sprintf("%s (updated)", clusterName)
 		coll.Name = updatedName
-		updated, err := models.UpdateEntrypoint(clusterID, userID, &coll)
+		updated, err := models.UpdateEntrypoint(clusterID, &coll)
 
 		require.Nil(t, err)
 		require.False(t, updated.CreatedAt.IsZero())
@@ -67,7 +67,7 @@ func TestEntrypointModel(t *testing.T) {
 		coll := models.Entrypoint{
 			Name: "Test Name 1 (updated)",
 		}
-		updated, err := models.UpdateEntrypoint(clusterUnknownID, userID, &coll)
+		updated, err := models.UpdateEntrypoint(clusterUnknownID, &coll)
 		assert.NotNil(t, err)
 		assert.True(t, updated.CreatedAt.IsZero())
 	})

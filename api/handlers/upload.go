@@ -3,13 +3,15 @@ package handlers
 import (
 	"fmt"
 	"io"
+	"io/ioutil"
+	"mime/multipart"
 	"net/http"
 	"os"
 	"path/filepath"
-	"strconv"
+	"time"
 
+	"github.com/gabriel-vasile/mimetype"
 	"github.com/google/uuid"
-	"github.com/gosimple/slug"
 	"github.com/labstack/echo/v4"
 	"github.com/periode/suns/api/config"
 	zero "github.com/periode/suns/api/logger"
@@ -27,50 +29,88 @@ func CreateUpload(c echo.Context) error {
 		zero.Warn("error getting the module UUID")
 		return c.String(http.StatusBadRequest, "Cannot parse the module UUID")
 	}
-	index, err := strconv.Atoi(c.FormValue("partner_index"))
-	if err != nil {
-		zero.Warn("error getting the partner index")
-		return c.String(http.StatusBadRequest, "Cannot parse the partner index")
+
+	var ftype, fname, fpath string
+	uploads := make([]models.Upload, 0)
+
+	txt := c.FormValue("text[]")
+	ftype = "text/plain"
+	//-- if there is an empty string, it means we have to deal with a file
+	if txt == "" {
+		form, err := c.MultipartForm()
+		if err != nil {
+			zero.Error(err.Error())
+			return c.String(http.StatusBadRequest, "Error uploading the file")
+		}
+
+		files := form.File["files[]"]
+		for index, file := range files {
+			fname := file.Filename
+			fpath := fmt.Sprintf("%d_%s_%s_%d_%s", time.Now().Unix(), module_uuid.String()[:8], user_uuid.String()[:8], index, fname)
+			target := filepath.Join(conf.UploadsDir, fpath)
+
+			ftype, err := writeFileToDisk(file, target)
+			if err != nil {
+				zero.Error(err.Error())
+				return c.String(http.StatusBadRequest, "Error uploading the file")
+			}
+
+			u := models.Upload{
+				Name:     fname,
+				URL:      fpath,
+				UserUUID: user_uuid.String(),
+				Text:     txt,
+				Type:     ftype,
+			}
+
+			uploads = append(uploads, u)
+		}
+	} else {
+		u := models.Upload{
+			Name:     fname,
+			URL:      fpath,
+			UserUUID: user_uuid.String(),
+			Text:     txt,
+			Type:     ftype,
+		}
+		uploads = append(uploads, u)
 	}
 
-	// Source
-	file, err := c.FormFile("file")
-	if err != nil {
-		return err
-	}
-	src, err := file.Open()
-	if err != nil {
-		return err
-	}
-	defer src.Close()
+	zero.Debugf("adding uploads: %v \n", uploads)
 
-	// Destination
-	var fname = fmt.Sprintf("%s-%s", module_uuid.String()[:13], slug.Make(file.Filename))
-	target := filepath.Join(conf.UploadsDir, fname)
-	dst, err := os.Create(target)
-	if err != nil {
-		return err
-	}
-	defer dst.Close()
-
-	// Copy
-	if _, err = io.Copy(dst, src); err != nil {
-		return err
-	}
-
-	upload := models.Upload{
-		Name:     file.Filename,
-		URL:      target,
-		UserUUID: user_uuid.String(),
-		Index:    index,
-	}
-
-	//-- then get the module, append the upload, and update it
-	module, err := models.AddModuleUpload(module_uuid, upload)
+	module, err := models.AddModuleUpload(module_uuid, uploads)
 	if err != nil {
 		zero.Warn("error getting the module")
 		return c.String(http.StatusInternalServerError, "Cannot get the module")
 	}
 
 	return c.JSON(http.StatusOK, module)
+}
+
+func writeFileToDisk(file *multipart.FileHeader, target string) (string, error) {
+	src, err := file.Open()
+	if err != nil {
+		return "", err
+	}
+	defer src.Close()
+
+	dst, err := os.Create(target)
+	if err != nil {
+		return "", err
+	}
+	defer dst.Close()
+
+	// check mimetype
+	bytes, err := ioutil.ReadAll(src)
+	if err != nil {
+		return "", err
+	}
+	m := mimetype.Detect(bytes)
+	ftype := m.String()
+
+	if _, err = io.Copy(dst, src); err != nil {
+		return "", err
+	}
+
+	return ftype, nil
 }

@@ -1,85 +1,147 @@
-- uuid: '57ed6a2b-aacb-4c24-b1e1-3495821f846a'
+- uuid: "57ed6a2b-aacb-4c24-b1e1-3495821f846a"
   name: "Combining first times"
-  status: "listed"
   entrypoints:
-    - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846a'
-      status: "listed"
-      name: "Combining first times"
+    - uuid: "46de6a2b-aacb-4c24-b1e1-3495821f846a"
+      status: "open"
+      name: "CombiningFirstTimes"
       max_users: 2
       lat: 300.300
       lng: 300.400
+      icon: "blue.svg"
       modules:
         - uuid: "2a73291d-559f-47c1-b24d-92a3606deb49"
-          name: "For the first time - 1"
-          status: "listed"
-          type: "Intro"
-          media:
-            type: "video"
-            url: "https://player.vimeo.com/video/139922433?h=07c88a080c"
-          content: "This is the first content"
+          name: "For the first time - Intro"
+          type: "intro"
+          contents:
+            - type: "vid"
+              key: "combining_intro_0"
+            - type: "txt"
+              key: "combining_intro_1"
+          hint: "This is the intro video with one accompanying paragraph"
         - uuid: "2a73291d-559f-47c1-b24d-92a3606deb50"
-          name: "For the first time - 2"
-          slug: "module-b-2a73291d"
-          status: "listed"
-          type: "upload_recording"
-          content: "This is the second content, with an audio cue"
-        - name: "For the first time - 3"
-          status: "listed"
-          content: "This is the third content"
-          uploads:
-            - url: "https://static.enframed.net/vertiges/proletaire.mp3"
-              user: "0"
-        - name: "For the first time - 4"
-          status: "listed"
-          content: "This is the final countdown"
-          type: "final"
+          name: "For the first time - Prompt recording"
+          type: "task"
+          tasks:
+            - type: "audio_input"
+              key: "combining_task_0"
+          hint: "Please record a moment that happened to you for the first time. This recording will then be sent to your partner."
+        - uuid: "2a73291d-559f-47c1-b24d-92a3606deb51"
+          name: "For the first time - Response recording"
+          type: "task"
+          tasks:
+            - type: "audio_input"
+              key: "combining_task_1"
+          hint: "This is what your partner has recorded, please tell the story of when the same thing happened to you."
+        - name: "For the first time - Final"
+          hint: "This is the final countdown"
+          type: "final_first_times"
 
-- uuid: '57ed6a2b-aacb-4c24-b1e1-3495821f846b'
-  name: "Test Cluster"
-  status: "listed"
-  entrypoints: 
-    - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846b'
-      status: "completed"
-      name: "Completed entrypoint"
+- uuid: "57ed6a2b-aacb-4c24-b1e1-349581f8457b"
+  name: "Symbiosis"
+  entrypoints:
+    - uuid: "46de6a2b-aacb-4c24-b1e1-3495821f846b"
+      status: "open"
+      name: "SymbiosisGaze"
       lat: 240.300
       lng: 240.400
+      icon: "green.svg"
+      max_users: 2
       modules:
-        - name: "Completed module 1"
-          status: "listed"
-          content: "This is the first content"
-        - name: "Completed module B"
-          status: "listed"
-          content: "This is the second content"
-        - name: "Completed C"
-          status: "listed"
-          content: "This is the third content"
-    - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846c'
-      status: "completed"
-      name: "Test entrypoint 1"
+        - name: "Start Symbiosis Gaze"
+          type: "intro"
+          contents:
+            - type: "img"
+              key: "intro_img"
+            - type: "txt"
+              key: "intro_txt"
+            - type: "vid"
+              key: "intro_vid"
+        - name: "Text input 1"
+          type: "task"
+          tasks:
+            - type: "text_input"
+              key: "input_0"
+              max_uploads: 1
+          hint: "This is the second content"
+        - name: "Upload 9 Images"
+          type: "task"
+          tasks:
+            - type: "image_input"
+              key: "input_1"
+              max_uploads: 9
+          hint: "This is the 9x9 grid image input"
+        - name: "Label random image from the 9 previous"
+          type: "task"
+          tasks:
+            - type: "text_input"
+              key: "input_2"
+          hint: "This is the 9x9 grid image input"
+        - name: "Final Symbiosis Gaze"
+          type: "final_symbiosis_gaze"
+          hint: "This is the final view for the symbiosis - gaze"
+
+    - uuid: "46de6a2b-aacb-4c24-b1e1-3495821f846c"
+      status: "open"
+      name: "SymbiosisTask"
       lat: 150.300
       lng: 150.400
+      icon: "green.svg"
+      max_users: 2
       modules:
-        - name: "Module A"
-          status: "listed"
-          content: "This is the first content"
-        - name: "Module B"
-          status: "listed"
-          content: "This is the second content"
-        - name: "Module C"
-          status: "listed"
-          content: "This is the third content"
-    - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846d'
-      status: "pending"
-      name: "Pending entrypoint 2"
-      lat: 140.300
-      lng: 150.400
+        - name: "Start Symbiosis Task"
+          type: "intro"
+          contents:
+            - type: "img"
+              key: "intro_img"
+            - type: "txt"
+              key: "intro_txt"
+            - type: "vid"
+              key: "intro_vid"
+        - name: "Text input 1"
+          type: "task"
+          tasks:
+            - type: "text_input"
+              key: "input_0"
+          hint: "This is the text input"
+        - name: "Upload 1 Video"
+          type: "task"
+          tasks:
+            - type: "video_input"
+              key: "input_1"
+              max_uploads: 3
+        - name: "Final Symbiosis Task"
+          type: "final_symbiosis_task"
+          hint: "This is the final view for the symbiosis - Task. It should show the videos"
+
+    - uuid: "46df7b2b-aacb-4c24-b1e1-3495821f846d"
+      status: "open"
+      name: "SymbiosisMean"
+      lat: 540.300
+      lng: 550.400
+      icon: "green.svg"
+      max_users: 2
       modules:
-        - name: "Module A"
-          status: "listed"
-          content: "This is the first content"
-        - name: "Module B"
-          status: "listed"
-          content: "This is the second content"
-        - name: "Module C"
-          status: "listed"
-          content: "This is the third content"
+        - name: "Start Symbiosis Mean"
+          type: "intro"
+          contents:
+            - type: "img"
+              key: "intro_img"
+            - type: "txt"
+              key: "intro_txt"
+            - type: "vid"
+              key: "intro_vid"
+        - name: "Upload Text"
+          type: "task"
+          tasks:
+            - type: "text_input"
+              key: "input_0"
+          hint: "This is the text input"
+        - name: "Upload Audio"
+          type: "task"
+          tasks:
+            - type: "audio_input"
+              key: "input_1"
+              max_uploads: 1
+        - name: "Final Symbiosis mean"
+          type: "final_symbiosis_mean"
+          hint: "This is the final view for the symbiosis - Mean"

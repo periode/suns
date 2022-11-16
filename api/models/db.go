@@ -42,7 +42,7 @@ func InitDB(url string) (*gorm.DB, error) {
 	}
 
 	// migration
-	err = db.AutoMigrate(&User{}, &Cluster{}, &Entrypoint{}, &Module{}, &Token{}, &Upload{})
+	err = db.AutoMigrate(&User{}, &Cluster{}, &Entrypoint{}, &Module{}, &Token{}, &Upload{}, Task{}, Content{})
 	if err != nil {
 		zero.Errorf("error running migrations: %v", err)
 		log.Fatal(err)
@@ -82,6 +82,16 @@ func runFixtures(shouldTruncateTables bool) error {
 		}
 
 		err = db.Exec("TRUNCATE TABLE uploads CASCADE").Error
+		if err != nil {
+			return err
+		}
+
+		err = db.Exec("TRUNCATE TABLE tasks CASCADE").Error
+		if err != nil {
+			return err
+		}
+
+		err = db.Exec("TRUNCATE TABLE contents CASCADE").Error
 		if err != nil {
 			return err
 		}

@@ -72,7 +72,7 @@ func UpdateEntrypoint(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "There was an error parsing the updated information.")
 	}
 
-	entrypoint, err := models.GetEntrypoint(uid, user_uuid)
+	entrypoint, err := models.GetEntrypoint(uid)
 	if err != nil {
 		return c.String(http.StatusNotFound, "We couldn't find the Entrypoint to update.")
 	}
@@ -82,7 +82,7 @@ func UpdateEntrypoint(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Error binding to the Entrypoint to update.")
 	}
 
-	updated, err := models.UpdateEntrypoint(uid, user_uuid, &entrypoint)
+	updated, err := models.UpdateEntrypoint(uid, &entrypoint)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error updating the Entrypoint. Please try again later.")
 	}
@@ -103,49 +103,66 @@ func ProgressEntrypoint(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Not a valid ID")
 	}
 
-	var empty = new(models.Entrypoint)
-	var input models.Entrypoint
-	err = c.Bind(&input)
-	if err != nil || reflect.DeepEqual(&input, empty) {
-		zero.Errorf("There was an error binding the update input %v", err)
-		return c.String(http.StatusBadRequest, "There was an error parsing the updated information.")
-	}
-
-	entrypoint, err := models.GetEntrypoint(uid, user_uuid)
+	ep, err := models.GetEntrypoint(uid)
 	if err != nil {
 		return c.String(http.StatusNotFound, "We couldn't find the Entrypoint to update.")
 	}
 
-	if entrypoint.CurrentModule == len(entrypoint.Modules)-1 {
+	if ep.CurrentModule == len(ep.Modules)-1 {
 		return c.String(http.StatusPreconditionFailed, "The entrypoint has all modules completed.")
 	}
 
+	mod := ep.Modules[ep.CurrentModule]
 	//-- this is where we make the update logic.
-	if entrypoint.MaxUsers == 1 {
-		entrypoint.CurrentModule += 1
-	} else if entrypoint.MaxUsers == 2 {
+	if ep.MaxUsers == 1 {
+		ep.CurrentModule += 1
+	} else if ep.MaxUsers == 2 {
 		//-- we update one user
-		for i := 0; i < len(entrypoint.Users); i++ {
-			if entrypoint.Users[i].UUID == user_uuid {
-				entrypoint.UserCompleted[i] = 1
+		for i := 0; i < len(ep.Users); i++ {
+			if ep.Users[i].UUID == user_uuid {
+				ep.UserCompleted[i] = 1
 			}
 		}
 
-		//-- if both users are updated, we increase the current_module by 1
-		if entrypoint.UserCompleted[0] == entrypoint.UserCompleted[1] {
-			entrypoint.CurrentModule += 1
-			entrypoint.UserCompleted[0] = 0
-			entrypoint.UserCompleted[1] = 0
-			entrypoint.StatusModule = models.EntrypointOpen
+		//-- if both users are updated, we increase the current_module by 1 and update the status of the module itself
+		if ep.UserCompleted[0] == ep.UserCompleted[1] {
+			mod.Status = models.ModuleCompleted
+
+			ep.UserCompleted[0] = 0
+			ep.UserCompleted[1] = 0
+
+			ep.CurrentModule += 1
 		} else { //-- if only one, we set the status as pending
-			entrypoint.StatusModule = models.EntrypointPending
-			zero.Warn("An entrypoint has had some progress! We should send an email")
+			mod.Status = models.ModulePartial
 		}
+
+		_, err := models.UpdateModule(mod.UUID, user_uuid, &mod)
+		if err != nil {
+			return c.String(http.StatusInternalServerError, "Error updating the module status. Please try again later.")
+		}
+
+		//-- send emails to whoever is not the user doing the current completion
+		// for i := 0; i < len(ep.Users); i++ {
+		// 	if ep.Users[i].UUID != user_uuid {
+		// 		mailer.SendModuleProgress(ep.Users[i], &ep)
+		// 	}
+		// }
 	}
 
-	updated, err := models.UpdateEntrypoint(uid, user_uuid, &entrypoint)
+	//-- check for entrypoint completion
+	if ep.CurrentModule == len(ep.Modules)-1 {
+		zero.Info("Entrypoint has been completed!")
+		ep.Status = models.EntrypointCompleted
+	}
+
+	_, err = models.UpdateEntrypoint(uid, &ep)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error updating the Entrypoint. Please try again later.")
+	}
+
+	updated, err := models.GetEntrypoint(uid)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "Error getting the updated Entrypoint. Please try again later.")
 	}
 
 	return c.JSON(http.StatusOK, updated)
@@ -164,7 +181,7 @@ func ClaimEntrypoint(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Not a valid ID")
 	}
 
-	entrypoint, err := models.GetEntrypoint(uid, user_uuid)
+	entrypoint, err := models.GetEntrypoint(uid)
 	if err != nil {
 		return c.String(http.StatusNotFound, "We couldn't find the Entrypoint to update.")
 	}
@@ -173,9 +190,20 @@ func ClaimEntrypoint(c echo.Context) error {
 		return c.String(http.StatusPreconditionFailed, "This entrypoint has already been claimed")
 	}
 
+	for _, u := range entrypoint.Users {
+		if u.UUID == user_uuid {
+			return c.String(http.StatusPreconditionFailed, "You have already claimed this entrypoint")
+		}
+	}
+
 	user, err := models.GetUser(user_uuid, user_uuid)
 	if err != nil {
 		return c.String(http.StatusNotFound, "We couldn't find the User to update.")
+	}
+
+	if len(entrypoint.Users) == entrypoint.MaxUsers-1 {
+		entrypoint.Status = models.EntrypointPending
+		entrypoint.CurrentModule += 1
 	}
 
 	updated, err := models.ClaimEntrypoint(&entrypoint, &user)
@@ -204,7 +232,7 @@ func GetEntrypoint(c echo.Context) error {
 
 	}
 
-	coll, err := models.GetEntrypoint(uid, user_uuid)
+	coll, err := models.GetEntrypoint(uid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusNotFound, "We couldn't find the Entrypoint.")

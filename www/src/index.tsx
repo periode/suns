@@ -7,16 +7,19 @@ import {
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import Auth from './components/auth/Auth';
+
 import NotFound from './NotFound';
+
 import About from './About';
+
+import Auth from './components/auth/Auth';
 import AccountConfirm from './pages/auth/AccountConfirm';
 import AccountRecovery from './pages/auth/AccountRecovery';
 import AccountRecoveryConfirm from './pages/auth/AccountRecoveryConfirm';
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: '/*',
     element: <App/>,
   },
   {
@@ -38,6 +41,10 @@ const router = createBrowserRouter([
   {
     path: '/about',
     element: <About />
+  },
+  {
+    path: '/entrypoints/*',
+    element: <App />
   },
   {
     path: "*",

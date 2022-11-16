@@ -1,0 +1,13 @@
+<html>
+
+<body>
+    <h1>Account recovery request</h1>
+    <p>Hello {{ .Name }},</p>
+    <p>There has been some progress on an entrypoint that you're part of!</p>
+    <p>
+        <a href="{{ .Host }}/entrypoints/{{ .EntrypointUUID }}">Go to the entrypoint - {{ .EntrypointName }}</a>
+    </p>
+    <p>Cheers,<br /></p>
+</body>
+
+</html>

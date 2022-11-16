@@ -10,9 +10,10 @@ import (
 	"time"
 
 	"github.com/mailgun/mailgun-go/v4"
+	"github.com/periode/suns/api/models"
 )
 
-const DOMAIN = "post.enframed.net"
+const DOMAIN = "sandbox5300b8e5b84a44f786333b559fb444b6.mailgun.org"
 const SENDER = "Suns - Test <suns@post.enframed.net>"
 
 type Payload interface {
@@ -51,6 +52,25 @@ func (c DeletionPayload) Check() error {
 }
 
 func (c DeletionPayload) Data() interface{} {
+	return c
+}
+
+type CompletionPayload struct {
+	Name           string
+	Host           string
+	EntrypointUUID string
+	EntrypointName string
+}
+
+func (c CompletionPayload) Check() error {
+	var err error
+	if c.Name == "" || c.Host == "" || c.EntrypointUUID == "" {
+		err = fmt.Errorf("the payload should not be empty")
+	}
+	return err
+}
+
+func (c CompletionPayload) Data() interface{} {
 	return c
 }
 
@@ -99,4 +119,17 @@ func SendMail(_dest string, _subject string, _template string, _data Payload) er
 	}
 
 	return err
+}
+
+func SendModuleProgress(dest *models.User, ep *models.Entrypoint) error {
+
+	host := os.Getenv("FRONTEND_HOST")
+	body := CompletionPayload{
+		Name:           dest.Name,
+		Host:           host,
+		EntrypointUUID: ep.UUID.String(),
+		EntrypointName: ep.Name,
+	}
+	SendMail(dest.Email, "Module progress", "module_progress", body)
+	return nil
 }
