@@ -16,6 +16,7 @@ type Upload struct {
 	Status    string         `gorm:"default:unlisted" json:"status"`
 	Name      string         `json:"name" form:"name"`
 	URL       string         `json:"url" form:"uploads_url"`
+	Text      string         `json:"string" form:"text"`
 
 	//-- has a user
 	UserUUID string `gorm:"type:uuid;default:uuid_generate_v4()" json:"user_uuid" form:"user_uuid"`

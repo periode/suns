@@ -1,20 +1,19 @@
 import { Dispatch, SetStateAction, useContext, useEffect } from "react"
 import { AirTableContext } from "../../contexts/AirContext"
-import { IEntrypoint, IModule } from "../../utils/types"
+import { IEntrypoint, IFile, IModule } from "../../utils/types"
 import AudioRecorder from "./AudioRecorder"
 import FileUploader from "./FileUploader"
-import TextInput from "./TextInput"
 
-interface ITaskModule {
+interface ITaskModuleProps {
     data: IModule,
     ep: IEntrypoint,
     index: number,
-    setUploads: Dispatch<SetStateAction<File[]>>,
+    setUploads: Dispatch<SetStateAction<IFile[]>>,
     setUserDone: Dispatch<SetStateAction<boolean>>,
     hasUserCompleted: boolean
 }
 
-const TaskModule = ({ data, ep, index, setUploads, setUserDone, hasUserCompleted }: ITaskModule) => {
+const TaskModule = ({ data, ep, index, setUploads, setUserDone, hasUserCompleted }: ITaskModuleProps) => {
 
     const ctx = useContext(AirTableContext)
     const contents = ctx.get(ep.name)
@@ -33,17 +32,17 @@ const TaskModule = ({ data, ep, index, setUploads, setUserDone, hasUserCompleted
                 case "video_input":
                     return (<div key={`${task.type}-key`}>
                         <p>{contents?.get(task.key)}</p>
-                        <FileUploader/>
+                        <FileUploader type="video" setUploads={setUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted}/>
                     </div>)
                 case "image_input":
                     return (<div key={`${task.type}-key`}>
                         <p>{contents?.get(task.key)}</p>
-                        <FileUploader/>
+                        <FileUploader type="image" setUploads={setUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted}/>
                     </div>)
                 case "text_input":
                     return (<div key={`${task.type}-key`}>
                         <p>{contents?.get(task.key)}</p>
-                        <TextInput />
+                        <input type="text"></input>
                     </div>)
                 default:
                     return (<>Could not find task type ({task.type})</>)

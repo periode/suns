@@ -27,35 +27,42 @@ func CreateUpload(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Cannot parse the module UUID")
 	}
 
-	// Source
-	file, err := c.FormFile("file")
-	if err != nil {
-		return err
-	}
-	src, err := file.Open()
-	if err != nil {
-		return err
-	}
-	defer src.Close()
+	var fname, fpath string
+	txt := c.FormValue("text")
+	//-- if there is an empty string, it means we have to deal with a file
+	if txt == "" {
+		// Source
+		file, err := c.FormFile("file")
+		if err != nil {
+			return err
+		}
+		src, err := file.Open()
+		if err != nil {
+			return err
+		}
+		defer src.Close()
 
-	// Destination
-	var fname = fmt.Sprintf("%d_%s_%s_%s", time.Now().Unix(), module_uuid.String()[:8], user_uuid.String()[:8], file.Filename)
-	target := filepath.Join(conf.UploadsDir, fname)
-	dst, err := os.Create(target)
-	if err != nil {
-		return err
-	}
-	defer dst.Close()
+		// Destination
+		fname = file.Filename
+		fpath = fmt.Sprintf("%d_%s_%s_%s", time.Now().Unix(), module_uuid.String()[:8], user_uuid.String()[:8], fname)
+		target := filepath.Join(conf.UploadsDir, fname)
+		dst, err := os.Create(target)
+		if err != nil {
+			return err
+		}
+		defer dst.Close()
 
-	// Copy
-	if _, err = io.Copy(dst, src); err != nil {
-		return err
+		// Copy
+		if _, err = io.Copy(dst, src); err != nil {
+			return err
+		}
 	}
 
 	upload := models.Upload{
-		Name:     file.Filename,
-		URL:      fname,
+		Name:     fname,
+		URL:      fpath,
 		UserUUID: user_uuid.String(),
+		Text:     txt,
 	}
 
 	//-- then get the module, append the upload, and update it

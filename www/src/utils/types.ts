@@ -41,6 +41,13 @@ export interface IEntrypoint {
 export interface IUpload {
     user_uuid: string,
     url: string,
+    name: string,
+    text: string,
+}
+
+export interface IFile {
+    file: File,
+    text: string
 }
 
 export interface IContent {

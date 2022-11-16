@@ -13,7 +13,7 @@ import NotFound from "../../NotFound";
 import AudioRecorder from "../modules/AudioRecorder";
 import IntroVideo from "../modules/IntroModule";
 import FinalFirstTimes from "../modules/FinalFirstTimes";
-import { ENTRYPOINT_STATUS, IEntrypoint, IModule, ISession } from "../../utils/types";
+import { ENTRYPOINT_STATUS, IEntrypoint, IFile, IModule, ISession } from "../../utils/types";
 import IntroModule from "../modules/IntroModule";
 import TaskModule from "../modules/TaskModule";
 
@@ -25,7 +25,7 @@ const Entrypoint = (props: any) => {
     const navigate = useNavigate()
     const session = getSession()
     const [data, setData] = useState(props.data as IEntrypoint)
-    const [uploads, setUploads] = useState(Array<File>)
+    const [uploads, setUploads] = useState(Array<IFile>)
 
     const [isOwned, setOwned] = useState(false)
     //-- userDone keeps track of when the user can submit the module
@@ -111,7 +111,7 @@ const Entrypoint = (props: any) => {
         }
     }
 
-    const submitUploads = async (files: Array<File>) => {
+    const submitUploads = async (files: Array<IFile>) => {
         const endpoint = new URL(`uploads/`, process.env.REACT_APP_API_URL)
 
         if (session.token === "")
@@ -122,7 +122,7 @@ const Entrypoint = (props: any) => {
 
         const b = new FormData()
         b.append("module_uuid", data.modules[data.current_module].uuid as string)
-        b.append("file", uploads[0])
+        b.append("file", files[0].file)
 
         var options = {
             method: 'POST',

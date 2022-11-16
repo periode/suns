@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
 import { getSession } from "../../utils/auth"
-import { IEntrypoint, IModule, IUpload } from "../../utils/types"
+import { IEntrypoint, IFile, IModule, IUpload } from "../../utils/types"
 
 const MediaStreamRecorder = require('msr')
 
@@ -8,7 +8,7 @@ interface AudioRecorderProps {
     index: number,
     mod: IModule,
     ep: IEntrypoint,
-    setUploads: Dispatch<SetStateAction<File[]>>,
+    setUploads: Dispatch<SetStateAction<IFile[]>>,
     setUserDone: Dispatch<SetStateAction<boolean>>,
     hasUserCompleted: boolean
 }
@@ -80,7 +80,7 @@ const AudioRecorder = ({ index, mod, ep, setUploads, setUserDone, hasUserComplet
         setRecordingState("done")
         setBlobURL(URL.createObjectURL(audioBlob as Blob))
 
-        setUploads([new File([audioBlob], "recording.wav")])
+        setUploads([{file: new File([audioBlob], "recording.wav"), text: ""}])
         setUserDone(true)
     }
 
