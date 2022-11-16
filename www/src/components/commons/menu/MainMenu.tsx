@@ -53,7 +53,7 @@ const MainMenu = () => {
 						</div>
 				</div>
 					:
-				<div className="absolute top-2 right-2
+				<div className="absolute z-10 top-2 right-2
 								w-12 h-12 
 								flex items-center justify-center
 								text-amber-900
