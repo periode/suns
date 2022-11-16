@@ -51,12 +51,15 @@ const TaskModule = ({ data, ep, index, setUploads, setUserDone, hasUserCompleted
                     </div>
                     )
                 case "text_input":
+                    console.log("task.placeholder", task.placeholder)
                     return (
                     <div className="w-full
                                     flex flex-col gap-4
                                             " key={`${task.type}-key`}>
                         <p>{contents?.get(task.key)}</p>
-                        <TextInputField setUploads={setUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted}/>
+                        <div className="h-60">
+                            <TextInputField setUploads={setUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted} placeholder={task.placeholder && contents?.get(task.placeholder) }/>
+                        </div>
                     </div>)
                 default:
                     return (<>Could not find task type ({task.type})</>)

@@ -40,15 +40,16 @@ const TextInputField = ({
 						disabled:opacity-50" 
 						htmlFor={ label?.toLowerCase() }>{ label }</label>
 			}
-			<input className="	w-full h-14 p-1 pr-2 pl-3 
+			<textarea className="	
+								w-full h-full p-3 
 								hover:border-amber-500
 								disabled:opacity-50
 								focus:outline-amber-500 focus:rounded-none focus:bg-white/50
-								border border-amber-900 bg-amber-50 font-mono
-								placeholder:text-amber-900/50
+								border border-amber-900 bg-white/20 font-serif text-amber-700
+								placeholder:text-amber-900/50 placeholder:font-mono
 								transition-all ease-in duration-300
 								"
-				onChange={onChange} placeholder={placeholder} type='text' name={ label? label.toLowerCase() : 'text' } disabled={hasUserCompleted}/>
+				onChange={onChange} placeholder={placeholder} name={ label? label.toLowerCase() : 'text' } disabled={ hasUserCompleted }/>
 		</>						
 	)	
 }
