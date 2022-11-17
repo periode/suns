@@ -21,15 +21,14 @@ const TextInputField = ({
  } : TextInputFieldProps) => {
 
 	const [uploads, setUploads] = useState(Array<IFile>)
-
 	useEffect(() => {
         setUserDone(false)
     }, [])
 
 	useEffect(() => {
-		if(isRequestingUploads)
+		if(isRequestingUploads)	
 			handleNewUploads(uploads)
-
+		
 	}, [isRequestingUploads])
 
 	const onChange = (e: React.BaseSyntheticEvent) => {

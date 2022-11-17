@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import { FiCommand, FiX } from "react-icons/fi"
@@ -29,11 +29,11 @@ const Entrypoint = (props: any) => {
 
     const [isOwned, setOwned] = useState(false)
     const [isRequestingUploads, setRequestingUploads] = useState(false)
-    const uploadsSubmittedCount = useRef(0)
     //-- userDone keeps track of when the user can submit the module
     const [isUserDone, setUserDone] = useState(false)
     //-- userCompleted keeps track of when the module is completed
     const [hasUserCompleted, setUserCompleted] = useState(false)
+    const hasSubmittedModule = useRef(false)
 
 
     useEffect(() => {
@@ -47,9 +47,9 @@ const Entrypoint = (props: any) => {
 
         // setting entrypoint expiry date
         let d = new Date(data.created_at)
-		let end = new Date()
-		end.setMinutes(d.getMinutes() + ENTRYPOINT_LIFETIME_MINUTES)
-		setEndDate(end.toString())
+        let end = new Date()
+        end.setMinutes(d.getMinutes() + ENTRYPOINT_LIFETIME_MINUTES)
+        setEndDate(end.toString())
     }, [data, session])
 
     useEffect(() => {
@@ -66,18 +66,14 @@ const Entrypoint = (props: any) => {
     }, [isOwned])
 
     useEffect(() => {
-        if(data === undefined)
+        if (data === undefined)
             return
-            
-        uploadsSubmittedCount.current++
-        console.log(`uploads submitted ${uploadsSubmittedCount.current} times`)
-        console.log(uploads);
 
-        if(uploadsSubmittedCount.current == data.modules[data.current_module].tasks.length)
+        if (uploads.length == data.modules[data.current_module].tasks.length && !hasSubmittedModule.current) {
             completeModule(data, session)
-        
-        // and keeps a counter of how many times it's been called (it should reach mod.tasks.length)
-    }, [uploads])
+            hasSubmittedModule.current = true
+        }
+    }, [uploads, hasUserCompleted])
 
     useEffect(() => {
         const endpoint = new URL(`entrypoints/${params.id}`, process.env.REACT_APP_API_URL)
@@ -97,10 +93,11 @@ const Entrypoint = (props: any) => {
                 e.modules = e.modules.sort((a: IModule, b: IModule) => { return parseInt(a.ID) - parseInt(b.ID) })
 
                 setData(e as IEntrypoint)
-                if (isUserDone) setUserDone(false)
+                setUserDone(false)
                 setTimeout(fetchEntrypoint, FETCH_INTERVAL)
             } else {
                 console.warn('error', res.status)
+                navigate('/')
             }
         }
 
@@ -133,11 +130,13 @@ const Entrypoint = (props: any) => {
         }
     }
 
-    const handleNewUploads = (_new : Array<IFile>) => {
-        setUploads([...uploads, ..._new])
+    const handleNewUploads = (_new: Array<IFile>) => {
+        setUploads(prev => {
+            return [...prev, ..._new] as IFile[]
+        })
     }
 
-    const submitUploads = async (files: Array<IFile>) => {
+    const submitUpload = async (f: IFile) => {
         const endpoint = new URL(`uploads/`, process.env.REACT_APP_API_URL)
 
         if (session.token === "")
@@ -149,12 +148,11 @@ const Entrypoint = (props: any) => {
         const b = new FormData()
         b.append("module_uuid", data.modules[data.current_module].uuid as string)
 
-        for (const f of files) {
-            if (f.file !== undefined)
-                b.append("files[]", f.file)
-            else
-                b.append("text[]", f.text)
-        }
+        if (f.file !== undefined)
+            b.append("files[]", f.file)
+
+        else if (f.text !== undefined)
+            b.append("text[]", f.text)
 
         var options = {
             method: 'POST',
@@ -170,22 +168,20 @@ const Entrypoint = (props: any) => {
     }
 
     const requestUploads = () => {
-        // check if there are any tasks in the current module
-        if(data.modules[data.current_module].tasks.length > 0)
+        if (data.modules[data.current_module].tasks.length > 0)
             setRequestingUploads(true)
         else
             completeModule(data, session)
     }
 
     const completeModule = async (ep: IEntrypoint, session: ISession) => {
-        if (uploads.length > 0)
-            submitUploads(uploads)
-
-        const endpoint = new URL(`entrypoints/${ep.uuid}/progress`, process.env.REACT_APP_API_URL)
-
         if (session.token === "")
             Navigate({ to: "/auth" })
 
+
+        uploads.forEach(u => submitUpload(u))
+
+        const endpoint = new URL(`entrypoints/${ep.uuid}/progress`, process.env.REACT_APP_API_URL)
         const h = new Headers();
         h.append("Authorization", `Bearer ${session.token}`);
 
@@ -308,9 +304,9 @@ const Entrypoint = (props: any) => {
                     <div className="w-full h-full p-4 overflow-scroll">
                         {
                             isOwned || data.status === ENTRYPOINT_STATUS.EntrypointCompleted ?
-                                     getModules()
+                                getModules()
                                 : data.users.length < data.max_users ? <>
-                                    { parseModule(0, data) }
+                                    {parseModule(0, data)}
                                 </> :
                                     <>
                                         <PublicView entrypoint={data} />
