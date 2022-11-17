@@ -83,7 +83,7 @@ const Entrypoint = (props: any) => {
     }, [isOwned])
 
     //-- this checks if all uploads have been submitted before completing the module
-    useEffect(() => {
+    useEffect(() => {        
         if (data === undefined)
             return
 
@@ -100,7 +100,9 @@ const Entrypoint = (props: any) => {
                 .then((e: IEntrypoint) => {
                     setData(e as IEntrypoint)
                     setUserDone([])
-                    setTimeout(fetchEntrypoint, FETCH_INTERVAL)
+                    setTimeout(() => {
+                        fetchEntrypoint(params.id as string, session.token)
+                    }, FETCH_INTERVAL)
                 })
                 .catch(err => {
                     console.warn('error', err)
@@ -133,7 +135,7 @@ const Entrypoint = (props: any) => {
         }
     }
 
-    const handleNewUploads = (_new: Array<IFile>) => {
+    const handleNewUploads = (_new: Array<IFile>) => {        
         setUploads(prev => {
             return [...prev, ..._new] as IFile[]
         })

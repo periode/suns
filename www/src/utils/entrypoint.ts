@@ -21,7 +21,7 @@ export async function fetchEntrypoint(id: string, token: string) {
     }
 }
 
-export const submitUpload = async (token: string, uuid: string, f: IFile) => {
+export const submitUpload = async (token: string, uuid: string, f: IFile) => {    
     const endpoint = new URL(`uploads/`, process.env.REACT_APP_API_URL)
 
     const h = new Headers();

@@ -20,7 +20,7 @@ const MAX_RECORD_TIME = 3 * 60 * 1000
 var recorder: any
 
 const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, handleUserDone, hasUserCompleted }: AudioRecorderProps) => {
-    const inputs = ep.modules[index - 1].uploads ? ep.modules[index - 1].uploads : null
+    const [inputs, setInputs] = useState(Array<IUpload>)
     const session = getSession()
     const [uploads, setUploads] = useState(Array<IFile>)
     const [recordingState, setRecordingState] = useState("idle")
@@ -32,10 +32,14 @@ const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, 
         handleUserDone(false)
     }, [])
 
+    useEffect(() => {        
+        if(index > 0 && ep.modules[index - 1] != undefined)
+            setInputs(ep.modules[index - 1].uploads ? ep.modules[index - 1].uploads : [])
+    }, [ep])
+
     useEffect(() => {
 		if(isRequestingUploads)
 			handleNewUploads(uploads)
-
 	}, [isRequestingUploads])
 
     var audioBlob = {} as Blob
@@ -78,8 +82,6 @@ const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, 
     }
 
     const stopRecording = () => {
-
-        console.log("stopRecording")
         if (recordingState === "done")
             return
         
@@ -105,14 +107,14 @@ const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, 
         handleUserDone(false)
     }
 
-    const getInputPrompt = () => {
-        if (inputs === null || inputs.length === 0) return (<></>)
+    const getInputPrompt = () => {        
+        if (inputs === null || inputs.length === 0) return (<></>)        
 
         if (inputs[0].user_uuid !== session.user.uuid)
             switch (inputs[0].type) {
                 case "text/plain":
                     return (<>{inputs[0].text}</>)
-                case "audio/*":
+                case "audio/wav":
                     return (<audio src={`${process.env.REACT_APP_API_URL}/static/${inputs[0].url}`} controls></audio>)
                 case "video/*":
                     return (<video src={`${process.env.REACT_APP_API_URL}/static/${inputs[0].url}`} controls></video>)
@@ -129,7 +131,7 @@ const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, 
             switch (inputs[1].type) {
                 case "text/plain":
                     return (<>{inputs[1].text}</>)
-                case "audio/*":
+                case "audio/wav":
                     return (<audio src={`${process.env.REACT_APP_API_URL}/static/${inputs[1].url}`} controls></audio>)
                 case "video/*":
                     return (<video src={`${process.env.REACT_APP_API_URL}/static/${inputs[1].url}`} controls></video>)
@@ -169,7 +171,7 @@ const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, 
             <div className="w-full flex flex-col items-start bg-amber-200">
                 <div className="w-full">
                     {
-                        uploads && uploads.length > 0 ?
+                        inputs && inputs.length > 0 ?
                             <>
                                 { getInputPrompt() }
                             </> : <></>
