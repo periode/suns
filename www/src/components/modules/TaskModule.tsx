@@ -3,7 +3,7 @@ import { AirTableContext } from "../../contexts/AirContext"
 import { IEntrypoint, IFile, IModule } from "../../utils/types"
 import TextInputField from "../commons/forms/inputs/TextInputField"
 import AudioRecorder from "./tasks/AudioRecorder"
-import FileUploader from "./tasks/FileUploader"
+import FileUploader from "./tasks/utils/FileUploader"
 
 interface ITaskModuleProps {
     data: IModule,

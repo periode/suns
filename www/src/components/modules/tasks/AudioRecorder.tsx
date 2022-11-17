@@ -186,7 +186,7 @@ const AudioRecorder = ({ index, mod, ep, setUploads, setUserDone, hasUserComplet
                                 </div>
                                 :
                                 recordingState === "done" ?
-                                <audio className="flex-1 bg-transparent border border-1 border-amber-500" src={ blobURL } controls></audio>
+                                <audio className="flex-1 bg-transparent" src={ blobURL } controls></audio>
                                 :
                                 <span className="text-sm text-amber-900/50"> { recordingMessage } </span>
                             }

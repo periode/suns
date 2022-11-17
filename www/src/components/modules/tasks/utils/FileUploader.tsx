@@ -1,7 +1,7 @@
 // needs setUploads, needsPreview
 
 import React, { Dispatch, SetStateAction, useEffect } from "react"
-import { IFile } from "../../../utils/types"
+import { IFile } from "../../../../utils/types"
 
 interface IFileUploadProps {
     type: string,
