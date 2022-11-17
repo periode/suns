@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { FiMic, FiPlay, FiRotateCcw, FiSquare, FiStopCircle } from "react-icons/fi"
 import { getSession } from "../../../utils/auth"
 import { IEntrypoint, IFile, IModule, IUpload } from "../../../utils/types"
@@ -12,14 +12,14 @@ interface AudioRecorderProps {
     ep: IEntrypoint,
     handleNewUploads: Function,
     isRequestingUploads: boolean,
-    setUserDone: Dispatch<SetStateAction<boolean>>,
+    handleUserDone: Function,
     hasUserCompleted: boolean
 }
 
 const MAX_RECORD_TIME = 3 * 60 * 1000
 var recorder: any
 
-const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, setUserDone, hasUserCompleted }: AudioRecorderProps) => {
+const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, handleUserDone, hasUserCompleted }: AudioRecorderProps) => {
     const inputs = ep.modules[index - 1].uploads ? ep.modules[index - 1].uploads : null
     const session = getSession()
     const [uploads, setUploads] = useState(Array<IFile>)
@@ -29,7 +29,7 @@ const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, 
     const [blobURL, setBlobURL] = useState("")
 
     useEffect(() => {
-        setUserDone(false)
+        handleUserDone(false)
     }, [])
 
     useEffect(() => {
@@ -93,7 +93,7 @@ const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, 
         setBlobURL(URL.createObjectURL(audioBlob as Blob))
         setUploads([{ file: new File([audioBlob], "recording.wav"), text: "" }])
 
-        setUserDone(true)
+        handleUserDone(true)
     }
 
     const resetRecording = () => {
@@ -102,7 +102,7 @@ const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, 
         setRecordingMessage("Ready to record")
         setRecordingState("idle")
         setUploads([])
-        setUserDone(false)
+        handleUserDone(false)
     }
 
     const getInputPrompt = () => {

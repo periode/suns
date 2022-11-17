@@ -4,9 +4,8 @@ import { FiShare2, FiArrowRight } from "react-icons/fi"
 interface EntrypointActionsProps {
 	entryPointData: IEntrypoint,
 	isOwner: boolean,
-	session: ISession,
+	canUserComplete: boolean,
 	hasUserCompleted: boolean,
-	isUserDone: boolean,
 	claimEntryPointFunction: () => {},
 	completeModuleFunction: () => void,
 }
@@ -16,9 +15,8 @@ function EntrypointActions({
 	claimEntryPointFunction,
 	completeModuleFunction,
 	isOwner,
-	session,
-	hasUserCompleted,
-	isUserDone
+	canUserComplete,
+	hasUserCompleted
 }: EntrypointActionsProps) {
 
 	const copyToClipboard = (text: string) => {
@@ -80,7 +78,7 @@ function EntrypointActions({
 		if (hasUserCompleted)
 			return <></>
 
-		if (isOwner && isUserDone && entryPointData.status === ENTRYPOINT_STATUS.EntrypointPending) {
+		if (isOwner && canUserComplete && entryPointData.status === ENTRYPOINT_STATUS.EntrypointPending) {
 			if (entryPointData.current_module === entryPointData.modules.length - 2)
 				return FinishButton
 			else if (entryPointData.partner_status == PARTNER_STATUS.PartnerFull)

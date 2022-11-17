@@ -7,13 +7,13 @@ interface IntroModuleProps {
     data: IModule,
     epName: string,
     index: number,
-    setUserDone: Dispatch<SetStateAction<boolean>>
+    handleUserDone: Function,
 }
 
-const IntroModule = ({ data, epName, index, setUserDone }: IntroModuleProps) => {
+const IntroModule = ({ data, epName, index, handleUserDone }: IntroModuleProps) => {
     
     useEffect(() => {
-        setUserDone(true)
+        handleUserDone(true)
     }, [])
 
     const ctx = useContext(AirTableContext)    

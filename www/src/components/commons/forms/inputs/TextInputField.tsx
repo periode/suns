@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IFile } from "../../../../utils/types";
 
 interface TextInputFieldProps {
@@ -7,7 +7,7 @@ interface TextInputFieldProps {
 	type? : string
 	handleNewUploads: Function,
 	isRequestingUploads: boolean,
-    setUserDone: Dispatch<SetStateAction<boolean>>,
+    handleUserDone: Function,
 	hasUserCompleted: boolean,
 }
 
@@ -16,13 +16,13 @@ const TextInputField = ({
 	placeholder,
 	handleNewUploads,
 	isRequestingUploads,
-	setUserDone,
+	handleUserDone,
 	hasUserCompleted
  } : TextInputFieldProps) => {
-
+	const hasSignifiedDone = useRef(false)
 	const [uploads, setUploads] = useState(Array<IFile>)
 	useEffect(() => {
-        setUserDone(false)
+        handleUserDone(false)
     }, [])
 
 	useEffect(() => {
@@ -36,9 +36,12 @@ const TextInputField = ({
 		e.preventDefault()
         e.stopPropagation()
 		
-		setUploads([{file: undefined, text: t.value}])
-		if (t.value.length > 10)
-			setUserDone(true)
+		
+		if (t.value.length > 10 && hasSignifiedDone.current == false){
+			setUploads([{file: undefined, text: t.value}])
+			handleUserDone(true)
+			hasSignifiedDone.current = true
+		}
 	}
 
 	return ( 
