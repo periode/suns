@@ -9,12 +9,13 @@ interface ITaskModuleProps {
     data: IModule,
     ep: IEntrypoint,
     index: number,
-    setUploads: Dispatch<SetStateAction<IFile[]>>,
+    handleNewUploads: Function,
+    isRequestingUploads: boolean,
     setUserDone: Dispatch<SetStateAction<boolean>>,
     hasUserCompleted: boolean
 }
 
-const TaskModule = ({ data, ep, index, setUploads, setUserDone, hasUserCompleted }: ITaskModuleProps) => {
+const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, setUserDone, hasUserCompleted }: ITaskModuleProps) => {
 
     const ctx = useContext(AirTableContext)
     const contents = ctx.get(ep.name)
@@ -29,7 +30,7 @@ const TaskModule = ({ data, ep, index, setUploads, setUserDone, hasUserCompleted
                                                 " key={`${task.type}-key`}>
                             <p>{contents?.get(task.key)}</p>
 
-                            <AudioRecorder key={`${data.ID}-${data.name}`} mod={data} index={index} ep={ep} setUploads={setUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted} />
+                            <AudioRecorder key={`${data.ID}-${data.name}`} mod={data} index={index} ep={ep} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted} />
                         </div>
                     )
                 case "video_input":
@@ -38,18 +39,16 @@ const TaskModule = ({ data, ep, index, setUploads, setUserDone, hasUserCompleted
                                     flex flex-col gap-4
                                             " key={`${task.type}-key`}>
                         <p>{contents?.get(task.key)}</p>
-                        <FileUploader type="video" setUploads={setUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted}/>
-                    </div>
-                    )
+                        <FileUploader type="video" maxUploads={task.max_uploads} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted}/>
+                    </div>)
                 case "image_input":
                     return (
                     <div className="w-full
                                     flex flex-col gap-4
                                             " key={`${task.type}-key`}>
                         <p>{contents?.get(task.key)}</p>
-                        <FileUploader type="image" setUploads={setUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted}/>
-                    </div>
-                    )
+                        <FileUploader type="image" maxUploads={task.max_uploads} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted}/>
+                    </div>)
                 case "text_input":
                     return (
                     <div className="w-full
@@ -57,7 +56,7 @@ const TaskModule = ({ data, ep, index, setUploads, setUserDone, hasUserCompleted
                                             " key={`${task.type}-key`}>
                         <p>{contents?.get(task.key)}</p>
                         <div className="h-60">
-                            <TextInputField setUploads={setUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted} placeholder={task.placeholder && contents?.get(task.placeholder) }/>
+                            <TextInputField handleNewUploads={handleNewUploads} setUserDone={setUserDone} isRequestingUploads={isRequestingUploads} hasUserCompleted={hasUserCompleted} placeholder={task.placeholder && contents?.get(task.placeholder) }/>
                         </div>
                     </div>)
                 default:

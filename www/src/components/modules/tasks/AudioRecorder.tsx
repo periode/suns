@@ -10,7 +10,8 @@ interface AudioRecorderProps {
     index: number,
     mod: IModule,
     ep: IEntrypoint,
-    setUploads: Dispatch<SetStateAction<IFile[]>>,
+    handleNewUploads: Function,
+    isRequestingUploads: boolean,
     setUserDone: Dispatch<SetStateAction<boolean>>,
     hasUserCompleted: boolean
 }
@@ -18,9 +19,10 @@ interface AudioRecorderProps {
 const MAX_RECORD_TIME = 3 * 60 * 1000
 var recorder: any
 
-const AudioRecorder = ({ index, mod, ep, setUploads, setUserDone, hasUserCompleted }: AudioRecorderProps) => {
-    const uploads = ep.modules[index - 1].uploads ? ep.modules[index - 1].uploads : null
+const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, setUserDone, hasUserCompleted }: AudioRecorderProps) => {
+    const inputs = ep.modules[index - 1].uploads ? ep.modules[index - 1].uploads : null
     const session = getSession()
+    const [uploads, setUploads] = useState(Array<IFile>)
     const [recordingState, setRecordingState] = useState("idle")
     const [recordingMessage, setRecordingMessage] = useState("Ready to record")
     const [stream, setStream] = useState({} as MediaStream)
@@ -30,10 +32,11 @@ const AudioRecorder = ({ index, mod, ep, setUploads, setUserDone, hasUserComplet
         setUserDone(false)
     }, [])
 
-    useEffect(() => 
-    {
-        console.log("Printing bloburl: " + blobURL)
-    }, [blobURL])
+    useEffect(() => {
+		if(isRequestingUploads)
+			handleNewUploads(uploads)
+
+	}, [isRequestingUploads])
 
     var audioBlob = {} as Blob
 
@@ -88,11 +91,8 @@ const AudioRecorder = ({ index, mod, ep, setUploads, setUserDone, hasUserComplet
         setRecordingMessage("done!")
         setRecordingState("done")
         setBlobURL(URL.createObjectURL(audioBlob as Blob))
-
-        console.log("blob URL: " + blobURL)
-
         setUploads([{ file: new File([audioBlob], "recording.wav"), text: "" }])
-        
+
         setUserDone(true)
     }
 
@@ -102,38 +102,39 @@ const AudioRecorder = ({ index, mod, ep, setUploads, setUserDone, hasUserComplet
         setRecordingMessage("Ready to record")
         setRecordingState("idle")
         setUploads([])
+        setUserDone(false)
     }
 
     const getInputPrompt = () => {
-        if (uploads === null || uploads.length === 0) return (<></>)
+        if (inputs === null || inputs.length === 0) return (<></>)
 
-        if (uploads[0].user_uuid !== session.user.uuid)
-            switch (uploads[0].type) {
+        if (inputs[0].user_uuid !== session.user.uuid)
+            switch (inputs[0].type) {
                 case "text/plain":
-                    return (<>{uploads[0].text}</>)
+                    return (<>{inputs[0].text}</>)
                 case "audio/*":
-                    return (<audio src={`${process.env.REACT_APP_API_URL}/static/${uploads[0].url}`} controls></audio>)
+                    return (<audio src={`${process.env.REACT_APP_API_URL}/static/${inputs[0].url}`} controls></audio>)
                 case "video/*":
-                    return (<video src={`${process.env.REACT_APP_API_URL}/static/${uploads[0].url}`} controls></video>)
+                    return (<video src={`${process.env.REACT_APP_API_URL}/static/${inputs[0].url}`} controls></video>)
                 case "image/*":
-                    return (<img src={`${process.env.REACT_APP_API_URL}/static/${uploads[0].url}`} />)
+                    return (<img src={`${process.env.REACT_APP_API_URL}/static/${inputs[0].url}`} />)
 
                 default:
                     break;
             }
 
-        if (uploads.length === 1) return (<></>)
+        if (inputs.length === 1) return (<></>)
 
-        if (uploads[1].user_uuid !== session.user.uuid)
-            switch (uploads[1].type) {
+        if (inputs[1].user_uuid !== session.user.uuid)
+            switch (inputs[1].type) {
                 case "text/plain":
-                    return (<>{uploads[1].text}</>)
+                    return (<>{inputs[1].text}</>)
                 case "audio/*":
-                    return (<audio src={`${process.env.REACT_APP_API_URL}/static/${uploads[1].url}`} controls></audio>)
+                    return (<audio src={`${process.env.REACT_APP_API_URL}/static/${inputs[1].url}`} controls></audio>)
                 case "video/*":
-                    return (<video src={`${process.env.REACT_APP_API_URL}/static/${uploads[1].url}`} controls></video>)
+                    return (<video src={`${process.env.REACT_APP_API_URL}/static/${inputs[1].url}`} controls></video>)
                 case "image/*":
-                    return (<img src={`${process.env.REACT_APP_API_URL}/static/${uploads[1].url}`} />)
+                    return (<img src={`${process.env.REACT_APP_API_URL}/static/${inputs[1].url}`} />)
 
                 default:
                     break;

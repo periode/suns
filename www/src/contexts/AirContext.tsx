@@ -9,6 +9,13 @@ const AirTablePages : string[] = [
 	"SymbiosisGaze",
 	"SymbiosisTask",
 	"SymbiosisMean",
+	"FootprintsPerson",
+	"FootprintsObject",
+	"FootprintsPlace",
+	"DraughtYou",
+	"DraughtWorld",
+	"DraughtPersonal",
+	"Cracks"
 ]
 
 var AirTableMap = new Map<string, Map<string, string>>()

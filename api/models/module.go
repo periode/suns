@@ -108,13 +108,13 @@ func UpdateModule(uuid uuid.UUID, user_uuid uuid.UUID, entry *Module) (Module, e
 	return existing, result.Error
 }
 
-func AddModuleUpload(uuid uuid.UUID, upload Upload) (Module, error) {
+func AddModuleUpload(uuid uuid.UUID, uploads []Upload) (Module, error) {
 	module, err := GetModule(uuid)
 	if err != nil {
 		return Module{}, err
 	}
 
-	err = db.Model(&module).Association("Uploads").Append(&upload)
+	err = db.Model(&module).Association("Uploads").Append(&uploads)
 	return module, err
 }
 

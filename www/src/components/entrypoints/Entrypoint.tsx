@@ -16,6 +16,7 @@ import IntroModule from "../modules/IntroModule";
 import TaskModule from "../modules/TaskModule";
 
 const FETCH_INTERVAL = 50 * 1000
+const ENTRYPOINT_LIFETIME_MINUTES = 10
 
 const Entrypoint = (props: any) => {
     const params = useParams()
@@ -24,8 +25,11 @@ const Entrypoint = (props: any) => {
     const session = getSession()
     const [data, setData] = useState(props.data as IEntrypoint)
     const [uploads, setUploads] = useState(Array<IFile>)
+    const [endDate, setEndDate] = useState("")
 
     const [isOwned, setOwned] = useState(false)
+    const [isRequestingUploads, setRequestingUploads] = useState(false)
+    const uploadsSubmittedCount = useRef(0)
     //-- userDone keeps track of when the user can submit the module
     const [isUserDone, setUserDone] = useState(false)
     //-- userCompleted keeps track of when the module is completed
@@ -40,6 +44,12 @@ const Entrypoint = (props: any) => {
             for (let u of data.users)
                 if (u.uuid === session.user.uuid)
                     setOwned(true)
+
+        // setting entrypoint expiry date
+        let d = new Date(data.created_at)
+		let end = new Date()
+		end.setMinutes(d.getMinutes() + ENTRYPOINT_LIFETIME_MINUTES)
+		setEndDate(end.toString())
     }, [data, session])
 
     useEffect(() => {
@@ -54,6 +64,20 @@ const Entrypoint = (props: any) => {
             }
         }
     }, [isOwned])
+
+    useEffect(() => {
+        if(data === undefined)
+            return
+            
+        uploadsSubmittedCount.current++
+        console.log(`uploads submitted ${uploadsSubmittedCount.current} times`)
+        console.log(uploads);
+
+        if(uploadsSubmittedCount.current == data.modules[data.current_module].tasks.length)
+            completeModule(data, session)
+        
+        // and keeps a counter of how many times it's been called (it should reach mod.tasks.length)
+    }, [uploads])
 
     useEffect(() => {
         const endpoint = new URL(`entrypoints/${params.id}`, process.env.REACT_APP_API_URL)
@@ -109,6 +133,10 @@ const Entrypoint = (props: any) => {
         }
     }
 
+    const handleNewUploads = (_new : Array<IFile>) => {
+        setUploads([...uploads, ..._new])
+    }
+
     const submitUploads = async (files: Array<IFile>) => {
         const endpoint = new URL(`uploads/`, process.env.REACT_APP_API_URL)
 
@@ -120,10 +148,13 @@ const Entrypoint = (props: any) => {
 
         const b = new FormData()
         b.append("module_uuid", data.modules[data.current_module].uuid as string)
-        if (files[0].file !== undefined)
-            b.append("file", files[0].file)
-        else
-            b.append("text", files[0].text)
+
+        for (const f of files) {
+            if (f.file !== undefined)
+                b.append("files[]", f.file)
+            else
+                b.append("text[]", f.text)
+        }
 
         var options = {
             method: 'POST',
@@ -136,6 +167,14 @@ const Entrypoint = (props: any) => {
         else
             console.log(res.statusText)
 
+    }
+
+    const requestUploads = () => {
+        // check if there are any tasks in the current module
+        if(data.modules[data.current_module].tasks.length > 0)
+            setRequestingUploads(true)
+        else
+            completeModule(data, session)
     }
 
     const completeModule = async (ep: IEntrypoint, session: ISession) => {
@@ -186,7 +225,7 @@ const Entrypoint = (props: any) => {
                 )
             case "task":
                 return (
-                    <TaskModule index={index} ep={ep} data={mod} setUploads={setUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted} />
+                    <TaskModule index={index} ep={ep} data={mod} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted} />
                 )
             case "final":
                 return (
@@ -262,7 +301,7 @@ const Entrypoint = (props: any) => {
                         </div>
                     </div>
                     <div className="w-full md:flex">
-                        <EntrypointCountdown endDate="Jan 5, 2024 15:37:25" />
+                        <EntrypointCountdown endDate={endDate} />
                         <div className="md:w-[1px] md:h-full  bg-amber-900"></div>
                         <EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
                     </div>
@@ -288,7 +327,7 @@ const Entrypoint = (props: any) => {
                             session={session}
                             isOwner={isOwned}
                             claimEntryPointFunction={claimEntrypoint}
-                            completeModuleFunction={completeModule}
+                            completeModuleFunction={requestUploads}
                             hasUserCompleted={hasUserCompleted}
                             isUserDone={isUserDone}
                         />
