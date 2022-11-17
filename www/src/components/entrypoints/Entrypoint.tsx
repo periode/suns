@@ -14,6 +14,7 @@ import FinalFirstTimes from "../modules/FinalFirstTimes";
 import { ENTRYPOINT_STATUS, IEntrypoint, IFile, IModule, ISession } from "../../utils/types";
 import IntroModule from "../modules/IntroModule";
 import TaskModule from "../modules/TaskModule";
+import { fetchEntrypoint, progressModule, submitUpload } from "../../utils/entrypoint";
 
 const FETCH_INTERVAL = 50 * 1000
 const ENTRYPOINT_LIFETIME_MINUTES = 10
@@ -58,12 +59,12 @@ const Entrypoint = (props: any) => {
 
     //-- this listens for whether a user is done with all tasks on the module
     useEffect(() => {
-        if(data == undefined)
+        if (data == undefined)
             return
-            
-        if(isUserDone.length  == data.modules[data.current_module].tasks.length)
+
+        if (isUserDone.length == data.modules[data.current_module].tasks.length)
             setCanUserComplete(true)
-           
+
     }, [isUserDone])
 
     //-- this checks for the completion status per user
@@ -93,33 +94,17 @@ const Entrypoint = (props: any) => {
 
     //-- gets the initial data
     useEffect(() => {
-        const endpoint = new URL(`entrypoints/${params.id}`, process.env.REACT_APP_API_URL)
-
-        async function fetchEntrypoint() {
-            const h = new Headers();
-            if (session.token !== "")
-                h.append("Authorization", `Bearer ${session.token}`);
-
-            var options = {
-                method: 'GET',
-                headers: h
-            };
-            const res = await fetch(endpoint, options)
-            if (res.ok) {
-                const e = await res.json()
-                e.modules = e.modules.sort((a: IModule, b: IModule) => { return parseInt(a.ID) - parseInt(b.ID) })
-
-                setData(e as IEntrypoint)
-                setUserDone([])
-                setTimeout(fetchEntrypoint, FETCH_INTERVAL)
-            } else {
-                console.warn('error', res.status)
-                navigate('/')
-            }
-        }
-
         if (hasData.current === false) {
-            fetchEntrypoint()
+            fetchEntrypoint(params.id as string, session.token)
+                .then((e: IEntrypoint) => {
+                    setData(e as IEntrypoint)
+                    setUserDone([])
+                    setTimeout(fetchEntrypoint, FETCH_INTERVAL)
+                })
+                .catch(err => {
+                    console.warn('error', err)
+                    navigate('/')
+                })
             hasData.current = true
         }
     }, [params.id])
@@ -153,42 +138,11 @@ const Entrypoint = (props: any) => {
         })
     }
 
-    const handleUserDone = (_val : boolean) => {        
-        if(_val == true)
+    const handleUserDone = (_val: boolean) => {
+        if (_val == true)
             setUserDone(prev => {
                 return [...prev, _val] as boolean[]
             })
-    }
-
-    const submitUpload = async (f: IFile) => {
-        const endpoint = new URL(`uploads/`, process.env.REACT_APP_API_URL)
-
-        if (session.token === "")
-            Navigate({ to: "/auth" })
-
-        const h = new Headers();
-        h.append("Authorization", `Bearer ${session.token}`);
-
-        const b = new FormData()
-        b.append("module_uuid", data.modules[data.current_module].uuid as string)
-
-        if (f.file !== undefined)
-            b.append("files[]", f.file)
-
-        else if (f.text !== undefined)
-            b.append("text[]", f.text)
-
-        var options = {
-            method: 'POST',
-            headers: h,
-            body: b
-        };
-        const res = await fetch(endpoint, options)
-        if (res.ok)
-            console.log('uploaded files');
-        else
-            console.log(res.statusText)
-
     }
 
     const requestUploads = () => {
@@ -203,36 +157,29 @@ const Entrypoint = (props: any) => {
             Navigate({ to: "/auth" })
 
 
-        uploads.forEach(u => submitUpload(u))
+        uploads.forEach(u => {
+            submitUpload(session.token, data.modules[data.current_module].uuid, u)
+                .then(() => console.log("uploaded file!"))
+                .catch((err) => console.log(err))
+        })
 
-        const endpoint = new URL(`entrypoints/${ep.uuid}/progress`, process.env.REACT_APP_API_URL)
-        const h = new Headers();
-        h.append("Authorization", `Bearer ${session.token}`);
+        progressModule(ep.uuid, session.token)
+            .then(updated => {
+                //-- completion always means the user is done with their input
+                setUserDone([])
 
-        var options = {
-            method: 'PATCH',
-            headers: h
-        };
-        const res = await fetch(endpoint, options)
-        if (res.ok) {
-            console.log(`successfully completed module!`);
-            const updated = await res.json()
+                //-- check if we're done with the module
+                if (updated.current_module === ep.current_module)
+                    setUserCompleted(true) //-- we have a partial state
+                else
+                    setUserCompleted(false) //-- we move on to the next module
 
-            updated.modules = updated.modules.sort((a: IModule, b: IModule) => { return parseInt(a.ID) - parseInt(b.ID) })
+                setData(updated)
+            })
+            .catch(err => {
+                console.log("failed to complete module, status:", err);
 
-            //-- completion always means the user is done with their input
-            setUserDone([])
-
-            //-- check if we're done with the module
-            if (updated.current_module === ep.current_module)
-                setUserCompleted(true) //-- we have a partial state
-            else
-                setUserCompleted(false) //-- we move on to the next module
-
-            setData(updated)
-        } else {
-            console.warn('error', res.status)
-        }
+            })
     }
 
     const parseModule = (index: number, ep: IEntrypoint) => {
@@ -277,21 +224,17 @@ const Entrypoint = (props: any) => {
         }
     }
 
-    const getModules = () => {
-        let mods = []
+    const getModule = () => {
+
         //-- if all modules are displayed and the status of the entrypoint is completed, we return the public view
         if (data.status === ENTRYPOINT_STATUS.EntrypointCompleted) {
-            mods.push(<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}-final`} className="m-1 p-1">{parseModule(data.current_module, data)}</div>)
-
-            return mods
+            return (<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}-final`} className="m-1 p-1">{parseModule(data.current_module, data)}</div>)
         }
 
-        mods.push(<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}`} className="m-1 p-1">{parseModule(data.current_module, data)}</div>)
-
         if (hasUserCompleted)
-            mods.push(<div key="module-complete-message" className="m-1 p-1">You have completed this module! Please wait for your partner to complete it as well.</div>)
+            return (<div key="module-complete-message" className="m-1 p-1">You have completed this module! Please wait for your partner to complete it as well.</div>)
 
-        return mods
+        return (<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}`} className="m-1 p-1">{parseModule(data.current_module, data)}</div>)
     }
 
     if (data !== undefined)
@@ -327,17 +270,17 @@ const Entrypoint = (props: any) => {
                     </div>
                     <div className="w-full h-full p-4 overflow-scroll">
                         {
-                                isOwned || data.status === ENTRYPOINT_STATUS.EntrypointCompleted ?
-                                     getModules()
-                                : 
-                                data.users.length < data.max_users ? 
-                                <>
-                                    { parseModule(0, data) }
-                                </> 
+                            isOwned || data.status === ENTRYPOINT_STATUS.EntrypointCompleted ?
+                                getModule()
                                 :
-                                <>
-                                    <PublicView entrypoint={data} />
-                                </>
+                                data.users.length < data.max_users ?
+                                    <>
+                                        {parseModule(0, data)}
+                                    </>
+                                    :
+                                    <>
+                                        <PublicView entrypoint={data} />
+                                    </>
                         }
                     </div>
                     <div className="h-20
@@ -347,7 +290,6 @@ const Entrypoint = (props: any) => {
                             border-t border-amber-900">
                         <EntrypointActions
                             entryPointData={data}
-                            session={session}
                             isOwner={isOwned}
                             claimEntryPointFunction={claimEntrypoint}
                             completeModuleFunction={requestUploads}

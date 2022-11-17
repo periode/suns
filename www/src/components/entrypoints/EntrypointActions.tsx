@@ -4,9 +4,8 @@ import { FiShare2, FiArrowRight } from "react-icons/fi"
 interface EntrypointActionsProps {
 	entryPointData: IEntrypoint,
 	isOwner: boolean,
-	session: ISession,
-	hasUserCompleted: boolean,
 	canUserComplete: boolean,
+	hasUserCompleted: boolean,
 	claimEntryPointFunction: () => {},
 	completeModuleFunction: () => void,
 }
@@ -16,9 +15,8 @@ function EntrypointActions({
 	claimEntryPointFunction,
 	completeModuleFunction,
 	isOwner,
-	session,
-	hasUserCompleted,
-	canUserComplete
+	canUserComplete,
+	hasUserCompleted
 }: EntrypointActionsProps) {
 
 	const copyToClipboard = (text: string) => {
