@@ -199,13 +199,7 @@ const Entrypoint = (props: any) => {
                 )
             case "final":
                 return (
-                    <>
-                        <div className="absolute text-sm l-0">{index}</div>
-                        <p>This is the final module, should be made public</p>
-                        <p>
-                            {mod.content}
-                        </p>
-                    </>
+                    <PublicView entrypoint={ep} />
                 )
             case "final_symbiosis_mean":
                 return (

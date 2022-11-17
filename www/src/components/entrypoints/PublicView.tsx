@@ -5,30 +5,27 @@ interface PublicViewProps {
 }
 
 const PublicView = ({ entrypoint }: PublicViewProps) => {
-    
-    console.log("Loggin entrypoint in PublicView Component : " + entrypoint)
-
-    var contentUser0: JSX.Element[] = [] ;
-    var contentUser1: JSX.Element[] = [] ;
 
     const getUploadContent = (upload: IUpload) : JSX.Element =>
     {
+        if ( upload === undefined )
+            return <>Couldnt get upload.type: undefined</>
         switch (upload.type) {
-            case "text_input":
+            case "text/plain":
                 return (
-                    <>{ upload.text }</>
+                    <div>{ upload.text }</div>
                 )
-            case "image_input":
+            case "image/*":
                 return (
-                    <>{ upload.url }</>
+                    <div>{ upload.url }</div>
                 )
-            case "video_input":
+            case "video/*":
                 return (
-                    <>{ upload.url }</>
+                    <div>{ upload.url }</div>
                 )
-            case "audio_input":
+            case "audio/wav":
                 return (
-                    <>{ upload.url }</>
+                    <div>{ upload.url }</div>
                 )
             default:
                 return <>Couldnt get upload.type: { upload.type }</>
@@ -37,9 +34,18 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
 
     const getContent = (user: IUser): JSX.Element => {
         
+        if (
+            entrypoint === undefined 
+            || entrypoint.modules.length === 0 
+            || entrypoint.modules[1].uploads.length === 0 
+            || entrypoint.modules[2].uploads.length === 0
+
+        )
+            return (<></>)
+
         var Content1 : JSX.Element
         var Content2 : JSX.Element
-
+       
         switch (entrypoint.final_module_type) {
             case FINAL_TYPE.Seperate:
             {
@@ -111,15 +117,14 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
     }
 
     return (
-        <div className="w-full flex gap-2">
-            <div className="flex-1 ">
+        <div className="w-full h-full flex flex-col md:flex-row gap-4">
+            <div className="">
                 <h2>{entrypoint.users[0].name}</h2>
                 { 
                     getContent(entrypoint.users[0])
                 }
             </div>
-            <div className="h-full w-[1px] background-amber-100"></div>
-            <div className="flex-1 ">
+            <div className="">
                 <h2>{entrypoint.users[1].name}</h2>
                 {  
                     getContent(entrypoint.users[1])
