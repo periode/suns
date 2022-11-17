@@ -99,8 +99,6 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
                         { Content2 }
                     </>
                 )
-                    
-                break;
             }
             default:
             {
