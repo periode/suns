@@ -48,7 +48,6 @@ func main() {
 		zero.Log.Fatal().Msgf("error initializing database: %v", err)
 	}
 
-	engine_chan := make(chan string)
-	go engine.StartEngine(engine_chan)
-	api.StartServer(port, conf, engine_chan)
+	go engine.StartEngine()
+	api.StartServer(port, conf)
 }
