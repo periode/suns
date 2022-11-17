@@ -13,8 +13,9 @@ import (
 	"github.com/periode/suns/api/models"
 )
 
-const DOMAIN = "sandbox5300b8e5b84a44f786333b559fb444b6.mailgun.org"
-const SENDER = "Suns - Test <suns@post.enframed.net>"
+const SYSTEM_DOMAIN = "mail.joiningsuns.online"
+const PROMPTS_DOMAIN = "prompts.joiningsuns.online"
+const SENDER = "Joining Suns <suns@mail.joiningsuns.online>"
 
 type Payload interface {
 	Check() error
@@ -92,7 +93,7 @@ func SendMail(_dest string, _subject string, _template string, _data Payload) er
 	if os.Getenv("API_MODE") == "test" {
 		os.Setenv("MAILGUN_PRIVATE_API_KEY", "pubkey-9e6707d57ed1aab274ac62786539c158")
 	}
-	mg := mailgun.NewMailgun(DOMAIN, os.Getenv("MAILGUN_PRIVATE_API_KEY"))
+	mg := mailgun.NewMailgun(SYSTEM_DOMAIN, os.Getenv("MAILGUN_PRIVATE_API_KEY"))
 	mg.SetAPIBase(mailgun.APIBaseEU) //-- rgpd mon amour
 
 	sender := SENDER
