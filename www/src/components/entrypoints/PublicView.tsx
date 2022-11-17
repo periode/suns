@@ -4,12 +4,18 @@ interface PublicViewProps {
     entrypoint: IEntrypoint
 }
 
-const PublicView = ({entrypoint} : PublicViewProps) => {
+const PublicView = ({ entrypoint }: PublicViewProps) => {
+    
+
 
     var PublicViewContent : JSX.Element;
     if (entrypoint.max_users === 1)
     {
         // Single view
+        return (
+            <>
+            </>
+        )
     }
 
     switch (entrypoint.final_module_type) {
@@ -30,8 +36,13 @@ const PublicView = ({entrypoint} : PublicViewProps) => {
 
 
     return (
-        <div>
-            {  }
+        <div className="w-full flex gap-2">
+            <div className="flex-1 ">
+                
+            </div>
+            <div className="flex-1 ">
+
+            </div>
         </div>
     )
 }

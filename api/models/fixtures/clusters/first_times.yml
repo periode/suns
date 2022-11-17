@@ -6,6 +6,7 @@ entrypoints:
     lat: 300.300
     lng: 300.400
     icon: "blue.svg"
+    final_module_type: "Tangled"
     modules:
       - uuid: "2a73291d-559f-47c1-b24d-92a3606deb49"
         name: "For the first time - Intro"

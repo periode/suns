@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import Spinner from "../../components/commons/Spinner";
+import Spinner from "../../components/commons/Spinners/Spinner";
 import { ConfirmToken } from "../../utils/auth";
 
 

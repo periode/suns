@@ -6,6 +6,7 @@ entrypoints:
     lng: 240.400
     icon: "green.svg"
     max_users: 2
+    final_module_type: "Tangled Inverted"
     modules:
       - name: "Start Symbiosis Gaze"
         type: "intro"
@@ -46,6 +47,7 @@ entrypoints:
     lng: 150.400
     icon: "green.svg"
     max_users: 2
+    final_module_type: "Tangled Inverted"
     modules:
       - name: "Start Symbiosis Task"
         type: "intro"
@@ -78,6 +80,7 @@ entrypoints:
     lng: 550.400
     icon: "green.svg"
     max_users: 2
+    final_module_type: "Tangled Inverted"
     modules:
       - name: "Start Symbiosis Mean"
         type: "intro"

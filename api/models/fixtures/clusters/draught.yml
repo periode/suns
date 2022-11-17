@@ -6,6 +6,7 @@ entrypoints:
   lng: 240.400
   icon: "yellow.svg"
   max_users: 2
+  final_module_type: "Tangled"
   modules:
     - name: "Start Draught You"
       type: "intro"
@@ -36,6 +37,7 @@ entrypoints:
   lng: 150.400
   icon: "yellow.svg"
   max_users: 2
+  final_module_type: "Tangled"
   modules:
     - name: "Start Draught World"
       type: "intro"
@@ -66,6 +68,7 @@ entrypoints:
   lng: 550.400
   icon: "yellow.svg"
   max_users: 2
+  final_module_type: "Tangled"
   modules:
     - name: "Start Draught Personal"
       type: "intro"

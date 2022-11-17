@@ -6,6 +6,7 @@ entrypoints:
     lat: 300.300
     lng: 300.400
     icon: "purple.svg"
+    final_module_type: "Crack"
     modules:
       - name: "Cracks - Intro"
         type: "task"

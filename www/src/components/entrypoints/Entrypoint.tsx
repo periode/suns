@@ -15,6 +15,7 @@ import { ENTRYPOINT_STATUS, IEntrypoint, IFile, IModule, ISession } from "../../
 import IntroModule from "../modules/IntroModule";
 import TaskModule from "../modules/TaskModule";
 import { fetchEntrypoint, progressModule, submitUpload } from "../../utils/entrypoint";
+import WaitingModule from "../modules/WaitingModule";
 
 const FETCH_INTERVAL = 50 * 1000
 const ENTRYPOINT_LIFETIME_MINUTES = 10
@@ -230,9 +231,12 @@ const Entrypoint = (props: any) => {
         if (data.status === ENTRYPOINT_STATUS.EntrypointCompleted) {
             return (<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}-final`} className="m-1 p-1">{parseModule(data.current_module, data)}</div>)
         }
-
+        
         if (hasUserCompleted)
-            return (<div key="module-complete-message" className="m-1 p-1">You have completed this module! Please wait for your partner to complete it as well.</div>)
+        { 
+            return(<WaitingModule key="module-complete-message"/>)
+        }
+
 
         return (<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}`} className="m-1 p-1">{parseModule(data.current_module, data)}</div>)
     }

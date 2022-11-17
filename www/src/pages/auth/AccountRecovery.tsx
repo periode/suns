@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import Spinner from "../../components/commons/Spinner";
+import Spinner from "../../components/commons/Spinners/Spinner";
 import { useLocation } from "react-router-dom"
 import { recoverRequest } from "../../utils/auth";
 

@@ -6,6 +6,7 @@ entrypoints:
     lng: 240.400
     icon: "red.svg"
     max_users: 2
+    final_module_type: "Tangled"
     modules:
       - name: "Start Footprints Person"
         type: "intro"
@@ -41,6 +42,7 @@ entrypoints:
     lng: 150.400
     icon: "red.svg"
     max_users: 2
+    final_module_type: "Tangled"
     modules:
       - name: "Start Footprints Place"
         type: "intro"
@@ -73,6 +75,7 @@ entrypoints:
     lng: 550.400
     icon: "red.svg"
     max_users: 2
+    final_module_type: "Tangled"
     modules:
       - name: "Start Footprints Object"
         type: "intro"
