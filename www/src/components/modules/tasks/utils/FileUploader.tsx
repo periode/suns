@@ -1,6 +1,6 @@
 // needs setUploads, needsPreview
 
-import React, { Dispatch, SetStateAction, useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { IFile } from "../../../../utils/types"
 
 interface IFileUploadProps {
@@ -8,15 +8,15 @@ interface IFileUploadProps {
     maxUploads?: number,
     handleNewUploads: Function,
     isRequestingUploads: boolean,
-    setUserDone: Dispatch<SetStateAction<boolean>>,
+    handleUserDone: Function,
     hasUserCompleted: boolean
 }
 
-const FileUploader = ({ type, maxUploads = 1, handleNewUploads, isRequestingUploads, setUserDone, hasUserCompleted }: IFileUploadProps) => {
+const FileUploader = ({ type, maxUploads = 1, handleNewUploads, isRequestingUploads, handleUserDone, hasUserCompleted }: IFileUploadProps) => {
     const [uploads, setUploads] = useState(Array<IFile>)
     const [uploadIndex, setUploadIndex] = useState(1)
     useEffect(() => {
-        setUserDone(false)
+        handleUserDone(false)
     }, [])
 
     useEffect(() => {
@@ -25,7 +25,7 @@ const FileUploader = ({ type, maxUploads = 1, handleNewUploads, isRequestingUplo
                 let u = uploadIndex + 1
                 setUploadIndex(u)
             } else if (uploads.length == maxUploads) {
-                setUserDone(true)
+                handleUserDone(true)
             }
         }
     }, [uploads])

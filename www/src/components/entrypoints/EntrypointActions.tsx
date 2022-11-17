@@ -6,7 +6,7 @@ interface EntrypointActionsProps {
 	isOwner: boolean,
 	session: ISession,
 	hasUserCompleted: boolean,
-	isUserDone: boolean,
+	canUserComplete: boolean,
 	claimEntryPointFunction: () => {},
 	completeModuleFunction: () => void,
 }
@@ -18,7 +18,7 @@ function EntrypointActions({
 	isOwner,
 	session,
 	hasUserCompleted,
-	isUserDone
+	canUserComplete
 }: EntrypointActionsProps) {
 
 	const copyToClipboard = (text: string) => {
@@ -80,7 +80,7 @@ function EntrypointActions({
 		if (hasUserCompleted)
 			return <></>
 
-		if (isOwner && isUserDone && entryPointData.status === ENTRYPOINT_STATUS.EntrypointPending) {
+		if (isOwner && canUserComplete && entryPointData.status === ENTRYPOINT_STATUS.EntrypointPending) {
 			if (entryPointData.current_module === entryPointData.modules.length - 2)
 				return FinishButton
 			else if (entryPointData.partner_status == PARTNER_STATUS.PartnerFull)

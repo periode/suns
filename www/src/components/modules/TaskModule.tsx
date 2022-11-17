@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useContext, useEffect } from "react"
+import { useContext } from "react"
 import { AirTableContext } from "../../contexts/AirContext"
 import { IEntrypoint, IFile, IModule } from "../../utils/types"
 import TextInputField from "../commons/forms/inputs/TextInputField"
@@ -11,11 +11,11 @@ interface ITaskModuleProps {
     index: number,
     handleNewUploads: Function,
     isRequestingUploads: boolean,
-    setUserDone: Dispatch<SetStateAction<boolean>>,
+    handleUserDone: Function,
     hasUserCompleted: boolean
 }
 
-const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, setUserDone, hasUserCompleted }: ITaskModuleProps) => {
+const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, handleUserDone, hasUserCompleted }: ITaskModuleProps) => {
 
     const ctx = useContext(AirTableContext)
     const contents = ctx.get(ep.name)
@@ -30,7 +30,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, se
                                                 " key={`${task.type}-key`}>
                             <p>{contents?.get(task.key)}</p>
 
-                            <AudioRecorder key={`${data.ID}-${data.name}`} mod={data} index={index} ep={ep} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted} />
+                            <AudioRecorder key={`${data.ID}-${data.name}`} mod={data} index={index} ep={ep} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted} />
                         </div>
                     )
                 case "video_input":
@@ -39,7 +39,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, se
                                     flex flex-col gap-4
                                             " key={`${task.type}-key`}>
                         <p>{contents?.get(task.key)}</p>
-                        <FileUploader type="video" maxUploads={task.max_uploads} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted}/>
+                        <FileUploader type="video" maxUploads={task.max_uploads} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted}/>
                     </div>)
                 case "image_input":
                     return (
@@ -47,7 +47,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, se
                                     flex flex-col gap-4
                                             " key={`${task.type}-key`}>
                         <p>{contents?.get(task.key)}</p>
-                        <FileUploader type="image" maxUploads={task.max_uploads} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} setUserDone={setUserDone} hasUserCompleted={hasUserCompleted}/>
+                        <FileUploader type="image" maxUploads={task.max_uploads} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted}/>
                     </div>)
                 case "text_input":
                     return (
@@ -56,7 +56,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, se
                                             " key={`${task.type}-key`}>
                         <p>{contents?.get(task.key)}</p>
                         <div className="h-60">
-                            <TextInputField handleNewUploads={handleNewUploads} setUserDone={setUserDone} isRequestingUploads={isRequestingUploads} hasUserCompleted={hasUserCompleted} placeholder={task.placeholder && contents?.get(task.placeholder) }/>
+                            <TextInputField handleNewUploads={handleNewUploads} handleUserDone={handleUserDone} isRequestingUploads={isRequestingUploads} hasUserCompleted={hasUserCompleted} placeholder={task.placeholder && contents?.get(task.placeholder) }/>
                         </div>
                     </div>)
                 default:
