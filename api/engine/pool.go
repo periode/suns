@@ -18,28 +18,19 @@ type Pool struct {
 }
 
 func (p *Pool) Generate() error {
-
-	//-- attach new entrypoints to map clusters
-	//-- easiest is to read from fixtures
 	for _, f := range fixtures {
-		bytes, err := os.ReadFile(filepath.Join(Basepath, "../models/fixtures/entrypoints", fmt.Sprintf("%s.yml", f)))
+		bytes, err := os.ReadFile(filepath.Join(Basepath, "../models/fixtures/clusters", fmt.Sprintf("%s.yml", f)))
 		if err != nil {
 			return err
 		}
 
-		new := make([]models.Entrypoint, 0)
+		var new models.Cluster
 		err = yaml.Unmarshal(bytes, &new)
 		if err != nil {
 			return err
 		}
 
-		//-- randomized position could happen in models BeforeCreate
-		for i, _ := range new {
-			new[i].Lat = rand.Float32() * 900
-			new[i].Lng = rand.Float32() * 900
-		}
-
-		p.entrypoints = append(p.entrypoints, new...)
+		p.entrypoints = append(p.entrypoints, new.Entrypoints...)
 	}
 
 	zero.Debugf("Picked up entrypoints: %d", len(p.entrypoints))

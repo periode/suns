@@ -1,3 +1,5 @@
+name: "Draught"
+entrypoints:
 - status: "open"
   name: "DraughtYou"
   lat: 240.300

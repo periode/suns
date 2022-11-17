@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -62,6 +63,8 @@ func InitDB(url string) (*gorm.DB, error) {
 	return db, err
 }
 
+var fixtures = [5]string{"first_times", "cracks", "draught", "footprints", "symbiosis"}
+
 func runFixtures(shouldTruncateTables bool) error {
 	var err error
 
@@ -102,25 +105,25 @@ func runFixtures(shouldTruncateTables bool) error {
 		}
 	}
 
-	bytes, err := os.ReadFile(filepath.Join(Basepath, "fixtures", "clusters.yml"))
-	if err != nil {
-		return err
-	}
+	for _, f := range fixtures {
+		bytes, err := os.ReadFile(filepath.Join(Basepath, "./fixtures/clusters", fmt.Sprintf("%s.yml", f)))
+		if err != nil {
+			return err
+		}
 
-	clusters := make([]Cluster, 0)
-	err = yaml.Unmarshal(bytes, &clusters)
-	if err != nil {
-		return err
-	}
+		var cluster Cluster
+		err = yaml.Unmarshal(bytes, &cluster)
+		if err != nil {
+			return err
+		}
 
-	for _, c := range clusters {
-		err := db.Create(&c).Error
+		err = db.Create(&cluster).Error
 		if err != nil {
 			return err
 		}
 	}
 
-	bytes, err = os.ReadFile(filepath.Join(Basepath, "fixtures", "users.yml"))
+	bytes, err := os.ReadFile(filepath.Join(Basepath, "fixtures", "users.yml"))
 	if err != nil {
 		return err
 	}

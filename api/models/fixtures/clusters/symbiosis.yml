@@ -1,0 +1,105 @@
+name: "Symbiosis"
+entrypoints:
+  - status: "open"
+    name: "SymbiosisGaze"
+    lat: 240.300
+    lng: 240.400
+    icon: "green.svg"
+    max_users: 2
+    modules:
+      - name: "Start Symbiosis Gaze"
+        type: "intro"
+        contents:
+          - type: "img"
+            key: "intro_img"
+          - type: "txt"
+            key: "intro_txt"
+          - type: "vid"
+            key: "intro_vid"
+      - name: "Text input 1"
+        type: "task"
+        tasks:
+          - type: "text_input"
+            key: "input_0"
+            max_uploads: 1
+        hint: "This is the second content"
+      - name: "Upload 1 Image"
+        type: "task"
+        tasks:
+          - type: "image_input"
+            key: "input_1"
+            max_uploads: 1
+        hint: "This is the 1 single image input"
+      - name: "Label random image from the 1 previous"
+        type: "task"
+        tasks:
+          - type: "text_input"
+            key: "input_2"
+        hint: "This is the 1 grid image input"
+      - name: "Final Symbiosis Gaze"
+        type: "final_symbiosis_gaze"
+        hint: "This is the final view for the symbiosis - gaze"
+
+  - status: "open"
+    name: "SymbiosisTask"
+    lat: 150.300
+    lng: 150.400
+    icon: "green.svg"
+    max_users: 2
+    modules:
+      - name: "Start Symbiosis Task"
+        type: "intro"
+        contents:
+          - type: "img"
+            key: "intro_img"
+          - type: "txt"
+            key: "intro_txt"
+          - type: "vid"
+            key: "intro_vid"
+      - name: "Text input 1"
+        type: "task"
+        tasks:
+          - type: "text_input"
+            key: "input_0"
+        hint: "This is the text input"
+      - name: "Upload 1 Video"
+        type: "task"
+        tasks:
+          - type: "video_input"
+            key: "input_1"
+            max_uploads: 3
+      - name: "Final Symbiosis Task"
+        type: "final_symbiosis_task"
+        hint: "This is the final view for the symbiosis - Task. It should show the videos"
+
+  - status: "open"
+    name: "SymbiosisMean"
+    lat: 540.300
+    lng: 550.400
+    icon: "green.svg"
+    max_users: 2
+    modules:
+      - name: "Start Symbiosis Mean"
+        type: "intro"
+        contents:
+          - type: "img"
+            key: "intro_img"
+          - type: "txt"
+            key: "intro_txt"
+          - type: "vid"
+            key: "intro_vid"
+      - name: "Upload Text"
+        type: "task"
+        tasks:
+          - type: "text_input"
+            key: "input_0"
+        hint: "This is the text input"
+      - name: "Upload Audio"
+        type: "task"
+        tasks:
+          - type: "audio_input"
+            key: "input_1"
+            max_uploads: 1
+      - name: "Final Symbiosis mean"
+        type: "final_symbiosis_mean"
+        hint: "This is the final view for the symbiosis - Mean"

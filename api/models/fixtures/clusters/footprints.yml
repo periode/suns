@@ -1,0 +1,103 @@
+name: "Footprints"
+entrypoints:
+  - status: "open"
+    name: "FootprintsPerson"
+    lat: 240.300
+    lng: 240.400
+    icon: "red.svg"
+    max_users: 2
+    modules:
+      - name: "Start Footprints Person"
+        type: "intro"
+        contents:
+          - type: "vid"
+            key: "intro_vid"
+          - type: "txt"
+            key: "intro_txt"
+      - name: "Upload a name and a picture"
+        type: "task"
+        tasks:
+          - type: "text_input"
+            key: "input_0"
+            max_uploads: 1
+          - type: "image_input"
+            key: "input_1"
+            max_uploads: 1
+        hint: "You should upload the name of someone and an image that represents them"
+      - name: "Name the other picture"
+        type: "task"
+        tasks:
+          - type: "audio_input"
+            key: "input_2"
+            max_uploads: 1
+        hint: "This is where you name your partner's picture"
+      - name: "Final Footprints Person"
+        type: "final_footprints_person"
+        hint: "This is the final view for the footprints - person"
+
+  - status: "open"
+    name: "FootprintsPlace"
+    lat: 150.300
+    lng: 150.400
+    icon: "red.svg"
+    max_users: 2
+    modules:
+      - name: "Start Footprints Place"
+        type: "intro"
+        contents:
+          - type: "vid"
+            key: "intro_vid"
+          - type: "txt"
+            key: "intro_txt"
+      - name: "Name and distance of a place"
+        type: "task"
+        tasks:
+          - type: "text_input"
+            key: "input_0"
+          - type: "text_input"
+            key: "input_1"
+        hint: "This is the text input of a name of a place, and how far it is"
+      - name: "Upload an image of the distance of that place"
+        type: "task"
+        tasks:
+          - type: "image_input"
+            key: "input_2"
+            max_uploads: 1
+      - name: "Final Footprints Place"
+        type: "final_footprints_place"
+        hint: "This is the final view for the footprints - Place. It should show the videos"
+
+  - status: "open"
+    name: "FootprintsObject"
+    lat: 540.300
+    lng: 550.400
+    icon: "red.svg"
+    max_users: 2
+    modules:
+      - name: "Start Footprints Object"
+        type: "intro"
+        contents:
+          - type: "vid"
+            key: "intro_vid"
+          - type: "txt"
+            key: "intro_txt"
+      - name: "Upload a picture of an object and its name"
+        type: "task"
+        tasks:
+          - type: "text_input"
+            key: "input_0"
+          - type: "image_input"
+            key: "input_1"
+            max_uploads: 1
+        hint: "This is the text input for the name and the image input for the picture of an object"
+      - name: "Upload a picture of a similar object, and how you name it"
+        type: "task"
+        tasks:
+          - type: "image_input"
+            key: "input_2"
+            max_uploads: 1
+          - type: "text_input"
+            key: "input_3"
+      - name: "Final Footprints object"
+        type: "final_footprints_object"
+        hint: "This is the final view for the footprints - Object"

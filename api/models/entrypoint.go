@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 	"math"
+	"math/rand"
 	"strings"
 	"time"
 
@@ -78,6 +79,9 @@ func (e *Entrypoint) BeforeCreate(tx *gorm.DB) (err error) {
 	for i := 0; i < e.MaxUsers; i++ {
 		e.UserCompleted = append(e.UserCompleted, 0)
 	}
+
+	e.Lat = rand.Float32()*900 + 50
+	e.Lng = rand.Float32()*900 + 50
 
 	return nil
 }
