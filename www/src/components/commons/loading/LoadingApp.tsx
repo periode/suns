@@ -1,4 +1,4 @@
-import Spinner from "../Spinner";
+import Spinner from "../Spinners/Spinner";
 
 function LoadingApp() {
 	return ( 

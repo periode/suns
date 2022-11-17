@@ -14,6 +14,7 @@ import FinalFirstTimes from "../modules/FinalFirstTimes";
 import { ENTRYPOINT_STATUS, IEntrypoint, IFile, IModule, ISession } from "../../utils/types";
 import IntroModule from "../modules/IntroModule";
 import TaskModule from "../modules/TaskModule";
+import WaitingModule from "../modules/WaitingModule";
 
 const FETCH_INTERVAL = 50 * 1000
 const ENTRYPOINT_LIFETIME_MINUTES = 10
@@ -261,11 +262,16 @@ const Entrypoint = (props: any) => {
 
             return mods
         }
+        
+        if (hasUserCompleted)
+        { 
+            mods.push(<WaitingModule key="module-complete-message"/>)
+            return mods
+        }
+
 
         mods.push(<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}`} className="m-1 p-1">{parseModule(data.current_module, data)}</div>)
 
-        if (hasUserCompleted)
-            mods.push(<div key="module-complete-message" className="m-1 p-1">You have completed this module! Please wait for your partner to complete it as well.</div>)
 
         return mods
     }

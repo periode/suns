@@ -18,7 +18,7 @@ const (
 	MAP_INTERVAL       = 10 * time.Second
 
 	CREATION_THRESHOLD  = 0.25
-	ENTRYPOINT_LIFETIME = 10 * time.Minute
+	ENTRYPOINT_LIFETIME = 72 * time.Hour
 
 	CLUSTER_FIRST_TIMES_UUID = "57ed6a2b-aacb-4c24-b1e1-3495821f846a"
 )

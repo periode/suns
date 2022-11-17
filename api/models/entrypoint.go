@@ -33,6 +33,8 @@ const (
 	FinalModuleTangled         string = "Tangled"
 	FinalModuleTangledInverted string = "Tangled Inverted"
 	FinalModuleSeperate        string = "Seperate"
+	// custom:
+	FinalModuleCrack string = "Crack"
 )
 
 type Entrypoint struct {

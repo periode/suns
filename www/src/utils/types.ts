@@ -16,7 +16,9 @@ export enum PARTNER_STATUS {
 export enum FINAL_TYPE {
     Tangled         = "Tangled",
     TangledInverted = "Tangled Inverted",
-    Seperate        = "Seperate",
+    Seperate = "Seperate",
+    // Custom:
+    Crack = "Crack"
 }
 
 //--------
