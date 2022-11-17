@@ -100,17 +100,17 @@ func writeFileToDisk(file *multipart.FileHeader, target string) (string, error) 
 	}
 	defer dst.Close()
 
+	if _, err = io.Copy(dst, src); err != nil {
+		return "", err
+	}
+
 	// check mimetype
-	bytes, err := ioutil.ReadAll(src)
+	bytes, err := ioutil.ReadFile(target)
 	if err != nil {
 		return "", err
 	}
 	m := mimetype.Detect(bytes)
 	ftype := m.String()
-
-	if _, err = io.Copy(dst, src); err != nil {
-		return "", err
-	}
 
 	return ftype, nil
 }

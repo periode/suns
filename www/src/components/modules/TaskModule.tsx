@@ -21,46 +21,46 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
     const contents = ctx.get(ep.name)
 
     const getTasks = () => {
-        const tasks = data.tasks.map(((task, index) => {
-            switch (task.type) {
+        const tasks = data.tasks.map(((t, i) => {
+            switch (t.type) {
                 case "audio_input":
                     return (
                         <div className="w-full
                                         flex flex-col gap-4
-                                                " key={`${task.type}-key-${index}`}>
-                            <p>{contents?.get(task.key)}</p>
+                                                " key={`${t.type}-key-${i}`}>
+                            <p>{contents?.get(t.key)}</p>
 
-                            <AudioRecorder key={`${data.ID}-${data.name}`} mod={data} index={index} ep={ep} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted} />
+                            <AudioRecorder mod={data} index={index} ep={ep} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted} />
                         </div>
                     )
                 case "video_input":
                     return (
                     <div className="w-full
                                     flex flex-col gap-4
-                                            " key={`${task.type}-key-${index}`}>
-                        <p>{contents?.get(task.key)}</p>
-                        <FileUploader type="video" maxUploads={task.max_uploads} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted}/>
+                                            " key={`${t.type}-key-${i}`}>
+                        <p>{contents?.get(t.key)}</p>
+                        <FileUploader type="video" maxUploads={t.max_uploads} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted}/>
                     </div>)
                 case "image_input":
                     return (
                     <div className="w-full
                                     flex flex-col gap-4
-                                            " key={`${task.type}-key-${index}`}>
-                        <p>{contents?.get(task.key)}</p>
-                        <FileUploader type="image" maxUploads={task.max_uploads} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted}/>
+                                            " key={`${t.type}-key-${i}`}>
+                        <p>{contents?.get(t.key)}</p>
+                        <FileUploader type="image" maxUploads={t.max_uploads} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted}/>
                     </div>)
                 case "text_input":
                     return (
                     <div className="w-full
                                     flex flex-col gap-4
-                                            " key={`${task.type}-key-${index}`}>
-                        <p>{contents?.get(task.key)}</p>
+                                            " key={`${t.type}-key-${i}`}>
+                        <p>{contents?.get(t.key)}</p>
                         <div className="h-60">
-                            <TextInputField handleNewUploads={handleNewUploads} handleUserDone={handleUserDone} isRequestingUploads={isRequestingUploads} hasUserCompleted={hasUserCompleted} placeholder={task.placeholder && contents?.get(task.placeholder) }/>
+                            <TextInputField handleNewUploads={handleNewUploads} handleUserDone={handleUserDone} isRequestingUploads={isRequestingUploads} hasUserCompleted={hasUserCompleted} placeholder={t.placeholder && contents?.get(t.placeholder) }/>
                         </div>
                     </div>)
                 default:
-                    return (<>Could not find task type ({task.type})</>)
+                    return (<>Could not find task type ({t.type})</>)
             }
         }))
 
