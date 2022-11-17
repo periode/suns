@@ -27,6 +27,13 @@ const (
 	PartnerFull    string = "full"
 )
 
+const (
+	// Type of Final module for layour
+	FinalModuleTangled         string = "Tangled"
+	FinalModuleTangledInverted string = "Tangled Inverted"
+	FinalModuleSeperate        string = "Seperate"
+)
+
 type Entrypoint struct {
 	ID        uint           `gorm:"primaryKey"`
 	CreatedAt time.Time      `json:"created_at"`
@@ -45,8 +52,9 @@ type Entrypoint struct {
 	Cluster     Cluster   `gorm:"foreignKey:ClusterUUID;references:UUID" json:"cluster"`
 
 	//-- has many modules
-	Modules       []Module `gorm:"foreignKey:EntrypointUUID;references:UUID" json:"modules"`
-	CurrentModule int      `gorm:"default:0" json:"current_module" form:"current_module"`
+	Modules         []Module `gorm:"foreignKey:EntrypointUUID;references:UUID" json:"modules"`
+	CurrentModule   int      `gorm:"default:0" json:"current_module" form:"current_module"`
+	FinalModuleType string   `gorm:"default:Seperate" json:"final_module_type"`
 
 	//-- has many-to-many users (0, 1 or 2)
 	Users         []*User       `gorm:"many2many:entrypoints_users;" json:"users"`

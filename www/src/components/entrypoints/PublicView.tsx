@@ -12,7 +12,7 @@ const PublicView = ({entrypoint} : PublicViewProps) => {
         // Single view
     }
 
-    switch (entrypoint.final_type) {
+    switch (entrypoint.final_module_type) {
         case FINAL_TYPE.Seperate:
 
             break;
