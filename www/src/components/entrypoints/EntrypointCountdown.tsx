@@ -12,6 +12,7 @@ function EntrypointCountdown( {endDate} : EntrypointCountdownProps ) {
 			return (String("0" + digit))
 		return(String(digit))
 	}
+	
 	return ( 
 		<div className="w-full h-12 
 						flex-1
@@ -20,6 +21,7 @@ function EntrypointCountdown( {endDate} : EntrypointCountdownProps ) {
 						border-b border-amber-900
 						">
 			{
+				isNaN(days) ? '-- : -- : -- : --' :
 				days + " : " + 
 				doubleDigits(hours) + " : " + 
 				doubleDigits(minutes) + " : " + 

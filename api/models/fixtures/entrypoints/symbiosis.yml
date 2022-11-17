@@ -21,19 +21,19 @@
           key: "input_0"
           max_uploads: 1
       hint: "This is the second content"
-    - name: "Upload 9 Images"
+    - name: "Upload 1 Image"
       type: "task"
       tasks:
         - type: "image_input"
           key: "input_1"
-          max_uploads: 9
-      hint: "This is the 9x9 grid image input"
-    - name: "Label random image from the 9 previous"
+          max_uploads: 1
+      hint: "This is the 1 single image input"
+    - name: "Label random image from the 1 previous"
       type: "task"
       tasks:
         - type: "text_input"
           key: "input_2"
-      hint: "This is the 9x9 grid image input"
+      hint: "This is the 1 grid image input"
     - name: "Final Symbiosis Gaze"
       type: "final_symbiosis_gaze"
       hint: "This is the final view for the symbiosis - gaze"
