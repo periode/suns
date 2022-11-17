@@ -13,6 +13,12 @@ export enum PARTNER_STATUS {
     PartnerFull = "full",
 }
 
+export enum FINAL_TYPE {
+    Tangled         = "Tangled",
+    TangledInverted = "Tangled Inverted",
+    Seperate        = "full",
+}
+
 //--------
 //-- types
 //--------
@@ -34,6 +40,7 @@ export interface IEntrypoint {
     max_users: number,
     user_completed: Array<number>,
     partner_status: PARTNER_STATUS,
+    final_type: FINAL_TYPE,
     lat: number,
     lng: number,
     icon: string,

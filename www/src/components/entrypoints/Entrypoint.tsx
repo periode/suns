@@ -307,14 +307,17 @@ const Entrypoint = (props: any) => {
                     </div>
                     <div className="w-full h-full p-4 overflow-scroll">
                         {
-                            isOwned || data.status === ENTRYPOINT_STATUS.EntrypointCompleted ?
+                                isOwned || data.status === ENTRYPOINT_STATUS.EntrypointCompleted ?
                                      getModules()
-                                : data.users.length < data.max_users ? <>
+                                : 
+                                data.users.length < data.max_users ? 
+                                <>
                                     { parseModule(0, data) }
-                                </> :
-                                    <>
-                                        <PublicView entrypoint={data} />
-                                    </>
+                                </> 
+                                :
+                                <>
+                                    <PublicView entrypoint={data} />
+                                </>
                         }
                     </div>
                     <div className="h-20
