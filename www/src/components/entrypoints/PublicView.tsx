@@ -38,10 +38,11 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
     return (
         <div className="w-full flex gap-2">
             <div className="flex-1 ">
-                
+                <h2>{ entrypoint.users[0].name }</h2>
             </div>
+            <div className="h-full w-[1px] background-amber-100"></div>
             <div className="flex-1 ">
-
+                <h2>{ entrypoint.users[1].name }</h2>
             </div>
         </div>
     )

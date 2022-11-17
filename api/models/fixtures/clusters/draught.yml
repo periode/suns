@@ -28,7 +28,7 @@ entrypoints:
           max_uploads: 1
       hint: "This is where you compare your draught stories"
     - name: "Final Draught You"
-      type: "final_draught_you"
+      type: "final"
       hint: "This is the final view for the draught - you"
 
 - status: "open"
@@ -59,7 +59,7 @@ entrypoints:
           key: "input_1"
           max_uploads: 1
     - name: "Final Draught World"
-      type: "final_draught_world"
+      type: "final"
       hint: "This is the final view for the draught - World. It combines both interviews together"
 
 - status: "open"
@@ -87,5 +87,5 @@ entrypoints:
         - type: "text_input"
           key: "input_1"
     - name: "Final Draught personal"
-      type: "final_draught_personal"
+      type: "final"
       hint: "This is the final view for the draught - Personal"
