@@ -8,7 +8,7 @@ interface EntrypointActionsProps {
 	hasUserCompleted: boolean,
 	isUserDone: boolean,
 	claimEntryPointFunction: () => {},
-	completeModuleFunction: (data: any, session: ISession) => Promise<void>,
+	completeModuleFunction: () => void,
 }
 
 function EntrypointActions({
@@ -50,7 +50,7 @@ function EntrypointActions({
 							cursor-pointer
 							flex items-center
 							gap-1`}
-			onClick={() => { if (!hasUserCompleted) completeModuleFunction(entryPointData, session) }} disabled={hasUserCompleted}>
+			onClick={() => { if (!hasUserCompleted) completeModuleFunction() }} disabled={hasUserCompleted}>
 			<p>Next</p>
 			<FiArrowRight className="text-xs" />
 		</button>
@@ -60,7 +60,7 @@ function EntrypointActions({
 							cursor-pointer
 							flex items-center
 							gap-1"
-			onClick={() => completeModuleFunction(entryPointData, session)}>
+			onClick={() => completeModuleFunction()}>
 			<p>Finish</p>
 			<FiArrowRight className="text-xs" />
 		</button>
