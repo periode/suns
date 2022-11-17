@@ -1,6 +1,8 @@
+uuid: "02ed6a2b-aacb-4c24-b1e1-3495821f846c"
 name: "Symbiosis"
 entrypoints:
   - status: "open"
+    cluster_uuid: "02ed6a2b-aacb-4c24-b1e1-3495821f846c"
     name: "SymbiosisGaze"
     lat: 240.300
     lng: 240.400
@@ -42,6 +44,7 @@ entrypoints:
         hint: "This is the final view for the symbiosis - gaze"
 
   - status: "open"
+    cluster_uuid: "02ed6a2b-aacb-4c24-b1e1-3495821f846c"
     name: "SymbiosisTask"
     lat: 150.300
     lng: 150.400
@@ -75,6 +78,7 @@ entrypoints:
         hint: "This is the final view for the symbiosis - Task. It should show the videos"
 
   - status: "open"
+    cluster_uuid: "02ed6a2b-aacb-4c24-b1e1-3495821f846c"
     name: "SymbiosisMean"
     lat: 540.300
     lng: 550.400

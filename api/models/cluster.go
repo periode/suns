@@ -78,15 +78,15 @@ func UpdateCluster(uuid uuid.UUID, user_uuid uuid.UUID, cluster *Cluster) (Clust
 	return existing, result.Error
 }
 
-func AddClusterEntrypoints(uuid string, eps []Entrypoint) error {
-	var existing Cluster
-	result := db.Where("uuid = ?", uuid).First(&existing)
-	if result.Error != nil {
-		return result.Error
-	}
-
+func AddClusterEntrypoints(eps []Entrypoint) error {
 	for _, ep := range eps {
-		err := db.Model(&existing).Where("uuid = ?", uuid).Association("Entrypoints").Append(&ep)
+		var existing Cluster
+		result := db.Where("uuid = ?", ep.ClusterUUID).First(&existing)
+		if result.Error != nil {
+			return result.Error
+		}
+
+		err := db.Model(&existing).Where("uuid = ?", ep.ClusterUUID).Association("Entrypoints").Append(&ep)
 		if err != nil {
 			return err
 		}

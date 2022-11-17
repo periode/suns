@@ -1,6 +1,8 @@
+uuid: "00ed6a2b-aacb-4c24-b1e1-3495821f846a"
 name: "Combining First Times"
 entrypoints:
   - status: "open"
+    cluster_uuid: "00ed6a2b-aacb-4c24-b1e1-3495821f846a"
     name: "CombiningFirstTimes"
     max_users: 2
     lat: 300.300

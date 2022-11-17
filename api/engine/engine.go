@@ -12,7 +12,7 @@ import (
 
 const (
 	CREATE_INTERVAL    = 30 * time.Second
-	DELETE_INTERVAL    = 1 * time.Minute
+	DELETE_INTERVAL    = 30 * time.Minute
 	SACRIFICE_INTERVAL = 15 * time.Minute
 	EMAIL_INTERVAL     = 10 * time.Minute
 	MAP_INTERVAL       = 10 * time.Second
@@ -20,7 +20,8 @@ const (
 	CREATION_THRESHOLD  = 0.25
 	ENTRYPOINT_LIFETIME = 72 * time.Hour
 
-	CLUSTER_FIRST_TIMES_UUID = "57ed6a2b-aacb-4c24-b1e1-3495821f846a"
+	MIN_ENTRYPOINTS = 10
+	MAX_ENTRYPOINTS = 100
 )
 
 type State struct {
@@ -85,6 +86,11 @@ func createEntrypoints(ch chan string) {
 		if err != nil {
 			zero.Errorf("Failed getting current generation entrypoints", err.Error())
 		}
+
+		if len(eps) > MAX_ENTRYPOINTS {
+			continue
+		}
+
 		var open int = 0
 		for _, ep := range eps {
 			if ep.Status == models.EntrypointOpen {
@@ -94,16 +100,16 @@ func createEntrypoints(ch chan string) {
 
 		remaining := float32(open) / float32(len(eps))
 		zero.Debug(fmt.Sprintf("Open entrypoints: %d%% (open %d, total %d)", int(remaining*100), open, len(eps)))
-		if float64(remaining) > CREATION_THRESHOLD {
-			continue
+
+		if float64(remaining) < CREATION_THRESHOLD || len(eps) < MIN_ENTRYPOINTS {
+			err = models.AddClusterEntrypoints(pool.Pick())
+			if err != nil {
+				zero.Errorf("Failed to create new entrypoint: %s", err.Error())
+			}
+
+			//-- finally, regenerate the map
 		}
 
-		err = models.AddClusterEntrypoints(CLUSTER_FIRST_TIMES_UUID, pool.Pick())
-		if err != nil {
-			zero.Errorf("Failed to create new entrypoint: %s", err.Error())
-		}
-
-		//-- finally, regenerate the map
 	}
 }
 

@@ -1,6 +1,8 @@
+uuid: "04ed6a2b-aacb-4c24-b1e1-3495821f846e"
 name: "Cracks"
 entrypoints:
   - status: "open"
+    cluster_uuid: "04ed6a2b-aacb-4c24-b1e1-3495821f846e"
     name: "Cracks"
     max_users: 1
     lat: 300.300
