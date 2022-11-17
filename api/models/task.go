@@ -14,9 +14,10 @@ type Task struct {
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 	UUID      uuid.UUID      `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
 
-	Type       string `json:"type" yaml:"type"`
-	Key        string `json:"key" yaml:"key"`
-	MaxUploads int    `gorm:"default:1" json:"max_uploads" yaml:"max_uploads"`
+	Type        string `json:"type" yaml:"type"`
+	Key         string `json:"key" yaml:"key"`
+	Placeholder string `json:"placeholder" yaml:"placeholder"`
+	MaxUploads  int    `gorm:"default:1" json:"max_uploads" yaml:"max_uploads"`
 
 	//-- belongs to a module
 	ModuleUUID uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()" json:"module_uuid" yaml:"module_uuid"`

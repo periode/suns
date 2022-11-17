@@ -20,12 +20,10 @@ const Toaster = ({ type, message, display, timeoutms, setDisplay } : ToasterProp
 
 
 	useEffect(() => {
-		console.log("display: " + display)
 		if (timeoutms && display)
 		{
 			setDisplay(true)
 			const timeoutDisplay = setTimeout(() => { 	
-				console.log("ho")
 				setDisplay(false) 
 			}, timeoutms);
 			return (() => clearTimeout(timeoutDisplay));

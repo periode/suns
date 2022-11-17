@@ -1,6 +1,8 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
-import { getSession } from "../../utils/auth"
-import { IEntrypoint, IFile, IModule, IUpload } from "../../utils/types"
+import { FiMic, FiPlay, FiRotateCcw, FiSquare, FiStopCircle } from "react-icons/fi"
+import { getSession } from "../../../utils/auth"
+import { IEntrypoint, IFile, IModule, IUpload } from "../../../utils/types"
+import AudioRecorderCountdown from "./utils/AudioRecorderCountdown"
 
 const MediaStreamRecorder = require('msr')
 
@@ -14,7 +16,7 @@ interface AudioRecorderProps {
     hasUserCompleted: boolean
 }
 
-const MAX_RECORD_TIME = 180 * 1000
+const MAX_RECORD_TIME = 3 * 60 * 1000
 var recorder: any
 
 const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, setUserDone, hasUserCompleted }: AudioRecorderProps) => {
@@ -22,7 +24,7 @@ const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, 
     const session = getSession()
     const [uploads, setUploads] = useState(Array<IFile>)
     const [recordingState, setRecordingState] = useState("idle")
-    const [recordingMessage, setRecordingMessage] = useState("ready to record")
+    const [recordingMessage, setRecordingMessage] = useState("Ready to record")
     const [stream, setStream] = useState({} as MediaStream)
     const [blobURL, setBlobURL] = useState("")
 
@@ -76,9 +78,11 @@ const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, 
     }
 
     const stopRecording = () => {
+
+        console.log("stopRecording")
         if (recordingState === "done")
             return
-
+        
         recorder.ondataavailable = function (blob: Blob) {
             audioBlob = blob
         };
@@ -95,7 +99,7 @@ const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, 
     const resetRecording = () => {
         audioBlob = new Blob()
         setBlobURL("")
-        setRecordingMessage("complete the module or start again")
+        setRecordingMessage("Ready to record")
         setRecordingState("idle")
         setUploads([])
         setUserDone(false)
@@ -139,37 +143,81 @@ const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, 
         return (<>Could not find proper prompt</>)
     }
 
+    const handleRecordButtonClick = () => {
+        console.log("Calling handleRecordButtonClick with recordingState: " + recordingState)
+        switch (recordingState) {
+            case "idle":
+                startRecording()
+                break;
+            case "recording":
+                stopRecording()
+                break;
+            case "done":
+                resetRecording()
+                break;
+            default:
+                console.error("handleRecordButtonClick : an error occured, recordinState:", recordingState)
+                break;
+        }
+    }
+
     return (
-        <div key={`mod-${mod.name}`}>
+        <div className="w-full font-mono" key={`mod-${mod.name}`}>
             <p>
-                {mod.content}
+                {mod.content} 
             </p>
-            <div className="flex flex-row mt-10">
-                <div className="flex-1">
+            <div className="w-full flex flex-col items-start bg-amber-200">
+                <div className="w-full">
                     {
                         uploads && uploads.length > 0 ?
                             <>
-                                {getInputPrompt()}
+                                { getInputPrompt() }
                             </> : <></>
                     }
                 </div>
-                <div className="flex-1">
-                    {!hasUserCompleted && recordingState === "idle" ? <button className="bg-amber-900 text-white p-1 m-1" onClick={startRecording}>record</button> : <></>}
-                    {!hasUserCompleted && recordingState === "recording" ? <button className="bg-amber-900 text-white p-1 m-1" onClick={stopRecording}>stop</button> : <></>}
-                    {!hasUserCompleted && recordingState === "done" ? <button className="bg-amber-900 text-white p-1 m-1" onClick={resetRecording}>restart</button> : <></>}
-                    <p>{recordingMessage}</p>
-                </div>
-                <div className="flex-1">
-                    {
-                        blobURL !== "" && !hasUserCompleted ?
-                            <audio src={blobURL} controls></audio>
-                            :
-                            <></>
-                    }
-                </div>
+                <div className="flex items-center justify-between gap-2
+                                w-full p-2 bg-amber-100">
+                        <div className="flex-1 h-full
+                                        flex items-center justify-center">
+                            {
+                                recordingState === "recording" ?
+                                <div className="flex items-center gap-2">
+                                    <div className="w-4 h-4 rounded-full bg-red-600 animate-pulse"></div>
+                                    <AudioRecorderCountdown time={MAX_RECORD_TIME}/>
+                                </div>
+                                :
+                                recordingState === "done" ?
+                                <audio className="flex-1 bg-transparent border border-1 border-amber-500" src={ blobURL } controls></audio>
+                                :
+                                <span className="text-sm text-amber-900/50"> { recordingMessage } </span>
+                            }
+                        </div>
+                        <div className="w-16 h-16">
+                                <button className={
+                                    recordingState === "recording" ?
+                                    "w-full h-full flex items-center justify-center text-lg relative hover:border-amber-600 hover:text-amber-600 text-white bg-amber-500 border border-1 border-amber-500 transition-colors ease-in-out duration-300"
+                                    :
+                                    "w-full h-full flex items-center justify-center text-lg relative hover:border-amber-600 hover:text-amber-600 text-amber-500 bg-transparent border border-1 border-amber-500 transition-colors ease-in-out duration-300"
 
+                                } 
+                                                    onClick={handleRecordButtonClick}>
+                                    {
+                                        recordingState === "idle" ? 
+                                        <FiMic className=""/>
+                                        :
+                                        recordingState === "recording" ? 
+                                        <FiSquare className=""/>
+                                        :
+                                        recordingState === "done" ? 
+                                        <FiRotateCcw className=""/>
+                                        :
+                                        <p>error: recording state: {recordingState}</p>
+                                    }
+                                </button> 
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
     )
 }
 

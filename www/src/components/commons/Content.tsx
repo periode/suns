@@ -1,3 +1,5 @@
+import ContentVideo from "../modules/content/ContentVideo"
+
 interface ContentProps {
     type: string
     airkey: string
@@ -22,7 +24,7 @@ const Content = ({ type, airkey, contents }: ContentProps) => {
             </>)
         case "vid":
             return (<>
-                <iframe className="m-auto block" title={airkey + "title"} src={contents.get(airkey)} width="640" height="360"></iframe>
+                <ContentVideo title={airkey + "title"} src={contents?.get(airkey) || ""}/>
             </>)
 
         default:
