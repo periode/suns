@@ -240,7 +240,7 @@ const Entrypoint = (props: any) => {
                 )
             case "final_first_times":
                 return (
-                    <FinalFirstTimes data={ep} />
+                    <PublicView entrypoint={ep} />
                 )
             default:
                 return (

@@ -33,7 +33,7 @@ entrypoints:
             max_uploads: 1
         hint: "This is where you name your partner's picture"
       - name: "Final Footprints Person"
-        type: "final_footprints_person"
+        type: "final"
         hint: "This is the final view for the footprints - person"
 
   - status: "open"
@@ -66,7 +66,7 @@ entrypoints:
             key: "input_2"
             max_uploads: 1
       - name: "Final Footprints Place"
-        type: "final_footprints_place"
+        type: "final"
         hint: "This is the final view for the footprints - Place. It should show the videos"
 
   - status: "open"
@@ -102,5 +102,5 @@ entrypoints:
           - type: "text_input"
             key: "input_3"
       - name: "Final Footprints object"
-        type: "final_footprints_object"
+        type: "final"
         hint: "This is the final view for the footprints - Object"

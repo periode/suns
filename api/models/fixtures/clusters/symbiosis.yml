@@ -38,7 +38,7 @@ entrypoints:
             key: "input_2"
         hint: "This is the 1 grid image input"
       - name: "Final Symbiosis Gaze"
-        type: "final_symbiosis_gaze"
+        type: "final"
         hint: "This is the final view for the symbiosis - gaze"
 
   - status: "open"
@@ -71,7 +71,7 @@ entrypoints:
             key: "input_1"
             max_uploads: 3
       - name: "Final Symbiosis Task"
-        type: "final_symbiosis_task"
+        type: "final"
         hint: "This is the final view for the symbiosis - Task. It should show the videos"
 
   - status: "open"
@@ -104,5 +104,5 @@ entrypoints:
             key: "input_1"
             max_uploads: 1
       - name: "Final Symbiosis mean"
-        type: "final_symbiosis_mean"
+        type: "final"
         hint: "This is the final view for the symbiosis - Mean"

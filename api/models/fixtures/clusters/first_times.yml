@@ -33,4 +33,4 @@ entrypoints:
         hint: "This is what your partner has recorded, please tell the story of when the same thing happened to you."
       - name: "For the first time - Final"
         hint: "This is the final countdown"
-        type: "final_first_times"
+        type: "final"
