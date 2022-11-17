@@ -21,13 +21,13 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
     const contents = ctx.get(ep.name)
 
     const getTasks = () => {
-        const tasks = data.tasks.map((task => {
+        const tasks = data.tasks.map(((task, index) => {
             switch (task.type) {
                 case "audio_input":
                     return (
                         <div className="w-full
                                         flex flex-col gap-4
-                                                " key={`${task.type}-key`}>
+                                                " key={`${task.type}-key-${index}`}>
                             <p>{contents?.get(task.key)}</p>
 
                             <AudioRecorder key={`${data.ID}-${data.name}`} mod={data} index={index} ep={ep} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted} />
@@ -37,7 +37,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
                     return (
                     <div className="w-full
                                     flex flex-col gap-4
-                                            " key={`${task.type}-key`}>
+                                            " key={`${task.type}-key-${index}`}>
                         <p>{contents?.get(task.key)}</p>
                         <FileUploader type="video" maxUploads={task.max_uploads} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted}/>
                     </div>)
@@ -45,7 +45,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
                     return (
                     <div className="w-full
                                     flex flex-col gap-4
-                                            " key={`${task.type}-key`}>
+                                            " key={`${task.type}-key-${index}`}>
                         <p>{contents?.get(task.key)}</p>
                         <FileUploader type="image" maxUploads={task.max_uploads} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted}/>
                     </div>)
@@ -53,7 +53,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
                     return (
                     <div className="w-full
                                     flex flex-col gap-4
-                                            " key={`${task.type}-key`}>
+                                            " key={`${task.type}-key-${index}`}>
                         <p>{contents?.get(task.key)}</p>
                         <div className="h-60">
                             <TextInputField handleNewUploads={handleNewUploads} handleUserDone={handleUserDone} isRequestingUploads={isRequestingUploads} hasUserCompleted={hasUserCompleted} placeholder={task.placeholder && contents?.get(task.placeholder) }/>
