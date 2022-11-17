@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useCountdown } from "../../../../hooks/useCountdown"
 
 
@@ -8,10 +8,11 @@ interface AudioRecorderCountdownProps {
 
 function AudioRecorderCountdown( { time } : AudioRecorderCountdownProps ) {
 
-	const date = Date.now()
-	const EndDate = new Date(date + time)
+	const EndDate = new Date(Date.now() + time)
+	
+	const [date, setDate] = useState(EndDate.toString())
 
-	const [days, hours, minutes, seconds] = useCountdown(EndDate.toDateString())
+	const [days, hours, minutes, seconds] = useCountdown(date)
 
 	const doubleDigits = (digit : number) : string =>{
 		if (digit < 10)

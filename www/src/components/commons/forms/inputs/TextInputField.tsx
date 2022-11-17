@@ -47,7 +47,7 @@ const TextInputField = ({
 								focus:outline-amber-500 focus:rounded-none 
 								border border-amber-900 bg-amber-100 font-serif text-amber-700
 								placeholder:text-amber-900/50 placeholder:font-mono
-								transition-all ease-in duration-300
+								transition-colors ease-in duration-300
 								"
 				onChange={onChange} placeholder={placeholder} name={ label? label.toLowerCase() : 'text' } disabled={ hasUserCompleted }/>
 		</>						
