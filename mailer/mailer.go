@@ -57,7 +57,7 @@ func SendMail(_dest string, _subject string, _template string, _data Payload) er
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
-	if os.Getenv("API_MODE") != "test" {
+	if os.Getenv("API_MODE") != "test" || os.Getenv("CAN_SEND_MAIL") != "true" {
 		_, _, err = mg.Send(ctx, message)
 	}
 

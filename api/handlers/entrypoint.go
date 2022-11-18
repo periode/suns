@@ -10,6 +10,7 @@ import (
 	"github.com/labstack/echo/v4"
 	zero "github.com/periode/suns/api/logger"
 	"github.com/periode/suns/api/models"
+	"github.com/periode/suns/mailer"
 )
 
 func GetAllEntrypoints(c echo.Context) error {
@@ -142,11 +143,11 @@ func ProgressEntrypoint(c echo.Context) error {
 		}
 
 		//-- send emails to whoever is not the user doing the current completion
-		// for i := 0; i < len(ep.Users); i++ {
-		// 	if ep.Users[i].UUID != user_uuid {
-		// 		mailer.SendModuleProgress(ep.Users[i], &ep)
-		// 	}
-		// }
+		for i := 0; i < len(ep.Users); i++ {
+			if ep.Users[i].UUID != user_uuid {
+				mailer.SendModuleProgress(ep.Users[i], &ep)
+			}
+		}
 	}
 
 	//-- check for entrypoint completion

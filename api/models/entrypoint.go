@@ -47,7 +47,7 @@ type Entrypoint struct {
 
 	Name       string `gorm:"not null" json:"name" form:"name" binding:"required"`
 	Slug       string `gorm:"" json:"slug"`
-	Icon       string `json:"icon" yaml:"icon"`
+	Icon       string `gorm:"default:black.svg" json:"icon" yaml:"icon"`
 	Generation int    `gorm:"default:0" json:"generation"`
 
 	//-- belongs to a cluster

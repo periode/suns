@@ -1,0 +1,13 @@
+<html>
+
+<body>
+    <h1>Hello, {{ .Name }}!</h1>
+    <p>Here is your rewilding prompt of the day</p>
+    <p>{{ .Body }}</p>
+    <p>
+        <a href="{{ .Host}}/entrypoints/{{ .EntrypointUUID}}">Click to contribute to {{ .EntrypointName }}</a>
+    </p>
+    <p>Cheers,<br /></p>
+</body>
+
+</html>

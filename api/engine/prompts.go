@@ -31,6 +31,16 @@ func (p *Prompts) Populate() error {
 	table := client.GetTable(DB_ID, "PromptsWeekly")
 	result, err := table.GetRecords().Do()
 	if err != nil {
+		//-- load dummy prompts
+		pr := Prompt{
+			Body:       "This is the Body",
+			Name:       "This is the Name",
+			IntroType:  "This is the IntroType",
+			IntroValue: "This is the IntroValue",
+			UploadType: "This is the UploadType",
+		}
+
+		p.Weekly = append(p.Weekly, pr)
 		return err
 	}
 

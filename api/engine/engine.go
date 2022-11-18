@@ -17,8 +17,8 @@ const (
 	CREATE_INTERVAL        = 30 * time.Second
 	DELETE_INTERVAL        = 30 * time.Minute
 	SACRIFICE_INTERVAL     = 15 * time.Minute
-	EMAIL_WEEKLY_INTERVAL  = 10 * time.Minute
-	EMAIL_MONTHYL_INTERVAL = 20 * time.Minute
+	EMAIL_WEEKLY_INTERVAL  = 5 * time.Second
+	EMAIL_MONTHLY_INTERVAL = 20 * time.Minute
 	MAP_INTERVAL           = 10 * time.Second
 
 	CREATION_THRESHOLD  = 0.25
@@ -26,6 +26,8 @@ const (
 
 	MIN_ENTRYPOINTS = 10
 	MAX_ENTRYPOINTS = 100
+
+	PROMPTS_CLUSTER_UUID = "05ed6a2b-aacb-4c24-b1e1-3495821f846f"
 )
 
 type State struct {
@@ -90,7 +92,7 @@ func createEntrypoints() {
 		zero.Debug(fmt.Sprintf("Open entrypoints: %d%% (open %d, total %d)", int(remaining*100), open, len(eps)))
 
 		if float64(remaining) < CREATION_THRESHOLD || len(eps) < MIN_ENTRYPOINTS {
-			err = models.AddClusterEntrypoints(pool.Pick())
+			_, err = models.AddClusterEntrypoints(pool.Pick())
 			if err != nil {
 				zero.Errorf("Failed to create new entrypoint: %s", err.Error())
 			}
@@ -144,25 +146,78 @@ func sendWeeklyEmails() {
 		}
 
 		for _, user := range users {
-			if user.WeeklyPromptsIndex > len(prompts.Weekly) {
+			if user.WeeklyPromptsIndex >= len(prompts.Weekly) {
 				continue
 			}
 
-			//-- todo: create entrypoint based on the prompt
-			fmt.Println("Create the entrypoint and assign the user as owner!")
-
 			prompt := prompts.Weekly[user.WeeklyPromptsIndex]
+
+			mods := make([]models.Module, 0)
+			mods = append(mods, models.Module{
+				Name: "IntroPrompt",
+				Type: "intro",
+				Contents: []models.Content{
+					{
+						Type:  prompt.IntroType,
+						Key:   "",
+						Value: prompt.IntroValue,
+					},
+					{
+						Type:  "txt",
+						Key:   "",
+						Value: prompt.Body,
+					}},
+			})
+			mods = append(mods, models.Module{
+				Name: "UploadPrompt",
+				Type: "task",
+				Tasks: []models.Task{
+					{
+						Type: prompt.UploadType,
+						Key:  "",
+					},
+					{
+						Type:  "txt",
+						Key:   "",
+						Value: "Please contribute!",
+					}},
+			})
+			mods = append(mods, models.Module{
+				Name: "FinalPrompt",
+				Type: "final",
+			})
+
+			ep := models.Entrypoint{
+				Status:      models.EntrypointPending,
+				ClusterUUID: uuid.MustParse(PROMPTS_CLUSTER_UUID),
+				Name:        prompt.Name,
+				Generation:  state.generation,
+				MaxUsers:    1,
+				Icon:        "black.svg",
+				Modules:     mods,
+			}
+
+			eps, err := models.AddClusterEntrypoints([]models.Entrypoint{ep})
+			if err != nil {
+				zero.Error(err.Error())
+			}
+
+			_, err = models.ClaimEntrypoint(&eps[0], &user)
+			if err != nil {
+				zero.Errorf(err.Error())
+			}
+
 			p := mailer.WeeklyPayload{
 				Body:           prompt.Body,
 				Name:           user.Name,
 				Host:           os.Getenv("FRONTEND_HOST"),
 				EntrypointUUID: uuid.NewString(),
-				EntrypointName: "YOU STILL HAVE TO MAKE ME",
+				EntrypointName: prompt.Name,
 			}
-			mailer.SendMail(user.Email, "Rewilding Prompt", "rewilding_prompt", p)
+			mailer.SendMail(user.Email, fmt.Sprintf("Rewilding Prompt #%d", user.MonthlyPromptsIndex), "rewilding_prompt", p)
 
 			user.WeeklyPromptsIndex++
-			_, err := models.UpdateUser(user.UUID, user.UUID, &user)
+			_, err = models.UpdateUser(user.UUID, user.UUID, &user)
 			if err != nil {
 				zero.Error(err.Error())
 			}
@@ -172,7 +227,7 @@ func sendWeeklyEmails() {
 
 func sendMonthlyEmails() {
 	for {
-		time.Sleep(EMAIL_WEEKLY_INTERVAL)
+		time.Sleep(EMAIL_MONTHLY_INTERVAL)
 	}
 }
 
