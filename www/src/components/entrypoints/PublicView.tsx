@@ -32,7 +32,6 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
     }
 
     const getContent = (user: IUser): JSX.Element => {
-
         if (
             entrypoint === undefined
             || entrypoint.modules.length === 0
@@ -46,7 +45,7 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
         var Content2: JSX.Element
 
         switch (entrypoint.final_module_type) {
-            case FINAL_TYPE.Seperate:
+            case FINAL_TYPE.Separate:
                 {
                     // Task and belong to both users
                     entrypoint.modules[1].uploads[0].user_uuid === user.uuid ?

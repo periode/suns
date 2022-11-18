@@ -7,7 +7,6 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/google/uuid"
 	zero "github.com/periode/suns/api/logger"
 	"github.com/periode/suns/api/models"
 	"github.com/periode/suns/mailer"
@@ -45,7 +44,6 @@ var (
 
 func StartEngine() {
 	zero.Info("starting engine...")
-
 	state = State{generation: 0}
 	err := pool.Generate()
 	if err != nil {
@@ -150,71 +148,19 @@ func sendWeeklyEmails() {
 				continue
 			}
 
-			prompt := prompts.Weekly[user.WeeklyPromptsIndex]
-
-			mods := make([]models.Module, 0)
-			mods = append(mods, models.Module{
-				Name: "IntroPrompt",
-				Type: "intro",
-				Contents: []models.Content{
-					{
-						Type:  prompt.IntroType,
-						Key:   "",
-						Value: prompt.IntroValue,
-					},
-					{
-						Type:  "txt",
-						Key:   "",
-						Value: prompt.Body,
-					}},
-			})
-			mods = append(mods, models.Module{
-				Name: "UploadPrompt",
-				Type: "task",
-				Tasks: []models.Task{
-					{
-						Type: prompt.UploadType,
-						Key:  "",
-					},
-					{
-						Type:  "txt",
-						Key:   "",
-						Value: "Please contribute!",
-					}},
-			})
-			mods = append(mods, models.Module{
-				Name: "FinalPrompt",
-				Type: "final",
-			})
-
-			ep := models.Entrypoint{
-				Status:      models.EntrypointPending,
-				ClusterUUID: uuid.MustParse(PROMPTS_CLUSTER_UUID),
-				Name:        prompt.Name,
-				Generation:  state.generation,
-				MaxUsers:    1,
-				Icon:        "black.svg",
-				Modules:     mods,
-			}
-
-			eps, err := models.AddClusterEntrypoints([]models.Entrypoint{ep})
+			prompt, ep, err := prompts.CreateEntrypoint(user, mailer.WEEKLY)
 			if err != nil {
 				zero.Error(err.Error())
 			}
 
-			_, err = models.ClaimEntrypoint(&eps[0], &user)
-			if err != nil {
-				zero.Errorf(err.Error())
-			}
-
-			p := mailer.WeeklyPayload{
+			p := mailer.PromptPayload{
 				Body:           prompt.Body,
 				Name:           user.Name,
 				Host:           os.Getenv("FRONTEND_HOST"),
-				EntrypointUUID: uuid.NewString(),
+				EntrypointUUID: ep.UUID.String(),
 				EntrypointName: prompt.Name,
 			}
-			mailer.SendMail(user.Email, fmt.Sprintf("Rewilding Prompt #%d", user.MonthlyPromptsIndex), "rewilding_prompt", p)
+			mailer.SendMail(user.Email, fmt.Sprintf("Weekly Rewilding Prompt #%d", user.WeeklyPromptsIndex), "rewilding_prompt", p)
 
 			user.WeeklyPromptsIndex++
 			_, err = models.UpdateUser(user.UUID, user.UUID, &user)
@@ -228,6 +174,37 @@ func sendWeeklyEmails() {
 func sendMonthlyEmails() {
 	for {
 		time.Sleep(EMAIL_MONTHLY_INTERVAL)
+
+		users, err := models.GetAllUsers()
+		if err != nil {
+			zero.Error(err.Error())
+		}
+
+		for _, user := range users {
+			if user.MonthlyPromptsIndex >= len(prompts.Monthly) {
+				continue
+			}
+
+			prompt, ep, err := prompts.CreateEntrypoint(user, mailer.MONTHLY)
+			if err != nil {
+				zero.Error(err.Error())
+			}
+
+			p := mailer.PromptPayload{
+				Body:           prompt.Body,
+				Name:           user.Name,
+				Host:           os.Getenv("FRONTEND_HOST"),
+				EntrypointUUID: ep.UUID.String(),
+				EntrypointName: prompt.Name,
+			}
+			mailer.SendMail(user.Email, fmt.Sprintf("Rewilding Prompt #%d", user.MonthlyPromptsIndex), "rewilding_prompt", p)
+
+			user.MonthlyPromptsIndex++
+			_, err = models.UpdateUser(user.UUID, user.UUID, &user)
+			if err != nil {
+				zero.Error(err.Error())
+			}
+		}
 	}
 }
 

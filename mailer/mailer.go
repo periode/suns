@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/mailgun/mailgun-go/v4"
+	zero "github.com/periode/suns/api/logger"
 	"github.com/periode/suns/api/models"
 )
 
@@ -57,8 +58,10 @@ func SendMail(_dest string, _subject string, _template string, _data Payload) er
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
-	if os.Getenv("API_MODE") != "test" || os.Getenv("CAN_SEND_MAIL") != "true" {
+	if os.Getenv("API_MODE") != "test" && os.Getenv("CAN_SEND_MAIL") == "true" {
 		_, _, err = mg.Send(ctx, message)
+	} else if os.Getenv("CAN_SEND_MAIL") != "true" {
+		zero.Warn("skipped sending email")
 	}
 
 	return err

@@ -2,6 +2,11 @@ package mailer
 
 import "fmt"
 
+const (
+	WEEKLY  = "weekly"
+	MONTHLY = "monthly"
+)
+
 type Payload interface {
 	Check() error
 	Data() interface{}
@@ -60,7 +65,7 @@ func (c CompletionPayload) Data() interface{} {
 	return c
 }
 
-type WeeklyPayload struct {
+type PromptPayload struct {
 	Body           string
 	Name           string
 	Host           string
@@ -68,7 +73,7 @@ type WeeklyPayload struct {
 	EntrypointName string
 }
 
-func (w WeeklyPayload) Check() error {
+func (w PromptPayload) Check() error {
 	var err error
 	if w.Name == "" || w.Body == "" || w.Host == "" || w.EntrypointUUID == "" {
 		err = fmt.Errorf("the payload should not be empty")
@@ -76,6 +81,6 @@ func (w WeeklyPayload) Check() error {
 	return err
 }
 
-func (w WeeklyPayload) Data() interface{} {
+func (w PromptPayload) Data() interface{} {
 	return w
 }

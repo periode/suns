@@ -98,6 +98,23 @@ func AddClusterEntrypoints(eps []Entrypoint) ([]Entrypoint, error) {
 		if err != nil {
 			return updated, err
 		}
+
+		for _, m := range ep.Modules {
+			if len(m.Contents) > 0 {
+				fmt.Printf("Adding %d contents to %s\n", len(m.Contents), m.Name)
+				err = db.Model(&m).Where("uuid = ?", m.UUID).Association("Contents").Replace(m.Contents)
+				if err != nil {
+					return updated, err
+				}
+			}
+
+			if len(m.Tasks) > 0 {
+				err = db.Model(&m).Where("uuid = ?", m.UUID).Association("Tasks").Replace(m.Tasks)
+				if err != nil {
+					return updated, err
+				}
+			}
+		}
 	}
 
 	return updated, nil

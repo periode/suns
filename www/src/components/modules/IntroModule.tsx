@@ -19,18 +19,12 @@ const IntroModule = ({ data, epName, index, handleUserDone }: IntroModuleProps) 
     const ctx = useContext(AirTableContext)    
     const contents = ctx.get(epName)
 
-    if(contents == undefined){
-        return(<>
-        There was a problem getting information from the Airtable
-        </>)
-    }
-
     return (<>
         <div className="flex flex-col">
             {
                 data.contents.map((c) => {
                     return (
-                        <Content key={c.key}type={c.type} airkey={c.key} contents={contents} />
+                        <Content key={c.key}type={c.type} airkey={c.key} contents={contents} value={c.value}/>
                     )   
                 })
             }
