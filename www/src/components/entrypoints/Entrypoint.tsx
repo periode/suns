@@ -263,11 +263,14 @@ const Entrypoint = (props: any) => {
                             </div>
                         </div>
                     </div>
-                    <div className="w-full md:flex">
-                        <EntrypointCountdown endDate={endDate} />
-                        <div className="md:w-[1px] md:h-full  bg-amber-900"></div>
-                        <EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
-                    </div>
+                    {
+                        !(data.status === ENTRYPOINT_STATUS.EntrypointCompleted) &&
+                        <div className="w-full md:flex">
+                            <EntrypointCountdown endDate={endDate} />
+                            <div className="md:w-[1px] md:h-full  bg-amber-900"></div>
+                            <EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
+                        </div>
+                    }
                     <div className="w-full h-full p-4 overflow-scroll">
                         {
                             isOwned || data.status === ENTRYPOINT_STATUS.EntrypointCompleted ?
