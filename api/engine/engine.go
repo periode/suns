@@ -219,12 +219,6 @@ func updateMap() {
 			return
 		}
 
-		// -- data which should be provided as comma-separated values
-		// -- -- generation
-		// -- -- status
-		// -- -- cluster
-		// -- -- lat
-		// -- -- lng
 		body := url.Values{}
 		eps, err := models.GetAllEntrypoints()
 		if err != nil {

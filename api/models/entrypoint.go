@@ -123,7 +123,7 @@ func GetEntrypointBySlug(slug string, user_uuid uuid.UUID) (Entrypoint, error) {
 
 func GetAllEntrypoints() ([]Entrypoint, error) {
 	eps := make([]Entrypoint, 0)
-	result := db.Preload("Modules").Preload("Users").Find(&eps)
+	result := db.Preload("Modules").Preload("Cluster").Preload("Users").Find(&eps)
 	return eps, result.Error
 }
 
