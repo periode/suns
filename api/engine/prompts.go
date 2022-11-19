@@ -52,7 +52,7 @@ func (p *Prompts) Populate() error {
 		p.Weekly = append(p.Weekly, pr)
 	}
 
-	table = client.GetTable(DB_ID, "PromptMonthly")
+	table = client.GetTable(DB_ID, "PromptsMonthly")
 	result, err = table.GetRecords().Do()
 	if err != nil {
 		return err

@@ -14,8 +14,7 @@ import (
 )
 
 func GetAllEntrypoints(c echo.Context) error {
-	user_uuid := mustGetUser(c)
-	clusters, err := models.GetAllEntrypoints(user_uuid)
+	clusters, err := models.GetAllEntrypoints()
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "There was an error getting the Entrypoints.")

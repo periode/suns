@@ -2,6 +2,8 @@ package engine
 
 import (
 	"fmt"
+	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -16,7 +18,7 @@ const (
 	CREATE_INTERVAL        = 30 * time.Second
 	DELETE_INTERVAL        = 30 * time.Minute
 	SACRIFICE_INTERVAL     = 15 * time.Minute
-	EMAIL_WEEKLY_INTERVAL  = 5 * time.Second
+	EMAIL_WEEKLY_INTERVAL  = 5 * time.Minute
 	EMAIL_MONTHLY_INTERVAL = 20 * time.Minute
 	MAP_INTERVAL           = 10 * time.Second
 
@@ -212,5 +214,31 @@ func sendMonthlyEmails() {
 func updateMap() {
 	for {
 		time.Sleep(MAP_INTERVAL)
+		if os.Getenv("MAP_HOST") == "" {
+			zero.Error("missing host env for map service.")
+			return
+		}
+
+		// -- data which should be provided as comma-separated values
+		// -- -- generation
+		// -- -- status
+		// -- -- cluster
+		// -- -- lat
+		// -- -- lng
+		body := url.Values{}
+		eps, err := models.GetAllEntrypoints()
+		if err != nil {
+			zero.Error(err.Error())
+		}
+
+		for i, ep := range eps {
+			body.Add(fmt.Sprintf("p%d", i), fmt.Sprintf("%d,%s,%s,%f,%f", ep.Generation, ep.Status, ep.Cluster.Name, ep.Lat, ep.Lng))
+		}
+		res, err := http.PostForm(os.Getenv("MAP_HOST"), body)
+		if err != nil {
+			zero.Error(err.Error())
+		} else {
+			zero.Debugf("response from map: %d", res.StatusCode)
+		}
 	}
 }
