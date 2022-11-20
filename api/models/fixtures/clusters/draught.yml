@@ -12,23 +12,32 @@ entrypoints:
       type: "intro"
       contents:
         - type: "txt"
-          key: "intro_txt"
+          key: "intro_txt_1"
+        - type: "txt"
+          key: "intro_txt_2"
     - name: "Text description of draught"
       type: "task"
       tasks:
         - type: "text_input"
-          key: "input_0"
+          key: "textinput_info_txt_1"
           max_uploads: 1
       hint: "Text description of draught"
     - name: "Respond to text prompt"
       type: "task"
       tasks:
         - type: "text_input"
-          key: "input_1"
+          key: "textinput_info_txt_2"
           max_uploads: 1
       hint: "This is where you compare your draught stories"
     - name: "Final Draught You"
       type: "final"
+      contents:
+        - type: "txt"
+          key: "public_info_1"
+        - type: "txt"
+          key: "public_hl_1"
+        - type: "txt"
+          key: "public_hl_2" 
       hint: "This is the final view for the draught - you"
 
 - status: "open"
@@ -50,16 +59,21 @@ entrypoints:
       type: "task"
       tasks:
         - type: "audio_input"
-          key: "input_0"
+          key: "audupload_info_txt_1"
       hint: "This is the text input of a name of a world, and how far it is"
     - name: "Respond to your partner's recording"
       type: "task"
       tasks:
         - type: "audio_input"
-          key: "input_1"
+          key: "audupload_info_txt_2"
           max_uploads: 1
     - name: "Final Draught World"
       type: "final"
+      contents:
+        - type: "txt"
+          key: "public_info_1"
+        - type: "txt"
+          key: "public_hl_1"
       hint: "This is the final view for the draught - World. It combines both interviews together"
 
 - status: "open"
@@ -74,18 +88,27 @@ entrypoints:
       type: "intro"
       contents:
         - type: "txt"
-          key: "intro_txt"
+          key: "intro_txt_1"
+        - type: "txt"
+          key: "intro_txt_2"          
     - name: "Describe personal draught"
       type: "task"
       tasks:
         - type: "text_input"
-          key: "input_0"
+          key: "textinput_info_txt_1"
       hint: "This is where you describe in text your personal draught."
     - name: "Respond to personal draught"
       type: "task"
       tasks:
         - type: "text_input"
-          key: "input_1"
+          key: "textinput_info_txt_2"
     - name: "Final Draught personal"
       type: "final"
+      contents:
+        - type: "txt"
+          key: "public_info_1"
+        - type: "txt"
+          key: "public_hl_1"
+        - type: "txt"
+          key: "public_hl_2" 
       hint: "This is the final view for the draught - Personal"
