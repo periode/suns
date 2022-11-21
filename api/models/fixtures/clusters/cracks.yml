@@ -38,7 +38,7 @@ entrypoints:
           - type: "txt"
             key: "intro_txt_4"
           - type: "img"
-            key: "intro_IMG_1"
+            key: "intro_img_1"
           - type: "txt"
             key: "intro_txt_5"            
         hint: "Look at a picture that Azede uploaded"
