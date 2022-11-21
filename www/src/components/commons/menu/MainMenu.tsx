@@ -7,9 +7,11 @@ const signout = () => {
     window.location.reload()
 }
 
+interface MainMenuProps {
+	username : string
+}
 
-
-const MainMenu = () => {
+const MainMenu = ({ username } : MainMenuProps) => {
 	const [isCollapsed, setIsCollapsed] = useState(false)
 	return ( 
 	<>
@@ -21,13 +23,21 @@ const MainMenu = () => {
 								text-amber-900
 								font-serif
 								">
-						<div className="absolute top-2 right-2
-								w-12 h-12 
-								flex items-center justify-center
-								cursor-pointer
+						<div className="absolute
+								w-full
+								h-16 
+								p-4
+								flex items-center justify-between
 								"
-							onClick={ () => setIsCollapsed(false) }>
-							<FiX className="text-2xl"/>
+						>
+							<div className="font-mono">
+								{ username }
+							</div>
+							<div className="cursor-pointer text-[40px]"
+								onClick={() => setIsCollapsed(false)}>
+
+								<FiX className="text-3xl"/>
+							</div>
 						</div>
 						<div className="h-20 w-full
 										border border-b-amber-900">

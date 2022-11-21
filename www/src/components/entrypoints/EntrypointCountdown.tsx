@@ -18,7 +18,6 @@ function EntrypointCountdown( {endDate} : EntrypointCountdownProps ) {
 						flex-1
 						flex items-center justify-center
 						font-mono
-						border-b border-amber-900
 						">
 			{
 				isNaN(days) ? '-- : -- : -- : --' :

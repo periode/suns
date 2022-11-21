@@ -1,5 +1,6 @@
 import { IUser, PARTNER_STATUS } from "../../utils/types";
 import { FiUsers, FiUser  } from "react-icons/fi"
+import { ReactElement } from "react";
 
 interface EntrypointPartnersProps {
 	users: Array<IUser>,
@@ -15,13 +16,13 @@ const EntrypointPartners = ( {
 	sessionUserUuid
 } : EntrypointPartnersProps) => {
 	
-	var userString : string;
+	var userString : ReactElement;
 
-	const checkUserName = (user : IUser) : string => {
+	const checkUserName = (user : IUser) : ReactElement => {
 		if (user.uuid === sessionUserUuid)
-			return "you"
+			return (<span className="text-amber-500">you</span>)
 		else
-			return user.name
+			return (<span>{ user.name }</span>)
 	}
 
 
@@ -29,7 +30,9 @@ const EntrypointPartners = ( {
 	{	
 		userString = checkUserName(users[0])
 		if (max_users === 2)
-			userString += " and waiting for someone else"
+			userString = <p> { checkUserName(users[0]) } and waiting for someone else</p>
+		else
+			userString = checkUserName(users[0])
 	}
 		
 	else if (partner_status === PARTNER_STATUS.PartnerFull)
@@ -37,12 +40,12 @@ const EntrypointPartners = ( {
 		if (max_users === 1)
 			userString = checkUserName(users[0])
 		if (max_users === 2)
-			userString = checkUserName(users[0]) + " and " + checkUserName(users[1])
+			userString = <p> checkUserName(users[0]) + " and " + checkUserName(users[1]) </p>
 		else
-			userString = "max_users: " + max_users
+			userString = <p> "max_users: " + max_users </p>
 	}
 	else
-		userString = "Partner status: " + partner_status 
+		userString = <p> "Partner status: " + partner_status  </p>
 
 	return ( 
 		<div className="h-12
@@ -50,18 +53,18 @@ const EntrypointPartners = ( {
 						relative
 						flex-1
 						flex items-center justify-center gap-2
-						border-b border-amber-900">
+						">
 			<div className="flex items-center
-							font-mono text-sm
+							font-mono text-md
 							gap-1">
 				{
-					max_users > 1 ? <FiUsers className="text-[20px]"/> : <FiUser className="text-[20px]"/>
+					max_users > 1 ? <FiUsers className="text-lg"/> : <FiUser className="text-lg"/>
 				}
 				<p>{users.length}/{max_users}</p>
 			</div>
 			{
 				partner_status !== PARTNER_STATUS.PartnerNone &&
-				<p>{userString}</p>
+				<span>{userString}</span>
 			}
 		</div>
 	 );
