@@ -88,10 +88,10 @@ func createEntrypoints() {
 			}
 		}
 
-		remaining := float32(open) / float32(len(eps))
+		remaining := float64(open) / float64(len(eps))
 		zero.Debug(fmt.Sprintf("Open entrypoints: %d%% (open %d, total %d)", int(remaining*100), open, len(eps)))
 
-		if float64(remaining) < CREATION_THRESHOLD || len(eps) < MIN_ENTRYPOINTS {
+		if remaining < CREATION_THRESHOLD || len(eps) < MIN_ENTRYPOINTS {
 			_, err = models.AddClusterEntrypoints(pool.Pick())
 			if err != nil {
 				zero.Errorf("Failed to create new entrypoint: %s", err.Error())
