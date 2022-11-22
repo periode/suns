@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useContext, useEffect } from "react"
+import { useContext, useEffect } from "react"
 import { AirTableContext } from "../../contexts/AirContext"
 import { IModule } from "../../utils/types"
 import Content from "../commons/Content"
@@ -6,15 +6,14 @@ import Content from "../commons/Content"
 interface IntroModuleProps {
     data: IModule,
     epName: string,
-    index: number,
     handleUserDone: Function,
 }
 
-const IntroModule = ({ data, epName, index, handleUserDone }: IntroModuleProps) => {
+const IntroModule = ({ data, epName, handleUserDone }: IntroModuleProps) => {
     
     useEffect(() => {
         handleUserDone(true)
-    }, [])
+    }, [handleUserDone])
 
     const ctx = useContext(AirTableContext)    
     const contents = ctx.get(epName)

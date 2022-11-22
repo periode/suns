@@ -1,6 +1,6 @@
 import { useContext } from "react"
 import { AirTableContext } from "../../contexts/AirContext"
-import { IEntrypoint, IFile, IModule } from "../../utils/types"
+import { IEntrypoint, IModule } from "../../utils/types"
 import TextInputField from "../commons/forms/inputs/TextInputField"
 import AudioRecorder from "./tasks/AudioRecorder"
 import FileUploader from "./tasks/utils/FileUploader"

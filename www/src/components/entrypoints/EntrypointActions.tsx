@@ -1,4 +1,4 @@
-import { ENTRYPOINT_STATUS, IEntrypoint, ISession, IUser, PARTNER_STATUS } from "../../utils/types"
+import { ENTRYPOINT_STATUS, IEntrypoint, PARTNER_STATUS } from "../../utils/types"
 import { FiShare2, FiArrowRight } from "react-icons/fi"
 
 interface EntrypointActionsProps {
@@ -81,7 +81,7 @@ function EntrypointActions({
 		if (isOwner && canUserComplete && entryPointData.status === ENTRYPOINT_STATUS.EntrypointPending) {
 			if (entryPointData.current_module === entryPointData.modules.length - 2)
 				return FinishButton
-			else if (entryPointData.partner_status == PARTNER_STATUS.PartnerFull)
+			else if (entryPointData.partner_status === PARTNER_STATUS.PartnerFull)
 				return NextButton
 		}
 

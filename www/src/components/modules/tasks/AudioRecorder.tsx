@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react"
-import { FiMic, FiPlay, FiRotateCcw, FiSquare, FiStopCircle } from "react-icons/fi"
+import { useEffect, useState } from "react"
+import { FiMic, FiRotateCcw, FiSquare } from "react-icons/fi"
 import { getSession } from "../../../utils/auth"
 import { IEntrypoint, IFile, IModule, IUpload } from "../../../utils/types"
 import AudioRecorderCountdown from "./utils/AudioRecorderCountdown"
@@ -33,7 +33,7 @@ const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, 
     }, [])
 
     useEffect(() => {
-        if (index > 0 && ep.modules[index - 1] != undefined)
+        if (index > 0 && ep.modules[index - 1] !== undefined)
             setInputs(ep.modules[index - 1].uploads ? ep.modules[index - 1].uploads : [])
     }, [ep])
 
@@ -124,14 +124,14 @@ const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, 
                         inputElements.push((<video src={`${process.env.REACT_APP_API_URL}/static/${i.url}`} controls></video>))
                         break;
                     case i.type.startsWith("image/"):
-                        inputElements.push((<img src={`${process.env.REACT_APP_API_URL}/static/${i.url}`} />))
+                        inputElements.push((<img src={`${process.env.REACT_APP_API_URL}/static/${i.url}`} alt="partner-input" />))
                         break;
 
                     default:
                         break;
                 }
         }
-        if (inputElements.length == 0)
+        if (inputElements.length === 0)
             return (<>Could not find proper prompt</>)
         else
             return inputElements

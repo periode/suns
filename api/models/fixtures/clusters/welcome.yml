@@ -1,0 +1,101 @@
+name: "Welcome"
+entrypoints:
+  - status: "open"
+    name: "Welcome"
+    max_users: 1
+    lat: 500
+    lng: 500
+    icon: "white.svg"
+    final_module_type: "Separate"
+    modules:
+      - name: "Welcome - Intro"
+        type: "intro"
+        contents:
+          - type: "txt"
+            key: "intro_txt_1"
+        hint: "This is the intro of the whole signup process"
+      - name: "Welcome - Prompt recording"
+        type: "task"
+        tasks:
+          - type: "mark_maker"
+            key: "mark_maker"
+        hint: "Please record a moment that happened to you for the first time. This recording will then be sent to your partner."
+      - name: "Welcome - Response recording"
+        type: "task"
+        tasks:
+          - type: "sign_up"
+            key: "recaudio_info_txt"
+        hint: "This is where you sign up with email and password"
+      - name: "Welcome - Gestures"
+        type: "intro"
+        contents:
+          - type: "txt"
+            key: "intro_txt_2"
+          - type: "vid"
+            key: "intro_vid_1"
+      - name: "Welcome - Marks"
+        type: "intro"
+        contents:
+          - type: "txt"
+            key: "intro_txt_3"
+          - type: "vid"
+            key: "intro_vid_3"
+      - name: "Welcome - Prompts"
+        type: "task"
+        task:
+          - type: "prompts_registration"
+            key: "intro_prompts"
+        contents:
+          - type: "vid"
+            key: "intro_prompts"
+        hint: "This is the choice of prompts frequency"
+      - name: "Welcome - Map"
+        type: "intro"
+        contents:
+          - type: "txt"
+            key: "intro_txt_4"
+          - type: "vid"
+            key: "intro_vid_4"
+        hint: "This is the part where you learn about the map"
+      - name: "Welcome - Co-creation 1"
+        type: "intro"
+        contents:
+          - type: "txt"
+            key: "intro_txt_5"
+          - type: "vid"
+            key: "intro_vid_5"
+        hint: "This is the part where you learn about co-creation"
+      - name: "Welcome - Co-creation Image"
+        type: "task"
+        tasks:
+          - type: "image_input"
+            key: "intro_txt_5"
+        hint: "This is where you upload a picture for the co-creation"
+      - name: "Welcome - Co-creation Video"
+        type: "task"
+        tasks:
+          - type: "video_input"
+            key: "intro_txt_6"
+        hint: "This is where you upload a video for the co-creation"
+      - name: "Welcome - Co-creation text"
+        type: "task"
+        tasks:
+          - type: "text_input"
+            key: "intro_txt_7"
+        hint: "This is where you upload a video for the co-creation"
+      - name: "Welcome - Final"
+        type: "final"
+        contents:
+          - type: "txt"
+            key: "public_info_1"
+          - type: "txt"
+            key: "public_hl_1"
+      - name: "Welcome - Conclusion"
+        type: "intro"
+        contents:
+          - type: "txt"
+            key: "conclusion_text"
+          - type: "vid"
+            key: "conclusion_video"
+        hint: "This is the final countdown"
+

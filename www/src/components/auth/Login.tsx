@@ -43,6 +43,10 @@ const Login = () => {
         setPassword(v)
     }
 
+	const handleSignup = () => {
+		navigate("/welcome")
+	}
+
 	return ( 
 		<>
 			<Toaster message={message} type={success ? ToasterType.success : ToasterType.error} display={isToasterDisplayed} setDisplay={setIsToasterDisplayed} timeoutms={3000}></Toaster>
@@ -63,7 +67,7 @@ const Login = () => {
 					<div className="sticky bottom-4 md:static 
 									flex flex-col-reverse md:flex-row w-full gap-4">
 						<LoginPrimary text="Login" onClick={handleSignin}/>
-						<LoginSecondary text="Sign up"/>
+						<LoginSecondary text="Sign up" onClick={handleSignup}/>
 					</div>
 				</form>
 			</div>

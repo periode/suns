@@ -11,7 +11,7 @@ const Content = ({ type, airkey, contents }: ContentProps) => {
     switch (type) {
         case "img":
             return (<div className="flex h-24 m-auto w-auto">
-                <img className="object-contain" src={contents.get(airkey)} />
+                <img className="object-contain" src={contents.get(airkey)} alt="This prompt is provided to you by the artist."/>
             </div>)
         case "mp3":
             return (<>
