@@ -10,20 +10,20 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
     {
         if ( upload === undefined )
             return <>Couldnt get upload.type: undefined</>
-        switch (upload.type) {
-            case "text/plain":
+        switch (true) {
+            case upload.type.startsWith("text/"):
                 return (
                     <div>{ upload.text }</div>
                 )
-            case "image/*":
+            case upload.type.startsWith("image/"):
                 return (
                     <div>{ upload.url }</div>
                 )
-            case "video/*":
+            case upload.type.startsWith("video/"):
                 return (
                     <div>{ upload.url }</div>
                 )
-            case "audio/wav":
+            case upload.type.startsWith("audio/"):
                 return (
                     <div>{ upload.url }</div>
                 )
