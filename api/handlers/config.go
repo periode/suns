@@ -17,6 +17,10 @@ func GetConfig(c echo.Context) error {
 }
 
 func SetConfig(c echo.Context) error {
+	// user := mustGetUser(c)
+	// if user == uuid.Nil {
+	// 	return c.String(http.StatusUnauthorized, "unauthorized")
+	// }
 	var updated engine.Config
 	err := c.Bind(&updated)
 	if err != nil {

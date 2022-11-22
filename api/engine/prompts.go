@@ -120,7 +120,7 @@ func (p *Prompts) CreateEntrypoint(user models.User, freq string) (Prompt, model
 
 		ep = models.Entrypoint{
 			Status:      models.EntrypointPending,
-			ClusterUUID: uuid.MustParse(PROMPTS_CLUSTER_UUID),
+			ClusterUUID: uuid.MustParse(os.Getenv("PROMPTS_CLUSTER_UUID")),
 			Name:        prompt.Name,
 			Generation:  state.generation,
 			MaxUsers:    1,

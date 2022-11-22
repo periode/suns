@@ -14,23 +14,6 @@ import (
 	"github.com/periode/suns/mailer"
 )
 
-const (
-	CREATE_INTERVAL        = 30 * time.Second
-	DELETE_INTERVAL        = 30 * time.Minute
-	SACRIFICE_INTERVAL     = 15 * time.Minute
-	EMAIL_WEEKLY_INTERVAL  = 5 * time.Minute
-	EMAIL_MONTHLY_INTERVAL = 20 * time.Minute
-	MAP_INTERVAL           = 10 * time.Second
-
-	CREATION_THRESHOLD  = 0.25
-	ENTRYPOINT_LIFETIME = 72 * time.Hour
-
-	MIN_ENTRYPOINTS = 10
-	MAX_ENTRYPOINTS = 100
-
-	PROMPTS_CLUSTER_UUID = "05ed6a2b-aacb-4c24-b1e1-3495821f846f"
-)
-
 type State struct {
 	generation int
 }
@@ -47,6 +30,7 @@ var (
 func StartEngine() {
 	zero.Info("starting engine...")
 
+	Conf.DefaultConf()
 	state = State{generation: 0}
 	err := pool.Generate()
 	if err != nil {
@@ -71,14 +55,14 @@ func StartEngine() {
 // -- then we create new entrypoints
 func createEntrypoints() {
 	for {
-		time.Sleep(CREATE_INTERVAL)
+		time.Sleep(Conf.CREATE_INTERVAL)
 
 		eps, err := models.GetEntrypointsByGeneration(state.generation)
 		if err != nil {
 			zero.Errorf("Failed getting current generation entrypoints", err.Error())
 		}
 
-		if len(eps) > MAX_ENTRYPOINTS {
+		if len(eps) > Conf.MAX_ENTRYPOINTS {
 			continue
 		}
 
@@ -92,7 +76,7 @@ func createEntrypoints() {
 		remaining := float64(open) / float64(len(eps))
 		zero.Debug(fmt.Sprintf("Open entrypoints: %d%% (open %d, total %d)", int(remaining*100), open, len(eps)))
 
-		if remaining < CREATION_THRESHOLD || len(eps) < MIN_ENTRYPOINTS {
+		if remaining < Conf.CREATION_THRESHOLD || len(eps) < Conf.MIN_ENTRYPOINTS {
 			_, err = models.AddClusterEntrypoints(pool.Pick())
 			if err != nil {
 				zero.Errorf("Failed to create new entrypoint: %s", err.Error())
@@ -108,7 +92,7 @@ func createEntrypoints() {
 // -- if it is older than a given time, it deletes it.
 func deleteEntrypoints() {
 	for {
-		time.Sleep(DELETE_INTERVAL)
+		time.Sleep(Conf.DELETE_INTERVAL)
 
 		eps, err := models.GetEntrypointsByGeneration(state.generation)
 		if err != nil {
@@ -116,7 +100,7 @@ func deleteEntrypoints() {
 		}
 
 		for _, ep := range eps {
-			if time.Since(ep.CreatedAt) > ENTRYPOINT_LIFETIME && ep.Status == models.EntrypointOpen {
+			if time.Since(ep.CreatedAt) > Conf.ENTRYPOINT_LIFETIME && ep.Status == models.EntrypointOpen {
 				_, err = models.DeleteEntrypoint(ep.UUID)
 				if err != nil {
 					zero.Errorf("Failed to delete expired entrypoints", err.Error())
@@ -131,14 +115,14 @@ func deleteEntrypoints() {
 // -- sacrificeEntrypoints archives all entrypoints that are completed, deletes the other entrypoints, and regenerates the map
 func sacrificeEntrypoints() {
 	for {
-		time.Sleep(SACRIFICE_INTERVAL)
+		time.Sleep(Conf.SACRIFICE_INTERVAL)
 	}
 }
 
 // -- sendEmails goes through the list of users that have signed up for the emails, then it checks for the frequency of emails, checks at which stage of the emails the user is, and then sends them the subsequent email
 func sendWeeklyEmails() {
 	for {
-		time.Sleep(EMAIL_WEEKLY_INTERVAL)
+		time.Sleep(Conf.EMAIL_WEEKLY_INTERVAL)
 
 		//-- for all users, send them the prompt
 		users, err := models.GetAllUsers()
@@ -176,7 +160,7 @@ func sendWeeklyEmails() {
 
 func sendMonthlyEmails() {
 	for {
-		time.Sleep(EMAIL_MONTHLY_INTERVAL)
+		time.Sleep(Conf.EMAIL_MONTHLY_INTERVAL)
 
 		users, err := models.GetAllUsers()
 		if err != nil {
@@ -214,7 +198,7 @@ func sendMonthlyEmails() {
 // -- updateMap queries the database for the current entrypoints, then marshals it as JSON and sends a request to the map generator to create a new background image
 func updateMap() {
 	for {
-		time.Sleep(MAP_INTERVAL)
+		time.Sleep(Conf.MAP_INTERVAL)
 		if os.Getenv("MAP_HOST") == "" {
 			zero.Error("missing host env for map service.")
 			return

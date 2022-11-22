@@ -2,7 +2,9 @@ package engine
 
 import (
 	"fmt"
+	"os"
 	"reflect"
+	"strconv"
 	"time"
 )
 
@@ -24,20 +26,79 @@ type Config struct {
 
 var Conf Config
 
-// DefaultConf sets reasonable defaults
+// DefaultConf sets reasonable defaults or reads from env variables
 func (c *Config) DefaultConf() {
-	c.CREATE_INTERVAL = 30 * time.Second
-	c.DELETE_INTERVAL = 30 * time.Minute
-	c.SACRIFICE_INTERVAL = 15 * time.Minute
-	c.EMAIL_WEEKLY_INTERVAL = 5 * time.Minute
-	c.EMAIL_MONTHLY_INTERVAL = 20 * time.Minute
-	c.MAP_INTERVAL = 10 * time.Second
+	d, err := time.ParseDuration(os.Getenv("CREATE_INTERVAL"))
+	if err != nil {
+		c.CREATE_INTERVAL = 30 * time.Second
+	} else {
+		c.CREATE_INTERVAL = d
+	}
 
-	c.CREATION_THRESHOLD = 0.25
-	c.ENTRYPOINT_LIFETIME = 72 * time.Hour
+	d, err = time.ParseDuration(os.Getenv("DELETE_INTERVAL"))
+	if err != nil {
+		c.DELETE_INTERVAL = 30 * time.Minute
+	} else {
+		c.DELETE_INTERVAL = d
+	}
 
-	c.MIN_ENTRYPOINTS = 10
-	c.MAX_ENTRYPOINTS = 100
+	d, err = time.ParseDuration(os.Getenv("SACRIFICE_INTERVAL"))
+	if err != nil {
+		c.SACRIFICE_INTERVAL = 15 * time.Minute
+	} else {
+		c.SACRIFICE_INTERVAL = d
+	}
+
+	d, err = time.ParseDuration(os.Getenv("EMAIL_WEEKLY_INTERVAL"))
+	if err != nil {
+		c.EMAIL_WEEKLY_INTERVAL = 5 * time.Minute
+	} else {
+		c.EMAIL_WEEKLY_INTERVAL = d
+	}
+
+	d, err = time.ParseDuration(os.Getenv("EMAIL_MONTHLY_INTERVAL"))
+
+	if err != nil {
+		c.EMAIL_MONTHLY_INTERVAL = 20 * time.Minute
+	} else {
+		c.EMAIL_MONTHLY_INTERVAL = d
+	}
+
+	d, err = time.ParseDuration(os.Getenv("MAP_INTERVAL"))
+	if err != nil {
+		c.MAP_INTERVAL = 10 * time.Second
+	} else {
+		c.MAP_INTERVAL = d
+	}
+
+	f, err := strconv.ParseFloat(os.Getenv("CREATION_THRESHOLD"), 64)
+	if err != nil {
+		c.CREATION_THRESHOLD = 0.25
+	} else {
+		c.CREATION_THRESHOLD = f
+	}
+
+	d, err = time.ParseDuration(os.Getenv("ENTRYPOINT_LIFETIME"))
+	if err != nil {
+		c.ENTRYPOINT_LIFETIME = 72 * time.Hour
+	} else {
+		c.ENTRYPOINT_LIFETIME = d
+	}
+
+	i, err := strconv.Atoi(os.Getenv("MIN_ENTRYPOINTS"))
+	if err != nil {
+		c.MIN_ENTRYPOINTS = 10
+	} else {
+		c.MIN_ENTRYPOINTS = i
+	}
+
+	i, err = strconv.Atoi(os.Getenv("MAX_ENTRYPOINTS"))
+	if err != nil {
+		c.MAX_ENTRYPOINTS = 100
+	} else {
+		c.MAX_ENTRYPOINTS = i
+	}
+
 }
 
 func (c *Config) Set(updated Config) (Config, error) {
@@ -51,7 +112,6 @@ func (c *Config) Set(updated Config) (Config, error) {
 		if val.IsZero() {
 			continue
 		}
-
 		field.Set(val)
 	}
 	return Conf, nil
