@@ -15,7 +15,7 @@ type Config struct {
 	SACRIFICE_INTERVAL     time.Duration `form:"SACRIFICE_INTERVAL"`
 	EMAIL_WEEKLY_INTERVAL  time.Duration `form:"EMAIL_WEEKLY_INTERVAL"`
 	EMAIL_MONTHLY_INTERVAL time.Duration `form:"EMAIL_MONTHLY_INTERVAL"`
-	MAP_INTERVAL           time.Duration `form:"MAP_INTERVAL"`
+	MAP_INTERVAL           time.Duration `form:"MAP_INTERVAL" type:"time"`
 
 	CREATION_THRESHOLD  float64       `form:"CREATION_THRESHOLD"`
 	ENTRYPOINT_LIFETIME time.Duration `form:"ENTRYPOINT_LIFETIME"`
