@@ -69,6 +69,20 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
         )
     }
 
+    const getUploads = (uploads: Array<IUpload>, uuid: string, compare: (x: string, y: string) => boolean, alternate: boolean) : JSX.Element[] =>
+    {
+        var Content: JSX.Element[] = []
+        
+        for (let i = 0; i < uploads.length; i++)
+        {
+            if (!alternate && compare(uploads[i].user_uuid, uuid))
+                Content.push(getUploadContent(uploads[i]))
+            if (alternate && !compare(uploads[i].user_uuid, uuid))
+                Content.push(getUploadContent(uploads[i]))
+        }
+        return (Content)
+    }
+
     const getModules = (user: IUser, modules: IModule[], compare: (x: string, y: string) => boolean, alternate: boolean) =>
     {
         if (user === undefined
@@ -84,19 +98,9 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
             {
                 Content.push(<>Upload does not exist</>)
             }
-            else if (isAlternated)
-            { 
-                compare(entrypoint.modules[moduleID].uploads[0].user_uuid, user.uuid) ?
-                Content.push(getUploadContent(entrypoint.modules[moduleID].uploads[0]))
-                :
-                Content.push(getUploadContent(entrypoint.modules[moduleID].uploads[1]))
-            }
             else
             { 
-                !compare(entrypoint.modules[moduleID].uploads[0]?.user_uuid, user.uuid) ?
-                Content.push(getUploadContent(entrypoint.modules[moduleID].uploads[0]))
-                :
-                Content.push(getUploadContent(entrypoint.modules[moduleID].uploads[1]))
+                getUploads(entrypoint.modules[moduleID].uploads, user.uuid, compare, isAlternated)
             }
             if (alternate)
                 isAlternated = !isAlternated
