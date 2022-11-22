@@ -2,7 +2,7 @@ import { ReactEventHandler, SyntheticEvent, useEffect, useState } from "react";
 import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript";
 
 interface ContentVideoProps {
-	title : string,
+	title? : string,
 	src?: string,
 }
 

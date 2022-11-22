@@ -16,6 +16,7 @@ import IntroModule from "../modules/IntroModule";
 import TaskModule from "../modules/TaskModule";
 import { fetchEntrypoint, progressModule, submitUpload } from "../../utils/entrypoint";
 import WaitingModule from "../modules/WaitingModule";
+import EntrypointLayout from "./Layouts/EntrypointLayout";
 
 const FETCH_INTERVAL = 50 * 1000
 const ENTRYPOINT_LIFETIME_MINUTES = 10
@@ -241,34 +242,28 @@ const Entrypoint = (props: any) => {
         return (
             <div className="absolute z-20 w-full h-full p-4 
                             md:flex md:flex-col md:items-center md:justify-center ">
-
-                <div className="
-                        flex flex-col
-                        w-full h-full md:w-[720px] md:h-4/5 
-                        border border-amber-900 
-                        text-amber-900
-                        bg-amber-50
-                        ">
-                    <div className="w-full flex justify-between flex-col
-                            p-4
-                            border-b border-amber-900">
-                        <div className="w-full  flex justify-between items-center">
-                            <div className="full flex items-center gap-4  ">
-                                <FiCommand className="text-[32px]" />
-                                <h1 className="text-xl font-bold">{data.name}</h1>
-                            </div>
-                            <div className="cursor-pointer"
-                                onClick={() => navigate('/', { replace: true })}>
-                                <FiX className="text-[32px]" />
+                <EntrypointLayout
+                    owned={isOwned}
+                    data={data}
+                    session={session}
+                    endDate={endDate}
+                    title={
+                        <div className="w-full flex justify-between flex-col
+                                p-4">
+                            <div className="w-full  flex justify-between items-center">
+                                <div className="full flex items-center gap-4  ">
+                                    <FiCommand className="text-[32px]" />
+                                    <h1 className="text-xl font-bold">{data.name}</h1>
+                                </div>
+                                <div className="cursor-pointer"
+                                    onClick={() => navigate('/', { replace: true })}>
+                                    <FiX className="text-[32px]" />
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="w-full md:flex">
-                        <EntrypointCountdown endDate={endDate} />
-                        <div className="md:w-[1px] md:h-full  bg-amber-900"></div>
-                        <EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
-                    </div>
-                    <div className="w-full h-full p-4 overflow-scroll">
+                    }
+                    module={
+                        <div className="w-full h-full p-4 overflow-scroll">
                         {
                             isOwned || data.status === ENTRYPOINT_STATUS.EntrypointCompleted ?
                                 getModule()
@@ -282,12 +277,9 @@ const Entrypoint = (props: any) => {
                                         <PublicView entrypoint={data} />
                                     </>
                         }
-                    </div>
-                    <div className="h-20
-                            pl-4 pr-4
-                            relative
-                            flex items-center justify-between
-                            border-t border-amber-900">
+                        </div>
+                    }
+                    entrypointactions={
                         <EntrypointActions
                             entryPointData={data}
                             isOwner={isOwned}
@@ -296,8 +288,8 @@ const Entrypoint = (props: any) => {
                             hasUserCompleted={hasUserCompleted}
                             canUserComplete={canUserComplete}
                         />
-                    </div>
-                </div>
+                    }
+                />
             </div>
         )
 

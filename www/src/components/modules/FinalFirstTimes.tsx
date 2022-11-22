@@ -4,7 +4,10 @@ const FinalFirstTimes = (props: any) => {
         if (data === undefined || data.modules.length === 0 || data.modules[1].uploads.length === 0 || data.modules[2].uploads.length === 0) return (<></>)
 
         //-- take the one uploaded by the given user
-        const promptURL = data.modules[1].uploads[0].user_uuid === user.uuid ? data.modules[1].uploads[0].url : data.modules[1].uploads[1].url
+        const promptURL = data.modules[1].uploads[0].user_uuid === user.uuid ?
+            data.modules[1].uploads[0].url
+            :
+            data.modules[1].uploads[1].url
 
         //-- take the one not uploaded by the given user
         const answerURL = data.modules[2].uploads[0].user_uuid !== user.uuid ? data.modules[2].uploads[0].url : data.modules[2].uploads[1].url
