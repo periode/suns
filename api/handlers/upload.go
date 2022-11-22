@@ -3,7 +3,6 @@ package handlers
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -110,7 +109,7 @@ func writeFileToDisk(file *multipart.FileHeader, target string) (string, error) 
 	}
 
 	// check mimetype
-	bytes, err := ioutil.ReadFile(target)
+	bytes, err := os.ReadFile(target)
 	if err != nil {
 		return "", err
 	}
