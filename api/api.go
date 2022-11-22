@@ -13,15 +13,14 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 
 	"github.com/periode/suns/api/auth"
-	"github.com/periode/suns/api/config"
 	"github.com/periode/suns/api/handlers"
 	zero "github.com/periode/suns/api/logger"
 )
 
-var conf config.Config
+var conf Config
 
 // StartServer gets his port and debug in the environment, registers the router, and registers the database closing on exit.
-func StartServer(port string, c config.Config) {
+func StartServer(port string, c Config) {
 	conf = c
 
 	err := os.MkdirAll(c.UploadsDir, os.ModePerm)

@@ -13,7 +13,7 @@ import (
 	"github.com/gabriel-vasile/mimetype"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"github.com/periode/suns/api/config"
+
 	zero "github.com/periode/suns/api/logger"
 	"github.com/periode/suns/api/models"
 )
@@ -21,7 +21,12 @@ import (
 // -- create upload parses the form info (module_uuid, partner_index and file), adds the user_uuid from the auth session and then appends the upload to the specified module
 func CreateUpload(c echo.Context) error {
 	user_uuid := mustGetUser(c)
-	conf := c.Get("config").(config.Config)
+	var uploadsDir string
+	if os.Getenv("UPLOADS_DIR") == "" {
+		uploadsDir = "/tmp/suns/uploads"
+	} else {
+		uploadsDir = os.Getenv("UPLOADS_DIR")
+	}
 
 	// Read form fields - module uuid is to know to which module to attach it to, and partner index is whether this is upload by partner 0 or 1
 	module_uuid, err := uuid.Parse(c.FormValue("module_uuid"))
@@ -47,7 +52,7 @@ func CreateUpload(c echo.Context) error {
 		for index, file := range files {
 			fname := file.Filename
 			fpath := fmt.Sprintf("%d_%s_%s_%d_%s", time.Now().Unix(), module_uuid.String()[:8], user_uuid.String()[:8], index, fname)
-			target := filepath.Join(conf.UploadsDir, fpath)
+			target := filepath.Join(uploadsDir, fpath)
 
 			ftype, err := writeFileToDisk(file, target)
 			if err != nil {
