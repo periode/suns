@@ -13,8 +13,9 @@ function ContentVideo({
 
 	return ( 
 		
-		<div className="w-full">
-			<video src={`${process.env.REACT_APP_API_URL}/static/${src}`}
+		<div className="flex items-center justify-start">
+			<video className="w-auto max-h-80"
+				src={`${process.env.REACT_APP_API_URL}/static/${src}`}
 				controls/>
 		</div>
 	 );

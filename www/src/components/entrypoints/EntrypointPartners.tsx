@@ -39,7 +39,7 @@ const EntrypointPartners = ( {
 	{
 		if (max_users === 1)
 			userString = checkUserName(users[0])
-		if (max_users === 2)
+		else if (max_users === 2)
 			userString = <p> {checkUserName(users[0])} and { checkUserName(users[1]) } </p>
 		else
 			userString = <p> "max_users: " + { max_users } </p>

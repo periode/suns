@@ -120,18 +120,41 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
         return <>A problem occured, entrypoint.final_module_type: { entrypoint.final_module_type }</>
     }
 
-    return (
-        <div className="w-full h-full flex flex-col md:flex-row gap-4">
-            <div className="flex flex-col gap-2">
-                <h2 className="text-2xl font-regular">{entrypoint.users[0].name}</h2>
-                { getContent(entrypoint.users[0]) }
+    if (entrypoint.max_users > 1)
+    {
+        return (
+            <div className="w-full h-full flex flex-col md:flex-row gap-8">
+                <div className="
+                                flex-1 
+                                flex flex-col gap-2
+                                ">
+                    <h2 className="text-2xl font-regular">{entrypoint.users[0].name}</h2>
+                    { getContent(entrypoint.users[0]) }
+                </div>
+                <div className="
+                                flex-1 
+                                flex flex-col gap-2
+                                ">
+                    <h2 className="text-2xl font-regular">{entrypoint.users[1].name}</h2>
+                    { getContent(entrypoint.users[1]) }
+                </div>
             </div>
-            <div className="flex flex-col gap-2">
-                <h2 className="text-2xl font-regular">{entrypoint.users[1].name}</h2>
-                { getContent(entrypoint.users[1]) }
+        )
+    }
+    else
+    {
+        return (
+            <div className="w-full h-full flex flex-col md:flex-row gap-8">
+                <div className="
+                                flex-1 
+                                flex flex-col gap-2
+                                ">
+                    <h2 className="text-2xl font-regular">{entrypoint.users[0].name}</h2>
+                    { getContent(entrypoint.users[0]) }
+                </div>
             </div>
-        </div>
-    )
+        )
+    }
 }
 
 export default PublicView
