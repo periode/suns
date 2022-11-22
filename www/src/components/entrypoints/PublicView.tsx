@@ -18,55 +18,23 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
         switch (true) {
             case upload.type.startsWith("text/"):
                 return (
-                    <ContentText text={upload.text}/>
+                    <ContentText key={ upload.name } text={ upload.text }/>
                 )
             case upload.type.startsWith("image/"):
                 return (
-                    <div>{ upload.url }</div>
+                    <ContentPhoto key={ upload.name } src={ upload.url } />
                 )
             case upload.type.startsWith("video/"):
                 return (
-                    <div>{ upload.url }</div>
+                    <ContentVideo key={ upload.name } src={ upload.url }/>
                 )
             case upload.type.startsWith("audio/"):
                 return (
-                    <ContentAudio src={ upload.url }/>
+                    <ContentAudio key={ upload.name } src={ upload.url }/>
                 )
             default:
                 return <>Couldnt get upload.type: { upload.type }</>
         }
-    }
-
-
-    const getModuleContent = (module: IModule, user : IUser, compare : (x:string, y:string) => {}, alternate: boolean) : JSX.Element => 
-    {
-        let Content1 : JSX.Element[] = []
-        let Content2 : JSX.Element[] = []
-
-        var isAlternated = false; 
-        for (let i = 0; i < module.uploads.length; i++)
-        {
-            if (isAlternated === false)
-            {
-                compare(module.uploads[i].user_uuid, user.uuid) ?
-                Content1.push( getUploadContent(module.uploads[i])) : Content2.push(getUploadContent(module.uploads[i]))
-            }
-            else
-            {
-                !compare(module.uploads[i].user_uuid, user.uuid) ?
-                Content1.push( getUploadContent(module.uploads[i])) : Content2.push(getUploadContent(module.uploads[i]))
-            }
-            
-            if (alternate)
-                isAlternated = !isAlternated
-        }
-
-        return (
-            <>
-                { Content1.map((element:JSX.Element)=>{return element}) }
-                { Content2.map((element:JSX.Element)=>{return element}) }
-            </>
-        )
     }
 
     const getUploads = (uploads: Array<IUpload>, uuid: string, compare: (x: string, y: string) => boolean, alternate: boolean) : JSX.Element[] =>
@@ -100,7 +68,7 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
             }
             else
             { 
-                getUploads(entrypoint.modules[moduleID].uploads, user.uuid, compare, isAlternated)
+                Content.push(...getUploads(entrypoint.modules[moduleID].uploads, user.uuid, compare, isAlternated))
             }
             if (alternate)
                 isAlternated = !isAlternated

@@ -12,13 +12,11 @@ function ContentVideo({
 	} : ContentVideoProps) {
 
 	return ( 
-		<iframe 
-			className=" block w-full" 
-			title={ title } 
-			src={ src }  
-		>
-		</iframe>
-
+		
+		<div className="w-full">
+			<video src={`${process.env.REACT_APP_API_URL}/static/${src}`}
+				controls/>
+		</div>
 	 );
 }
 

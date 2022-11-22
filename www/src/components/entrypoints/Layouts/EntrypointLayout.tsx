@@ -96,7 +96,7 @@ function EntrypointLayout({
                         text-stone-500
                         bg-stone-50
                         ">
-					<div className="w-full border-b border-stone5700">
+					<div className="w-full border-b border-stone-500">
 						{title}
 					</div>
 					<div className="w-full md:flex">

@@ -2,9 +2,9 @@
 //-- enums
 //--------
 export enum ENTRYPOINT_STATUS {
+    EntrypointOpen = "open",
     EntrypointPending = "pending",
     EntrypointCompleted = "completed",
-    EntrypointOpen = "open",
 }
 
 export enum PARTNER_STATUS {

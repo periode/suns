@@ -124,7 +124,7 @@ const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, 
                         inputElements.push((<video src={`${process.env.REACT_APP_API_URL}/static/${i.url}`} controls></video>))
                         break;
                     case i.type.startsWith("image/"):
-                        inputElements.push((<img src={`${process.env.REACT_APP_API_URL}/static/${i.url}`} />))
+                        inputElements.push((<img src={`${process.env.REACT_APP_API_URL}/static/${i.url}`} alt={i.url} />))
                         break;
 
                     default:
