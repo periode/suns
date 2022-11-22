@@ -13,15 +13,14 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 
 	"github.com/periode/suns/api/auth"
-	"github.com/periode/suns/api/config"
 	"github.com/periode/suns/api/handlers"
 	zero "github.com/periode/suns/api/logger"
 )
 
-var conf config.Config
+var conf Config
 
 // StartServer gets his port and debug in the environment, registers the router, and registers the database closing on exit.
-func StartServer(port string, c config.Config, engine_chan chan string) {
+func StartServer(port string, c Config) {
 	conf = c
 
 	err := os.MkdirAll(c.UploadsDir, os.ModePerm)
@@ -48,20 +47,9 @@ func StartServer(port string, c config.Config, engine_chan chan string) {
 	shutdown := make(chan os.Signal, 2)
 	if os.Getenv("API_MODE") != "test" {
 		signal.Notify(shutdown, os.Interrupt, syscall.SIGTERM)
-	}
-
-	//-- wait for messages from the engine to know what to do
-	for {
-		time.Sleep(100 * time.Millisecond)
-
-		select {
-		case msg := <-engine_chan:
-			zero.Debugf("engine event: %s", msg)
-		case <-shutdown: // block until signal received
-			zero.Info("shutting down...")
-			s.Shutdown(context.Background())
-			return
-		}
+		<-shutdown // block until signal received
+		zero.Info("Shutting down...")
+		s.Shutdown(context.Background())
 	}
 }
 
@@ -89,6 +77,12 @@ func SetupRouter() *echo.Echo {
 		a.POST("/confirm", auth.Confirm)
 		a.POST("/request-recover", auth.RequestRecover)
 		a.POST("/check-recover", auth.Recover)
+	}
+
+	config := r.Group("/config")
+	{
+		config.GET("/engine", handlers.GetConfig)
+		config.POST("/engine", handlers.SetConfig)
 	}
 
 	users := r.Group("/users")

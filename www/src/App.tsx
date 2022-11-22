@@ -78,10 +78,10 @@ const App = () => {
                   <MapContainer center={[WIDTH / 2, HEIGHT / 2]} minZoom={MIN_ZOOOM} maxZoom={MAX_ZOOM} zoom={2} scrollWheelZoom={true} crs={CRS.Simple} maxBounds={bounds} inertia={false}>
                     <ImageOverlay url={backgroundMap} bounds={bounds} />
                     <>
-                      {entrypoints.map(ep => {
+                      {entrypoints.map((ep, index) => {
                         return (
                           <EntrypointMarker
-                            key={`ep-${ep.name}`}
+                            key={`ep-${ep.name.replace(' ', '-')}-${index}`}
                             data={ep}
                             />
                         )

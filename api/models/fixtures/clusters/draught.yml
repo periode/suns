@@ -1,6 +1,8 @@
+uuid: "03ed6a2b-aacb-4c24-b1e1-3495821f846d"
 name: "Draught"
 entrypoints:
 - status: "open"
+  cluster_uuid: "03ed6a2b-aacb-4c24-b1e1-3495821f846d"
   name: "DraughtYou"
   lat: 240.300
   lng: 240.400
@@ -41,6 +43,7 @@ entrypoints:
       hint: "This is the final view for the draught - you"
 
 - status: "open"
+  cluster_uuid: "03ed6a2b-aacb-4c24-b1e1-3495821f846d"
   name: "DraughtWorld"
   lat: 150.300
   lng: 150.400
@@ -77,6 +80,7 @@ entrypoints:
       hint: "This is the final view for the draught - World. It combines both interviews together"
 
 - status: "open"
+  cluster_uuid: "03ed6a2b-aacb-4c24-b1e1-3495821f846d"
   name: "DraughtPersonal"
   lat: 540.300
   lng: 550.400

@@ -3,6 +3,7 @@ module github.com/periode/suns
 go 1.18
 
 require (
+	github.com/gabriel-vasile/mimetype v1.4.1
 	github.com/gin-gonic/gin v1.8.1
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/golang-migrate/migrate/v4 v4.15.2
@@ -11,6 +12,7 @@ require (
 	github.com/labstack/echo/v4 v4.8.0
 	github.com/lib/pq v1.10.6
 	github.com/mailgun/mailgun-go/v4 v4.8.1
+	github.com/mehanizm/airtable v0.2.6
 	github.com/rs/zerolog v1.27.0
 	github.com/stretchr/testify v1.8.0
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa
@@ -23,7 +25,6 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/facebookgo/ensure v0.0.0-20200202191622-63f1cf65ac4c // indirect
 	github.com/facebookgo/subset v0.0.0-20200203212716-c811ad88dec4 // indirect
-	github.com/gabriel-vasile/mimetype v1.4.1 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect

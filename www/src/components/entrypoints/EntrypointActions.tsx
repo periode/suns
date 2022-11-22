@@ -72,7 +72,7 @@ function EntrypointActions({
 		</p>
 
 	const rightButtonDisplay = () => {
-		if (entryPointData.status === ENTRYPOINT_STATUS.EntrypointOpen || (!isOwner && entryPointData.status === ENTRYPOINT_STATUS.EntrypointPending))
+		if (entryPointData.status === ENTRYPOINT_STATUS.EntrypointOpen)
 			return StartButton
 
 		if (hasUserCompleted)

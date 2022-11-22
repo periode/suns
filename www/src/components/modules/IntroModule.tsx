@@ -20,7 +20,6 @@ const IntroModule = ({ data, epName, index, handleUserDone }: IntroModuleProps) 
     const contents = ctx.get(epName)
 
     if (contents === undefined) {
-        console.log(contents)
         return(<>
             There was a problem getting information from the Airtable
         </>)
@@ -31,7 +30,7 @@ const IntroModule = ({ data, epName, index, handleUserDone }: IntroModuleProps) 
             {
                 data.contents.map((c) => {
                     return (
-                        <Content key={c.key}type={c.type} airkey={c.key} contents={contents} />
+                        <Content key={c.key}type={c.type} airkey={c.key} contents={contents} value={c.value}/>
                     )   
                 })
             }
