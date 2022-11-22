@@ -32,15 +32,15 @@ const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, 
         handleUserDone(false)
     }, [])
 
-    useEffect(() => {        
-        if(index > 0 && ep.modules[index - 1] != undefined)
+    useEffect(() => {
+        if (index > 0 && ep.modules[index - 1] != undefined)
             setInputs(ep.modules[index - 1].uploads ? ep.modules[index - 1].uploads : [])
     }, [ep])
 
     useEffect(() => {
-		if(isRequestingUploads)
-			handleNewUploads(uploads)
-	}, [isRequestingUploads])
+        if (isRequestingUploads)
+            handleNewUploads(uploads)
+    }, [isRequestingUploads])
 
     var audioBlob = {} as Blob
 
@@ -84,7 +84,7 @@ const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, 
     const stopRecording = () => {
         if (recordingState === "done")
             return
-        
+
         recorder.ondataavailable = function (blob: Blob) {
             audioBlob = blob
         };
@@ -107,42 +107,34 @@ const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, 
         handleUserDone(false)
     }
 
-    const getInputPrompt = () => {        
-        if (inputs === null || inputs.length === 0) return (<></>)        
+    const getInputPrompt = () => {
+        if (inputs === null || inputs.length === 0) return (<></>)
 
-        if (inputs[0].user_uuid !== session.user.uuid)
-            switch (inputs[0].type) {
-                case "text/plain":
-                    return (<>{inputs[0].text}</>)
-                case "audio/wav":
-                    return (<audio src={`${process.env.REACT_APP_API_URL}/static/${inputs[0].url}`} controls></audio>)
-                case "video/*":
-                    return (<video src={`${process.env.REACT_APP_API_URL}/static/${inputs[0].url}`} controls></video>)
-                case "image/*":
-                    return (<img src={`${process.env.REACT_APP_API_URL}/static/${inputs[0].url}`} />)
+        let inputElements = []
+        for (const i of inputs) {
+            if (i.user_uuid !== session.user.uuid)
+                switch (true) {
+                    case i.type.startsWith("text/plain"):
+                        inputElements.push((<>{i.text}</>))
+                        break;
+                    case i.type.startsWith("audio/"):
+                        inputElements.push((<audio src={`${process.env.REACT_APP_API_URL}/static/${i.url}`} controls></audio>))
+                        break;
+                    case i.type.startsWith("video/"):
+                        inputElements.push((<video src={`${process.env.REACT_APP_API_URL}/static/${i.url}`} controls></video>))
+                        break;
+                    case i.type.startsWith("image/"):
+                        inputElements.push((<img src={`${process.env.REACT_APP_API_URL}/static/${i.url}`} />))
+                        break;
 
-                default:
-                    break;
-            }
-
-        if (inputs.length === 1) return (<></>)
-
-        if (inputs[1].user_uuid !== session.user.uuid)
-            switch (inputs[1].type) {
-                case "text/plain":
-                    return (<>{inputs[1].text}</>)
-                case "audio/wav":
-                    return (<audio src={`${process.env.REACT_APP_API_URL}/static/${inputs[1].url}`} controls></audio>)
-                case "video/*":
-                    return (<video src={`${process.env.REACT_APP_API_URL}/static/${inputs[1].url}`} controls></video>)
-                case "image/*":
-                    return (<img src={`${process.env.REACT_APP_API_URL}/static/${inputs[1].url}`} />)
-
-                default:
-                    break;
-            }
-
-        return (<>Could not find proper prompt</>)
+                    default:
+                        break;
+                }
+        }
+        if (inputElements.length == 0)
+            return (<>Could not find proper prompt</>)
+        else
+            return inputElements
     }
 
     const handleRecordButtonClick = () => {
@@ -166,60 +158,60 @@ const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, 
     return (
         <div className="w-full font-mono" key={`mod-${mod.name}`}>
             <p>
-                {mod.content} 
+                {mod.content}
             </p>
             <div className="w-full flex flex-col items-start bg-amber-200">
                 <div className="w-full">
                     {
                         inputs && inputs.length > 0 ?
                             <>
-                                { getInputPrompt() }
+                                {getInputPrompt()}
                             </> : <></>
                     }
                 </div>
                 <div className="flex items-center justify-between gap-2
                                 w-full p-2 bg-amber-100">
-                        <div className="flex-1 h-full
+                    <div className="flex-1 h-full
                                         flex items-center justify-center">
-                            {
-                                recordingState === "recording" ?
+                        {
+                            recordingState === "recording" ?
                                 <div className="flex items-center gap-2">
                                     <div className="w-4 h-4 rounded-full bg-red-600 animate-pulse"></div>
-                                    <AudioRecorderCountdown time={MAX_RECORD_TIME}/>
+                                    <AudioRecorderCountdown time={MAX_RECORD_TIME} />
                                 </div>
                                 :
                                 recordingState === "done" ?
-                                <audio className="flex-1 bg-transparent" src={ blobURL } controls></audio>
-                                :
-                                <span className="text-sm text-amber-900/50"> { recordingMessage } </span>
-                            }
-                        </div>
-                        <div className="w-16 h-16">
-                                <button className={
-                                    recordingState === "recording" ?
-                                    "w-full h-full flex items-center justify-center text-lg relative hover:border-amber-600 hover:text-amber-600 text-white bg-amber-500 border border-1 border-amber-500 transition-colors ease-in-out duration-300"
+                                    <audio className="flex-1 bg-transparent" src={blobURL} controls></audio>
                                     :
-                                    "w-full h-full flex items-center justify-center text-lg relative hover:border-amber-600 hover:text-amber-600 text-amber-500 bg-transparent border border-1 border-amber-500 transition-colors ease-in-out duration-300"
+                                    <span className="text-sm text-amber-900/50"> {recordingMessage} </span>
+                        }
+                    </div>
+                    <div className="w-16 h-16">
+                        <button className={
+                            recordingState === "recording" ?
+                                "w-full h-full flex items-center justify-center text-lg relative hover:border-amber-600 hover:text-amber-600 text-white bg-amber-500 border border-1 border-amber-500 transition-colors ease-in-out duration-300"
+                                :
+                                "w-full h-full flex items-center justify-center text-lg relative hover:border-amber-600 hover:text-amber-600 text-amber-500 bg-transparent border border-1 border-amber-500 transition-colors ease-in-out duration-300"
 
-                                } 
-                                                    onClick={handleRecordButtonClick}>
-                                    {
-                                        recordingState === "idle" ? 
-                                        <FiMic className=""/>
+                        }
+                            onClick={handleRecordButtonClick}>
+                            {
+                                recordingState === "idle" ?
+                                    <FiMic className="" />
+                                    :
+                                    recordingState === "recording" ?
+                                        <FiSquare className="" />
                                         :
-                                        recordingState === "recording" ? 
-                                        <FiSquare className=""/>
-                                        :
-                                        recordingState === "done" ? 
-                                        <FiRotateCcw className=""/>
-                                        :
-                                        <p>error: recording state: {recordingState}</p>
-                                    }
-                                </button> 
-                        </div>
+                                        recordingState === "done" ?
+                                            <FiRotateCcw className="" />
+                                            :
+                                            <p>error: recording state: {recordingState}</p>
+                            }
+                        </button>
                     </div>
                 </div>
             </div>
+        </div>
     )
 }
 
