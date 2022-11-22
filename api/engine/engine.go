@@ -46,6 +46,7 @@ var (
 
 func StartEngine() {
 	zero.Info("starting engine...")
+
 	state = State{generation: 0}
 	err := pool.Generate()
 	if err != nil {

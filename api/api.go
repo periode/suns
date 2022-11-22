@@ -80,6 +80,12 @@ func SetupRouter() *echo.Echo {
 		a.POST("/check-recover", auth.Recover)
 	}
 
+	config := r.Group("/config")
+	{
+		config.GET("/engine", handlers.GetConfig)
+		config.POST("/engine", handlers.SetConfig)
+	}
+
 	users := r.Group("/users")
 	{
 		users.GET("/", handlers.GetAllUsers)
