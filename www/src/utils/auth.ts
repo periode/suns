@@ -127,7 +127,11 @@ const signup = async (_email: string, _email_conf: string, _password: string, _p
     }
 
     if (_password.length < 8) {
-        return Promise.reject("The password should be at least 8 chararcters long.")
+        return Promise.reject("The password should be between 8 and 20 characters long.")
+    }
+
+    if (_password.length > 20) {
+        return Promise.reject("The password should be between 8 and 20 characters long.")
     }
 
     if (!validateEmail(_email)) {

@@ -9,12 +9,12 @@ import Entrypoint from './components/entrypoints/Entrypoint';
 
 import backgroundMap from './map.png'
 import MainMenu from './components/commons/menu/MainMenu';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import UILayout from './components/commons/layout/UILayout';
 import AirContext from './contexts/AirContext';
 
 import { IEntrypoint } from './utils/types';
-import Login from './components/auth/Login';
+import Login from './pages/auth/Login';
 
 export interface EntrypointInterface {
   uuid: string
@@ -70,7 +70,7 @@ const App = () => {
         <AirContext>
           <div className="App w-full h-full font-serif">
             { session.token === '' ?
-                <Login />        
+                <Navigate to="/auth"/>
               :
               <>
               <MainMenu username={ session.user.name } />

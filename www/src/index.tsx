@@ -16,6 +16,8 @@ import Auth from './components/auth/Auth';
 import AccountConfirm from './pages/auth/AccountConfirm';
 import AccountRecovery from './pages/auth/AccountRecovery';
 import AccountRecoveryConfirm from './pages/auth/AccountRecoveryConfirm';
+import { Sign } from 'crypto';
+import SignUp from './pages/auth/SignUp';
 
 const router = createBrowserRouter([
   {
@@ -25,6 +27,10 @@ const router = createBrowserRouter([
   {
     path: '/auth',
     element: <Auth />
+  },
+  {
+    path: '/signup',
+    element: <SignUp />
   },
   {
     path: '/auth/confirm',
