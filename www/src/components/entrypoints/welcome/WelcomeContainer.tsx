@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import AirContext from "../../../contexts/AirContext"
-import Login from "../../auth/Login"
+import Login from "../../../pages/auth/Login"
 import MarkMaking from "../../modules/tasks/MarkMaking"
 import WelcomeIntro from "./WelcomeIntro"
 
