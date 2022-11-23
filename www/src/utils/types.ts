@@ -54,6 +54,7 @@ export interface IUpload {
     name: string,
     text: string,
     type: string,
+    uuid: string,
 }
 
 export interface IFile {

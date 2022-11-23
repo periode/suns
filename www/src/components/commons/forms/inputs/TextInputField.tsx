@@ -31,11 +31,12 @@ const TextInputField = ({
 		
 	}, [isRequestingUploads])
 
+
+	// Check when erasing if value is now below 10, then update userDone
 	const onChange = (e: React.BaseSyntheticEvent) => {
 		const t = e.target as HTMLInputElement
 		e.preventDefault()
         e.stopPropagation()
-		
 		
 		if (t.value.length > 10 && hasSignifiedDone.current == false){
 			setUploads([{file: undefined, text: t.value}])

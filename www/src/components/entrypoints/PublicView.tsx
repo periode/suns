@@ -17,26 +17,26 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
         switch (true) {
             case upload.type.startsWith("text/"):
                 return (
-                    <ContentText key={ upload.name } text={ upload.text }/>
+                    <ContentText key={ upload.uuid } text={ upload.text }/>
                 )
             case upload.type.startsWith("image/"):
                 return (
-                    <ContentPhoto key={ upload.name } src={ upload.url } />
+                    <ContentPhoto key={ upload.uuid } src={ upload.url } />
                 )
             case upload.type.startsWith("video/"):
                 return (
-                    <ContentVideoInternal key={ upload.name } src={ upload.url }/>
+                    <ContentVideoInternal key={ upload.uuid } src={ upload.url }/>
                 )
             case upload.type.startsWith("audio/"):
                 return (
-                    <ContentAudio key={ upload.name } src={ upload.url }/>
+                    <ContentAudio key={ upload.uuid } src={ upload.url }/>
                 )
             default:
                 return <>Couldnt get upload.type: { upload.type }</>
         }
     }
 
-    const getUploads = (uploads: Array<IUpload>, uuid: string, compare: (x: string, y: string) => boolean, alternate: boolean) : JSX.Element[] =>
+    const getUploads = (uploads: Array<IUpload>, uuid: string, compare: (x: string, y: string) => boolean, alternate: boolean, ) : JSX.Element[] =>
     {
         var Content: JSX.Element[] = []
         
