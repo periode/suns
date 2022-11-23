@@ -72,6 +72,14 @@ function EntrypointActions({
 		</p>
 
 	const rightButtonDisplay = () => {
+		console.log(
+			"entryPointData : " + entryPointData, 
+			"claimEntryPointFunction : " + claimEntryPointFunction, 
+			"completeModuleFunction : " + completeModuleFunction, 
+			"isOwner : " + isOwner, 
+			"canUserComplete : " + canUserComplete, 
+			"hasUserCompleted : " + hasUserCompleted, 
+		)
 		if (entryPointData.status === ENTRYPOINT_STATUS.EntrypointOpen || (!isOwner && entryPointData.status === ENTRYPOINT_STATUS.EntrypointPending))
 			return StartButton
 
@@ -81,7 +89,7 @@ function EntrypointActions({
 		if (isOwner && canUserComplete && entryPointData.status === ENTRYPOINT_STATUS.EntrypointPending) {
 			if (entryPointData.current_module === entryPointData.modules.length - 2)
 				return FinishButton
-			else if (entryPointData.partner_status == PARTNER_STATUS.PartnerFull)
+			else
 				return NextButton
 		}
 
@@ -100,7 +108,7 @@ function EntrypointActions({
 				Step
 			}
 			<div className="w-16">
-				{rightButtonDisplay()}
+				{ rightButtonDisplay() }
 			</div>
 		</div>
 	);

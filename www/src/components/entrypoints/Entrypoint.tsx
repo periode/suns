@@ -131,6 +131,7 @@ const Entrypoint = (props: any) => {
         if (res.ok) {
             const updated = await res.json()
             setData(updated)
+            setCanUserComplete(false)
         } else {
             console.warn('error', res.status)
         }
@@ -143,7 +144,7 @@ const Entrypoint = (props: any) => {
     }
 
     const handleUserDone = (_val: boolean) => {
-        if (_val == true)
+        if (_val === true)
             setUserDone(prev => {
                 return [...prev, _val] as boolean[]
             })
@@ -165,8 +166,10 @@ const Entrypoint = (props: any) => {
             console.log(u);
             
             submitUpload(session.token, data.modules[data.current_module].uuid, u)
-                .then(() => console.log("uploaded file!"))
-                .catch((err) => console.log(err))
+                .then(() => {
+                    console.log("uploaded file!")
+                })
+                .catch((err) => console.error(err))
         })
 
         progressModule(ep.uuid, session.token)
@@ -179,12 +182,12 @@ const Entrypoint = (props: any) => {
                     setUserCompleted(true) //-- we have a partial state
                 else
                     setUserCompleted(false) //-- we move on to the next module
-
+                
+                setCanUserComplete(false)
                 setData(updated)
             })
             .catch(err => {
                 console.log("failed to complete module, status:", err);
-
             })
     }
 
