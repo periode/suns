@@ -72,15 +72,7 @@ function EntrypointActions({
 		</p>
 
 	const rightButtonDisplay = () => {
-		console.log(
-			"entryPointData : " + entryPointData, 
-			"claimEntryPointFunction : " + claimEntryPointFunction, 
-			"completeModuleFunction : " + completeModuleFunction, 
-			"isOwner : " + isOwner, 
-			"canUserComplete : " + canUserComplete, 
-			"hasUserCompleted : " + hasUserCompleted, 
-		)
-		if (entryPointData.status === ENTRYPOINT_STATUS.EntrypointOpen || (!isOwner && entryPointData.status === ENTRYPOINT_STATUS.EntrypointPending))
+		if (!isOwner && (entryPointData.partner_status === PARTNER_STATUS.PartnerPartial || entryPointData.partner_status === PARTNER_STATUS.PartnerNone))
 			return StartButton
 
 		if (hasUserCompleted)

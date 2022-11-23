@@ -20,7 +20,6 @@ const IntroModule = ({ data, epName, index, handleUserDone }: IntroModuleProps) 
     const contents = ctx.get(epName)
 
     if (contents === undefined) {
-        console.log(contents)
         return(<>
             There was a problem getting information from the Airtable
         </>)

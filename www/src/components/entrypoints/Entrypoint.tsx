@@ -163,6 +163,8 @@ const Entrypoint = (props: any) => {
 
 
         uploads.forEach(u => {
+            console.log(u);
+            
             submitUpload(session.token, data.modules[data.current_module].uuid, u)
                 .then(() => {
                     console.log("uploaded file!")

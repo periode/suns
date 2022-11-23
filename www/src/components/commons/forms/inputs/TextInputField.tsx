@@ -1,13 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IFile } from "../../../../utils/types";
 
 interface TextInputFieldProps {
-	label? : string,
-	placeholder? : string,
-	type? : string
+	label?: string,
+	placeholder?: string,
+	type?: string
 	handleNewUploads: Function,
 	isRequestingUploads: boolean,
-    handleUserDone: Function,
+	handleUserDone: Function,
 	hasUserCompleted: boolean,
 }
 
@@ -18,40 +18,40 @@ const TextInputField = ({
 	isRequestingUploads,
 	handleUserDone,
 	hasUserCompleted
- } : TextInputFieldProps) => {
+}: TextInputFieldProps) => {
 	const hasSignifiedDone = useRef(false)
 	const [uploads, setUploads] = useState(Array<IFile>)
+	const inputRef = useRef<HTMLTextAreaElement>(null)
 	useEffect(() => {
-        handleUserDone(false)
-    }, [])
+		handleUserDone(false)
+	}, [])
 
 	useEffect(() => {
-		if(isRequestingUploads)	
+		if (isRequestingUploads)
 			handleNewUploads(uploads)
-		
+	}, [uploads])
+
+	useEffect(() => {
+		if (inputRef.current == null)
+			return
+
+		setUploads([{ file: undefined, text: inputRef.current.value }])
 	}, [isRequestingUploads])
 
-
-	// Check when erasing if value is now below 10, then update userDone
-	const onChange = (e: React.BaseSyntheticEvent) => {
-		const t = e.target as HTMLInputElement
-		e.preventDefault()
-        e.stopPropagation()
-		
-		if (t.value.length > 10 && hasSignifiedDone.current == false){
-			setUploads([{file: undefined, text: t.value}])
+	const handleOnChange = (e: React.BaseSyntheticEvent) => {
+		if (e.target.value.length > 10 && hasSignifiedDone.current == false) {
 			handleUserDone(true)
 			hasSignifiedDone.current = true
 		}
 	}
 
-	return ( 
+	return (
 		<>
 			{
 				label &&
-				<label	className="
-						disabled:opacity-50" 
-						htmlFor={ label?.toLowerCase() }>{ label }</label>
+				<label className="
+						disabled:opacity-50"
+					htmlFor={label?.toLowerCase()}>{label}</label>
 			}
 			<textarea className="	
 								w-full h-full p-3 
@@ -62,9 +62,9 @@ const TextInputField = ({
 								placeholder:text-amber-900/50 placeholder:font-mono
 								transition-colors ease-in duration-300
 								"
-				onChange={onChange} placeholder={placeholder} name={ label? label.toLowerCase() : 'text' } disabled={ hasUserCompleted }/>
-		</>						
-	)	
+				ref={inputRef} onChange={handleOnChange} placeholder={placeholder} name={label ? label.toLowerCase() : 'text'} disabled={hasUserCompleted} />
+		</>
+	)
 }
 
 export default TextInputField;

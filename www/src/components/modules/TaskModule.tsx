@@ -3,6 +3,10 @@ import { AirTableContext } from "../../contexts/AirContext"
 import { getSession } from "../../utils/auth"
 import { IEntrypoint, IFile, IModule, IUpload } from "../../utils/types"
 import TextInputField from "../commons/forms/inputs/TextInputField"
+import ContentAudio from "./content/ContentAudio"
+import ContentPhoto from "./content/ContentPhoto"
+import ContentText from "./content/ContentText"
+import ContentVideoInternal from "./content/ContentVideoInternal"
 import AudioRecorder from "./tasks/AudioRecorder"
 import FileUploader from "./tasks/utils/FileUploader"
 
@@ -82,16 +86,16 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
             if (i.user_uuid !== session.user.uuid)
                 switch (true) {
                     case i.type.startsWith("text/plain"):
-                        inputElements.push((<>{i.text}</>))
+                        inputElements.push((<ContentText key={i.uuid} text={i.text}/>))
                         break;
                     case i.type.startsWith("audio/"):
-                        inputElements.push((<audio src={`${process.env.REACT_APP_API_URL}/static/${i.url}`} controls></audio>))
+                        inputElements.push((<ContentAudio key={i.uuid} src={`${process.env.REACT_APP_API_URL}/static/${i.url}`}/>))
                         break;
                     case i.type.startsWith("video/"):
-                        inputElements.push((<video src={`${process.env.REACT_APP_API_URL}/static/${i.url}`} controls></video>))
+                        inputElements.push((<ContentVideoInternal key={i.uuid} src={`${process.env.REACT_APP_API_URL}/static/${i.url}`} />))
                         break;
                     case i.type.startsWith("image/"):
-                        inputElements.push((<img src={`${process.env.REACT_APP_API_URL}/static/${i.url}`} alt={i.url} />))
+                        inputElements.push((<ContentPhoto key={i.uuid} src={`${process.env.REACT_APP_API_URL}/static/${i.url}`} />))
                         break;
 
                     default:
