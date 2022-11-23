@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/periode/suns/api"
-	"github.com/periode/suns/api/config"
 	"github.com/periode/suns/api/engine"
 	zero "github.com/periode/suns/api/logger"
 	"github.com/periode/suns/api/models"
@@ -25,7 +24,7 @@ func main() {
 		zero.InitLog(2)
 	}
 
-	var conf config.Config
+	var conf api.Config
 	conf.DefaultConf()
 
 	url := os.Getenv("DATABASE_URL")
@@ -48,7 +47,6 @@ func main() {
 		zero.Log.Fatal().Msgf("error initializing database: %v", err)
 	}
 
-	engine_chan := make(chan string)
-	go engine.StartEngine(engine_chan)
-	api.StartServer(port, conf, engine_chan)
+	go engine.StartEngine()
+	api.StartServer(port, conf)
 }

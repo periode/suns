@@ -10,9 +10,8 @@ interface PublicViewProps {
 
 const PublicView = ({ entrypoint }: PublicViewProps) => {
 
-    const getUploadContent = (upload: IUpload) : JSX.Element =>
-    {
-        if ( upload === undefined )
+    const getUploadContent = (upload: IUpload): JSX.Element => {
+        if (upload === undefined)
             return <>Couldnt get upload.type: undefined</>
         switch (true) {
             case upload.type.startsWith("text/"):
@@ -32,7 +31,7 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
                     <ContentAudio key={ upload.uuid } src={ upload.url }/>
                 )
             default:
-                return <>Couldnt get upload.type: { upload.type }</>
+                return <>Couldnt get upload.type: {upload.type}</>
         }
     }
 
@@ -91,7 +90,6 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
 
 
     const getContent = (user: IUser): JSX.Element => {
-        
         if (
             entrypoint === undefined 
             || entrypoint.modules.length === 0 
@@ -101,16 +99,16 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
             return (<>A problem occured</>)
        
         switch (entrypoint.final_module_type) {
-            case FINAL_TYPE.Seperate:
+            case FINAL_TYPE.Separate:
                 return (getModules(user, entrypoint.modules, equalString, false))
             case FINAL_TYPE.Tangled:
                 return (getModules(user, entrypoint.modules, equalString, true))
             case FINAL_TYPE.TangledInverted:
                 return (getModules(user, entrypoint.modules, notequalString, true))
             default:
-            {
-                break;
-            }
+                {
+                    break;
+                }
         }
 
         return <>A problem occured, entrypoint.final_module_type: { entrypoint.final_module_type }</>

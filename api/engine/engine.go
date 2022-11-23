@@ -2,25 +2,16 @@ package engine
 
 import (
 	"fmt"
+	"net/http"
+	"net/url"
+	"os"
 	"path/filepath"
 	"runtime"
 	"time"
 
 	zero "github.com/periode/suns/api/logger"
 	"github.com/periode/suns/api/models"
-)
-
-const (
-	CREATE_INTERVAL    = 30 * time.Second
-	DELETE_INTERVAL    = 1 * time.Minute
-	SACRIFICE_INTERVAL = 15 * time.Minute
-	EMAIL_INTERVAL     = 10 * time.Minute
-	MAP_INTERVAL       = 10 * time.Second
-
-	CREATION_THRESHOLD  = 0.25
-	ENTRYPOINT_LIFETIME = 72 * time.Hour
-
-	CLUSTER_FIRST_TIMES_UUID = "57ed6a2b-aacb-4c24-b1e1-3495821f846a"
+	"github.com/periode/suns/mailer"
 )
 
 type State struct {
@@ -28,63 +19,53 @@ type State struct {
 }
 
 var (
-	state State
-	pool  Pool
+	state   State
+	pool    Pool
+	prompts Prompts
 
 	_, b, _, _ = runtime.Caller(0)
 	Basepath   = filepath.Dir(b)
 )
 
-func StartEngine(channel chan string) {
+func StartEngine() {
 	zero.Info("starting engine...")
 
+	Conf.DefaultConf()
 	state = State{generation: 0}
 	err := pool.Generate()
 	if err != nil {
 		zero.Errorf("error generating pool: %s", err.Error())
 	}
 
-	create_chan := make(chan string)
-	delete_chan := make(chan string)
-	sacrifice_chan := make(chan string)
-	email_chan := make(chan string)
-	map_chan := make(chan string)
-
-	go createEntrypoints(create_chan)
-	go deleteEntrypoints(delete_chan)
-	go sacrificeEntrypoints(sacrifice_chan)
-	go sendEmails(email_chan)
-	go updateMap(map_chan)
-
-	for {
-		time.Sleep(1 * time.Second)
-		select {
-		case msg := <-create_chan:
-			channel <- msg
-		case msg := <-delete_chan:
-			channel <- msg
-		case msg := <-sacrifice_chan:
-			channel <- msg
-		case msg := <-email_chan:
-			channel <- msg
-		case msg := <-email_chan:
-			channel <- msg
-		}
+	err = prompts.Populate()
+	if err != nil {
+		zero.Errorf("error populating prompts: %s", err.Error())
 	}
+
+	go createEntrypoints()
+	go deleteEntrypoints()
+	go sacrificeEntrypoints()
+	go sendWeeklyEmails()
+	go sendMonthlyEmails()
+	go updateMap()
 }
 
 // -- createEntrypoints queries the database to know about the status of entrypoints from this generation
 // -- if there are a certain amounts of entrypoints which are not open
 // -- then we create new entrypoints
-func createEntrypoints(ch chan string) {
+func createEntrypoints() {
 	for {
-		time.Sleep(CREATE_INTERVAL)
-		ch <- "create new entrypoints"
+		time.Sleep(Conf.CREATE_INTERVAL)
 
 		eps, err := models.GetEntrypointsByGeneration(state.generation)
 		if err != nil {
 			zero.Errorf("Failed getting current generation entrypoints", err.Error())
 		}
+
+		if len(eps) > Conf.MAX_ENTRYPOINTS {
+			continue
+		}
+
 		var open int = 0
 		for _, ep := range eps {
 			if ep.Status == models.EntrypointOpen {
@@ -92,27 +73,26 @@ func createEntrypoints(ch chan string) {
 			}
 		}
 
-		remaining := float32(open) / float32(len(eps))
+		remaining := float64(open) / float64(len(eps))
 		zero.Debug(fmt.Sprintf("Open entrypoints: %d%% (open %d, total %d)", int(remaining*100), open, len(eps)))
-		if float64(remaining) > CREATION_THRESHOLD {
-			continue
+
+		if remaining < Conf.CREATION_THRESHOLD || len(eps) < Conf.MIN_ENTRYPOINTS {
+			_, err = models.AddClusterEntrypoints(pool.Pick())
+			if err != nil {
+				zero.Errorf("Failed to create new entrypoint: %s", err.Error())
+			}
+
+			//-- finally, regenerate the map
 		}
 
-		err = models.AddClusterEntrypoints(CLUSTER_FIRST_TIMES_UUID, pool.Pick())
-		if err != nil {
-			zero.Errorf("Failed to create new entrypoint: %s", err.Error())
-		}
-
-		//-- finally, regenerate the map
 	}
 }
 
 // -- deleteEntrypoints queries the database to know about the lifetime of entrypoints of this generation.
 // -- if it is older than a given time, it deletes it.
-func deleteEntrypoints(ch chan string) {
+func deleteEntrypoints() {
 	for {
-		time.Sleep(DELETE_INTERVAL)
-		ch <- "delete new entrypoints"
+		time.Sleep(Conf.DELETE_INTERVAL)
 
 		eps, err := models.GetEntrypointsByGeneration(state.generation)
 		if err != nil {
@@ -120,7 +100,7 @@ func deleteEntrypoints(ch chan string) {
 		}
 
 		for _, ep := range eps {
-			if time.Since(ep.CreatedAt) > ENTRYPOINT_LIFETIME && ep.Status == models.EntrypointOpen {
+			if time.Since(ep.CreatedAt) > Conf.ENTRYPOINT_LIFETIME && ep.Status == models.EntrypointOpen {
 				_, err = models.DeleteEntrypoint(ep.UUID)
 				if err != nil {
 					zero.Errorf("Failed to delete expired entrypoints", err.Error())
@@ -133,25 +113,111 @@ func deleteEntrypoints(ch chan string) {
 }
 
 // -- sacrificeEntrypoints archives all entrypoints that are completed, deletes the other entrypoints, and regenerates the map
-func sacrificeEntrypoints(ch chan string) {
+func sacrificeEntrypoints() {
 	for {
-		time.Sleep(SACRIFICE_INTERVAL)
-		ch <- "sacrifice all entrypoints"
+		time.Sleep(Conf.SACRIFICE_INTERVAL)
 	}
 }
 
 // -- sendEmails goes through the list of users that have signed up for the emails, then it checks for the frequency of emails, checks at which stage of the emails the user is, and then sends them the subsequent email
-func sendEmails(ch chan string) {
+func sendWeeklyEmails() {
 	for {
-		time.Sleep(EMAIL_INTERVAL)
-		ch <- "send emails"
+		time.Sleep(Conf.EMAIL_WEEKLY_INTERVAL)
+
+		//-- for all users, send them the prompt
+		users, err := models.GetAllUsers()
+		if err != nil {
+			zero.Error(err.Error())
+		}
+
+		for _, user := range users {
+			if user.WeeklyPromptsIndex >= len(prompts.Weekly) {
+				continue
+			}
+
+			prompt, ep, err := prompts.CreateEntrypoint(user, mailer.WEEKLY)
+			if err != nil {
+				zero.Error(err.Error())
+			}
+
+			p := mailer.PromptPayload{
+				Body:           prompt.Body,
+				Name:           user.Name,
+				Host:           os.Getenv("FRONTEND_HOST"),
+				EntrypointUUID: ep.UUID.String(),
+				EntrypointName: prompt.Name,
+			}
+			mailer.SendMail(user.Email, fmt.Sprintf("Weekly Rewilding Prompt #%d", user.WeeklyPromptsIndex), "rewilding_prompt", p)
+
+			user.WeeklyPromptsIndex++
+			_, err = models.UpdateUser(user.UUID, user.UUID, &user)
+			if err != nil {
+				zero.Error(err.Error())
+			}
+		}
+	}
+}
+
+func sendMonthlyEmails() {
+	for {
+		time.Sleep(Conf.EMAIL_MONTHLY_INTERVAL)
+
+		users, err := models.GetAllUsers()
+		if err != nil {
+			zero.Error(err.Error())
+		}
+
+		for _, user := range users {
+			if user.MonthlyPromptsIndex >= len(prompts.Monthly) {
+				continue
+			}
+
+			prompt, ep, err := prompts.CreateEntrypoint(user, mailer.MONTHLY)
+			if err != nil {
+				zero.Error(err.Error())
+			}
+
+			p := mailer.PromptPayload{
+				Body:           prompt.Body,
+				Name:           user.Name,
+				Host:           os.Getenv("FRONTEND_HOST"),
+				EntrypointUUID: ep.UUID.String(),
+				EntrypointName: prompt.Name,
+			}
+			mailer.SendMail(user.Email, fmt.Sprintf("Rewilding Prompt #%d", user.MonthlyPromptsIndex), "rewilding_prompt", p)
+
+			user.MonthlyPromptsIndex++
+			_, err = models.UpdateUser(user.UUID, user.UUID, &user)
+			if err != nil {
+				zero.Error(err.Error())
+			}
+		}
 	}
 }
 
 // -- updateMap queries the database for the current entrypoints, then marshals it as JSON and sends a request to the map generator to create a new background image
-func updateMap(ch chan string) {
+func updateMap() {
 	for {
-		time.Sleep(MAP_INTERVAL)
-		ch <- "update the map"
+		time.Sleep(Conf.MAP_INTERVAL)
+		if os.Getenv("MAP_HOST") == "" {
+			zero.Error("missing host env for map service.")
+			return
+		}
+
+		body := url.Values{}
+		eps, err := models.GetAllEntrypoints()
+		if err != nil {
+			zero.Error(err.Error())
+		}
+
+		for i, ep := range eps {
+			body.Add(fmt.Sprintf("p%d", i), fmt.Sprintf("%d,%s,%s,%f,%f", ep.Generation, ep.Status, ep.Cluster.Name, ep.Lat, ep.Lng))
+		}
+		res, err := http.PostForm(os.Getenv("MAP_HOST"), body)
+		if err != nil {
+			zero.Error(err.Error())
+		} else {
+			zero.Debugf("response from map: %d", res.StatusCode)
+		}
 	}
 }

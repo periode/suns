@@ -53,6 +53,11 @@ func CreateUser(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "There already is a user with this email address. Try to login instead?")
 	}
 
+	//-- create entrypoint
+	//-- marshal from file
+	//-- attach to cluster
+	//-- make user claim it
+
 	token, err := models.CreateToken(user.UUID)
 	if err != nil {
 		zero.Error(err.Error())

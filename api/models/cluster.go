@@ -17,7 +17,7 @@ type Cluster struct {
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 	UUID      uuid.UUID      `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
-	Status    string         `gorm:"default:unlisted" json:"status"`
+	Status    string         `gorm:"default:listed" json:"status"`
 
 	Name string `gorm:"not null" json:"name" form:"name" binding:"required"`
 	Slug string `gorm:"" json:"slug"`
@@ -43,7 +43,7 @@ func CreateCluster(cluster *Cluster) (Cluster, error) {
 
 func GetCluster(uuid uuid.UUID, user_uuid uuid.UUID) (Cluster, error) {
 	var coll Cluster
-	result := db.Where("uuid = ? AND (status = 'listed' OR user_uuid = ?)", uuid, user_uuid).First(&coll)
+	result := db.Where("uuid = ?", uuid).First(&coll)
 	if result.Error != nil {
 		return coll, result.Error
 	}
@@ -63,7 +63,7 @@ func GetClusterBySlug(slug string, user_uuid uuid.UUID) (Cluster, error) {
 
 func GetAllClusters(user_uuid uuid.UUID) ([]Cluster, error) {
 	clusters := make([]Cluster, 0)
-	result := db.Preload("Entrypoints").Where("status = 'listed'").Find(&clusters)
+	result := db.Preload("Entrypoints").Find(&clusters)
 	return clusters, result.Error
 }
 
@@ -78,26 +78,46 @@ func UpdateCluster(uuid uuid.UUID, user_uuid uuid.UUID, cluster *Cluster) (Clust
 	return existing, result.Error
 }
 
-func AddClusterEntrypoints(uuid string, eps []Entrypoint) error {
-	var existing Cluster
-	result := db.Where("uuid = ?", uuid).First(&existing)
-	if result.Error != nil {
-		return result.Error
-	}
-
+func AddClusterEntrypoints(eps []Entrypoint) ([]Entrypoint, error) {
+	var updated []Entrypoint
 	for _, ep := range eps {
-		err := db.Model(&existing).Where("uuid = ?", uuid).Association("Entrypoints").Append(&ep)
-		if err != nil {
-			return err
+		var existing Cluster
+		result := db.Where("uuid = ?", ep.ClusterUUID).First(&existing)
+		if result.Error != nil {
+			return updated, result.Error
 		}
 
-		err = db.Model(&ep).Where("uuid = ?", ep.UUID).Association("Modules").Append(&ep.Modules)
+		err := db.Model(&existing).Where("uuid = ?", ep.ClusterUUID).Association("Entrypoints").Append(&ep)
 		if err != nil {
-			return err
+			return updated, err
+		}
+
+		updated = append(updated, ep)
+
+		err = db.Model(&ep).Where("uuid = ?", ep.UUID).Association("Modules").Replace(&ep.Modules)
+		if err != nil {
+			return updated, err
+		}
+
+		for _, m := range ep.Modules {
+			if len(m.Contents) > 0 {
+				fmt.Printf("Adding %d contents to %s\n", len(m.Contents), m.Name)
+				err = db.Model(&m).Where("uuid = ?", m.UUID).Association("Contents").Replace(m.Contents)
+				if err != nil {
+					return updated, err
+				}
+			}
+
+			if len(m.Tasks) > 0 {
+				err = db.Model(&m).Where("uuid = ?", m.UUID).Association("Tasks").Replace(m.Tasks)
+				if err != nil {
+					return updated, err
+				}
+			}
 		}
 	}
 
-	return nil
+	return updated, nil
 }
 
 func DeleteCluster(uuid uuid.UUID, user_uuid uuid.UUID) (Cluster, error) {
