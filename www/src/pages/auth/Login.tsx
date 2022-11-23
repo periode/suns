@@ -69,7 +69,7 @@ const Login = () => {
 						<div className="flex-1">
 							<LoginPrimary text="Login" onClick={ handleSignin } />
 						</div>
-						<Link className="flex-1" to="/signup">
+						<Link className="flex-1" to="/welcome">
 							<LoginSecondary text="Sign up"/>
 						</Link>
 					</div>

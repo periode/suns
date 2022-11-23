@@ -154,7 +154,8 @@ const signup = async (_email: string, _email_conf: string, _password: string, _p
 
     const res = await fetch(endpoint, options)
     if (res.ok) {
-        return Promise.resolve("Account created successfully! Please check your email inbox to confirm your account.")
+        const uuid = await res.text()
+        return Promise.resolve(uuid)
     } else {
         return Promise.reject("There was an error creating your account. Please try again later.")
     }

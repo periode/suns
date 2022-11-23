@@ -29,10 +29,6 @@ const router = createBrowserRouter([
     element: <Auth />
   },
   {
-    path: '/signup',
-    element: <SignUp />
-  },
-  {
     path: '/auth/confirm',
     element: <AccountConfirm />
   },

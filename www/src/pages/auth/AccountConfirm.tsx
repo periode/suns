@@ -50,7 +50,7 @@ const AccountConfirm = () => {
 		<>
 			<h2>{ message }</h2>
 			{
-				isSuccess &&
+				isSuccess &&	
 				<>
 					<p>You can now login</p>
 				</>

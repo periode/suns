@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import AirContext from "../../../contexts/AirContext"
-import Login from "../../../pages/auth/Login"
+import SignUp from "../../../pages/auth/SignUp"
 import MarkMaking from "../../modules/tasks/MarkMaking"
 import WelcomeIntro from "./WelcomeIntro"
 
@@ -35,10 +35,14 @@ const Welcome = () => {
                     stage === 0 ?
                         <WelcomeIntro/>
                         : stage === 1 ? <MarkMaking />
-                            : stage === 2 ? <Login />
-                                : <>This stage is too far. We should rather be redirecting you to a created entrypoint.</>
+                            : stage === 2 ? <SignUp />
+                      
+                            : <>This stage is too far. We should rather be redirecting you to a created entrypoint.</>
                 }
-                <button className="m-2 p-2 border" onClick={handleNextStage}>Next</button>
+                {
+                    stage < 2 &&
+                    <button className="m-2 p-2 border" onClick={handleNextStage}>Next</button>
+                }
             </div>
         </AirContext>
     )

@@ -5,9 +5,11 @@ import LoginPrimary from "../../components/commons/buttons/LoginPrimary"
 import LoginSecondary from "../../components/commons/buttons/LoginSecondary"
 import InputField from "../../components/commons/forms/inputs/InputField"
 import Toaster, { ToasterType } from "../../components/commons/toaster/Toaster"
-import { signup } from "../../utils/auth"
+import { signin, signup } from "../../utils/auth"
 
 const SignUp = () => {
+
+	const navigate = useNavigate()
 
 	const [success, setSuccess] = useState(false)
 
@@ -20,14 +22,33 @@ const SignUp = () => {
 	const [signupEmailConf, setSignupEmailConf] = useState("")
 	const [signupPasswordConf, setSignupPasswordConf] = useState("")
 
+	const autoSignIn = (welcome_entrypoint_uuid : string) => {
+		// fetch login : on succes navigate
+		signin(signupEmail, signupPassword)
+			.then((res : string) => {
+				console.log("sign in succcess ", welcome_entrypoint_uuid)
+				
+				navigate(`/entrypoints/${welcome_entrypoint_uuid}`)
+				setSuccess(true)
+				setMessage(res)
+			})
+			.catch((err: string) => {
+					setMessage(err)
+					setIsToasterDisplayed(true)
+				})
+	}
+
 	const handleSignup = (e: React.BaseSyntheticEvent) => {
         e.preventDefault()
         e.stopPropagation()
 
         signup(signupEmail, signupEmailConf, signupPassword, signupPasswordConf)
-            .then((res : string) => {
+			.then((res: string) => {
                 setMessage(res)
-                setSuccess(true)
+				setSuccess(true)
+				// fetch login : on succes navigate
+				console.log(res)
+				autoSignIn(res)
             })
 			.catch((err: string) => {
 				setMessage(err)
@@ -56,7 +77,6 @@ const SignUp = () => {
 	}
 
 	return ( 
-			!success ?
 			<>
 				<div className="w-full h-full font-serif">
 					<Toaster message={message} type={success ? ToasterType.success : ToasterType.error} display={isToasterDisplayed} setDisplay={setIsToasterDisplayed} timeoutms={3000}></Toaster>
@@ -80,9 +100,6 @@ const SignUp = () => {
 							</div>
 							<div className="sticky bottom-4 md:static 
 											flex flex-col-reverse md:flex-row w-full gap-4">
-								<Link className="flex-1" to="/login">
-									<LoginSecondary text="Login"/>
-								</Link>
 								<div className="flex-1">
 									<LoginPrimary text="Signup" onClick={ handleSignup } />
 								</div>
@@ -91,17 +108,6 @@ const SignUp = () => {
 					</div>
 				</div>
 			</>
-			
-			:
-
-			<div className="w-full h-full font-serif">
-				<div className="bg-amber-50 w-full h-screen text-amber-900 flex items-center justify-center">
-					<p className="status-info flex flex-col md:flex-row gap-2 items-center">
-						<FiCheck/> {message}
-					</p>
-				</div>
-			</div>
-
 	);
 }
 
