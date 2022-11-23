@@ -1,4 +1,6 @@
-import ContentVideo from "../modules/content/ContentVideo"
+import ContentAudio from "../modules/content/ContentAudio"
+import ContentPhoto from "../modules/content/ContentPhoto"
+import ContentVideoExternal from "../modules/content/ContentVideoExternal"
 
 interface ContentProps {
     type: string
@@ -6,30 +8,27 @@ interface ContentProps {
     contents: Map<string, string>
 }
 
-const Content = ({ type, airkey, contents }: ContentProps) => {
+const IntroContent = ({ type, airkey, contents }: ContentProps) => {
     
     switch (type) {
         case "img":
-            return (<div className="flex h-24 m-auto w-auto">
-                <img className="object-contain" src={contents.get(airkey)} />
-            </div>)
+            return (
+                <ContentPhoto src={contents.get(airkey) || ""}/>)
         case "mp3":
-            return (<>
-                <audio src=""></audio>
-                <div>{contents.get(airkey)}</div>
-            </>)
+            return (
+                <ContentAudio src={contents.get(airkey) || ""}/>
+               )
         case "txt":
-            return (<>
-                <div>{contents.get(airkey)}</div>
-            </>)
+            return (
+                <p>{ contents.get(airkey) || "" }</p>
+            )
         case "vid":
-            return (<>
-                <ContentVideo title={airkey + "title"} src={contents?.get(airkey) || ""}/>
-            </>)
-
+            return (
+                <ContentVideoExternal title={airkey + "title"} src={contents?.get(airkey) || ""} />
+            )
         default:
             return (<>Couldn't find the type of content: {type}</>)
     }
 }
 
-export default Content
+export default IntroContent

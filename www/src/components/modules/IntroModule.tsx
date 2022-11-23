@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useContext, useEffect } from "react"
 import { AirTableContext } from "../../contexts/AirContext"
 import { IModule } from "../../utils/types"
-import Content from "../commons/Content"
+import IntroContent from "../commons/Content"
 
 interface IntroModuleProps {
     data: IModule,
@@ -27,11 +27,11 @@ const IntroModule = ({ data, epName, index, handleUserDone }: IntroModuleProps) 
     }
 
     return (<>
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-4 items-center">
             {
                 data.contents.map((c) => {
                     return (
-                        <Content key={c.key}type={c.type} airkey={c.key} contents={contents} />
+                        <IntroContent key={c.key} type={c.type} airkey={c.key} contents={contents} />
                     )   
                 })
             }

@@ -1,8 +1,7 @@
-import { equal } from "assert"
 import { FINAL_TYPE, IEntrypoint, IModule, IUpload, IUser } from "../../utils/types"
 import ContentAudio from "../modules/content/ContentAudio"
 import ContentPhoto from "../modules/content/ContentPhoto"
-import ContentVideo from "../modules/content/ContentVideo"
+import ContentVideoInternal from "../modules/content/ContentVideoInternal"
 import ContentText from "../modules/content/ContextText"
 
 interface PublicViewProps {
@@ -26,7 +25,7 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
                 )
             case upload.type.startsWith("video/"):
                 return (
-                    <ContentVideo key={ upload.name } src={ upload.url }/>
+                    <ContentVideoInternal key={ upload.name } src={ upload.url }/>
                 )
             case upload.type.startsWith("audio/"):
                 return (

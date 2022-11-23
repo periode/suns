@@ -1,12 +1,10 @@
-import { ReactEventHandler, SyntheticEvent, useEffect, useState } from "react";
-import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript";
 
 interface ContentVideoProps {
 	title? : string,
 	src?: string,
 }
 
-function ContentVideo({
+function ContentVideoInternal({
 	title,
 	src
 	} : ContentVideoProps) {
@@ -15,10 +13,11 @@ function ContentVideo({
 		
 		<div className="flex items-center justify-start">
 			<video className="w-auto max-h-80"
+				title={title}
 				src={`${process.env.REACT_APP_API_URL}/static/${src}`}
 				controls/>
 		</div>
 	 );
 }
 
-export default ContentVideo;
+export default ContentVideoInternal;
