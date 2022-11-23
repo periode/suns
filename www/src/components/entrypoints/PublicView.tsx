@@ -2,7 +2,7 @@ import { FINAL_TYPE, IEntrypoint, IModule, IUpload, IUser } from "../../utils/ty
 import ContentAudio from "../modules/content/ContentAudio"
 import ContentPhoto from "../modules/content/ContentPhoto"
 import ContentVideoInternal from "../modules/content/ContentVideoInternal"
-import ContentText from "../modules/content/ContextText"
+import ContentText from "../modules/content/ContentText"
 
 interface PublicViewProps {
     entrypoint: IEntrypoint
