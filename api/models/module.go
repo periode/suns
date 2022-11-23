@@ -27,10 +27,11 @@ type Module struct {
 	UUID      uuid.UUID      `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
 	Status    string         `gorm:"default:none" json:"status"`
 
-	Name    string   `gorm:"not null" json:"name" form:"name" binding:"required"`
-	Slug    string   `gorm:"" json:"slug"`
-	Uploads []Upload `gorm:"foreignKey:ModuleUUID;references:UUID" json:"uploads"`
-	Type    string   `json:"type"`
+	Name                string   `gorm:"not null" json:"name" form:"name" binding:"required"`
+	Slug                string   `gorm:"" json:"slug"`
+	Uploads             []Upload `gorm:"foreignKey:ModuleUUID;references:UUID" json:"uploads"`
+	Type                string   `json:"type"`
+	ShowPreviousUploads bool     `gorm:"default:false" json:"showPreviousUploads" yaml:"show_previous_uploads"`
 
 	//-- belongs to an entrypoint
 	EntrypointUUID uuid.UUID  `gorm:"type:uuid;default:uuid_generate_v4()" json:"entrypoint_uuid" yaml:"entrypoint_uuid"`

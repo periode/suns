@@ -201,8 +201,8 @@ func ClaimEntrypoint(c echo.Context) error {
 		return c.String(http.StatusNotFound, "We couldn't find the User to update.")
 	}
 
+	//-- progress so that we don't have to re-watch the video
 	if len(entrypoint.Users) == entrypoint.MaxUsers-1 {
-		entrypoint.Status = models.EntrypointPending
 		entrypoint.CurrentModule += 1
 	}
 

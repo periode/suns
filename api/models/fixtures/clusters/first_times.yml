@@ -24,6 +24,7 @@ entrypoints:
         hint: "Please record a moment that happened to you for the first time. This recording will then be sent to your partner."
       - name: "For the first time - Response recording"
         type: "task"
+        show_previous_uploads: true
         tasks:
           - type: "audio_input"
             key: "recaudio_info_txt"

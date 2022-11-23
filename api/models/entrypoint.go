@@ -149,15 +149,15 @@ func ClaimEntrypoint(entry *Entrypoint, user *User) (Entrypoint, error) {
 	if err != nil {
 		return *entry, err
 	}
-	// Handle entrypoint status
-	entry.Status = EntrypointPending
 
 	// Handle partner status
 	if len(entry.Users) < entry.MaxUsers {
 		entry.PartnerStatus = PartnerPartial
 	}
+
 	if len(entry.Users) == entry.MaxUsers {
 		entry.PartnerStatus = PartnerFull
+		entry.Status = EntrypointPending
 	}
 	_, err = UpdateEntrypoint(entry.UUID, entry)
 	if err != nil {

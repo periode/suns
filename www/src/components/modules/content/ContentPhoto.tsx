@@ -5,8 +5,10 @@ interface ContentPhotoProps {
 
 function ContentPhoto({src} : ContentPhotoProps) {
 	return ( 
-		<div className="w-full ">
-			<img src={src} alt={src} />
+		<div className="flex items-center justify-start">
+			<img className="w-auto max-h-80"
+				src={`${process.env.REACT_APP_API_URL}/static/${src}`}
+				alt={src}/>
 		</div>
 	 );
 }

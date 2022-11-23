@@ -20,8 +20,6 @@ const MAX_RECORD_TIME = 3 * 60 * 1000
 var recorder: any
 
 const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, handleUserDone, hasUserCompleted }: AudioRecorderProps) => {
-    const [inputs, setInputs] = useState(Array<IUpload>)
-    const session = getSession()
     const [uploads, setUploads] = useState(Array<IFile>)
     const [recordingState, setRecordingState] = useState("idle")
     const [recordingMessage, setRecordingMessage] = useState("Ready to record")
@@ -31,11 +29,6 @@ const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, 
     useEffect(() => {
         handleUserDone(false)
     }, [])
-
-    useEffect(() => {
-        if (index > 0 && ep.modules[index - 1] !== undefined)
-            setInputs(ep.modules[index - 1].uploads ? ep.modules[index - 1].uploads : [])
-    }, [ep])
 
     useEffect(() => {
         if (isRequestingUploads)
@@ -107,36 +100,6 @@ const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, 
         handleUserDone(false)
     }
 
-    const getInputPrompt = () => {
-        if (inputs === null || inputs.length === 0) return (<></>)
-
-        let inputElements = []
-        for (const i of inputs) {
-            if (i.user_uuid !== session.user.uuid)
-                switch (true) {
-                    case i.type.startsWith("text/plain"):
-                        inputElements.push((<>{i.text}</>))
-                        break;
-                    case i.type.startsWith("audio/"):
-                        inputElements.push((<audio src={`${process.env.REACT_APP_API_URL}/static/${i.url}`} controls></audio>))
-                        break;
-                    case i.type.startsWith("video/"):
-                        inputElements.push((<video src={`${process.env.REACT_APP_API_URL}/static/${i.url}`} controls></video>))
-                        break;
-                    case i.type.startsWith("image/"):
-                        inputElements.push((<img src={`${process.env.REACT_APP_API_URL}/static/${i.url}`} alt="partner-input" />))
-                        break;
-
-                    default:
-                        break;
-                }
-        }
-        if (inputElements.length === 0)
-            return (<>Could not find proper prompt</>)
-        else
-            return inputElements
-    }
-
     const handleRecordButtonClick = () => {
         console.log("Calling handleRecordButtonClick with recordingState: " + recordingState)
         switch (recordingState) {
@@ -161,14 +124,6 @@ const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, 
                 {mod.content}
             </p>
             <div className="w-full flex flex-col items-start bg-amber-200">
-                <div className="w-full">
-                    {
-                        inputs && inputs.length > 0 ?
-                            <>
-                                {getInputPrompt()}
-                            </> : <></>
-                    }
-                </div>
                 <div className="flex items-center justify-between gap-2
                                 w-full p-2 bg-amber-100">
                     <div className="flex-1 h-full

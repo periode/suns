@@ -1,8 +1,8 @@
 import { FINAL_TYPE, IEntrypoint, IModule, IUpload, IUser } from "../../utils/types"
 import ContentAudio from "../modules/content/ContentAudio"
 import ContentPhoto from "../modules/content/ContentPhoto"
-import ContentVideo from "../modules/content/ContentVideo"
-import ContentText from "../modules/content/ContextText"
+import ContentVideoInternal from "../modules/content/ContentVideoInternal"
+import ContentText from "../modules/content/ContentText"
 
 interface PublicViewProps {
     entrypoint: IEntrypoint
@@ -17,23 +17,37 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
         switch (true) {
             case upload.type.startsWith("text/"):
                 return (
-                    <ContentText text={upload.text}/>
+                    <ContentText key={ upload.uuid } text={ upload.text }/>
                 )
             case upload.type.startsWith("image/"):
                 return (
-                    <ContentPhoto src={upload.url}/>
+                    <ContentPhoto key={ upload.uuid } src={ upload.url } />
                 )
             case upload.type.startsWith("video/"):
                 return (
-                    <ContentVideo src={upload.url}/>
+                    <ContentVideoInternal key={ upload.uuid } src={ upload.url }/>
                 )
             case upload.type.startsWith("audio/"):
                 return (
-                    <ContentAudio src={ upload.url }/>
+                    <ContentAudio key={ upload.uuid } src={ upload.url }/>
                 )
             default:
                 return <>Couldnt get upload.type: { upload.type }</>
         }
+    }
+
+    const getUploads = (uploads: Array<IUpload>, uuid: string, compare: (x: string, y: string) => boolean, alternate: boolean, ) : JSX.Element[] =>
+    {
+        var Content: JSX.Element[] = []
+        
+        for (let i = 0; i < uploads.length; i++)
+        {
+            if (!alternate && compare(uploads[i].user_uuid, uuid))
+                Content.push(getUploadContent(uploads[i]))
+            if (alternate && !compare(uploads[i].user_uuid, uuid))
+                Content.push(getUploadContent(uploads[i]))
+        }
+        return (Content)
     }
 
     const getModules = (user: IUser, modules: IModule[], compare: (x: string, y: string) => boolean, alternate: boolean) =>
@@ -47,26 +61,15 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
         var isAlternated = false; 
         for (let moduleID = 1; moduleID < modules.length - 1; moduleID++)
         {
-            if (!modules[moduleID].uploads[0])
+            if (modules[moduleID].uploads.length !== 0)
             {
-                Content.push(<>Upload does not exist</>)
+                if (!modules[moduleID].uploads[0])
+                    Content.push(<>Upload does not exist</>)
+                else
+                    Content.push(...getUploads(entrypoint.modules[moduleID].uploads, user.uuid, compare, isAlternated))
+                if (alternate)
+                    isAlternated = !isAlternated
             }
-            else if (isAlternated)
-            { 
-                compare(entrypoint.modules[moduleID].uploads[0].user_uuid, user.uuid) ?
-                Content.push(getUploadContent(entrypoint.modules[moduleID].uploads[0]))
-                :
-                Content.push(getUploadContent(entrypoint.modules[moduleID].uploads[1]))
-            }
-            else
-            { 
-                !compare(entrypoint.modules[moduleID].uploads[0]?.user_uuid, user.uuid) ?
-                Content.push(getUploadContent(entrypoint.modules[moduleID].uploads[0]))
-                :
-                Content.push(getUploadContent(entrypoint.modules[moduleID].uploads[1]))
-            }
-            if (alternate)
-                isAlternated = !isAlternated
         }
         return (
             <>
@@ -92,8 +95,6 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
         if (
             entrypoint === undefined 
             || entrypoint.modules.length === 0 
-            || entrypoint.modules[1].uploads.length === 0 
-            || entrypoint.modules[2].uploads.length === 0
             || user === undefined
             || user.uuid === undefined
         )
@@ -115,18 +116,41 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
         return <>A problem occured, entrypoint.final_module_type: { entrypoint.final_module_type }</>
     }
 
-    return (
-        <div className="w-full h-full flex flex-col md:flex-row gap-4">
-            <div className="flex flex-col gap-2">
-                <h2 className="text-2xl font-regular">{entrypoint.users[0].name}</h2>
-                { getContent(entrypoint.users[0]) }
+    if (entrypoint.max_users > 1)
+    {
+        return (
+            <div className="w-full h-full flex flex-col md:flex-row gap-8">
+                <div className="
+                                flex-1 
+                                flex flex-col gap-2
+                                ">
+                    <h2 className="text-2xl font-regular">{entrypoint.users[0].name}</h2>
+                    { getContent(entrypoint.users[0]) }
+                </div>
+                <div className="
+                                flex-1 
+                                flex flex-col gap-2
+                                ">
+                    <h2 className="text-2xl font-regular">{entrypoint.users[1].name}</h2>
+                    { getContent(entrypoint.users[1]) }
+                </div>
             </div>
-            <div className="flex flex-col gap-2">
-                <h2 className="text-2xl font-regular">{entrypoint.users[1].name}</h2>
-                { getContent(entrypoint.users[1]) }
+        )
+    }
+    else
+    {
+        return (
+            <div className="w-full h-full flex flex-col md:flex-row gap-8">
+                <div className="
+                                flex-1 
+                                flex flex-col gap-2
+                                ">
+                    <h2 className="text-2xl font-regular">{entrypoint.users[0].name}</h2>
+                    { getContent(entrypoint.users[0]) }
+                </div>
             </div>
-        </div>
-    )
+        )
+    }
 }
 
 export default PublicView
