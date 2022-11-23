@@ -28,6 +28,7 @@ entrypoints:
         hint: "This is the second content"
       - name: "Upload 1 Image"
         type: "task"
+        show_previous_uploads: true
         tasks:
           - type: "image_input"
             key: "imgupload_info_txt"
@@ -35,6 +36,7 @@ entrypoints:
         hint: "This is the 1 single image input"
       - name: "Label random image from the 1 previous"
         type: "task"
+        show_previous_uploads: true
         tasks:
           - type: "text_input"
             key: "textinput_info_txt_2"
@@ -73,6 +75,7 @@ entrypoints:
         hint: "This is the text input"
       - name: "Upload 1 Video"
         type: "task"
+        show_previous_uploads: true
         tasks:
           - type: "video_input"
             key: "vidupload_info_txt"
@@ -115,9 +118,13 @@ entrypoints:
         hint: "This is the text input"
       - name: "Upload Audio"
         type: "task"
+        show_previous_uploads: true
         tasks:
-          - type: "audio_input"
+          - type: "text_input"
             key: "input_1"
+            max_uploads: 1
+          - type: "audio_input"
+            key: "input_2"
             max_uploads: 1
       - name: "Final Symbiosis mean"
         type: "final"

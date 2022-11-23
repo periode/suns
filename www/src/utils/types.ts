@@ -79,6 +79,7 @@ export interface IModule {
     name: string,
     content: string,
     type: string,
+    showPreviousUploads: boolean,
     uploads: Array<IUpload>,
     status: string,
     contents: Array<IContent>,

@@ -27,6 +27,7 @@ entrypoints:
         hint: "You should upload the name of someone and an image that represents them"
       - name: "Name the other picture"
         type: "task"
+        show_previous_uploads: true
         tasks:
           - type: "audio_input"
             key: "audioupload_info_txt"
@@ -68,6 +69,7 @@ entrypoints:
         hint: "This is the text input of a name of a place, and how far it is"
       - name: "Upload an image of the distance of that place"
         type: "task"
+        show_previous_uploads: true
         tasks:
           - type: "image_input"
             key: "imageupload_info_txt"
@@ -111,6 +113,7 @@ entrypoints:
         hint: "This is the text input for the name and the image input for the picture of an object"
       - name: "Upload a picture of a similar object, and how you name it"
         type: "task"
+        show_previous_uploads: true
         tasks:
           - type: "image_input"
             key: "imgupload_info_txt_2"
