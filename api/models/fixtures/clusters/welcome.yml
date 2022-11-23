@@ -2,7 +2,7 @@ uuid: "06ed6a2b-bbcb-4c24-b1e1-3495821f846a"
 name: "Welcome"
 entrypoints:
   - status: "open"
-    uuid: "06ed6a2b-bbcb-4c24-b1e1-3495821f846a"
+    cluster_uuid: "06ed6a2b-bbcb-4c24-b1e1-3495821f846a"
     name: "Welcome"
     max_users: 1
     lat: 500

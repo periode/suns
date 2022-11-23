@@ -98,7 +98,7 @@ func CreateUser(c echo.Context) error {
 		}
 	}
 
-	return c.JSON(http.StatusCreated, user)
+	return c.String(http.StatusCreated, ep.UUID.String())
 }
 
 func UpdateUser(c echo.Context) error {

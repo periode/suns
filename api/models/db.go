@@ -63,7 +63,7 @@ func InitDB(url string) (*gorm.DB, error) {
 	return db, err
 }
 
-var clusters = [6]string{"first_times", "cracks", "draught", "footprints", "symbiosis", "prompts"}
+var clusters = [7]string{"first_times", "cracks", "draught", "footprints", "symbiosis", "prompts", "welcome"}
 
 func runFixtures(shouldTruncateTables bool) error {
 	var err error
@@ -106,6 +106,7 @@ func runFixtures(shouldTruncateTables bool) error {
 	}
 
 	for _, c := range clusters {
+
 		bytes, err := os.ReadFile(filepath.Join(Basepath, "./fixtures/clusters", fmt.Sprintf("%s.yml", c)))
 		if err != nil {
 			return err

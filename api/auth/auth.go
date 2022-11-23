@@ -88,10 +88,12 @@ func Login(c echo.Context) error {
 		return c.String(http.StatusUnauthorized, "Authentication failed")
 	}
 
-	if user.Status == models.UserPending {
-		zero.Error("Cannot login pending user")
-		return c.String(http.StatusUnauthorized, "Authentication failed")
-	}
+	// Disabled for tutorial flow:
+
+	// if user.Status == models.UserPending {
+	// 	zero.Error("Cannot login pending user")
+	// 	return c.String(http.StatusUnauthorized, "Authentication failed")
+	// }
 
 	err = bcrypt.CompareHashAndPassword(user.Password, []byte(password))
 	if err != nil {
