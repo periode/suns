@@ -1,6 +1,6 @@
-import ContentAudio from "../modules/content/ContentAudio"
-import ContentPhoto from "../modules/content/ContentPhoto"
-import ContentVideoExternal from "../modules/content/ContentVideoExternal"
+import ContentAudio from "./ContentAudio"
+import ContentPhoto from "./ContentPhoto"
+import ContentVideoExternal from "./ContentVideoExternal"
 
 interface ContentProps {
     type: string

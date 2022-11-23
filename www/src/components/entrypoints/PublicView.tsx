@@ -61,16 +61,15 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
         var isAlternated = false; 
         for (let moduleID = 1; moduleID < modules.length - 1; moduleID++)
         {
-            if (!modules[moduleID].uploads[0])
+            if (modules[moduleID].uploads.length !== 0)
             {
-                Content.push(<>Upload does not exist</>)
+                if (!modules[moduleID].uploads[0])
+                    Content.push(<>Upload does not exist</>)
+                else
+                    Content.push(...getUploads(entrypoint.modules[moduleID].uploads, user.uuid, compare, isAlternated))
+                if (alternate)
+                    isAlternated = !isAlternated
             }
-            else
-            { 
-                Content.push(...getUploads(entrypoint.modules[moduleID].uploads, user.uuid, compare, isAlternated))
-            }
-            if (alternate)
-                isAlternated = !isAlternated
         }
         return (
             <>
@@ -96,8 +95,6 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
         if (
             entrypoint === undefined 
             || entrypoint.modules.length === 0 
-            || entrypoint.modules[1].uploads.length === 0 
-            || entrypoint.modules[2].uploads.length === 0
             || user === undefined
             || user.uuid === undefined
         )
