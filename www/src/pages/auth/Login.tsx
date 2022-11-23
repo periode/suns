@@ -43,6 +43,10 @@ const Login = () => {
         setPassword(v)
     }
 
+	const handleSignup = () => {
+		navigate("/welcome")
+	}
+
 	return ( 
 		<div className="w-full h-full font-serif">
 			<Toaster message={message} type={success ? ToasterType.success : ToasterType.error} display={isToasterDisplayed} setDisplay={setIsToasterDisplayed} timeoutms={3000}></Toaster>

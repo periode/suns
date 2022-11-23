@@ -16,7 +16,7 @@ export enum PARTNER_STATUS {
 export enum FINAL_TYPE {
     Tangled         = "Tangled",
     TangledInverted = "Tangled Inverted",
-    Seperate = "Seperate",
+    Separate = "Separate",
     // Custom:
     Crack = "Crack"
 }
@@ -64,14 +64,16 @@ export interface IFile {
 
 export interface IContent {
     type: string,
-    key: string
+    key: string,
+    value?: string,
 }
 
 export interface ITask {
     type: string,
     key: string,
     placeholder?: string,
-    max_uploads?: number
+    max_uploads?: number,
+    value?: string
 }
 
 export interface IModule {

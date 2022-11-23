@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import { FiCommand, FiX } from "react-icons/fi"
@@ -6,12 +6,10 @@ import { FiCommand, FiX } from "react-icons/fi"
 import "../../styles/entrypoint.css"
 import { getSession } from "../../utils/auth";
 import EntrypointActions from "./EntrypointActions";
-import EntrypointPartners from "./EntrypointPartners";
-import EntrypointCountdown from "./EntrypointCountdown";
 import PublicView from "./PublicView";
 import NotFound from "../../NotFound";
 import FinalFirstTimes from "../modules/FinalFirstTimes";
-import { ENTRYPOINT_STATUS, IEntrypoint, IFile, IModule, ISession } from "../../utils/types";
+import { ENTRYPOINT_STATUS, IEntrypoint, IFile, ISession } from "../../utils/types";
 import IntroModule from "../modules/IntroModule";
 import TaskModule from "../modules/TaskModule";
 import { fetchEntrypoint, progressModule, submitUpload } from "../../utils/entrypoint";
@@ -61,13 +59,13 @@ const Entrypoint = (props: any) => {
 
     //-- this listens for whether a user is done with all tasks on the module
     useEffect(() => {
-        if (data == undefined)
+        if (data === undefined)
             return
 
-        if (isUserDone.length == data.modules[data.current_module].tasks.length)
+        if (isUserDone.length === data.modules[data.current_module].tasks.length)
             setCanUserComplete(true)
 
-    }, [isUserDone])
+    }, [isUserDone, data])
 
     //-- this checks for the completion status per user
     useEffect(() => {
@@ -81,14 +79,14 @@ const Entrypoint = (props: any) => {
                 return
             }
         }
-    }, [isOwned])
+    }, [isOwned, data, session.user.uuid])
 
-    //-- this checks if all uploads have been submitted before completing the module
+    //-- this checks if all uploads have been submitted before completing the module (should be a useCallback?)
     useEffect(() => {        
         if (data === undefined)
             return
 
-        if (uploads.length == data.modules[data.current_module].tasks.length && !hasSubmittedModule.current) {
+        if (uploads.length === data.modules[data.current_module].tasks.length && !hasSubmittedModule.current) {
             completeModule(data, session)
             hasSubmittedModule.current = true
         }
@@ -197,7 +195,7 @@ const Entrypoint = (props: any) => {
         switch (mod.type) {
             case "intro":
                 return (
-                    <IntroModule index={index} epName={ep.name} data={mod} handleUserDone={handleUserDone} />
+                    <IntroModule epName={ep.name} data={mod} handleUserDone={handleUserDone} />
                 )
             case "task":
                 return (

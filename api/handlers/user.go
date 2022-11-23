@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"net/mail"
 	"os"
+	"path/filepath"
+	"runtime"
 	"strings"
 
 	"github.com/google/uuid"
@@ -14,6 +16,12 @@ import (
 	"github.com/periode/suns/api/models"
 	"github.com/periode/suns/mailer"
 	"golang.org/x/crypto/bcrypt"
+	"gopkg.in/yaml.v2"
+)
+
+var (
+	_, b, _, _ = runtime.Caller(0)
+	Basepath   = filepath.Dir(b)
 )
 
 func GetAllUsers(c echo.Context) error {
@@ -53,22 +61,38 @@ func CreateUser(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "There already is a user with this email address. Try to login instead?")
 	}
 
-	token, err := models.CreateToken(user.UUID)
+	bytes, err := os.ReadFile(filepath.Join(Basepath, "../models/fixtures/clusters/welcome.yml"))
+	if err != nil {
+		return err
+	}
+
+	var welcome models.Cluster
+	err = yaml.Unmarshal(bytes, &welcome)
+	if err != nil {
+		return err
+	}
+
+	eps, err := models.AddClusterEntrypoints(welcome.Entrypoints)
 	if err != nil {
 		zero.Error(err.Error())
-		return c.String(http.StatusInternalServerError, "There was an error completing your account creation. Please try again later.")
+		return c.String(http.StatusInternalServerError, "There was an error creating your entrypoint.")
+	}
+
+	ep, err := models.ClaimEntrypoint(&eps[0], &user)
+	if err != nil {
+		zero.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "There was an error claiming your entrypoint.")
 	}
 
 	var host = os.Getenv("FRONTEND_HOST")
-
 	payload := mailer.ConfirmationPayload{
-		Name:  user.Name,
-		Host:  host,
-		Token: token.UUID.String(),
+		Name:       user.Name,
+		Host:       host,
+		Entrypoint: ep.UUID.String(),
 	}
 
 	if os.Getenv("API_MODE") != "test" {
-		err = mailer.SendMail(user.Email, "Welcome to Suns!", "account_confirmation", payload)
+		err = mailer.SendMail(user.Email, "Welcome to Suns!", "account_creation", payload)
 		if err != nil {
 			zero.Warnf(err.Error())
 		}

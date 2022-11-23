@@ -13,7 +13,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/periode/suns/api"
-	"github.com/periode/suns/api/config"
 	"github.com/periode/suns/api/models"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -125,7 +124,7 @@ func TestAuth(t *testing.T) {
 }
 
 func mustSetupRouter() *echo.Echo {
-	var conf config.Config
+	var conf api.Config
 	conf.DefaultConf()
 	conf.TemplatesDir = "../api/templates"
 	conf.FixturesDir = "../api/models/fixtures"

@@ -33,13 +33,15 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
 
     const getTasks = () => {
         const tasks = data.tasks.map(((t, i) => {
+            const prompt = contents ? contents.get(t.key) : t.value != "" ? t.value : "No prompt for this task"
+
             switch (t.type) {
                 case "audio_input":
                     return (
                         <div className="w-full
                                         flex flex-col gap-4
                                                 " key={`${t.type}-key-${i}`}>
-                            <p>{contents?.get(t.key)}</p>
+                            <p>{prompt}</p>
 
                             <AudioRecorder mod={data} index={index} ep={ep} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted} />
                         </div>
@@ -49,7 +51,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
                         <div className="w-full
                                     flex flex-col gap-4
                                             " key={`${t.type}-key-${i}`}>
-                            <p>{contents?.get(t.key)}</p>
+                            <p>{prompt}</p>
                             <FileUploader type="video" maxUploads={t.max_uploads} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted} />
                         </div>)
                 case "image_input":
@@ -57,19 +59,19 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
                         <div className="w-full
                                     flex flex-col gap-4
                                             " key={`${t.type}-key-${i}`}>
-                            <p>{contents?.get(t.key)}</p>
-                            <FileUploader type="image" maxUploads={t.max_uploads} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted} />
-                        </div>)
+                        <p>{prompt}</p>
+                        <FileUploader type="image" maxUploads={t.max_uploads} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted}/>
+                    </div>)
                 case "text_input":
                     return (
                         <div className="w-full
                                     flex flex-col gap-4
                                             " key={`${t.type}-key-${i}`}>
-                            <p>{contents?.get(t.key)}</p>
-                            <div className="h-60">
-                                <TextInputField handleNewUploads={handleNewUploads} handleUserDone={handleUserDone} isRequestingUploads={isRequestingUploads} hasUserCompleted={hasUserCompleted} placeholder={t.placeholder && contents?.get(t.placeholder)} />
-                            </div>
-                        </div>)
+                        <p>{prompt}</p>
+                        <div className="h-60">
+                            <TextInputField handleNewUploads={handleNewUploads} handleUserDone={handleUserDone} isRequestingUploads={isRequestingUploads} hasUserCompleted={hasUserCompleted} placeholder={t.placeholder && contents?.get(t.placeholder) }/>
+                        </div>
+                    </div>)
                 default:
                     return (<>Could not find task type ({t.type})</>)
             }

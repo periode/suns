@@ -8,7 +8,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"github.com/periode/suns/api/config"
 	"github.com/periode/suns/api/models"
 	"gorm.io/gorm"
 
@@ -44,11 +43,10 @@ func TestApi(t *testing.T) {
 	defer teardown(t)
 
 	t.Run("Testing server setup", func(t *testing.T) {
-		var conf config.Config
+		var conf Config
 		conf.DefaultConf()
 		conf.TemplatesDir = "./templates"
-		var ch chan string
-		StartServer("2046", conf, ch)
+		StartServer("2046", conf)
 	})
 
 	t.Run("Testing ping", func(t *testing.T) {

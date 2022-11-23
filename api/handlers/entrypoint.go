@@ -10,11 +10,11 @@ import (
 	"github.com/labstack/echo/v4"
 	zero "github.com/periode/suns/api/logger"
 	"github.com/periode/suns/api/models"
+	"github.com/periode/suns/mailer"
 )
 
 func GetAllEntrypoints(c echo.Context) error {
-	user_uuid := mustGetUser(c)
-	clusters, err := models.GetAllEntrypoints(user_uuid)
+	clusters, err := models.GetAllEntrypoints()
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "There was an error getting the Entrypoints.")
@@ -142,11 +142,11 @@ func ProgressEntrypoint(c echo.Context) error {
 		}
 
 		//-- send emails to whoever is not the user doing the current completion
-		// for i := 0; i < len(ep.Users); i++ {
-		// 	if ep.Users[i].UUID != user_uuid {
-		// 		mailer.SendModuleProgress(ep.Users[i], &ep)
-		// 	}
-		// }
+		for i := 0; i < len(ep.Users); i++ {
+			if ep.Users[i].UUID != user_uuid {
+				mailer.SendModuleProgress(ep.Users[i], &ep)
+			}
+		}
 	}
 
 	//-- check for entrypoint completion

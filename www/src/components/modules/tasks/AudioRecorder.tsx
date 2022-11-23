@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react"
-import { FiMic, FiPlay, FiRotateCcw, FiSquare, FiStopCircle } from "react-icons/fi"
+import { useEffect, useState } from "react"
+import { FiMic, FiRotateCcw, FiSquare } from "react-icons/fi"
 import { getSession } from "../../../utils/auth"
 import { IEntrypoint, IFile, IModule, IUpload } from "../../../utils/types"
 import AudioRecorderCountdown from "./utils/AudioRecorderCountdown"

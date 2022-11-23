@@ -16,6 +16,7 @@ type Task struct {
 
 	Type        string `json:"type" yaml:"type"`
 	Key         string `json:"key" yaml:"key"`
+	Value       string `json:"value" yaml:"value"`
 	Placeholder string `json:"placeholder" yaml:"placeholder"`
 	MaxUploads  int    `gorm:"default:1" json:"max_uploads" yaml:"max_uploads"`
 

@@ -14,7 +14,7 @@ func TestEntrypointModel(t *testing.T) {
 	defer teardown(t)
 
 	t.Run("Test get all listed and owned clusters", func(t *testing.T) {
-		res, err := models.GetAllEntrypoints(userID)
+		res, err := models.GetAllEntrypoints()
 		require.Nil(t, err)
 		assert.Equal(t, len(res), 3)
 	})

@@ -177,7 +177,7 @@ func RequestRecover(c echo.Context) error {
 
 	// send email with link
 	if os.Getenv("API_MODE") != "test" {
-		body := mailer.ConfirmationPayload{
+		body := mailer.RecoverPayload{
 			Name:  user.Name,
 			Host:  host,
 			Token: token.UUID.String(),

@@ -32,7 +32,7 @@ const (
 	// Type of Final module for layour
 	FinalModuleTangled         string = "Tangled"
 	FinalModuleTangledInverted string = "Tangled Inverted"
-	FinalModuleSeperate        string = "Seperate"
+	FinalModuleSeparate        string = "Separate"
 	// custom:
 	FinalModuleCrack string = "Crack"
 )
@@ -47,7 +47,7 @@ type Entrypoint struct {
 
 	Name       string `gorm:"not null" json:"name" form:"name" binding:"required"`
 	Slug       string `gorm:"" json:"slug"`
-	Icon       string `json:"icon" yaml:"icon"`
+	Icon       string `gorm:"default:black.svg" json:"icon" yaml:"icon"`
 	Generation int    `gorm:"default:0" json:"generation"`
 
 	//-- belongs to a cluster
@@ -57,7 +57,7 @@ type Entrypoint struct {
 	//-- has many modules
 	Modules         []Module `gorm:"foreignKey:EntrypointUUID;references:UUID" json:"modules"`
 	CurrentModule   int      `gorm:"default:0" json:"current_module" form:"current_module"`
-	FinalModuleType string   `gorm:"default:Seperate" json:"final_module_type"`
+	FinalModuleType string   `gorm:"default:Separate" json:"final_module_type"`
 
 	//-- has many-to-many users (0, 1 or 2)
 	Users         []*User       `gorm:"many2many:entrypoints_users;" json:"users"`
@@ -121,9 +121,9 @@ func GetEntrypointBySlug(slug string, user_uuid uuid.UUID) (Entrypoint, error) {
 	return entry, nil
 }
 
-func GetAllEntrypoints(user_uuid uuid.UUID) ([]Entrypoint, error) {
+func GetAllEntrypoints() ([]Entrypoint, error) {
 	eps := make([]Entrypoint, 0)
-	result := db.Preload("Modules").Preload("Users").Find(&eps)
+	result := db.Preload("Modules").Preload("Cluster").Preload("Users").Find(&eps)
 	return eps, result.Error
 }
 
