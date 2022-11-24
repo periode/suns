@@ -49,6 +49,7 @@ type Entrypoint struct {
 	Slug       string `gorm:"" json:"slug"`
 	Icon       string `gorm:"default:black.svg" json:"icon" yaml:"icon"`
 	Generation int    `gorm:"default:0" json:"generation"`
+	IsVisible  bool   `gorm:"default:false" json:"is_visible" form:"is_visible"`
 
 	//-- belongs to a cluster
 	ClusterUUID uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()" json:"cluster_uuid" yaml:"cluster_uuid"`

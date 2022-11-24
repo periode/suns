@@ -3,38 +3,14 @@ name: "Welcome"
 entrypoints:
   - status: "open"
     cluster_uuid: "06ed6a2b-bbcb-4c24-b1e1-3495821f846a"
+    is_visible: true
     name: "Welcome"
     max_users: 1
     lat: 500
     lng: 500
-    icon: "white.svg"
+    icon: "grey.svg"
     final_module_type: "Separate"
     modules:
-      - name: "Welcome - Intro"
-        type: "intro"
-        contents:
-          - type: "txt"
-            key: "intro_txt_1"
-        hint: "This is the intro of the whole signup process"
-      - name: "Welcome - Prompt recording"
-        type: "task"
-        tasks:
-          - type: "mark_maker"
-            key: "mark_maker"
-        hint: "Please record a moment that happened to you for the first time. This recording will then be sent to your partner."
-      - name: "Welcome - Response recording"
-        type: "task"
-        tasks:
-          - type: "sign_up"
-            key: "recaudio_info_txt"
-        hint: "This is where you sign up with email and password"
-      - name: "Welcome - Gestures"
-        type: "intro"
-        contents:
-          - type: "txt"
-            key: "intro_txt_2"
-          - type: "vid"
-            key: "intro_vid_1"
       - name: "Welcome - Marks"
         type: "intro"
         contents:

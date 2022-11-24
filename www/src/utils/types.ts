@@ -35,6 +35,7 @@ export interface IEntrypoint {
     created_at: string,
     name: string,
     status: ENTRYPOINT_STATUS,
+    is_visible: boolean,
     content: string,
     current_module: number,
     modules: Array<IModule>,
