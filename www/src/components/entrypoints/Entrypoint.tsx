@@ -205,14 +205,6 @@ const Entrypoint = (props: any) => {
                 return (
                     <PublicView entrypoint={ep} />
                 )
-            case "final_symbiosis_mean":
-                return (
-                    <FinalFirstTimes data={ep} />
-                )
-            case "final_first_times":
-                return (
-                    <PublicView entrypoint={ep} />
-                )
             default:
                 return (
                     <>

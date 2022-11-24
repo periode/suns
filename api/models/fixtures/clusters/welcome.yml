@@ -5,7 +5,7 @@ entrypoints:
     cluster_uuid: "06ed6a2b-bbcb-4c24-b1e1-3495821f846a"
     visibility: "hidden"
     name: "Welcome"
-    max_users: 1
+    max_users: 2
     icon: "grey.svg"
     final_module_type: "Separate"
     modules:
@@ -45,19 +45,40 @@ entrypoints:
         type: "task"
         tasks:
           - type: "image_input"
-            key: "intro_txt_4"
+            key: "intro_txt_img_input"
+          - type: "audio_input"
+            key: "intro_txt_audio_input"
+        uploads:
+          - user_uuid: "e8b74bcd-c864-41ee-b5a7-d3031f76c8a8"
+            url: "sample.png"
+            text: ""
+            type: "image/png"
+          - user_uuid: "e8b74bcd-c864-41ee-b5a7-d3031f76c8a8"
+            url: "sample.wav"
+            text: ""
+            type: "audio/wav"
         hint: "This is where you upload a picture for the co-creation"
       - name: "Welcome - Co-creation Video"
         type: "task"
         tasks:
           - type: "video_input"
             key: "intro_txt_5"
+        uploads:
+          - user_uuid: "e8b74bcd-c864-41ee-b5a7-d3031f76c8a8"
+            url: "sample.mp4"
+            text: ""
+            type: "video/mp4"
         hint: "This is where you upload a video for the co-creation"
       - name: "Welcome - Co-creation text"
         type: "task"
         tasks:
           - type: "text_input"
             key: "intro_txt_6"
+        uploads:
+          - user_uuid: "e8b74bcd-c864-41ee-b5a7-d3031f76c8a8"
+            url: ""
+            text: "this is the sample from the bot"
+            type: "text/plain"
         hint: "This is where you upload a video for the co-creation"
       - name: "Welcome - Final"
         type: "final"
@@ -66,11 +87,11 @@ entrypoints:
             key: "public_info_1"
           - type: "txt"
             key: "public_hl_1"
-      - name: "Welcome - Conclusion"
+      - name: "Welcome - Sacrifice"
         type: "intro"
         contents:
           - type: "txt"
-            key: "conclusion_text"
+            key: "intro_txt_sacrifice"
           - type: "vid"
             key: "conclusion_video"
         hint: "This is the final countdown"

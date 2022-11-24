@@ -55,7 +55,7 @@ func CreateUser(user *User) (User, error) {
 	return *user, result.Error
 }
 
-func GetUser(uuid uuid.UUID, user_uuid uuid.UUID) (User, error) {
+func GetUser(uuid uuid.UUID) (User, error) {
 	var user User
 	err := db.Where("uuid = ?", uuid).First(&user).Error
 	if err != nil {

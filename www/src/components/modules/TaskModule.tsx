@@ -123,7 +123,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
         <>
             <div className="w-full">
                 {
-                    inputs && inputs.length > 0 ?
+                    data.showPreviousUploads ?
                         <>
                             {getInputPrompt()}
                         </> : <></>

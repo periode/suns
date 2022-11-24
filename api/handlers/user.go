@@ -24,6 +24,8 @@ var (
 	Basepath   = filepath.Dir(b)
 )
 
+const BOT_USER_ID = "e8b74bcd-c864-41ee-b5a7-d3031f76c8a8"
+
 func GetAllUsers(c echo.Context) error {
 	users, err := models.GetAllUsers()
 	if err != nil {
@@ -78,6 +80,31 @@ func CreateUser(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "There was an error creating your entrypoint.")
 	}
 
+	//-- claim entrypoint by the bot
+	bot, err := models.GetUser(uuid.MustParse(BOT_USER_ID))
+	if err != nil {
+		zero.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "There was an error claiming your entrypoint.")
+	}
+
+	_, err = models.ClaimEntrypoint(&eps[0], &bot)
+	if err != nil {
+		zero.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "There was an error claiming your entrypoint.")
+	}
+
+	//-- manually create the bot uploads
+	for _, mod := range eps[0].Modules {
+		if len(mod.Uploads) > 0 {
+			_, err := models.AddModuleUpload(mod.UUID, mod.Uploads)
+			if err != nil {
+				zero.Warn("error getting the module")
+				return c.String(http.StatusInternalServerError, "Cannot get the module")
+			}
+		}
+	}
+
+	//-- claim entrypoint by the new user
 	ep, err := models.ClaimEntrypoint(&eps[0], &user)
 	if err != nil {
 		zero.Error(err.Error())
@@ -120,7 +147,7 @@ func UpdateUser(c echo.Context) error {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 
-	_, err = models.GetUser(uid, user_uuid)
+	_, err = models.GetUser(uid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusNotFound, "We could not find the requested user.")
@@ -155,7 +182,7 @@ func UpdateUserPrompts(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Not a valid ID.")
 	}
 
-	user, err := models.GetUser(uid, user_uuid)
+	user, err := models.GetUser(uid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusNotFound, "We could not find the requested user.")
@@ -199,7 +226,7 @@ func GetUser(c echo.Context) error {
 		return c.JSON(http.StatusOK, user)
 	}
 
-	user, err := models.GetUser(uid, user_uuid)
+	user, err := models.GetUser(uid)
 	if err != nil {
 		zero.Errorf("error getting User by UUID %v: %s", id, err)
 		c.String(http.StatusNotFound, "We couldn't find the User.")
