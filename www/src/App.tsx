@@ -82,7 +82,7 @@ const App = () => {
                     if (ep.visibility == "visible"){
                       return (
                         <EntrypointMarker
-                          key={`ep-${ep.name.replace(' ', '-')}-${index}`}
+                          key={`ep-${ep.name.replace(' ', '-')}-${index}-${ep.uuid}`}
                           data={ep}
                         />
                       )

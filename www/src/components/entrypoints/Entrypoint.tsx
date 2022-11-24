@@ -149,7 +149,7 @@ const Entrypoint = (props: any) => {
     }
 
     const requestUploads = () => {
-        if (data.modules[data.current_module].tasks.length > 0)
+        if (data.modules[data.current_module].tasks.length > 0 && data.modules[data.current_module].tasks[0].type != "prompts_input")
             setRequestingUploads(true)
         else
             completeModule(data, session)

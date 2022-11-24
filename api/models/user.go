@@ -32,8 +32,10 @@ type User struct {
 	Slug     string `gorm:"" json:"slug"`
 	Password []byte `gorm:"not null" json:"password"`
 
-	WeeklyPromptsIndex  int `gorm:"default:0"`
-	MonthlyPromptsIndex int `gorm:"default:0"`
+	CanReceiveWeeklyPrompts  bool `gorm:"default:false"`
+	CanReceiveMonthlyPrompts bool `gorm:"default:false"`
+	WeeklyPromptsIndex       int  `gorm:"default:0"`
+	MonthlyPromptsIndex      int  `gorm:"default:0"`
 
 	//-- a user has many-many entrypoints
 	Entrypoints []*Entrypoint `gorm:"many2many:entrypoints_users;" json:"entrypoints"`

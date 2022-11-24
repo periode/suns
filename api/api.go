@@ -92,6 +92,7 @@ func SetupRouter() *echo.Echo {
 		users.POST("/", handlers.CreateUser)
 
 		users.PATCH("/:id", handlers.UpdateUser)
+		users.PATCH("/:id/prompts", handlers.UpdateUserPrompts)
 		users.DELETE("/:id", handlers.DeleteUser)
 	}
 

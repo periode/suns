@@ -3,6 +3,7 @@ import { AirTableContext } from "../../contexts/AirContext"
 import { getSession } from "../../utils/auth"
 import { IEntrypoint, IFile, IModule, IUpload } from "../../utils/types"
 import TextInputField from "../commons/forms/inputs/TextInputField"
+import WelcomePrompts from "../entrypoints/welcome/WelcomePrompts"
 import ContentAudio from "./content/ContentAudio"
 import ContentPhoto from "./content/ContentPhoto"
 import ContentText from "./content/ContentText"
@@ -34,7 +35,6 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
     const getTasks = () => {
         const tasks = data.tasks.map(((t, i) => {
             const prompt = contents ? contents.get(t.key) : t.value != "" ? t.value : "No prompt for this task"
-
             switch (t.type) {
                 case "audio_input":
                     return (
@@ -59,17 +59,26 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
                         <div className="w-full
                                     flex flex-col gap-4
                                             " key={`${t.type}-key-${i}`}>
-                        <p>{prompt}</p>
-                        <FileUploader type="image" maxUploads={t.max_uploads} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted}/>
-                    </div>)
+                            <p>{prompt}</p>
+                            <FileUploader type="image" maxUploads={t.max_uploads} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted} />
+                        </div>)
                 case "text_input":
                     return (
                         <div className="w-full
                                     flex flex-col gap-4
                                             " key={`${t.type}-key-${i}`}>
+                            <p>{prompt}</p>
+                            <div className="h-60">
+                                <TextInputField handleNewUploads={handleNewUploads} handleUserDone={handleUserDone} isRequestingUploads={isRequestingUploads} hasUserCompleted={hasUserCompleted} placeholder={t.placeholder && contents?.get(t.placeholder)} />
+                            </div>
+                        </div>)
+                case "prompts_input":
+                    return (<div className="w-full
+                    flex flex-col gap-4
+                            " key={`${t.type}-key-${i}`}>
                         <p>{prompt}</p>
                         <div className="h-60">
-                            <TextInputField handleNewUploads={handleNewUploads} handleUserDone={handleUserDone} isRequestingUploads={isRequestingUploads} hasUserCompleted={hasUserCompleted} placeholder={t.placeholder && contents?.get(t.placeholder) }/>
+                            <WelcomePrompts handleUserDone={handleUserDone}/>
                         </div>
                     </div>)
                 default:
@@ -88,10 +97,10 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
             if (i.user_uuid !== session.user.uuid)
                 switch (true) {
                     case i.type.startsWith("text/plain"):
-                        inputElements.push((<ContentText key={i.uuid} text={i.text}/>))
+                        inputElements.push((<ContentText key={i.uuid} text={i.text} />))
                         break;
                     case i.type.startsWith("audio/"):
-                        inputElements.push((<ContentAudio key={i.uuid} src={`${process.env.REACT_APP_API_URL}/static/${i.url}`}/>))
+                        inputElements.push((<ContentAudio key={i.uuid} src={`${process.env.REACT_APP_API_URL}/static/${i.url}`} />))
                         break;
                     case i.type.startsWith("video/"):
                         inputElements.push((<ContentVideoInternal key={i.uuid} src={`${process.env.REACT_APP_API_URL}/static/${i.url}`} />))

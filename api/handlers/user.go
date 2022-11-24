@@ -142,6 +142,44 @@ func UpdateUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, updated)
 }
 
+func UpdateUserPrompts(c echo.Context) error {
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
+		return c.String(http.StatusUnauthorized, "unauthorized")
+	}
+
+	id := c.Param("id")
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		zero.Error(err.Error())
+		return c.String(http.StatusBadRequest, "Not a valid ID.")
+	}
+
+	user, err := models.GetUser(uid, user_uuid)
+	if err != nil {
+		zero.Error(err.Error())
+		return c.String(http.StatusNotFound, "We could not find the requested user.")
+	}
+
+	if c.FormValue("weekly") == "on" {
+		user.CanReceiveWeeklyPrompts = true
+	}
+
+	if c.FormValue("monthly") == "on" {
+		user.CanReceiveMonthlyPrompts = true
+	}
+
+	fmt.Printf("updating user preferences - weekly (%v) monthly (%v)\n", user.CanReceiveWeeklyPrompts, user.CanReceiveMonthlyPrompts)
+
+	updated, err := models.UpdateUser(uid, user_uuid, &user)
+	if err != nil {
+		zero.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "There was an error updating the user.")
+	}
+
+	return c.JSON(http.StatusOK, updated)
+}
+
 func GetUser(c echo.Context) error {
 	user_uuid := mustGetUser(c)
 
