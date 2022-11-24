@@ -64,7 +64,7 @@ const App = () => {
     }
 
   }, [session.token])
-
+  
   return (
 
     <AirContext>
@@ -79,13 +79,16 @@ const App = () => {
                 <ImageOverlay url={backgroundMap} bounds={bounds} />
                 <>
                   {entrypoints.map((ep, index) => {
-                    if (ep.is_visible)
+                    if (ep.visibility == "visible"){
                       return (
                         <EntrypointMarker
                           key={`ep-${ep.name.replace(' ', '-')}-${index}`}
                           data={ep}
                         />
                       )
+                    }else{
+                      return(<></>)
+                    }
                   })
                   }
                 </>

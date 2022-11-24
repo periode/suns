@@ -23,12 +23,8 @@ const SignUp = () => {
 	const [signupPasswordConf, setSignupPasswordConf] = useState("")
 
 	const autoSignIn = (welcome_entrypoint_uuid : string) => {
-		// fetch login : on succes navigate
 		signin(signupEmail, signupPassword)
 			.then((res : string) => {
-				console.log("sign in succcess ", welcome_entrypoint_uuid)
-				console.log("sign in succcess res", res)
-				
 				navigate(`/entrypoints/${welcome_entrypoint_uuid}`)
 				setSuccess(true)
 				setMessage(res)
