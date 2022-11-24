@@ -1,7 +1,9 @@
+import MarkMaker from "../../entrypoints/welcome/MarkMaker/MarMaker"
+
 const MarkMaking = () => {
     return (
         <>
-        Making a mark yay
+            <MarkMaker />
         </>
     )
 }
