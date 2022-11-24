@@ -88,10 +88,12 @@ func Login(c echo.Context) error {
 		return c.String(http.StatusUnauthorized, "Authentication failed")
 	}
 
-	if user.Status == models.UserPending {
-		zero.Error("Cannot login pending user")
-		return c.String(http.StatusUnauthorized, "Authentication failed")
-	}
+	// Disabled for tutorial flow:
+
+	// if user.Status == models.UserPending {
+	// 	zero.Error("Cannot login pending user")
+	// 	return c.String(http.StatusUnauthorized, "Authentication failed")
+	// }
 
 	err = bcrypt.CompareHashAndPassword(user.Password, []byte(password))
 	if err != nil {
@@ -177,7 +179,7 @@ func RequestRecover(c echo.Context) error {
 
 	// send email with link
 	if os.Getenv("API_MODE") != "test" {
-		body := mailer.ConfirmationPayload{
+		body := mailer.RecoverPayload{
 			Name:  user.Name,
 			Host:  host,
 			Token: token.UUID.String(),

@@ -1,16 +1,15 @@
-import { Dispatch, SetStateAction, useContext, useEffect } from "react"
+import { useContext, useEffect } from "react"
 import { AirTableContext } from "../../contexts/AirContext"
 import { IModule } from "../../utils/types"
-import Content from "../commons/Content"
+import IntroContent from "./content/IntroContent"
 
 interface IntroModuleProps {
     data: IModule,
     epName: string,
-    index: number,
     handleUserDone: Function,
 }
 
-const IntroModule = ({ data, epName, index, handleUserDone }: IntroModuleProps) => {
+const IntroModule = ({ data, epName, handleUserDone }: IntroModuleProps) => {
     
     useEffect(() => {
         handleUserDone(true)
@@ -26,11 +25,11 @@ const IntroModule = ({ data, epName, index, handleUserDone }: IntroModuleProps) 
     }
 
     return (<>
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-4 items-start">
             {
                 data.contents.map((c) => {
                     return (
-                        <Content key={c.key}type={c.type} airkey={c.key} contents={contents} value={c.value}/>
+                        <IntroContent key={c.key} type={c.type} airkey={c.key} contents={contents} />
                     )   
                 })
             }

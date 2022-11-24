@@ -1,7 +1,5 @@
 import { ReactNode } from "react";
-import { finished } from "stream";
 import { ENTRYPOINT_STATUS, IEntrypoint, ISession } from "../../../utils/types";
-import EntrypointActions from "../EntrypointActions";
 import EntrypointCountdown from "../EntrypointCountdown";
 import EntrypointPartners from "../EntrypointPartners";
 
@@ -37,7 +35,7 @@ function EntrypointLayout({
 					<div className="w-full border-b border-green-600">
 						{title}
 					</div>
-					<div className="w-full md:flex">
+					{/* <div className="w-full md:flex">
 						<div className="w-full border-b border-green-600">
 							<EntrypointCountdown endDate={endDate} />
 						</div>
@@ -45,7 +43,7 @@ function EntrypointLayout({
 						<div className="w-full border-b border-green-600">
 							<EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
 						</div>
-					</div>
+					</div> */}
 					{ module }
 					<div className="h-20
                             pl-4 pr-4
@@ -96,7 +94,7 @@ function EntrypointLayout({
                         text-stone-500
                         bg-stone-50
                         ">
-					<div className="w-full border-b border-stone5700">
+					<div className="w-full border-b border-stone-500">
 						{title}
 					</div>
 					<div className="w-full md:flex">

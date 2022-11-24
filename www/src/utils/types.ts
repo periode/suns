@@ -2,9 +2,9 @@
 //-- enums
 //--------
 export enum ENTRYPOINT_STATUS {
+    EntrypointOpen = "open",
     EntrypointPending = "pending",
     EntrypointCompleted = "completed",
-    EntrypointOpen = "open",
 }
 
 export enum PARTNER_STATUS {
@@ -35,6 +35,8 @@ export interface IEntrypoint {
     created_at: string,
     name: string,
     status: ENTRYPOINT_STATUS,
+    cluster: ICluster,
+    visibility: string,
     content: string,
     current_module: number,
     modules: Array<IModule>,
@@ -54,6 +56,7 @@ export interface IUpload {
     name: string,
     text: string,
     type: string,
+    uuid: string,
 }
 
 export interface IFile {
@@ -81,6 +84,7 @@ export interface IModule {
     name: string,
     content: string,
     type: string,
+    showPreviousUploads: boolean,
     uploads: Array<IUpload>,
     status: string,
     contents: Array<IContent>,

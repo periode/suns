@@ -113,8 +113,9 @@ func ProgressEntrypoint(c echo.Context) error {
 	}
 
 	mod := ep.Modules[ep.CurrentModule]
-	//-- this is where we make the update logic.
-	if ep.MaxUsers == 1 {
+	//-- this is where we make the update logic
+	//-- if we're on the welcome module, we have two users but behave like one
+	if ep.MaxUsers == 1 || ep.Cluster.Name == "Welcome" {
 		ep.CurrentModule += 1
 	} else if ep.MaxUsers == 2 {
 		//-- we update one user
@@ -196,13 +197,13 @@ func ClaimEntrypoint(c echo.Context) error {
 		}
 	}
 
-	user, err := models.GetUser(user_uuid, user_uuid)
+	user, err := models.GetUser(user_uuid)
 	if err != nil {
 		return c.String(http.StatusNotFound, "We couldn't find the User to update.")
 	}
 
+	//-- progress so that we don't have to re-watch the video
 	if len(entrypoint.Users) == entrypoint.MaxUsers-1 {
-		entrypoint.Status = models.EntrypointPending
 		entrypoint.CurrentModule += 1
 	}
 

@@ -1,4 +1,4 @@
-import { ENTRYPOINT_STATUS, IEntrypoint, ISession, IUser, PARTNER_STATUS } from "../../utils/types"
+import { ENTRYPOINT_STATUS, IEntrypoint, PARTNER_STATUS } from "../../utils/types"
 import { FiShare2, FiArrowRight } from "react-icons/fi"
 
 interface EntrypointActionsProps {
@@ -22,7 +22,7 @@ function EntrypointActions({
 	const copyToClipboard = (text: string) => {
 		window.prompt("You can share this link: ", text);
 	}
-
+		
 	const ShareButton =
 		<button className=" font-mono
 							cursor-pointer
@@ -48,7 +48,7 @@ function EntrypointActions({
 							cursor-pointer
 							flex items-center
 							gap-1`}
-			onClick={() => { if (!hasUserCompleted) completeModuleFunction() }} disabled={hasUserCompleted}>
+			onClick={() => {if (!hasUserCompleted) completeModuleFunction() }} disabled={hasUserCompleted}>
 			<p>Next</p>
 			<FiArrowRight className="text-xs" />
 		</button>
@@ -72,7 +72,7 @@ function EntrypointActions({
 		</p>
 
 	const rightButtonDisplay = () => {
-		if (entryPointData.status === ENTRYPOINT_STATUS.EntrypointOpen)
+		if (!isOwner && (entryPointData.partner_status === PARTNER_STATUS.PartnerPartial || entryPointData.partner_status === PARTNER_STATUS.PartnerNone))
 			return StartButton
 
 		if (hasUserCompleted)
@@ -81,7 +81,7 @@ function EntrypointActions({
 		if (isOwner && canUserComplete && entryPointData.status === ENTRYPOINT_STATUS.EntrypointPending) {
 			if (entryPointData.current_module === entryPointData.modules.length - 2)
 				return FinishButton
-			else if (entryPointData.partner_status == PARTNER_STATUS.PartnerFull)
+			else
 				return NextButton
 		}
 
@@ -100,7 +100,7 @@ function EntrypointActions({
 				Step
 			}
 			<div className="w-16">
-				{rightButtonDisplay()}
+				{ rightButtonDisplay() }
 			</div>
 		</div>
 	);

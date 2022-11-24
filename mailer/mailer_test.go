@@ -11,7 +11,7 @@ func TestMailer(t *testing.T) {
 	os.Setenv("API_MODE", "test")
 
 	t.Run("Testing basic send", func(t *testing.T) {
-		body := ConfirmationPayload{
+		body := RecoverPayload{
 			Name:  "Pierre",
 			Host:  "localhost",
 			Token: "ttttt-oooo-kkkk-eeeee",
@@ -23,7 +23,7 @@ func TestMailer(t *testing.T) {
 	})
 
 	t.Run("Testing wrong template", func(t *testing.T) {
-		body := ConfirmationPayload{
+		body := RecoverPayload{
 			Name:  "Pierre",
 			Host:  "localhost",
 			Token: "ttttt-oooo-kkkk-eeeee",

@@ -131,7 +131,7 @@ func sendWeeklyEmails() {
 		}
 
 		for _, user := range users {
-			if user.WeeklyPromptsIndex >= len(prompts.Weekly) {
+			if !user.CanReceiveWeeklyPrompts || user.WeeklyPromptsIndex >= len(prompts.Weekly) {
 				continue
 			}
 
@@ -168,7 +168,7 @@ func sendMonthlyEmails() {
 		}
 
 		for _, user := range users {
-			if user.MonthlyPromptsIndex >= len(prompts.Monthly) {
+			if !user.CanReceiveMonthlyPrompts || user.MonthlyPromptsIndex >= len(prompts.Monthly) {
 				continue
 			}
 

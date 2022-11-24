@@ -13,12 +13,30 @@ type Payload interface {
 }
 
 type ConfirmationPayload struct {
+	Name       string
+	Host       string
+	Entrypoint string
+}
+
+func (c ConfirmationPayload) Check() error {
+	var err error
+	if c.Name == "" || c.Host == "" || c.Entrypoint == "" {
+		err = fmt.Errorf("the payload should not be empty")
+	}
+	return err
+}
+
+func (c ConfirmationPayload) Data() interface{} {
+	return c
+}
+
+type RecoverPayload struct {
 	Name  string
 	Host  string
 	Token string
 }
 
-func (c ConfirmationPayload) Check() error {
+func (c RecoverPayload) Check() error {
 	var err error
 	if c.Name == "" || c.Host == "" || c.Token == "" {
 		err = fmt.Errorf("the payload should not be empty")
@@ -26,7 +44,7 @@ func (c ConfirmationPayload) Check() error {
 	return err
 }
 
-func (c ConfirmationPayload) Data() interface{} {
+func (c RecoverPayload) Data() interface{} {
 	return c
 }
 

@@ -1,9 +1,8 @@
-import { equal } from "assert"
 import { FINAL_TYPE, IEntrypoint, IModule, IUpload, IUser } from "../../utils/types"
 import ContentAudio from "../modules/content/ContentAudio"
 import ContentPhoto from "../modules/content/ContentPhoto"
-import ContentVideo from "../modules/content/ContentVideo"
-import ContentText from "../modules/content/ContextText"
+import ContentVideoInternal from "../modules/content/ContentVideoInternal"
+import ContentText from "../modules/content/ContentText"
 
 interface PublicViewProps {
     entrypoint: IEntrypoint
@@ -17,92 +16,58 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
         switch (true) {
             case upload.type.startsWith("text/"):
                 return (
-                    <div>{upload.text}</div>
+                    <ContentText key={upload.uuid} text={upload.text} />
                 )
             case upload.type.startsWith("image/"):
                 return (
-                    <div>{upload.url}</div>
+                    <ContentPhoto key={upload.uuid} src={upload.url} />
                 )
             case upload.type.startsWith("video/"):
                 return (
-                    <div>{upload.url}</div>
+                    <ContentVideoInternal key={upload.uuid} src={upload.url} />
                 )
             case upload.type.startsWith("audio/"):
                 return (
-                    <div>{upload.url}</div>
+                    <ContentAudio key={upload.uuid} src={upload.url} />
                 )
             default:
                 return <>Couldnt get upload.type: {upload.type}</>
         }
     }
 
+    const getUploads = (uploads: Array<IUpload>, uuid: string, compare: (x: string, y: string) => boolean, alternate: boolean,): JSX.Element[] => {
+        var Content: JSX.Element[] = []
 
-    const getModuleContent = (module: IModule, user : IUser, compare : (x:string, y:string) => {}, alternate: boolean) : JSX.Element => 
-    {
-        let Content1 : JSX.Element[] = []
-        let Content2 : JSX.Element[] = []
-
-        var isAlternated = false; 
-        for (let i = 0; i < module.uploads.length; i++)
-        {
-            if (isAlternated === false)
-            {
-                compare(module.uploads[i].user_uuid, user.uuid) ?
-                Content1.push( getUploadContent(module.uploads[i])) : Content2.push(getUploadContent(module.uploads[i]))
-            }
-            else
-            {
-                !compare(module.uploads[i].user_uuid, user.uuid) ?
-                Content1.push( getUploadContent(module.uploads[i])) : Content2.push(getUploadContent(module.uploads[i]))
-            }
-            
-            if (alternate)
-                isAlternated = !isAlternated
+        for (let i = 0; i < uploads.length; i++) {
+            if (!alternate && compare(uploads[i].user_uuid, uuid))
+                Content.push(getUploadContent(uploads[i]))
+            if (alternate && !compare(uploads[i].user_uuid, uuid))
+                Content.push(getUploadContent(uploads[i]))
         }
-
-        return (
-            <>
-                { Content1.map((element:JSX.Element)=>{return element}) }
-                { Content2.map((element:JSX.Element)=>{return element}) }
-            </>
-        )
+        return (Content)
     }
 
-    const getModules = (user: IUser, modules: IModule[], compare: (x: string, y: string) => boolean, alternate: boolean) =>
-    {
+    const getModules = (user: IUser, modules: IModule[], compare: (x: string, y: string) => boolean, alternate: boolean) => {
         if (user === undefined
             || user.uuid === undefined
-            )
+        )
             return <>user undefined</>
-        var Content : JSX.Element[] = []
-
-        var isAlternated = false; 
-        for (let moduleID = 1; moduleID < modules.length - 1; moduleID++)
-        {
-            if (!modules[moduleID].uploads[0])
-            {
-                Content.push(<>Upload does not exist</>)
+        var Content: JSX.Element[] = []
+        
+        var isAlternated = false;
+        for (let moduleID = 1; moduleID < modules.length - 1; moduleID++) {
+            if (modules[moduleID].uploads.length !== 0) {
+                if (!modules[moduleID].uploads[0])
+                    Content.push(<>Upload does not exist</>)
+                else
+                    Content.push(...getUploads(entrypoint.modules[moduleID].uploads, user.uuid, compare, isAlternated))
+                if (alternate)
+                    isAlternated = !isAlternated
             }
-            else if (isAlternated)
-            { 
-                compare(entrypoint.modules[moduleID].uploads[0].user_uuid, user.uuid) ?
-                Content.push(getUploadContent(entrypoint.modules[moduleID].uploads[0]))
-                :
-                Content.push(getUploadContent(entrypoint.modules[moduleID].uploads[1]))
-            }
-            else
-            { 
-                !compare(entrypoint.modules[moduleID].uploads[0]?.user_uuid, user.uuid) ?
-                Content.push(getUploadContent(entrypoint.modules[moduleID].uploads[0]))
-                :
-                Content.push(getUploadContent(entrypoint.modules[moduleID].uploads[1]))
-            }
-            if (alternate)
-                isAlternated = !isAlternated
         }
         return (
             <>
-                { Content.map((element:JSX.Element)=>{return element}) }
+                {Content.map((element: JSX.Element) => { return element })}
             </>
         )
     }
@@ -123,99 +88,45 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
         if (
             entrypoint === undefined
             || entrypoint.modules.length === 0
-            || entrypoint.modules[1].uploads.length === 0
-            || entrypoint.modules[2].uploads.length === 0
             || user === undefined
             || user.uuid === undefined
         )
-            return (<></>)
-
-        var Content1: JSX.Element
-        var Content2: JSX.Element
+            return (<>A problem occured</>)
 
         switch (entrypoint.final_module_type) {
             case FINAL_TYPE.Separate:
-                {
-                    // Task and belong to both users
-                    entrypoint.modules[1].uploads[0].user_uuid === user.uuid ?
-                        Content1 = getUploadContent(entrypoint.modules[1].uploads[0])
-                        :
-                        Content1 = getUploadContent(entrypoint.modules[1].uploads[1])
-
-                    entrypoint.modules[2].uploads[0].user_uuid === user.uuid ?
-                        Content2 = getUploadContent(entrypoint.modules[2].uploads[0])
-                        :
-                        Content2 = getUploadContent(entrypoint.modules[2].uploads[1])
-
-                    return (
-                        <>
-                            {Content1}
-                            {Content2}
-                        </>
-                    )
-                }
+                return (getModules(user, entrypoint.modules, equalString, false))
             case FINAL_TYPE.Tangled:
-                {
-                    // First module + Second Module from the other user
-                    entrypoint.modules[1].uploads[0].user_uuid === user.uuid ?
-                        Content1 = getUploadContent(entrypoint.modules[1].uploads[0])
-                        :
-                        Content1 = getUploadContent(entrypoint.modules[1].uploads[1])
-
-                    entrypoint.modules[2].uploads[0].user_uuid !== user.uuid ?
-                        Content2 = getUploadContent(entrypoint.modules[2].uploads[0])
-                        :
-                        Content2 = getUploadContent(entrypoint.modules[2].uploads[1])
-
-                    return (
-                        <>
-                            {Content1}
-                            {Content2}
-                        </>
-                    )
-                }
+                return (getModules(user, entrypoint.modules, equalString, true))
             case FINAL_TYPE.TangledInverted:
-                {
-                    entrypoint.modules[1].uploads[0].user_uuid !== user.uuid ?
-                        Content1 = getUploadContent(entrypoint.modules[1].uploads[0])
-                        :
-                        Content1 = getUploadContent(entrypoint.modules[1].uploads[1])
-
-                    entrypoint.modules[2].uploads[0].user_uuid === user.uuid ?
-                        Content2 = getUploadContent(entrypoint.modules[2].uploads[0])
-                        :
-                        Content2 = getUploadContent(entrypoint.modules[2].uploads[1])
-
-                    return (
-                        <>
-                            {Content1}
-                            {Content2}
-                        </>
-                    )
-                }
+                return (getModules(user, entrypoint.modules, notequalString, true))
             default:
                 {
                     break;
                 }
         }
 
-        return <>A problem occured, entrypoint.final_module_type: { entrypoint.final_module_type }</>
+        return <>A problem occured, entrypoint.final_module_type: {entrypoint.final_module_type}</>
     }
 
+
     return (
-        <div className="w-full h-full flex flex-col md:flex-row gap-4">
-            {entrypoint.users.map((u : IUser) => {
+        <div className="w-full h-full flex flex-col md:flex-row gap-8">
+            {entrypoint.users.map(u => {
                 return (
-                    <div className="">
-                        <h2>{u.name}</h2>
-                        {
-                            getContent(u)
-                        }
+                    <div className="
+                        flex-1 
+                        flex flex-col gap-2
+                        " key={u.uuid}>
+                        <h2 className="text-2xl font-regular">{u.name}</h2>
+                        {getContent(u)}
                     </div>
                 )
             })}
         </div >
     )
+
+
 }
 
 export default PublicView

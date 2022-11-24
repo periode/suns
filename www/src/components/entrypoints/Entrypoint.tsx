@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import { FiCommand, FiX } from "react-icons/fi"
@@ -6,12 +6,10 @@ import { FiCommand, FiX } from "react-icons/fi"
 import "../../styles/entrypoint.css"
 import { getSession } from "../../utils/auth";
 import EntrypointActions from "./EntrypointActions";
-import EntrypointPartners from "./EntrypointPartners";
-import EntrypointCountdown from "./EntrypointCountdown";
 import PublicView from "./PublicView";
 import NotFound from "../../NotFound";
 import FinalFirstTimes from "../modules/FinalFirstTimes";
-import { ENTRYPOINT_STATUS, IEntrypoint, IFile, IModule, ISession } from "../../utils/types";
+import { ENTRYPOINT_STATUS, IEntrypoint, IFile, ISession } from "../../utils/types";
 import IntroModule from "../modules/IntroModule";
 import TaskModule from "../modules/TaskModule";
 import { fetchEntrypoint, progressModule, submitUpload } from "../../utils/entrypoint";
@@ -61,13 +59,13 @@ const Entrypoint = (props: any) => {
 
     //-- this listens for whether a user is done with all tasks on the module
     useEffect(() => {
-        if (data == undefined)
+        if (data === undefined)
             return
 
-        if (isUserDone.length == data.modules[data.current_module].tasks.length)
+        if (isUserDone.length === data.modules[data.current_module].tasks.length)
             setCanUserComplete(true)
 
-    }, [isUserDone])
+    }, [isUserDone, data])
 
     //-- this checks for the completion status per user
     useEffect(() => {
@@ -81,14 +79,14 @@ const Entrypoint = (props: any) => {
                 return
             }
         }
-    }, [isOwned])
+    }, [isOwned, data, session.user.uuid])
 
-    //-- this checks if all uploads have been submitted before completing the module
-    useEffect(() => {        
+    //-- this checks if all uploads have been submitted before completing the module (should be a useCallback?)
+    useEffect(() => {
         if (data === undefined)
             return
 
-        if (uploads.length == data.modules[data.current_module].tasks.length && !hasSubmittedModule.current) {
+        if (uploads.length === data.modules[data.current_module].tasks.length && !hasSubmittedModule.current) {
             completeModule(data, session)
             hasSubmittedModule.current = true
         }
@@ -131,26 +129,27 @@ const Entrypoint = (props: any) => {
         if (res.ok) {
             const updated = await res.json()
             setData(updated)
+            setCanUserComplete(false)
         } else {
             console.warn('error', res.status)
         }
     }
 
-    const handleNewUploads = (_new: Array<IFile>) => {        
+    const handleNewUploads = (_new: Array<IFile>) => {
         setUploads(prev => {
             return [...prev, ..._new] as IFile[]
         })
     }
 
     const handleUserDone = (_val: boolean) => {
-        if (_val == true)
+        if (_val === true)
             setUserDone(prev => {
                 return [...prev, _val] as boolean[]
             })
     }
 
     const requestUploads = () => {
-        if (data.modules[data.current_module].tasks.length > 0)
+        if (data.modules[data.current_module].tasks.length > 0 && data.modules[data.current_module].tasks[0].type != "prompts_input")
             setRequestingUploads(true)
         else
             completeModule(data, session)
@@ -162,9 +161,13 @@ const Entrypoint = (props: any) => {
 
 
         uploads.forEach(u => {
+            console.log(u);
+
             submitUpload(session.token, data.modules[data.current_module].uuid, u)
-                .then(() => console.log("uploaded file!"))
-                .catch((err) => console.log(err))
+                .then(() => {
+                    console.log("uploaded file!")
+                })
+                .catch((err) => console.error(err))
         })
 
         progressModule(ep.uuid, session.token)
@@ -178,11 +181,11 @@ const Entrypoint = (props: any) => {
                 else
                     setUserCompleted(false) //-- we move on to the next module
 
+                setCanUserComplete(false)
                 setData(updated)
             })
             .catch(err => {
                 console.log("failed to complete module, status:", err);
-
             })
     }
 
@@ -192,21 +195,13 @@ const Entrypoint = (props: any) => {
         switch (mod.type) {
             case "intro":
                 return (
-                    <IntroModule index={index} epName={ep.name} data={mod} handleUserDone={handleUserDone} />
+                    <IntroModule epName={ep.name} data={mod} handleUserDone={handleUserDone} />
                 )
             case "task":
                 return (
                     <TaskModule index={index} ep={ep} data={mod} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted} />
                 )
             case "final":
-                return (
-                    <PublicView entrypoint={ep} />
-                )
-            case "final_symbiosis_mean":
-                return (
-                    <FinalFirstTimes data={ep} />
-                )
-            case "final_first_times":
                 return (
                     <PublicView entrypoint={ep} />
                 )
@@ -228,10 +223,9 @@ const Entrypoint = (props: any) => {
         if (data.status === ENTRYPOINT_STATUS.EntrypointCompleted) {
             return (<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}-final`} className="m-1 p-1">{parseModule(data.current_module, data)}</div>)
         }
-        
-        if (hasUserCompleted)
-        { 
-            return(<WaitingModule key="module-complete-message"/>)
+
+        if (hasUserCompleted) {
+            return (<WaitingModule key="module-complete-message" />)
         }
 
 
@@ -255,28 +249,31 @@ const Entrypoint = (props: any) => {
                                     <FiCommand className="text-[32px]" />
                                     <h1 className="text-xl font-bold">{data.name}</h1>
                                 </div>
-                                <div className="cursor-pointer"
-                                    onClick={() => navigate('/', { replace: true })}>
-                                    <FiX className="text-[32px]" />
-                                </div>
+                                {
+                                    data.cluster.name != "Welcome" ? <div className="cursor-pointer"
+                                        onClick={() => navigate('/', { replace: true })}>
+                                        <FiX className="text-[32px]" />
+                                    </div> : <></>
+                                }
+
                             </div>
                         </div>
                     }
                     module={
                         <div className="w-full h-full p-4 overflow-scroll">
-                        {
-                            isOwned || data.status === ENTRYPOINT_STATUS.EntrypointCompleted ?
-                                getModule()
-                                :
-                                data.users.length < data.max_users ?
-                                    <>
-                                        {parseModule(0, data)}
-                                    </>
+                            {
+                                isOwned || data.status === ENTRYPOINT_STATUS.EntrypointCompleted ?
+                                    getModule()
                                     :
-                                    <>
-                                        <PublicView entrypoint={data} />
-                                    </>
-                        }
+                                    data.users.length < data.max_users ?
+                                        <>
+                                            {parseModule(0, data)}
+                                        </>
+                                        :
+                                        <>
+                                            <PublicView entrypoint={data} />
+                                        </>
+                            }
                         </div>
                     }
                     entrypointactions={

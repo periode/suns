@@ -33,7 +33,7 @@ func TestUserModel(t *testing.T) {
 	})
 
 	t.Run("Test get user", func(t *testing.T) {
-		user, err := models.GetUser(userID, uuid.Nil)
+		user, err := models.GetUser(userID)
 		require.Nil(t, err)
 		assert.Equal(t, user.Name, userName)
 	})
@@ -53,13 +53,13 @@ func TestUserModel(t *testing.T) {
 	})
 
 	t.Run("Test get non-existing user", func(t *testing.T) {
-		user, err := models.GetUser(userUnknownID, uuid.Nil)
+		user, err := models.GetUser(userUnknownID)
 		require.NotNil(t, err)
 		assert.True(t, user.CreatedAt.IsZero())
 	})
 
 	t.Run("Test update user", func(t *testing.T) {
-		user, err := models.GetUser(userID, userID)
+		user, err := models.GetUser(userID)
 		require.Nil(t, err)
 
 		user.Email = "test@updated.com"
@@ -72,7 +72,7 @@ func TestUserModel(t *testing.T) {
 	})
 
 	t.Run("Test update user non-owner", func(t *testing.T) {
-		user, err := models.GetUser(userID, userUnknownID)
+		user, err := models.GetUser(userID)
 		require.Nil(t, err)
 
 		user.Email = "test@updated.com"

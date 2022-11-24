@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signin } from "../../utils/auth";
-import LoginPrimary from "../commons/buttons/LoginPrimary";
-import LoginSecondary from "../commons/buttons/LoginSecondary";
-import InputField from "../commons/forms/inputs/InputField";
-import Toaster, { ToasterType } from "../commons/toaster/Toaster";
+import LoginPrimary from "../../components/commons/buttons/LoginPrimary";
+import LoginSecondary from "../../components/commons/buttons/LoginSecondary";
+import InputField from "../../components/commons/forms/inputs/InputField";
+import Toaster, { ToasterType } from "../../components/commons/toaster/Toaster";
 
 
 const Login = () => {
@@ -27,7 +27,7 @@ const Login = () => {
                 setSuccess(true)
                 navigate("/")
             })
-            .catch((err :  string) => {
+			.catch((err: string) => {
 				setMessage(err)
 				setIsToasterDisplayed(true)
             })
@@ -43,8 +43,12 @@ const Login = () => {
         setPassword(v)
     }
 
+	const handleSignup = () => {
+		navigate("/welcome")
+	}
+
 	return ( 
-		<>
+		<div className="w-full h-full font-serif">
 			<Toaster message={message} type={success ? ToasterType.success : ToasterType.error} display={isToasterDisplayed} setDisplay={setIsToasterDisplayed} timeoutms={3000}></Toaster>
 			<div className="bg-amber-50 w-full h-screen text-amber-900 flex items-center justify-center">
 				<form className="	w-full h-full md:w-[720px] md:h-4/5
@@ -62,12 +66,16 @@ const Login = () => {
 					</div>
 					<div className="sticky bottom-4 md:static 
 									flex flex-col-reverse md:flex-row w-full gap-4">
-						<LoginPrimary text="Login" onClick={handleSignin}/>
-						<LoginSecondary text="Sign up"/>
+						<div className="flex-1">
+							<LoginPrimary text="Login" onClick={ handleSignin } />
+						</div>
+						<Link className="flex-1" to="/welcome">
+							<LoginSecondary text="Sign up"/>
+						</Link>
 					</div>
 				</form>
 			</div>
-		</>
+		</div>
 	)
 }
 

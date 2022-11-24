@@ -1,4 +1,5 @@
-import ContentVideo from "../modules/content/ContentVideo"
+import ContentVideoExternal from "../modules/content/ContentVideoExternal"
+
 
 interface ContentProps {
     type: string
@@ -30,7 +31,7 @@ const Content = ({ type, airkey, contents, value }: ContentProps) => {
                 </>)
             case "vid":
                 return (<>
-                    <ContentVideo title={airkey + "title"} src={contents?.get(airkey) || ""} />
+                    <ContentVideoExternal title={airkey + "title"} src={contents?.get(airkey) || ""} />
                 </>)
 
             default:

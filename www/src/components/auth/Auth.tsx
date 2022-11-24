@@ -1,5 +1,5 @@
 import "../../styles/auth.css"
-import Login from './Login';
+import Login from '../../pages/auth/Login';
 
 const Auth = () => {
     return (

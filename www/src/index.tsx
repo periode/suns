@@ -16,6 +16,8 @@ import Auth from './components/auth/Auth';
 import AccountConfirm from './pages/auth/AccountConfirm';
 import AccountRecovery from './pages/auth/AccountRecovery';
 import AccountRecoveryConfirm from './pages/auth/AccountRecoveryConfirm';
+import SignUp from './pages/auth/SignUp';
+import WelcomeContainer from './components/entrypoints/welcome/WelcomeContainer';
 
 const router = createBrowserRouter([
   {
@@ -41,6 +43,10 @@ const router = createBrowserRouter([
   {
     path: '/about',
     element: <About />
+  },
+  {
+    path: '/welcome',
+    element: <WelcomeContainer />
   },
   {
     path: '/entrypoints/*',

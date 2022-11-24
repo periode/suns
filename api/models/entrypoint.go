@@ -29,6 +29,12 @@ const (
 )
 
 const (
+	EntrypointVisible  string = "visible"
+	EntrypointHidden   string = "hidden"
+	EntrypointPersonal string = "personal" //-- only shown on the map to the user
+)
+
+const (
 	// Type of Final module for layour
 	FinalModuleTangled         string = "Tangled"
 	FinalModuleTangledInverted string = "Tangled Inverted"
@@ -49,6 +55,7 @@ type Entrypoint struct {
 	Slug       string `gorm:"" json:"slug"`
 	Icon       string `gorm:"default:black.svg" json:"icon" yaml:"icon"`
 	Generation int    `gorm:"default:0" json:"generation"`
+	Visibility string `gorm:"default:visible" json:"visibility" yaml:"visibility"`
 
 	//-- belongs to a cluster
 	ClusterUUID uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()" json:"cluster_uuid" yaml:"cluster_uuid"`
@@ -95,7 +102,7 @@ func CreateEntrypoint(entry *Entrypoint) (Entrypoint, error) {
 
 func GetEntrypoint(uuid uuid.UUID) (Entrypoint, error) {
 	var entry Entrypoint
-	result := db.Preload("Modules").Preload("Users").Where("uuid = ?", uuid).First(&entry)
+	result := db.Preload("Cluster").Preload("Modules").Preload("Users").Where("uuid = ?", uuid).First(&entry)
 	if result.Error != nil {
 		return entry, result.Error
 	}
@@ -149,15 +156,15 @@ func ClaimEntrypoint(entry *Entrypoint, user *User) (Entrypoint, error) {
 	if err != nil {
 		return *entry, err
 	}
-	// Handle entrypoint status
-	entry.Status = EntrypointPending
 
 	// Handle partner status
 	if len(entry.Users) < entry.MaxUsers {
 		entry.PartnerStatus = PartnerPartial
 	}
+
 	if len(entry.Users) == entry.MaxUsers {
 		entry.PartnerStatus = PartnerFull
+		entry.Status = EntrypointPending
 	}
 	_, err = UpdateEntrypoint(entry.UUID, entry)
 	if err != nil {

@@ -19,7 +19,7 @@ type Upload struct {
 	Text      string         `json:"text" form:"text"`
 	Type      string         `json:"type"`
 	//-- has a user
-	UserUUID string `gorm:"type:uuid;default:uuid_generate_v4()" json:"user_uuid" form:"user_uuid"`
+	UserUUID string `gorm:"type:uuid;default:uuid_generate_v4()" json:"user_uuid" form:"user_uuid" yaml:"user_uuid"`
 
 	//-- has a module
 	ModuleUUID uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()" json:"module_uuid" form:"module_uuid"`
