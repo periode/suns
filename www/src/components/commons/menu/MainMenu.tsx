@@ -59,7 +59,12 @@ const MainMenu = ({ username } : MainMenuProps) => {
 										font-mono
 										flex flex-col items-center justify-center text-2xl
 										border border-t-amber-900">
-							<h2 onClick={signout}>Log out</h2>
+							<button className="flex items-center justify-center 
+							w-80 h-14 bg-none
+							text-amber-500 font-mono font-bold border 
+							border-1 border-amber-500
+							hover:text-amber-600 hover:border-amber-600
+							transition-all ease-in duration-300" onClick={signout}>Log out</button>
 						</div>
 				</div>
 					:

@@ -100,7 +100,6 @@ const signin = async (_email: string, _password: string) => {
         }
         sessionStorage.setItem("user", JSON.stringify(user))
         sessionStorage.setItem("token", token)
-        window.location.reload()
         return Promise.resolve("Login successful!")
     } else {
         console.error(`Could not signin! ${res.statusText} (removing token)`)

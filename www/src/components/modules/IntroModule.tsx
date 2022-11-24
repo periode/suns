@@ -13,7 +13,7 @@ const IntroModule = ({ data, epName, handleUserDone }: IntroModuleProps) => {
     
     useEffect(() => {
         handleUserDone(true)
-    }, [handleUserDone])
+    }, [])
 
     const ctx = useContext(AirTableContext)    
     const contents = ctx.get(epName)

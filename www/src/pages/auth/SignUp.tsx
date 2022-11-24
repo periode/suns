@@ -27,6 +27,7 @@ const SignUp = () => {
 		signin(signupEmail, signupPassword)
 			.then((res : string) => {
 				console.log("sign in succcess ", welcome_entrypoint_uuid)
+				console.log("sign in succcess res", res)
 				
 				navigate(`/entrypoints/${welcome_entrypoint_uuid}`)
 				setSuccess(true)
@@ -46,7 +47,6 @@ const SignUp = () => {
 			.then((res: string) => {
                 setMessage(res)
 				setSuccess(true)
-				// fetch login : on succes navigate
 				console.log(res)
 				autoSignIn(res)
             })
