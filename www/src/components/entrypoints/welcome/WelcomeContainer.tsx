@@ -6,6 +6,7 @@ import WelcomeIntro from "./WelcomeIntro"
 
 const Welcome = () => {
     const [stage, setStage] = useState(0) //-- 0 = text, 1 = mark making, 2 = signup
+    const [mark, setMark] = useState<Blob>()
 
     useEffect(() => {
         switch (stage) {
@@ -34,8 +35,8 @@ const Welcome = () => {
                 {
                     stage === 0 ?
                         <WelcomeIntro/>
-                        : stage === 1 ? <MarkMaking />
-                            : stage === 2 ? <SignUp />
+                        : stage === 1 ? <MarkMaking setMark={setMark} />
+                            : stage === 2 ? <SignUp mark={mark}/>
                       
                             : <>This stage is too far. We should rather be redirecting you to a created entrypoint.</>
                 }

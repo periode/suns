@@ -12,10 +12,10 @@ import {
 } from "./DrawMark";
 
 interface MarkMakerProps {
-	alterMark : () => {}
+	setMark: React.Dispatch<Blob>
 }
 
-function MarkMaker() {
+function MarkMaker({setMark} : MarkMakerProps) {
 
 	const [isCreated, setIsCreated] = useState(false)
 	const [isUpdated, setIsUpdated] = useState(true)
@@ -31,7 +31,6 @@ function MarkMaker() {
 		p5.createCanvas(400, 400).parent(canvasParentRef);
 		p5.angleMode("degrees")
 	}
-
 
 	const createMark = (p5: p5Types) => {
 		p5.background(255); // Trans insteads?
@@ -77,15 +76,27 @@ function MarkMaker() {
 		}
 	}
 
+	const handleConfirmation = () => {
+		let el = document.getElementById("defaultCanvas0") as HTMLCanvasElement
+		let f : File
+		 el.toBlob(blob => {
+			if(blob)
+				f = new File([blob], "mark.png")
+			else
+				console.warn("mark blob is empty!", blob)
+			
+			setMark(f)
 
-
-	// On component creation : create mark.
+			//-- todo handle UX change (confirm should do the same job as next)
+		 })
+	}
 	
 	return (
 		<>
 			<Sketch setup={setup} draw={draw} />
 			<button onClick={() => setIsCreated(false)}>Create</button>
 			<button onClick={() => setIsUpdated(false)}>Update</button>
+			<button onClick={handleConfirmation}>Confirm</button>
 		</>
 	);
 }

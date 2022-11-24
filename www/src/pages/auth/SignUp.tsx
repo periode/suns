@@ -7,7 +7,11 @@ import InputField from "../../components/commons/forms/inputs/InputField"
 import Toaster, { ToasterType } from "../../components/commons/toaster/Toaster"
 import { signin, signup } from "../../utils/auth"
 
-const SignUp = () => {
+interface SignUpProps {
+	mark? : Blob
+}
+
+const SignUp = ({mark} : SignUpProps) => {
 
 	const navigate = useNavigate()
 
@@ -17,6 +21,7 @@ const SignUp = () => {
 
 	const [message, setMessage] = useState("")
 
+	const [signupName, setSignupName] = useState("")
 	const [signupEmail, setSignupEmail] = useState("")
 	const [signupPassword, setSignupPassword] = useState("")
 	const [signupEmailConf, setSignupEmailConf] = useState("")
@@ -39,11 +44,10 @@ const SignUp = () => {
         e.preventDefault()
         e.stopPropagation()
 
-        signup(signupEmail, signupEmailConf, signupPassword, signupPasswordConf)
+        signup(signupEmail, signupEmailConf, signupPassword, signupPasswordConf, signupName, mark)
 			.then((res: string) => {
                 setMessage(res)
 				setSuccess(true)
-				console.log(res)
 				autoSignIn(res)
             })
 			.catch((err: string) => {
@@ -51,6 +55,12 @@ const SignUp = () => {
 				setIsToasterDisplayed(true)
             })
     }
+
+	const handleSignupNameChange = (e: React.BaseSyntheticEvent) => {
+		const v = e.target.value as string;
+		setSignupName(v)
+	}
+
 
 	const handleSignupEmailChange = (e: React.BaseSyntheticEvent) => {
 		const v = e.target.value as string;
@@ -81,6 +91,9 @@ const SignUp = () => {
 											flex flex-col p-4 justify-between md:justify-center md:gap-4" onSubmit={handleSignup}>
 							<div className="flex flex-col items-start justify-center w-full h-full md:h-auto gap-4">
 								<h2 className="text-6xl ">Sign up</h2>
+								<div className="flex flex-col gap-1 items-start w-full">
+									<InputField label="Email" onChange={handleSignupNameChange } placeholder="Mohammed Li" type="text"/>
+								</div>
 								<div className="flex flex-col gap-1 items-start w-full">
 									<InputField label="Email" onChange={handleSignupEmailChange } placeholder="example@example.com" type="text"/>
 								</div>

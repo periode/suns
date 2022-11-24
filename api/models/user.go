@@ -31,6 +31,7 @@ type User struct {
 	Name     string `gorm:"default:Anonymous User;not null" json:"name" form:"name"`
 	Slug     string `gorm:"" json:"slug"`
 	Password []byte `gorm:"not null" json:"password"`
+	MarkURL  string `json:"mark_url"`
 
 	CanReceiveWeeklyPrompts  bool `gorm:"default:false"`
 	CanReceiveMonthlyPrompts bool `gorm:"default:false"`
