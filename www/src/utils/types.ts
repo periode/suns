@@ -35,6 +35,7 @@ export interface IEntrypoint {
     created_at: string,
     name: string,
     status: ENTRYPOINT_STATUS,
+    cluster: ICluster,
     visibility: string,
     content: string,
     current_module: number,

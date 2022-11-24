@@ -102,7 +102,7 @@ func CreateEntrypoint(entry *Entrypoint) (Entrypoint, error) {
 
 func GetEntrypoint(uuid uuid.UUID) (Entrypoint, error) {
 	var entry Entrypoint
-	result := db.Preload("Modules").Preload("Users").Where("uuid = ?", uuid).First(&entry)
+	result := db.Preload("Cluster").Preload("Modules").Preload("Users").Where("uuid = ?", uuid).First(&entry)
 	if result.Error != nil {
 		return entry, result.Error
 	}
