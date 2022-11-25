@@ -235,6 +235,7 @@ const Entrypoint = (props: any) => {
     if (data !== undefined)
         return (
             <div className="absolute z-20 w-full h-full p-4 
+                            bg-amber-50/50
                             md:flex md:flex-col md:items-center md:justify-center ">
                 <EntrypointLayout
                     owned={isOwned}

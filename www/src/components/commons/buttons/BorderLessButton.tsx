@@ -10,7 +10,7 @@ function BorderLessButton({ action, icon, text }: BorderLessButtonProps) {
 	const Icon = icon
 	return ( 
 		<>
-			<button className=" flex-1
+			<button className=" 
 								flex items-center justify-center gap-2
 								w-full md:w-40 h-14 bg-none
 								bg-amber-200

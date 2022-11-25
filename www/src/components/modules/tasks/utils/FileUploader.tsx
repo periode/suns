@@ -51,19 +51,27 @@ const FileUploader = ({ type, maxUploads = 1, handleNewUploads, isRequestingUplo
     const getInputFields = () => {
         let fields = []
         for (let i = 0; i < uploadIndex; i++) {
-            fields.push(<input key={`fileinput-${i}`} type="file" capture="environment" accept={`${type}/*`} onChange={handleFileChange} />)
+            fields.push(
+                <input 
+                key={`fileinput-${i}`} 
+                type="file"
+                capture="environment" 
+                accept={`${type}/*`} 
+                onChange={handleFileChange}
+                className="font-mono text-sm w-full bg-amber-100 p-4 flex flex-col
+                "
+                />
+            )
         }
 
         return fields
     }
 
     return (<>
-        <p>
             {
                 getInputFields()
             }
-        </p>
-    </>)
+            </>)
 }
 
 export default FileUploader

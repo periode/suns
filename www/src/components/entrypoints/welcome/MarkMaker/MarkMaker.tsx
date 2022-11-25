@@ -114,7 +114,7 @@ function MarkMaker({
 				<div className="w-80 h-80 flex items-center justify-center ">
 					<Sketch setup={ setup } draw={ draw } />
 				</div>
-				<div className="w-full flex gap-4 ">
+				<div className="w-full items-center justify-center flex gap-4 ">
 					<BorderLessButton text="Create" action={() => { setIsCreated(false) }} icon={FiLoader} />
 					<BorderLessButton text="Update" action={() => { setIsUpdated(false) }} icon={FiRotateCcw} />
 				</div>

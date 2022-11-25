@@ -62,7 +62,14 @@ const TextInputField = ({
 								placeholder:text-amber-900/50 placeholder:font-mono
 								transition-colors ease-in duration-300
 								"
-				ref={inputRef} onChange={handleOnChange} placeholder={placeholder} name={label ? label.toLowerCase() : 'text'} disabled={hasUserCompleted} />
+				
+				ref={inputRef} 
+				onChange={handleOnChange} 
+				placeholder={placeholder} 
+				name={label ? label.toLowerCase() : 'text'} 
+				disabled={hasUserCompleted}
+				minLength={10}
+			/>
 		</>
 	)
 }
