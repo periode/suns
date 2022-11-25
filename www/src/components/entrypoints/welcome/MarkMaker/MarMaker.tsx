@@ -1,6 +1,6 @@
 import Sketch from "react-p5";
 import p5Types from "p5";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
 	drawHexagon,
 	drawArrow,
@@ -8,33 +8,40 @@ import {
 	drawOpenBox,
 	drawStrokes,
 	IElement,
-	ElementFunction
+	ElementFunction,
+	AddOnFunction
 } from "./DrawMark";
 
 interface MarkMakerProps {
-	alterMark : () => {}
 }
 
 function MarkMaker() {
 
 	const [isCreated, setIsCreated] = useState(false)
 	const [isUpdated, setIsUpdated] = useState(true)
+	
 
+	var elements = useRef<IElement[]>([]);
 
-	let elements: IElement[] = [];
 	let elementFuncs : ElementFunction[]= [drawCross, drawArrow, drawOpenBox];
-	let addOnTypes: string[] = ['drawStrokes'];
+	let addOnTypes: AddOnFunction[] = [drawStrokes];
 	
 	let framewidth = 100
+
+	useEffect(() => {
+		elements.current = new Array<IElement>()
+	},[])
+
+	var canvasRef = useRef<null | HTMLCanvasElement>(null)
 	
 	const setup = (p5: p5Types, canvasParentRef: Element) => {
-		p5.createCanvas(400, 400).parent(canvasParentRef);
+		p5.createCanvas(400, 400).parent(canvasRef);
 		p5.angleMode("degrees")
 	}
 
 
 	const createMark = (p5: p5Types) => {
-		p5.background(255); // Trans insteads?
+
 		drawHexagon(p5);
 		var countElements = 2 + Math.floor(Math.random() * 3.0)
 		for (let i = 0; i < countElements; i++)
@@ -44,35 +51,52 @@ function MarkMaker() {
 				p5,
 				i,
 				framewidth,
-				elements,
+				elements.current,
 				addOnTypes
 			)
 		}
 	}
 	const alterMark = (p5: p5Types) => {
-		p5.background(255); // Trans insteads?
+		
 		drawHexagon(p5)
-		for (let i = 0; i < elements.length; i++)	
+
+		for (let i = 0; i < elements.current.length; i++)	
 		{
-			elements[i].type(
+			elements.current[i].type(
 				p5,
 				i,
 				framewidth,
-				elements,
+				elements.current,
 				addOnTypes
 			)
 		}
 	}
 
+	const writeCanvas = (p5: p5Types) => {
+
+		const img = p5.get()
+		if (canvasRef)
+			console.log(canvasRef.current?.toDataURL())
+		
+		// p5.storeItem("markItem", img)
+		// console.log(p5.getItem("mark"))
+	}
+
 	const draw = (p5: p5Types) => {
+
+		p5.createWriter('user')
 		if (!isCreated)	
 		{ 
+			p5.clear();
 			createMark(p5)
+			writeCanvas(p5)
 			setIsCreated(true)
 		}
 		if (!isUpdated)	
-		{ 
+		{
+			p5.clear();
 			alterMark(p5)
+			writeCanvas(p5)
 			setIsUpdated(true)
 		}
 	}
@@ -83,6 +107,7 @@ function MarkMaker() {
 	
 	return (
 		<>
+			<canvas ref={canvasRef} ></canvas>
 			<Sketch setup={setup} draw={draw} />
 			<button onClick={() => setIsCreated(false)}>Create</button>
 			<button onClick={() => setIsUpdated(false)}>Update</button>

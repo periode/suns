@@ -1,11 +1,17 @@
 import p5Types from "p5";
 
+export type AddOnFunction = (
+	p5: p5Types, 
+	posx: number,
+	posy: number
+) => void
+
 export type ElementFunction = (
 	p5: p5Types, 
 	_index: number, 
 	framewidth: number, 
 	elements: IElement[], 
-	addOnTypes: string[]
+	addOnTypes: AddOnFunction[]
 ) => void
 
 export interface IElement {
@@ -29,7 +35,7 @@ export interface IElement {
 	openSide:		number
 	fill:			boolean
 
-	addOn: string
+	addOn:			AddOnFunction
 	hasAddOn:		boolean
 	type:			ElementFunction
 }
@@ -55,7 +61,7 @@ export class ElementClass implements IElement {
 	openSide:		number	= 0
 	fill:			boolean	= true
 	
-	addOn:			string	= ""
+	addOn:			AddOnFunction	= drawStrokes
 	hasAddOn:		boolean	= false
 	type:			ElementFunction	= drawCross
 }
@@ -79,7 +85,7 @@ export const drawCross = (
 	_index: number, 
 	framewidth: number, 
 	elements : IElement[], 
-	addOnTypes: string[]) =>
+	addOnTypes: AddOnFunction[]) =>
 {
 	var nC : IElement = new ElementClass();
 	if (elements.length <= _index) {
@@ -129,10 +135,8 @@ export const drawCross = (
     
 	p5.pop();
 
-	// ?? 
-	// if (nC.hasAddOn) {
-	// 	window[nC.addOn](nC.posx, nC.posy);
-	// }
+	if (nC.hasAddOn)
+		nC.addOn(p5, nC.posx, nC.posy)
 }
 
 export const drawArrow = (
@@ -140,7 +144,7 @@ export const drawArrow = (
 	_index: number, 
 	framewidth: number, 
 	elements: IElement[],
-	addOnTypes: string[]
+	addOnTypes: AddOnFunction[]
 ) => {
 	var nC: IElement = new ElementClass()
 	if(elements.length <= _index){
@@ -189,7 +193,7 @@ export const drawOpenBox = (
 	_index: number, 
 	framewidth: number, 
 	elements : IElement[], 
-	addOnTypes: string[]) => {
+	addOnTypes: AddOnFunction[]) => {
     var nC = new ElementClass();
     if(elements.length <= _index){
         //description of a box
@@ -249,19 +253,17 @@ export const drawOpenBox = (
     }
 	p5.pop(); 
 
-	// ????
-    // if(nC.hasAddOn){
-    //     window[nC.addOn](nC.posx,nC.posy);
-    // }
- 
-    //console.log("openBox");
+	
+	if (nC.hasAddOn)
+		nC.addOn(p5, nC.posx, nC.posy)
+
 }
 
 export const drawStrokes = (
 	p5: p5Types, 
 	posx: number,
-	posy:  number,
-	) => {
+	posy: number
+) => {
 		var count = 1 + Math.floor(Math.random() * 5);
 		var start = Math.floor(count / 2) * -1;
 		var end = count + start;
@@ -283,4 +285,5 @@ export const drawStrokes = (
 
 			p5.pop();
 		}
+		
 }
