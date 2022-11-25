@@ -5,15 +5,19 @@ interface TextInputFieldProps {
 	label?: string,
 	placeholder?: string,
 	type?: string
+	maxLimit?: number,
 	handleNewUploads: Function,
 	isRequestingUploads: boolean,
 	handleUserDone: Function,
 	hasUserCompleted: boolean,
 }
 
+const MIN_LIMIT = 2
+
 const TextInputField = ({
 	label,
 	placeholder,
+	maxLimit,
 	handleNewUploads,
 	isRequestingUploads,
 	handleUserDone,
@@ -39,7 +43,7 @@ const TextInputField = ({
 	}, [isRequestingUploads])
 
 	const handleOnChange = (e: React.BaseSyntheticEvent) => {
-		if (e.target.value.length > 10 && hasSignifiedDone.current == false) {
+		if (e.target.value.length > MIN_LIMIT && hasSignifiedDone.current == false) {
 			handleUserDone(true)
 			hasSignifiedDone.current = true
 		}
@@ -62,7 +66,7 @@ const TextInputField = ({
 								placeholder:text-amber-900/50 placeholder:font-mono
 								transition-colors ease-in duration-300
 								"
-				ref={inputRef} onChange={handleOnChange} placeholder={placeholder} name={label ? label.toLowerCase() : 'text'} disabled={hasUserCompleted} />
+				ref={inputRef} onChange={handleOnChange} placeholder={placeholder} maxLength={maxLimit} name={label ? label.toLowerCase() : 'text'} disabled={hasUserCompleted} />
 		</>
 	)
 }

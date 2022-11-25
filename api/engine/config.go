@@ -87,14 +87,14 @@ func (c *Config) DefaultConf() {
 
 	i, err := strconv.Atoi(os.Getenv("MIN_ENTRYPOINTS"))
 	if err != nil {
-		c.MIN_ENTRYPOINTS = 10
+		c.MIN_ENTRYPOINTS = 70
 	} else {
 		c.MIN_ENTRYPOINTS = i
 	}
 
 	i, err = strconv.Atoi(os.Getenv("MAX_ENTRYPOINTS"))
 	if err != nil {
-		c.MAX_ENTRYPOINTS = 100
+		c.MAX_ENTRYPOINTS = 1000
 	} else {
 		c.MAX_ENTRYPOINTS = i
 	}

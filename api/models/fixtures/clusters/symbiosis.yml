@@ -26,7 +26,7 @@ entrypoints:
         tasks:
           - type: "text_input"
             key: "textinput_info_txt"
-            max_uploads: 1
+            max_limit: 300
         hint: "This is the second content"
       - name: "Upload 1 Image"
         type: "task"
@@ -34,7 +34,7 @@ entrypoints:
         tasks:
           - type: "image_input"
             key: "imgupload_info_txt"
-            max_uploads: 1
+            max_limit: 1
         hint: "This is the 1 single image input"
       - name: "Label random image from the 1 previous"
         type: "task"
@@ -42,6 +42,7 @@ entrypoints:
         tasks:
           - type: "text_input"
             key: "textinput_info_txt_2"
+            max_limit: 300
         hint: "This is the 1 grid image input"
       - name: "Final Symbiosis Gaze"
         type: "final"
@@ -82,7 +83,7 @@ entrypoints:
         tasks:
           - type: "video_input"
             key: "vidupload_info_txt"
-            max_uploads: 3
+            max_limit: 3
       - name: "Final Symbiosis Task"
         type: "final"
         contents:
@@ -119,6 +120,7 @@ entrypoints:
         tasks:
           - type: "text_input"
             key: "textinput_info_txt"
+            max_limit: 300
         hint: "This is the text input"
       - name: "Upload Audio"
         type: "task"
@@ -126,10 +128,10 @@ entrypoints:
         tasks:
           - type: "text_input"
             key: "input_1"
-            max_uploads: 1
+            max_limit: 300
           - type: "audio_input"
             key: "input_2"
-            max_uploads: 1
+            max_limit: 1
       - name: "Final Symbiosis mean"
         type: "final"
         hint: "This is the final view for the symbiosis - Mean"

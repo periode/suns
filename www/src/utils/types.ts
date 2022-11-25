@@ -74,7 +74,7 @@ export interface ITask {
     type: string,
     key: string,
     placeholder?: string,
-    max_uploads?: number,
+    max_limit?: number,
     value?: string
 }
 

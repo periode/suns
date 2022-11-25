@@ -22,10 +22,10 @@ entrypoints:
         tasks:
           - type: "text_input"
             key: "textinput_info_txt"
-            max_uploads: 1
+            max_limit: 300
           - type: "image_input"
             key: "imgupload_info_txt"
-            max_uploads: 1
+            max_limit: 1
         hint: "You should upload the name of someone and an image that represents them"
       - name: "Name the other picture"
         type: "task"
@@ -33,7 +33,7 @@ entrypoints:
         tasks:
           - type: "audio_input"
             key: "audioupload_info_txt"
-            max_uploads: 1
+            max_limit: 1
         hint: "This is where you name your partner's picture"
       - name: "Final Footprints Person"
         type: "final"
@@ -67,8 +67,10 @@ entrypoints:
         tasks:
           - type: "text_input"
             key: "textinput_info_txt_1"
+            max_limit: 300
           - type: "text_input"
             key: "textinput_info_txt_2"
+            max_limit: 300
         hint: "This is the text input of a name of a place, and how far it is"
       - name: "Upload an image of the distance of that place"
         type: "task"
@@ -76,7 +78,7 @@ entrypoints:
         tasks:
           - type: "image_input"
             key: "imageupload_info_txt"
-            max_uploads: 1
+            max_limit: 1
       - name: "Final Footprints Place"
         type: "final"
         contents:
@@ -111,9 +113,10 @@ entrypoints:
         tasks:
           - type: "text_input"
             key: "textinput_info_txt_1"
+            max_limit: 300
           - type: "image_input"
             key: "imgupload_info_txt_1"
-            max_uploads: 1
+            max_limit: 1
         hint: "This is the text input for the name and the image input for the picture of an object"
       - name: "Upload a picture of a similar object, and how you name it"
         type: "task"
@@ -121,9 +124,10 @@ entrypoints:
         tasks:
           - type: "image_input"
             key: "imgupload_info_txt_2"
-            max_uploads: 1
+            max_limit: 1
           - type: "text_input"
             key: "textinput_info_txt_2"
+            max_limit: 300
       - name: "Final Footprints object"
         type: "final"
         contents:
