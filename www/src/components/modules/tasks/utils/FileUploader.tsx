@@ -12,6 +12,8 @@ interface IFileUploadProps {
     hasUserCompleted: boolean
 }
 
+const MAX_FILE_SIZE = 32
+
 const FileUploader = ({ type, maxUploads = 1, handleNewUploads, isRequestingUploads, handleUserDone, hasUserCompleted }: IFileUploadProps) => {
     const [uploads, setUploads] = useState(Array<IFile>)
     const [uploadIndex, setUploadIndex] = useState(1)
@@ -31,21 +33,26 @@ const FileUploader = ({ type, maxUploads = 1, handleNewUploads, isRequestingUplo
     }, [uploads])
 
     useEffect(() => {
-		if(isRequestingUploads)
-			handleNewUploads(uploads)
-	}, [isRequestingUploads])
+        if (isRequestingUploads)
+            handleNewUploads(uploads)
+    }, [isRequestingUploads])
 
     const handleFileChange = (e: React.SyntheticEvent) => {
         const t = e.target as HTMLInputElement
+        if (t.files == null) return
 
-        if (t.files != null) {
-            let f = {
-                file: t.files[0],
-                text: ""
-            } as IFile
-
-            setUploads([...uploads, f])
+        if (t.files[0].size / 1024 / 1024 > MAX_FILE_SIZE) {
+            console.warn("The upload file is too big! We should use the toaster here.")
+            return
         }
+
+        let f = {
+            file: t.files[0],
+            text: ""
+        } as IFile
+
+        setUploads([...uploads, f])
+
     }
 
     const getInputFields = () => {

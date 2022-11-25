@@ -62,7 +62,7 @@ func SetupRouter() *echo.Echo {
 		Format: "\033[32m${time_rfc3339}\033[0m | ${method} | ${uri} | ${status} | ${remote_ip} | ${error.message}\n",
 	}))
 	r.Use(middleware.Recover())
-	r.Use(middleware.BodyLimit("16M"))
+	r.Use(middleware.BodyLimit("32M"))
 	r.Use(injectConfig)
 
 	r.Static("/static", conf.UploadsDir)
