@@ -17,7 +17,24 @@ type Pool struct {
 	entrypoints []models.Entrypoint
 }
 
+var weights = make(map[string]int)
+
 func (p *Pool) Generate() error {
+
+	weights = map[string]int{
+		"Cracks":              1,
+		"DraughtYou":          1,
+		"DraughtWorld":        1,
+		"DraughtPersonal":     1,
+		"CombiningFirstTimes": 1,
+		"FootprintsPerson":    1,
+		"FootprintsPlace":     1,
+		"FootprintsObject":    1,
+		"SymbiosisGaze":       1,
+		"SymbiosisTask":       1,
+		"SymbiosisMean":       1,
+	}
+
 	for _, f := range fixtures {
 		bytes, err := os.ReadFile(filepath.Join(Basepath, "../models/fixtures/clusters", fmt.Sprintf("%s.yml", f)))
 		if err != nil {
@@ -30,7 +47,13 @@ func (p *Pool) Generate() error {
 			return err
 		}
 
-		p.entrypoints = append(p.entrypoints, new.Entrypoints...)
+		//-- add the entrypoint as many times as the name
+		for _, ep := range new.Entrypoints {
+			for i := 0; i < weights[ep.Name]; i++ {
+				p.entrypoints = append(p.entrypoints, ep)
+			}
+		}
+
 	}
 
 	zero.Debugf("Picked up entrypoints: %d", len(p.entrypoints))
