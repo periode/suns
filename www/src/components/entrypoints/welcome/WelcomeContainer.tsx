@@ -1,14 +1,11 @@
 import { useEffect, useState } from "react"
 import AirContext from "../../../contexts/AirContext"
 import SignUp from "../../../pages/auth/SignUp"
-import { getSession } from "../../../utils/auth"
 import NextButton from "../../commons/buttons/NextButton"
 import MarkMaking from "../../modules/tasks/MarkMaking"
 import WelcomeIntro from "./WelcomeIntro"
 
 const Welcome = () => {
-    const session = getSession()
-    const [UserMark, setUserMark] = useState()
 
     const [stage, setStage] = useState(0) //-- 0 = text, 1 = mark making, 2 = signup
     const [mark, setMark] = useState<Blob>()
@@ -32,6 +29,7 @@ const Welcome = () => {
     const handleNextStage = () => {
         let s = stage + 1
         setStage(s)
+        console.log("handleNextStage" )
     }
 
     return (
