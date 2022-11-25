@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react"
 import AirContext from "../../../contexts/AirContext"
 import SignUp from "../../../pages/auth/SignUp"
+import { getSession } from "../../../utils/auth"
 import MarkMaking from "../../modules/tasks/MarkMaking"
 import WelcomeIntro from "./WelcomeIntro"
 
 const Welcome = () => {
+    const session = getSession()
+    const [UserMark, setUserMark] = useState()
+
     const [stage, setStage] = useState(0) //-- 0 = text, 1 = mark making, 2 = signup
 
     useEffect(() => {
@@ -36,8 +40,7 @@ const Welcome = () => {
                         <WelcomeIntro/>
                         : stage === 1 ? <MarkMaking />
                             : stage === 2 ? <SignUp />
-                      
-                            : <>This stage is too far. We should rather be redirecting you to a created entrypoint.</>
+                                : <>This stage is too far. We should rather be redirecting you to a created entrypoint.</>
                 }
                 {
                     stage < 2 &&
