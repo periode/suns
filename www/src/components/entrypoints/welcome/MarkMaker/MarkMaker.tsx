@@ -11,6 +11,8 @@ import {
 	ElementFunction,
 	AddOnFunction
 } from "./DrawMark";
+import BorderLessButton from "../../../commons/buttons/BorderLessButton";
+import { FiLoader, FiRotateCcw } from "react-icons/fi";
 
 interface MarkMakerProps {
 	setMark: React.Dispatch<Blob>
@@ -22,23 +24,21 @@ function MarkMaker({
 
 	const [isCreated, setIsCreated] = useState(false)
 	const [isUpdated, setIsUpdated] = useState(true)
-	
 
-	var elements = useRef<IElement[]>([]);
+	var elementRef = useRef<IElement[]>([])
+
+	useEffect(() => {
+		elementRef.current = new Array<IElement>()
+	}, [])
 
 	let elementFuncs : ElementFunction[]= [drawCross, drawArrow, drawOpenBox];
 	let addOnTypes: AddOnFunction[] = [drawStrokes];
 	
 	let framewidth = 100
 
-	useEffect(() => {
-		elements.current = new Array<IElement>()
-	},[])
-
-	var canvasRef = useRef<null | HTMLCanvasElement>(null)
 	
 	const setup = (p5: p5Types, canvasParentRef: Element) => {
-		p5.createCanvas(400, 400).parent(canvasRef);
+		p5.createCanvas(320, 320).parent(canvasParentRef);
 		p5.angleMode("degrees")
 	}
 
@@ -53,7 +53,7 @@ function MarkMaker({
 				p5,
 				i,
 				framewidth,
-				elements.current,
+				elementRef.current,
 				addOnTypes
 			)
 		}
@@ -62,13 +62,13 @@ function MarkMaker({
 		
 		drawHexagon(p5)
 
-		for (let i = 0; i < elements.current.length; i++)	
+		for (let i = 0; i < elementRef.current.length; i++)	
 		{
-			elements.current[i].type(
+			elementRef.current[i].type(
 				p5,
 				i,
 				framewidth,
-				elements.current,
+				elementRef.current,
 				addOnTypes
 			)
 		}
@@ -81,12 +81,14 @@ function MarkMaker({
 		{ 
 			p5.clear();
 			createMark(p5)
+			handleConfirmation()
 			setIsCreated(true)
 		}
 		if (!isUpdated)	
 		{
 			p5.clear();
 			alterMark(p5)
+			handleConfirmation()
 			setIsUpdated(true)
 		}
 	}
@@ -107,13 +109,17 @@ function MarkMaker({
 	}
 	
 	return (
-		<>
-			<canvas ref={canvasRef} ></canvas>
-			<Sketch setup={setup} draw={draw} />
-			<button onClick={() => setIsCreated(false)}>Create</button>
-			<button onClick={() => setIsUpdated(false)}>Update</button>
-			<button onClick={ handleConfirmation }> Confirm </button>
-		</>
+		<div className="w-full p-4">
+			<div className="w-full flex flex-col gap-4 items-center">
+				<div className="w-80 h-80 flex items-center justify-center ">
+					<Sketch setup={ setup } draw={ draw } />
+				</div>
+				<div className="w-full flex gap-4 ">
+					<BorderLessButton text="Create" action={() => { setIsCreated(false) }} icon={FiLoader} />
+					<BorderLessButton text="Update" action={() => { setIsUpdated(false) }} icon={FiRotateCcw} />
+				</div>
+			</div>
+		</div>
 	);
 }
 

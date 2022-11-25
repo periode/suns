@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import AirContext from "../../../contexts/AirContext"
 import SignUp from "../../../pages/auth/SignUp"
 import NextButton from "../../commons/buttons/NextButton"
-import MarkMaking from "../../modules/tasks/MarkMaking"
+import MarkMaker from "./MarkMaker/MarkMaker"
 import WelcomeIntro from "./WelcomeIntro"
 
 const Welcome = () => {
@@ -29,7 +29,6 @@ const Welcome = () => {
     const handleNextStage = () => {
         let s = stage + 1
         setStage(s)
-        console.log("handleNextStage" )
     }
 
     return (
@@ -38,15 +37,16 @@ const Welcome = () => {
                             bg-amber-50 text-amber-900 font-serif leading-relaxed
                             flex flex-col items-center justify-between md:justify-center gap-4
                             ">
-                <div className="flex-grow md:flex-grow-0
+                <div className="w-full
+                                flex-grow md:flex-grow-0
                                 flex items-center justify-center">
                     {
                         stage === 0 ?
-                        <WelcomeIntro/>
-                        : stage === 1 ? <MarkMaking setMark={setMark} />
-                        : stage === 2 ? <SignUp mark={mark}/>
-                        
-                        : <>This stage is too far. We should rather be redirecting you to a created entrypoint.</>
+                         <WelcomeIntro/>
+                        : stage === 1 ? <MarkMaker setMark={setMark} />
+                            : stage === 2 ? <SignUp mark={mark}/>
+                      
+                            : <>This stage is too far. We should rather be redirecting you to a created entrypoint.</>
                     }
                 </div >
                 {

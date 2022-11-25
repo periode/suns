@@ -11,6 +11,7 @@ interface SignUpProps {
 
 const SignUp = ({ mark } : SignUpProps) => {
 
+	console.log(mark)
 	const navigate = useNavigate()
 
 	const [success, setSuccess] = useState(false)
@@ -81,13 +82,18 @@ const SignUp = ({ mark } : SignUpProps) => {
 	}
 
 	return ( 
-			<>
+			<div className="w-full">
 				<div className="w-full h-full font-serif">
 					<Toaster message={message} type={success ? ToasterType.success : ToasterType.error} display={isToasterDisplayed} setDisplay={setIsToasterDisplayed} timeoutms={3000}></Toaster>
-					<div className="bg-amber-50 w-full h-screen text-amber-900 flex items-center justify-center">
-						<form className="	w-full h-full md:w-[720px] md:h-4/5
-											flex flex-col p-4 justify-between md:justify-center md:gap-4" onSubmit={handleSignup}>
-							<div className="flex flex-col items-start justify-center w-full h-full md:h-auto gap-4">
+				<div className="w-full bg-amber-50 h-screen 
+								text-amber-900
+								flex items-center justify-center">
+						<form className="w-full h-full md:w-[720px] md:h-4/5
+											flex flex-col justify-between md:justify-center md:gap-4
+											" onSubmit={handleSignup}>
+							<div className="w-full h-full md:h-auto
+										flex flex-col items-start justify-center gap-4
+										overflow-y-scroll">
 								<h2 className="text-6xl ">Sign up</h2>
 								<div className="flex flex-col gap-1 items-start w-full">
 								<InputField
@@ -138,7 +144,7 @@ const SignUp = ({ mark } : SignUpProps) => {
 						</form>
 					</div>
 				</div>
-			</>
+			</div>
 	);
 }
 
