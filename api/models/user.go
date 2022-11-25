@@ -31,9 +31,12 @@ type User struct {
 	Name     string `gorm:"default:Anonymous User;not null" json:"name" form:"name"`
 	Slug     string `gorm:"" json:"slug"`
 	Password []byte `gorm:"not null" json:"password"`
+	MarkURL  string `json:"mark_url"`
 
-	WeeklyPromptsIndex  int `gorm:"default:0"`
-	MonthlyPromptsIndex int `gorm:"default:0"`
+	CanReceiveWeeklyPrompts  bool `gorm:"default:false"`
+	CanReceiveMonthlyPrompts bool `gorm:"default:false"`
+	WeeklyPromptsIndex       int  `gorm:"default:0"`
+	MonthlyPromptsIndex      int  `gorm:"default:0"`
 
 	//-- a user has many-many entrypoints
 	Entrypoints []*Entrypoint `gorm:"many2many:entrypoints_users;" json:"entrypoints"`
@@ -53,7 +56,7 @@ func CreateUser(user *User) (User, error) {
 	return *user, result.Error
 }
 
-func GetUser(uuid uuid.UUID, user_uuid uuid.UUID) (User, error) {
+func GetUser(uuid uuid.UUID) (User, error) {
 	var user User
 	err := db.Where("uuid = ?", uuid).First(&user).Error
 	if err != nil {

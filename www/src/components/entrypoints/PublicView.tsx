@@ -16,31 +16,29 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
         switch (true) {
             case upload.type.startsWith("text/"):
                 return (
-                    <ContentText key={ upload.uuid } text={ upload.text }/>
+                    <ContentText key={upload.uuid} text={upload.text} />
                 )
             case upload.type.startsWith("image/"):
                 return (
-                    <ContentPhoto key={ upload.uuid } src={ upload.url } />
+                    <ContentPhoto key={upload.uuid} src={upload.url} />
                 )
             case upload.type.startsWith("video/"):
                 return (
-                    <ContentVideoInternal key={ upload.uuid } src={ upload.url }/>
+                    <ContentVideoInternal key={upload.uuid} src={upload.url} />
                 )
             case upload.type.startsWith("audio/"):
                 return (
-                    <ContentAudio key={ upload.uuid } src={ upload.url }/>
+                    <ContentAudio key={upload.uuid} src={upload.url} />
                 )
             default:
                 return <>Couldnt get upload.type: {upload.type}</>
         }
     }
 
-    const getUploads = (uploads: Array<IUpload>, uuid: string, compare: (x: string, y: string) => boolean, alternate: boolean, ) : JSX.Element[] =>
-    {
+    const getUploads = (uploads: Array<IUpload>, uuid: string, compare: (x: string, y: string) => boolean, alternate: boolean,): JSX.Element[] => {
         var Content: JSX.Element[] = []
-        
-        for (let i = 0; i < uploads.length; i++)
-        {
+
+        for (let i = 0; i < uploads.length; i++) {
             if (!alternate && compare(uploads[i].user_uuid, uuid))
                 Content.push(getUploadContent(uploads[i]))
             if (alternate && !compare(uploads[i].user_uuid, uuid))
@@ -49,19 +47,16 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
         return (Content)
     }
 
-    const getModules = (user: IUser, modules: IModule[], compare: (x: string, y: string) => boolean, alternate: boolean) =>
-    {
+    const getModules = (user: IUser, modules: IModule[], compare: (x: string, y: string) => boolean, alternate: boolean) => {
         if (user === undefined
             || user.uuid === undefined
-            )
+        )
             return <>user undefined</>
-        var Content : JSX.Element[] = []
-
-        var isAlternated = false; 
-        for (let moduleID = 1; moduleID < modules.length - 1; moduleID++)
-        {
-            if (modules[moduleID].uploads.length !== 0)
-            {
+        var Content: JSX.Element[] = []
+        
+        var isAlternated = false;
+        for (let moduleID = 1; moduleID < modules.length - 1; moduleID++) {
+            if (modules[moduleID].uploads.length !== 0) {
                 if (!modules[moduleID].uploads[0])
                     Content.push(<>Upload does not exist</>)
                 else
@@ -72,7 +67,7 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
         }
         return (
             <>
-                { Content.map((element:JSX.Element)=>{return element}) }
+                {Content.map((element: JSX.Element) => { return element })}
             </>
         )
     }
@@ -91,13 +86,13 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
 
     const getContent = (user: IUser): JSX.Element => {
         if (
-            entrypoint === undefined 
-            || entrypoint.modules.length === 0 
+            entrypoint === undefined
+            || entrypoint.modules.length === 0
             || user === undefined
             || user.uuid === undefined
         )
             return (<>A problem occured</>)
-       
+
         switch (entrypoint.final_module_type) {
             case FINAL_TYPE.Separate:
                 return (getModules(user, entrypoint.modules, equalString, false))
@@ -111,44 +106,27 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
                 }
         }
 
-        return <>A problem occured, entrypoint.final_module_type: { entrypoint.final_module_type }</>
+        return <>A problem occured, entrypoint.final_module_type: {entrypoint.final_module_type}</>
     }
 
-    if (entrypoint.max_users > 1)
-    {
-        return (
-            <div className="w-full h-full flex flex-col md:flex-row gap-8">
-                <div className="
-                                flex-1 
-                                flex flex-col gap-2
-                                ">
-                    <h2 className="text-2xl font-regular">{entrypoint.users[0].name}</h2>
-                    { getContent(entrypoint.users[0]) }
-                </div>
-                <div className="
-                                flex-1 
-                                flex flex-col gap-2
-                                ">
-                    <h2 className="text-2xl font-regular">{entrypoint.users[1].name}</h2>
-                    { getContent(entrypoint.users[1]) }
-                </div>
-            </div>
-        )
-    }
-    else
-    {
-        return (
-            <div className="w-full h-full flex flex-col md:flex-row gap-8">
-                <div className="
-                                flex-1 
-                                flex flex-col gap-2
-                                ">
-                    <h2 className="text-2xl font-regular">{entrypoint.users[0].name}</h2>
-                    { getContent(entrypoint.users[0]) }
-                </div>
-            </div>
-        )
-    }
+
+    return (
+        <div className="w-full h-full flex flex-col md:flex-row gap-8">
+            {entrypoint.users.map(u => {
+                return (
+                    <div className="
+                        flex-1 
+                        flex flex-col gap-2
+                        " key={u.uuid}>
+                        <h2 className="text-2xl font-regular">{u.name}</h2>
+                        {getContent(u)}
+                    </div>
+                )
+            })}
+        </div >
+    )
+
+
 }
 
 export default PublicView

@@ -22,7 +22,7 @@ function EntrypointActions({
 	const copyToClipboard = (text: string) => {
 		window.prompt("You can share this link: ", text);
 	}
-
+		
 	const ShareButton =
 		<button className=" font-mono
 							cursor-pointer
@@ -48,7 +48,7 @@ function EntrypointActions({
 							cursor-pointer
 							flex items-center
 							gap-1`}
-			onClick={() => { if (!hasUserCompleted) completeModuleFunction() }} disabled={hasUserCompleted}>
+			onClick={() => {if (!hasUserCompleted) completeModuleFunction() }} disabled={hasUserCompleted}>
 			<p>Next</p>
 			<FiArrowRight className="text-xs" />
 		</button>

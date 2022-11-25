@@ -3,7 +3,7 @@ import { ISession, IUser } from "./types";
 
 var user: IUser
 
-const ConfirmToken = async (_token : string) => {
+const ConfirmToken = async (_token: string) => {
     const endpoint = new URL('auth/confirm', process.env.REACT_APP_API_URL)
     const h = new Headers();
     var b = new URLSearchParams();
@@ -14,18 +14,16 @@ const ConfirmToken = async (_token : string) => {
         body: b,
     }
     const res = await fetch(endpoint, options)
-    if (res.ok)
-    {
+    if (res.ok) {
         return Promise.resolve("Confirmation successful!")
     }
-    else
-    {
+    else {
         console.error(`Could not confirm! ${res.statusText} (removing token)`)
         return Promise.reject("We could not confirm your account.")
     }
 }
 
-const recoverConfirm = async(_token: string, _password: string) => {
+const recoverConfirm = async (_token: string, _password: string) => {
     const endpoint = new URL('auth/check-recover', process.env.REACT_APP_API_URL)
     const h = new Headers();
 
@@ -39,18 +37,16 @@ const recoverConfirm = async(_token: string, _password: string) => {
     }
 
     const res = await fetch(endpoint, options)
-    if (res.ok)
-    {
+    if (res.ok) {
         return Promise.resolve("New password was created sucessfully!")
     }
-    else
-    {
+    else {
         console.error(`Could not confirm! ${res.statusText} (removing token)`)
         return Promise.reject("We could not create a new password.")
     }
 }
 
-const recoverRequest = async(_email: string) => {
+const recoverRequest = async (_email: string) => {
     const endpoint = new URL('auth/request-recover', process.env.REACT_APP_API_URL);
     var h = new Headers();
     h.append("Content-Type", "application/x-www-form-urlencoded");
@@ -67,9 +63,8 @@ const recoverRequest = async(_email: string) => {
     const res = await fetch(endpoint, options)
     if (res.ok)
         return Promise.resolve(`${res.statusText}`)
-    else
-    {
-        
+    else {
+
         return Promise.reject(`${res.statusText}`)
     }
 }
@@ -113,7 +108,7 @@ const signout = () => {
     window.location.reload()
 }
 
-const signup = async (_email: string, _email_conf: string, _password: string, _password_conf: string) => {
+const signup = async (_email: string, _email_conf: string, _password: string, _password_conf: string, _name: string, _mark?: Blob) => {
     const endpoint = new URL('users/', process.env.REACT_APP_API_URL)
 
     // check for validity
@@ -137,18 +132,20 @@ const signup = async (_email: string, _email_conf: string, _password: string, _p
         return Promise.reject("The email you've entered is not valid.")
     }
 
-    // create account
-    var h = new Headers();
-    h.append("Content-Type", "application/x-www-form-urlencoded");
+    if (_name.length < 2) {
+        return Promise.reject("The name should be at least 2 characters long.")
+    }
 
-    var b = new URLSearchParams();
-    b.append("email", _email);
-    b.append("password", _password);
-
+    var f = new FormData();
+    f.append("email", _email);
+    f.append("password", _password);
+    f.append("name", _name);
+    if(_mark)
+        f.append("mark", _mark, "mark.png")
+    
     var options = {
         method: 'POST',
-        headers: h,
-        body: b
+        body: f
     };
 
     const res = await fetch(endpoint, options)
@@ -163,9 +160,9 @@ const signup = async (_email: string, _email_conf: string, _password: string, _p
 const getSession = () => {
     const t = sessionStorage.getItem("token")
     const u = sessionStorage.getItem("user")
-    const s : ISession = {
+    const s: ISession = {
         token: t ? t : '',
-        user: u ? JSON.parse(u) : {name: '', uuid: ''}
+        user: u ? JSON.parse(u) : { name: '', uuid: '' }
     }
 
     return s

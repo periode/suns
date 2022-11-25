@@ -1,9 +1,13 @@
-import MarkMaker from "../../entrypoints/welcome/MarkMaker/MarMaker"
+import MarkMaker from "../../entrypoints/welcome/MarkMaker/MarkMaker"
 
-const MarkMaking = () => {
+interface MarkMakingProps {
+	setMark: React.Dispatch<Blob>
+}
+
+const MarkMaking = ({setMark} : MarkMakingProps) => {
     return (
         <>
-            <MarkMaker />
+            <MarkMaker setMark={setMark} />
         </>
     )
 }

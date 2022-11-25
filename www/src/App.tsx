@@ -31,7 +31,7 @@ const MIN_ZOOOM = 0.5;
 const MAX_ZOOM = 6;
 
 const App = () => {
-  var currentEntrypoint : IEntrypoint = {} as IEntrypoint
+  var currentEntrypoint: IEntrypoint = {} as IEntrypoint
   const hasData = useRef(false)
   const [entrypoints, setEntrypoints] = useState(Array<IEntrypoint>)
   const bounds = new L.LatLngBounds(new L.LatLng(0, 0), new L.LatLng(WIDTH, HEIGHT))
@@ -64,41 +64,45 @@ const App = () => {
     }
 
   }, [session.token])
+  
+  return (
 
-    return (
-
-        <AirContext>
-          <div className="App w-full h-full font-serif">
-            { session.token === '' ?
-                <Navigate to="/auth"/>
-              :
-              <>
-              <MainMenu username={ session.user.name } />
-                <div className="map-container" id="map">
-                  <MapContainer center={[WIDTH / 2, HEIGHT / 2]} minZoom={MIN_ZOOOM} maxZoom={MAX_ZOOM} zoom={2} scrollWheelZoom={true} crs={CRS.Simple} maxBounds={bounds} inertia={false}>
-                    <ImageOverlay url={backgroundMap} bounds={bounds} />
-                    <>
-                      {entrypoints.map((ep, index) => {
-                        return (
-                          <EntrypointMarker
-                            key={`ep-${ep.name.replace(' ', '-')}-${index}`}
-                            data={ep}
-                            />
-                        )
-                      })
-                      }
-                    </>
-                  </MapContainer>
-                </div>
-                <Routes>
-                  <Route path=":id" element={<Entrypoint />} />
-                </Routes>
-                <UILayout currentEntrypoint={currentEntrypoint}/>
-              </>
-            }
-          </div>
-        </AirContext>
-    );
+    <AirContext>
+      <div className="App w-full h-full font-serif">
+        {session.token === '' ?
+          <Navigate to="/auth" />
+          :
+          <>
+            <MainMenu username={session.user.name} />
+            <div className="map-container" id="map">
+              <MapContainer center={[WIDTH / 2, HEIGHT / 2]} minZoom={MIN_ZOOOM} maxZoom={MAX_ZOOM} zoom={2} scrollWheelZoom={true} crs={CRS.Simple} maxBounds={bounds} inertia={false}>
+                <ImageOverlay url={backgroundMap} bounds={bounds} />
+                <>
+                  {entrypoints.map((ep, index) => {
+                    if (ep.visibility == "visible"){
+                      return (
+                        <EntrypointMarker
+                          key={`ep-${ep.name.replace(' ', '-')}-${index}-${ep.uuid}`}
+                          data={ep}
+                        />
+                      )
+                    }else{
+                      return(<></>)
+                    }
+                  })
+                  }
+                </>
+              </MapContainer>
+            </div>
+            <Routes>
+              <Route path=":id" element={<Entrypoint />} />
+            </Routes>
+            <UILayout currentEntrypoint={currentEntrypoint} />
+          </>
+        }
+      </div>
+    </AirContext>
+  );
 }
 
 export default App;

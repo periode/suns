@@ -82,7 +82,7 @@ const Entrypoint = (props: any) => {
     }, [isOwned, data, session.user.uuid])
 
     //-- this checks if all uploads have been submitted before completing the module (should be a useCallback?)
-    useEffect(() => {        
+    useEffect(() => {
         if (data === undefined)
             return
 
@@ -135,7 +135,7 @@ const Entrypoint = (props: any) => {
         }
     }
 
-    const handleNewUploads = (_new: Array<IFile>) => {        
+    const handleNewUploads = (_new: Array<IFile>) => {
         setUploads(prev => {
             return [...prev, ..._new] as IFile[]
         })
@@ -149,7 +149,7 @@ const Entrypoint = (props: any) => {
     }
 
     const requestUploads = () => {
-        if (data.modules[data.current_module].tasks.length > 0)
+        if (data.modules[data.current_module].tasks.length > 0 && data.modules[data.current_module].tasks[0].type != "prompts_input")
             setRequestingUploads(true)
         else
             completeModule(data, session)
@@ -162,7 +162,7 @@ const Entrypoint = (props: any) => {
 
         uploads.forEach(u => {
             console.log(u);
-            
+
             submitUpload(session.token, data.modules[data.current_module].uuid, u)
                 .then(() => {
                     console.log("uploaded file!")
@@ -180,7 +180,7 @@ const Entrypoint = (props: any) => {
                     setUserCompleted(true) //-- we have a partial state
                 else
                     setUserCompleted(false) //-- we move on to the next module
-                
+
                 setCanUserComplete(false)
                 setData(updated)
             })
@@ -205,14 +205,6 @@ const Entrypoint = (props: any) => {
                 return (
                     <PublicView entrypoint={ep} />
                 )
-            case "final_symbiosis_mean":
-                return (
-                    <FinalFirstTimes data={ep} />
-                )
-            case "final_first_times":
-                return (
-                    <PublicView entrypoint={ep} />
-                )
             default:
                 return (
                     <>
@@ -231,10 +223,9 @@ const Entrypoint = (props: any) => {
         if (data.status === ENTRYPOINT_STATUS.EntrypointCompleted) {
             return (<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}-final`} className="m-1 p-1">{parseModule(data.current_module, data)}</div>)
         }
-        
-        if (hasUserCompleted)
-        { 
-            return(<WaitingModule key="module-complete-message"/>)
+
+        if (hasUserCompleted) {
+            return (<WaitingModule key="module-complete-message" />)
         }
 
 
@@ -258,28 +249,31 @@ const Entrypoint = (props: any) => {
                                     <FiCommand className="text-[32px]" />
                                     <h1 className="text-xl font-bold">{data.name}</h1>
                                 </div>
-                                <div className="cursor-pointer"
-                                    onClick={() => navigate('/', { replace: true })}>
-                                    <FiX className="text-[32px]" />
-                                </div>
+                                {
+                                    data.cluster.name != "Welcome" ? <div className="cursor-pointer"
+                                        onClick={() => navigate('/', { replace: true })}>
+                                        <FiX className="text-[32px]" />
+                                    </div> : <></>
+                                }
+
                             </div>
                         </div>
                     }
                     module={
                         <div className="w-full h-full p-4 overflow-scroll">
-                        {
-                            isOwned || data.status === ENTRYPOINT_STATUS.EntrypointCompleted ?
-                                getModule()
-                                :
-                                data.users.length < data.max_users ?
-                                    <>
-                                        {parseModule(0, data)}
-                                    </>
+                            {
+                                isOwned || data.status === ENTRYPOINT_STATUS.EntrypointCompleted ?
+                                    getModule()
                                     :
-                                    <>
-                                        <PublicView entrypoint={data} />
-                                    </>
-                        }
+                                    data.users.length < data.max_users ?
+                                        <>
+                                            {parseModule(0, data)}
+                                        </>
+                                        :
+                                        <>
+                                            <PublicView entrypoint={data} />
+                                        </>
+                            }
                         </div>
                     }
                     entrypointactions={
