@@ -16,7 +16,9 @@ interface MarkMakerProps {
 	setMark: React.Dispatch<Blob>
 }
 
-function MarkMaker({setMark} : MarkMakerProps) {
+function MarkMaker({
+	setMark
+} : MarkMakerProps) {
 
 	const [isCreated, setIsCreated] = useState(false)
 	const [isUpdated, setIsUpdated] = useState(true)
@@ -72,16 +74,6 @@ function MarkMaker({setMark} : MarkMakerProps) {
 		}
 	}
 
-	const writeCanvas = (p5: p5Types) => {
-
-		const img = p5.get()
-		if (canvasRef)
-			console.log(canvasRef.current?.toDataURL())
-		
-		// p5.storeItem("markItem", img)
-		// console.log(p5.getItem("mark"))
-	}
-
 	const draw = (p5: p5Types) => {
 
 		p5.createWriter('user')
@@ -89,14 +81,12 @@ function MarkMaker({setMark} : MarkMakerProps) {
 		{ 
 			p5.clear();
 			createMark(p5)
-			writeCanvas(p5)
 			setIsCreated(true)
 		}
 		if (!isUpdated)	
 		{
 			p5.clear();
 			alterMark(p5)
-			writeCanvas(p5)
 			setIsUpdated(true)
 		}
 	}
@@ -122,7 +112,7 @@ function MarkMaker({setMark} : MarkMakerProps) {
 			<Sketch setup={setup} draw={draw} />
 			<button onClick={() => setIsCreated(false)}>Create</button>
 			<button onClick={() => setIsUpdated(false)}>Update</button>
-			<button onClick={handleConfirmation}>Confirm</button>
+			<button onClick={ handleConfirmation }> Confirm </button>
 		</>
 	);
 }

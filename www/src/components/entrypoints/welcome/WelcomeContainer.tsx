@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import AirContext from "../../../contexts/AirContext"
 import SignUp from "../../../pages/auth/SignUp"
 import { getSession } from "../../../utils/auth"
+import NextButton from "../../commons/buttons/NextButton"
 import MarkMaking from "../../modules/tasks/MarkMaking"
 import WelcomeIntro from "./WelcomeIntro"
 
@@ -35,18 +36,24 @@ const Welcome = () => {
 
     return (
         <AirContext>
-            <div className="bg-amber-50 w-full h-screen text-amber-900 flex flex-col items-center justify-center">
-                {
-                    stage === 0 ?
+            <div className="w-full h-screen p-4
+                            bg-amber-50 text-amber-900 font-serif leading-relaxed
+                            flex flex-col items-center justify-between md:justify-center gap-4
+                            ">
+                <div className="flex-grow md:flex-grow-0
+                                flex items-center justify-center">
+                    {
+                        stage === 0 ?
                         <WelcomeIntro/>
                         : stage === 1 ? <MarkMaking setMark={setMark} />
-                            : stage === 2 ? <SignUp mark={mark}/>
-                      
-                            : <>This stage is too far. We should rather be redirecting you to a created entrypoint.</>
-                }
+                        : stage === 2 ? <SignUp mark={mark}/>
+                        
+                        : <>This stage is too far. We should rather be redirecting you to a created entrypoint.</>
+                    }
+                </div >
                 {
                     stage < 2 &&
-                    <button className="m-2 p-2 border" onClick={handleNextStage}>Next</button>
+                    <NextButton handleNextStage={handleNextStage}/>
                 }
             </div>
         </AirContext>

@@ -1,8 +1,6 @@
 import { useState } from "react"
-import { FiCheck } from "react-icons/fi"
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import LoginPrimary from "../../components/commons/buttons/LoginPrimary"
-import LoginSecondary from "../../components/commons/buttons/LoginSecondary"
 import InputField from "../../components/commons/forms/inputs/InputField"
 import Toaster, { ToasterType } from "../../components/commons/toaster/Toaster"
 import { signin, signup } from "../../utils/auth"
@@ -11,7 +9,7 @@ interface SignUpProps {
 	mark? : Blob
 }
 
-const SignUp = ({mark} : SignUpProps) => {
+const SignUp = ({ mark } : SignUpProps) => {
 
 	const navigate = useNavigate()
 
@@ -92,19 +90,43 @@ const SignUp = ({mark} : SignUpProps) => {
 							<div className="flex flex-col items-start justify-center w-full h-full md:h-auto gap-4">
 								<h2 className="text-6xl ">Sign up</h2>
 								<div className="flex flex-col gap-1 items-start w-full">
-									<InputField label="Email" onChange={handleSignupNameChange } placeholder="Mohammed Li" type="text"/>
+								<InputField
+									label="Username"
+									onChange={handleSignupNameChange}
+									placeholder="username"
+									type="text"
+									autocomplete="username" 
+									maxlength={15}/>
 								</div>
 								<div className="flex flex-col gap-1 items-start w-full">
-									<InputField label="Email" onChange={handleSignupEmailChange } placeholder="example@example.com" type="text"/>
+									<InputField 
+									label="Email" 
+									onChange={handleSignupEmailChange } 
+									placeholder="example@example.com" 
+									type="text"/>
 								</div>
 								<div className="flex flex-col gap-1 items-start w-full">
-									<InputField label="Comfirm Email" onChange={handleSignupEmailConfChange } placeholder="example@example.com" type="text"/>
+									<InputField 
+									label="Comfirm Email" 
+									onChange={handleSignupEmailConfChange } 
+									placeholder="example@example.com" 
+									type="text"/>
 								</div>
 								<div className="flex flex-col gap-1 items-start w-full">
-									<InputField onChange={ handleSignupPasswordChange } label="Password" placeholder="••••••••" type="password"/>
+									<InputField 
+									onChange={ handleSignupPasswordChange } 
+									label="Password" 
+									placeholder="••••••••" 
+									type="password"
+									maxlength={20}/>
 								</div>
 								<div className="flex flex-col gap-1 items-start w-full">
-									<InputField onChange={ handleSignupPasswordConfChange } label="Password" placeholder="••••••••" type="password"/>
+									<InputField 
+									onChange={ handleSignupPasswordConfChange } 
+									label="Password" 
+									placeholder="••••••••" 
+									type="password"
+									maxlength={20}/>
 								</div>
 							</div>
 							<div className="sticky bottom-4 md:static 
