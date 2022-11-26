@@ -250,10 +250,11 @@ const Entrypoint = (props: any) => {
                                     <h1 className="text-xl font-bold">{data.name}</h1>
                                 </div>
                                 {
-                                    data.cluster.name != "Welcome" ? <div className="cursor-pointer"
-                                        onClick={() => navigate('/', { replace: true })}>
-                                        <FiX className="text-[32px]" />
-                                    </div> : <></>
+                                    (data.cluster.name != "Welcome" || data.current_module == data.modules.length - 1) ?
+                                        <div className="cursor-pointer"
+                                            onClick={() => navigate('/', { replace: true })}>
+                                            <FiX className="text-[32px]" />
+                                        </div> : <></>
                                 }
 
                             </div>
