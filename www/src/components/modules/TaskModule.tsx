@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { AirTableContext } from "../../contexts/AirContext"
 import { getSession } from "../../utils/auth"
-import { IEntrypoint, IFile, IModule, IUpload } from "../../utils/types"
+import { IEntrypoint, IFile, IModule, IUpload, UPLOAD_TYPE } from "../../utils/types"
 import TextInputField from "../commons/forms/inputs/TextInputField"
 import WelcomePrompts from "../entrypoints/welcome/WelcomePrompts"
 import ContentAudio from "./content/ContentAudio"
@@ -52,7 +52,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
                                     flex flex-col gap-4
                                             " key={`${t.type}-key-${i}`}>
                             <p>{prompt}</p>
-                            <FileUploader type="video" maxUploads={t.max_limit} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted} />
+                            <FileUploader type={UPLOAD_TYPE.Video} maxUploads={t.max_limit} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted} />
                         </div>)
                 case "image_input":
                     return (
@@ -60,7 +60,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
                                     flex flex-col gap-4
                                             " key={`${t.type}-key-${i}`}>
                             <p>{prompt}</p>
-                            <FileUploader type="image" maxUploads={t.max_limit} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted} />
+                            <FileUploader type={UPLOAD_TYPE.Image} maxUploads={t.max_limit} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted} />
                         </div>)
                 case "text_input":
                     return (

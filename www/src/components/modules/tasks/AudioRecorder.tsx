@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { FiMic, FiRotateCcw, FiSquare } from "react-icons/fi"
 import { getSession } from "../../../utils/auth"
-import { IEntrypoint, IFile, IModule, IUpload } from "../../../utils/types"
+import { IEntrypoint, IFile, IModule, IUpload, UPLOAD_TYPE } from "../../../utils/types"
 import AudioRecorderCountdown from "./utils/AudioRecorderCountdown"
 
 const MediaStreamRecorder = require('msr')
@@ -86,7 +86,7 @@ const AudioRecorder = ({ index, mod, ep, handleNewUploads, isRequestingUploads, 
         setRecordingMessage("done!")
         setRecordingState("done")
         setBlobURL(URL.createObjectURL(audioBlob as Blob))
-        setUploads([{ file: new File([audioBlob], "recording.wav"), text: "" }])
+        setUploads([{ file: new File([audioBlob], "recording.wav"), text: "", type: UPLOAD_TYPE.Audio }])
 
         handleUserDone(true)
     }

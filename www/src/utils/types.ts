@@ -21,6 +21,13 @@ export enum FINAL_TYPE {
     Crack = "Crack"
 }
 
+export enum UPLOAD_TYPE {
+    Text = "txt",
+    Image = "img",
+    Video = "vid",
+    Audio = "wav"
+}
+
 //--------
 //-- types
 //--------
@@ -61,7 +68,8 @@ export interface IUpload {
 
 export interface IFile {
     file?: File,
-    text: string
+    text: string,
+    type: UPLOAD_TYPE
 }
 
 export interface IContent {

@@ -14,7 +14,7 @@ const IntroContent = ({ type, airkey, contents }: ContentProps) => {
         case "img":
             return (
                 <ContentPhoto src={contents.get(airkey) || ""}/>)
-        case "mp3":
+        case "wav":
             return (
                 <ContentAudio src={contents.get(airkey) || ""}/>
                )

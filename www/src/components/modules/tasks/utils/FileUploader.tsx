@@ -48,7 +48,8 @@ const FileUploader = ({ type, maxUploads = 1, handleNewUploads, isRequestingUplo
 
         let f = {
             file: t.files[0],
-            text: ""
+            text: "",
+            type: type
         } as IFile
 
         setUploads([...uploads, f])

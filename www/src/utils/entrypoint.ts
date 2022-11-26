@@ -29,6 +29,7 @@ export const submitUpload = async (token: string, uuid: string, f: IFile) => {
 
     const b = new FormData()
     b.append("module_uuid", uuid)
+    b.append("type", f.type)
 
     if (f.file !== undefined)
         b.append("files[]", f.file)

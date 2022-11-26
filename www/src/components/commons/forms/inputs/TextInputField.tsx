@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { IFile } from "../../../../utils/types";
+import { IFile, UPLOAD_TYPE } from "../../../../utils/types";
 
 interface TextInputFieldProps {
 	label?: string,
@@ -39,7 +39,7 @@ const TextInputField = ({
 		if (inputRef.current == null)
 			return
 
-		setUploads([{ file: undefined, text: inputRef.current.value }])
+		setUploads([{ file: undefined, text: inputRef.current.value, type: UPLOAD_TYPE.Text }])
 	}, [isRequestingUploads])
 
 	const handleOnChange = (e: React.BaseSyntheticEvent) => {
