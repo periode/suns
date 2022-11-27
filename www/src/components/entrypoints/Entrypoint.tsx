@@ -17,7 +17,7 @@ import WaitingModule from "../modules/WaitingModule";
 import EntrypointLayout from "./Layouts/EntrypointLayout";
 
 const FETCH_INTERVAL = 50 * 1000
-const ENTRYPOINT_LIFETIME_MINUTES = 10
+const ENTRYPOINT_LIFETIME_MINUTES = 72 * 60
 
 const Entrypoint = (props: any) => {
     const params = useParams()

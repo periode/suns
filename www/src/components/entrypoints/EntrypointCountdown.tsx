@@ -8,8 +8,10 @@ function EntrypointCountdown( {endDate} : EntrypointCountdownProps ) {
 	const [days, hours, minutes, seconds] = useCountdown(endDate)
 
 	const doubleDigits = (digit : number) : string =>{
-		if (digit < 10)
+		if (digit.toString().length === 1)
 			return (String("0" + digit))
+		else if(digit < 0)
+			return(String(0))
 		return(String(digit))
 	}
 	
