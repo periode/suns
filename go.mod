@@ -3,7 +3,7 @@ module github.com/periode/suns
 go 1.18
 
 require (
-	github.com/gabriel-vasile/mimetype v1.4.1
+	github.com/chai2010/webp v1.1.1
 	github.com/gin-gonic/gin v1.8.1
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/golang-migrate/migrate/v4 v4.15.2

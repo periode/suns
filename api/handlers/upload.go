@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"bytes"
 	"fmt"
+	"image"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -10,11 +12,16 @@ import (
 	"strings"
 	"time"
 
+	"github.com/chai2010/webp"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 
 	zero "github.com/periode/suns/api/logger"
 	"github.com/periode/suns/api/models"
+
+	_ "image/gif"
+	_ "image/jpeg"
+	_ "image/png"
 )
 
 // -- create upload parses the form info (module_uuid, partner_index and file), adds the user_uuid from the auth session and then appends the upload to the specified module
@@ -28,14 +35,14 @@ func CreateUpload(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Cannot parse the module UUID")
 	}
 
-	var ftype, fname, fpath string
+	var ftype, fpath string
 	uploads := make([]models.Upload, 0)
 
 	ftype = c.FormValue("type")
 	if ftype == models.TextType {
 		txt := c.FormValue("text[]")
 		u := models.Upload{
-			Name:     fname,
+			Name:     "",
 			URL:      fpath,
 			UserUUID: user_uuid.String(),
 			Text:     txt,
@@ -59,7 +66,7 @@ func CreateUpload(c echo.Context) error {
 			}
 
 			u := models.Upload{
-				Name:     fname,
+				Name:     file.Filename,
 				URL:      fpath,
 				UserUUID: user_uuid.String(),
 				Text:     "",
@@ -102,7 +109,7 @@ func writeFileToDisk(file *multipart.FileHeader, ftype string) (string, error) {
 	case models.ImageType:
 		fext = "webp"
 	case models.VideoType:
-		fext = "webm"
+		fext = "mp4"
 	case models.AudioType:
 		fext = "wav"
 	}
@@ -121,15 +128,21 @@ func writeFileToDisk(file *multipart.FileHeader, ftype string) (string, error) {
 	}
 	defer src.Close()
 
-	//-- this is where the conversion should be happening. it would be ideal if ffmpeg can just do it with an in-memory file as input
 	if ftype == models.ImageType {
-		// err := ffmpeg.Input(src).
-		// 	Output(target, ffmpeg.KwArgs{"c:v": "libwebp"}).
-		// 	ErrorToStdOut().Run()
-		// if err != nil {
-		// 	return "", err
-		// }
-		fmt.Println("converting image")
+		var buf bytes.Buffer
+		m, _, err := image.Decode(src)
+		if err != nil {
+			return "", err
+		}
+		err = webp.Encode(&buf, m, &webp.Options{Lossless: false})
+		if err != nil {
+			return "", err
+		}
+
+		err = os.WriteFile(target, buf.Bytes(), 0666)
+		if err != nil {
+			return "", err
+		}
 	} else if ftype == models.VideoType {
 		// err := ffmpeg.Input(src).
 		// 	Output(target, ffmpeg.KwArgs{"c:v": "libwebm"}).
