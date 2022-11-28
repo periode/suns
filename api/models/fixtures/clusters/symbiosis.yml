@@ -82,7 +82,7 @@ entrypoints:
         tasks:
           - type: "video_input"
             key: "vidupload_info_txt"
-            max_uploads: 3
+            max_uploads: 1
       - name: "Final Symbiosis Task"
         type: "final"
         contents:
