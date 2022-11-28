@@ -14,7 +14,7 @@ function ContentVideoInternal({
 		<div className="flex items-center justify-start">
 			<video className="w-auto max-h-80"
 				title={title}
-				src={`${process.env.REACT_APP_API_URL}/static/${src}`}
+				src={`${process.env.REACT_APP_SPACES_URL}/${src}`}
 				controls/>
 		</div>
 	 );

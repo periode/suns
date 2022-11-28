@@ -12,6 +12,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/chai2010/webp"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
@@ -59,7 +63,7 @@ func CreateUpload(c echo.Context) error {
 		files := form.File["files[]"]
 		for _, file := range files {
 
-			fpath, err := writeFileToDisk(file, ftype)
+			fpath, err := saveFile(file, ftype)
 			if err != nil {
 				zero.Error(err.Error())
 				return c.String(http.StatusBadRequest, "Error uploading the file")
@@ -95,13 +99,22 @@ func CreateUpload(c echo.Context) error {
 	return c.JSON(http.StatusOK, module)
 }
 
-func writeFileToDisk(file *multipart.FileHeader, ftype string) (string, error) {
-	var uploadsDir string
-	if os.Getenv("UPLOADS_DIR") == "" {
-		uploadsDir = "/tmp/suns/uploads"
-	} else {
-		uploadsDir = os.Getenv("UPLOADS_DIR")
+func saveFile(file *multipart.FileHeader, ftype string) (string, error) {
+	key := os.Getenv("SPACES_API_KEY")
+	secret := os.Getenv("SPACES_API_SECRET")
+
+	s3Config := &aws.Config{
+		Credentials:      credentials.NewStaticCredentials(key, secret, ""),
+		Endpoint:         aws.String("https://fra1.digitaloceanspaces.com/"),
+		Region:           aws.String("us-east-1"),
+		S3ForcePathStyle: aws.Bool(false), // Depending on your version, alternatively use o.UsePathStyle = false
 	}
+
+	newSession, err := session.NewSession(s3Config)
+	if err != nil {
+		return "", err
+	}
+	s3Client := s3.New(newSession)
 
 	//-- generate target path
 	var fext string
@@ -120,6 +133,14 @@ func writeFileToDisk(file *multipart.FileHeader, ftype string) (string, error) {
 		strings.Split(file.Filename, ".")[0],
 		fext,
 	)
+
+	var uploadsDir string
+	if os.Getenv("UPLOADS_DIR") == "" {
+		uploadsDir = "/tmp/suns/uploads"
+	} else {
+		uploadsDir = os.Getenv("UPLOADS_DIR")
+	}
+
 	target := filepath.Join(uploadsDir, fname)
 
 	src, err := file.Open()
@@ -129,6 +150,8 @@ func writeFileToDisk(file *multipart.FileHeader, ftype string) (string, error) {
 	defer src.Close()
 
 	if ftype == models.ImageType {
+
+		//-- convert to webp
 		var buf bytes.Buffer
 		m, _, err := image.Decode(src)
 		if err != nil {
@@ -143,6 +166,31 @@ func writeFileToDisk(file *multipart.FileHeader, ftype string) (string, error) {
 		if err != nil {
 			return "", err
 		}
+
+		//-- read the converted file
+		body, err := os.ReadFile(target)
+		if err != nil {
+			return "", err
+		}
+
+		//-- upload object
+		upload := s3.PutObjectInput{
+			Bucket: aws.String("suns"),
+			Key:    aws.String(fname),
+			Body:   bytes.NewReader(body),
+			ACL:    aws.String("public"),
+		}
+
+		_, err = s3Client.PutObject(&upload)
+		if err != nil {
+			return "", err
+		}
+
+		err = os.Remove(target)
+		if err != nil {
+			return "", err
+		}
+
 	} else if ftype == models.VideoType {
 		// err := ffmpeg.Input(src).
 		// 	Output(target, ffmpeg.KwArgs{"c:v": "libwebm"}).
@@ -151,16 +199,32 @@ func writeFileToDisk(file *multipart.FileHeader, ftype string) (string, error) {
 		// 	return "", err
 		// }
 		fmt.Println("converting video")
-	}
 
-	dst, err := os.Create(target)
-	if err != nil {
-		return "", err
-	}
-	defer dst.Close()
+		dst, err := os.Create(target)
+		if err != nil {
+			return "", err
+		}
+		defer dst.Close()
 
-	if _, err = io.Copy(dst, src); err != nil {
-		return "", err
+		if _, err = io.Copy(dst, src); err != nil {
+			return "", err
+		}
+	} else if ftype == models.AudioType {
+		fmt.Println("converting audio")
+		//-- upload object
+		upload := s3.PutObjectInput{
+			Bucket: aws.String("suns"),
+			Key:    aws.String(fname),
+			Body:   src,
+			ACL:    aws.String("public"),
+		}
+
+		_, err = s3Client.PutObject(&upload)
+		if err != nil {
+			return "", err
+		}
+	} else {
+		fmt.Println("unknown upload type")
 	}
 
 	return fname, nil

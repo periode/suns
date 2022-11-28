@@ -8,7 +8,6 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
@@ -44,13 +43,6 @@ func CreateUser(c echo.Context) error {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 
-	var uploadsDir string
-	if os.Getenv("UPLOADS_DIR") == "" {
-		uploadsDir = "/tmp/suns/uploads"
-	} else {
-		uploadsDir = os.Getenv("UPLOADS_DIR")
-	}
-
 	var user models.User
 	err = c.Bind(&user) // Bind user data to user struct
 	if err != nil {
@@ -66,11 +58,7 @@ func CreateUser(c echo.Context) error {
 	}
 
 	mark := form.File["mark"][0]
-	fname := mark.Filename
-	fpath := fmt.Sprintf("%d_%s_%s", time.Now().Unix(), user.Name, fname)
-	target := filepath.Join(uploadsDir, fpath)
-
-	_, err = writeFileToDisk(mark, target)
+	fpath, err := saveFile(mark, models.ImageType)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusBadRequest, "Error saving the mark to disk")
