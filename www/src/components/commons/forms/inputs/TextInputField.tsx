@@ -5,10 +5,11 @@ interface TextInputFieldProps {
 	label?: string,
 	placeholder?: string,
 	type?: string
+	uuid: string,
 	maxLimit?: number,
 	handleNewUploads: Function,
 	isRequestingUploads: boolean,
-	handleUserDone: Function,
+	handleTasksDone: Function,
 	hasUserCompleted: boolean,
 }
 
@@ -17,17 +18,18 @@ const MIN_LIMIT = 2
 const TextInputField = ({
 	label,
 	placeholder,
+	uuid,
 	maxLimit,
 	handleNewUploads,
 	isRequestingUploads,
-	handleUserDone,
+	handleTasksDone,
 	hasUserCompleted
 }: TextInputFieldProps) => {
 	const hasSignifiedDone = useRef(false)
 	const [uploads, setUploads] = useState(Array<IFile>)
 	const inputRef = useRef<HTMLTextAreaElement>(null)
 	useEffect(() => {
-		handleUserDone(false)
+		handleTasksDone({key: uuid, value: false})
 	}, [])
 
 	useEffect(() => {
@@ -44,7 +46,7 @@ const TextInputField = ({
 
 	const handleOnChange = (e: React.BaseSyntheticEvent) => {
 		if (e.target.value.length > MIN_LIMIT && hasSignifiedDone.current == false) {
-			handleUserDone(true)
+			handleTasksDone({key: uuid, value: true})
 			hasSignifiedDone.current = true
 		}
 	}

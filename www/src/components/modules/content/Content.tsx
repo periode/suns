@@ -8,7 +8,7 @@ interface ContentProps {
     contents: Map<string, string>
 }
 
-const IntroContent = ({ type, airkey, contents }: ContentProps) => {
+const Content = ({ type, airkey, contents }: ContentProps) => {
     
     switch (type) {
         case "img":
@@ -31,4 +31,4 @@ const IntroContent = ({ type, airkey, contents }: ContentProps) => {
     }
 }
 
-export default IntroContent
+export default Content

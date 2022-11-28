@@ -9,7 +9,7 @@ import EntrypointActions from "./EntrypointActions";
 import PublicView from "./PublicView";
 import NotFound from "../../NotFound";
 import FinalFirstTimes from "../modules/FinalFirstTimes";
-import { ENTRYPOINT_STATUS, IEntrypoint, IFile, ISession } from "../../utils/types";
+import { ENTRYPOINT_STATUS, IEntrypoint, IFile, ISession, TaskDoneType } from "../../utils/types";
 import IntroModule from "../modules/IntroModule";
 import TaskModule from "../modules/TaskModule";
 import { fetchEntrypoint, progressModule, submitUpload } from "../../utils/entrypoint";
@@ -31,8 +31,8 @@ const Entrypoint = (props: any) => {
     const [isOwned, setOwned] = useState(false)
     const [isRequestingUploads, setRequestingUploads] = useState(false)
 
-    //-- userDone keeps track of when the user can submit the module
-    const [isUserDone, setUserDone] = useState(Array<boolean>)
+    //-- tasksDone keeps track of when the user can submit the module
+    const [tasksDone, setTasksDone] = useState(Array<TaskDoneType>)
 
     const [canUserComplete, setCanUserComplete] = useState(false)
     //-- userCompleted keeps track of when the module is completed
@@ -59,13 +59,22 @@ const Entrypoint = (props: any) => {
 
     //-- this listens for whether a user is done with all tasks on the module
     useEffect(() => {
-        if (data === undefined)
-            return
+        if(tasksDone.length == 0) return
+        console.log(tasksDone);
+        
+       let isDone = true
+       for (const task of tasksDone) {
+        if(task.value == false){
+            isDone = false
+            break
+        }
+       }
 
-        if (isUserDone.length === data.modules[data.current_module].tasks.length)
-            setCanUserComplete(true)
+       console.log(isDone);
+       
+       setCanUserComplete(isDone)
 
-    }, [isUserDone, data])
+    }, [tasksDone])
 
     //-- this checks for the completion status per user
     useEffect(() => {
@@ -98,10 +107,8 @@ const Entrypoint = (props: any) => {
             fetchEntrypoint(params.id as string, session.token)
                 .then((e: IEntrypoint) => {
                     setData(e as IEntrypoint)
-                    setUserDone([])
-                    setTimeout(() => {
-                        fetchEntrypoint(params.id as string, session.token)
-                    }, FETCH_INTERVAL)
+                    let tasks = e.modules[e.current_module].tasks.map(t => {return {key: t.uuid, value: false}})
+                    setTasksDone(tasks)
                 })
                 .catch(err => {
                     console.warn('error', err)
@@ -141,11 +148,23 @@ const Entrypoint = (props: any) => {
         })
     }
 
-    const handleUserDone = (_val: boolean) => {
-        if (_val === true)
-            setUserDone(prev => {
-                return [...prev, _val] as boolean[]
-            })
+    const handleTasksDone = (_task: TaskDoneType) => {
+        console.log('new task done:', _task);
+        
+        let tmp = [...tasksDone]
+        let hasFound = false
+        for (const task of tmp) {
+            if(task.key === _task.key){                
+                task.value = _task.value
+                hasFound = true
+                break
+            }
+        }
+
+        if(!hasFound)
+            tmp.push(_task)
+
+        setTasksDone(tmp)
     }
 
     const requestUploads = () => {
@@ -173,7 +192,7 @@ const Entrypoint = (props: any) => {
         progressModule(ep.uuid, session.token)
             .then(updated => {
                 //-- completion always means the user is done with their input
-                setUserDone([])
+                setTasksDone([])
 
                 //-- check if we're done with the module
                 if (updated.current_module === ep.current_module)
@@ -195,11 +214,11 @@ const Entrypoint = (props: any) => {
         switch (mod.type) {
             case "intro":
                 return (
-                    <IntroModule epName={ep.name} data={mod} handleUserDone={handleUserDone} />
+                    <IntroModule epName={ep.name} data={mod} handleTasksDone={handleTasksDone} />
                 )
             case "task":
                 return (
-                    <TaskModule index={index} ep={ep} data={mod} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted} />
+                    <TaskModule index={index} ep={ep} data={mod} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleTasksDone={handleTasksDone} hasUserCompleted={hasUserCompleted} />
                 )
             case "final":
                 return (
@@ -219,7 +238,7 @@ const Entrypoint = (props: any) => {
 
     const getModule = () => {
 
-        //-- if all modules are displayed and the status of the entrypoint is completed, we return the public view
+        //-- style the module as final
         if (data.status === ENTRYPOINT_STATUS.EntrypointCompleted) {
             return (<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}-final`} className="m-1 p-1">{parseModule(data.current_module, data)}</div>)
         }

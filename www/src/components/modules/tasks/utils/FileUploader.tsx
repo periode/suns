@@ -5,20 +5,21 @@ import { IFile } from "../../../../utils/types"
 
 interface IFileUploadProps {
     type: string,
+    uuid: string,
     maxUploads?: number,
     handleNewUploads: Function,
     isRequestingUploads: boolean,
-    handleUserDone: Function,
+    handleTasksDone: Function,
     hasUserCompleted: boolean
 }
 
 const MAX_FILE_SIZE = 32
 
-const FileUploader = ({ type, maxUploads = 1, handleNewUploads, isRequestingUploads, handleUserDone, hasUserCompleted }: IFileUploadProps) => {
+const FileUploader = ({ type, uuid, maxUploads = 1, handleNewUploads, isRequestingUploads, handleTasksDone, hasUserCompleted }: IFileUploadProps) => {
     const [uploads, setUploads] = useState(Array<IFile>)
     const [uploadIndex, setUploadIndex] = useState(1)
     useEffect(() => {
-        handleUserDone(false)
+        handleTasksDone({key: uuid, value: false})
     }, [])
 
     useEffect(() => {
@@ -27,7 +28,7 @@ const FileUploader = ({ type, maxUploads = 1, handleNewUploads, isRequestingUplo
                 let u = uploadIndex + 1
                 setUploadIndex(u)
             } else if (uploads.length == maxUploads) {
-                handleUserDone(true)
+                handleTasksDone({key: uuid, value: true})
             }
         }
     }, [uploads])
