@@ -112,6 +112,10 @@ func ProgressEntrypoint(c echo.Context) error {
 		return c.String(http.StatusPreconditionFailed, "The entrypoint has all modules completed.")
 	}
 
+	if ep.PartnerStatus == models.PartnerPartial || ep.PartnerStatus == models.PartnerNone {
+		return c.String(http.StatusPreconditionFailed, "You cannot progress an entrypoint which doesn't have all necessary users!")
+	}
+
 	mod := ep.Modules[ep.CurrentModule]
 	//-- this is where we make the update logic
 	//-- if we're on the welcome module, we have two users but behave like one
