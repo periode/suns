@@ -19,6 +19,8 @@ function EntrypointActions({
 	hasUserCompleted
 }: EntrypointActionsProps) {
 
+	console.log("Entrypoint Actions: Can user complete? ", canUserComplete)
+
 	const copyToClipboard = (text: string) => {
 		window.prompt("You can share this link: ", text);
 	}
@@ -38,7 +40,7 @@ function EntrypointActions({
 							cursor-pointer
 							flex items-center
 							gap-1"
-			onClick={claimEntryPointFunction}>
+			onClick={ () => {claimEntryPointFunction()}}>
 			<p>Start</p>
 			<FiArrowRight className="text-xs" />
 		</button>
@@ -48,7 +50,7 @@ function EntrypointActions({
 							cursor-pointer
 							flex items-center
 							gap-1`}
-			onClick={() => {if (!hasUserCompleted) completeModuleFunction() }} disabled={hasUserCompleted}>
+			onClick={ () => {completeModuleFunction()} }>
 			<p>Next</p>
 			<FiArrowRight className="text-xs" />
 		</button>
@@ -58,7 +60,7 @@ function EntrypointActions({
 							cursor-pointer
 							flex items-center
 							gap-1"
-			onClick={() => completeModuleFunction()}>
+			onClick={() => {completeModuleFunction()}}>
 			<p>Finish</p>
 			<FiArrowRight className="text-xs" />
 		</button>

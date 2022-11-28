@@ -1,20 +1,31 @@
 import { useEffect, useState } from "react"
 import { getSession } from "../../../utils/auth"
+import { TaskDoneType } from "../../../utils/types"
 import SubmitButton from "../../commons/buttons/SubmitButton copy"
 
 interface PromptsInputProps {
-    handleUserDone: Function,
+    setTasksDone: React.Dispatch<React.SetStateAction<TaskDoneType[]>>,
+    tasksDone: TaskDoneType[],
+    uuid : string
 }
 
 const WelcomePrompts = ({
-    handleUserDone,
+     setTasksDone, tasksDone, uuid
 }: PromptsInputProps) => {
     const session = getSession()
     const [isFormActive, setFormActive] = useState(true)
 
     useEffect(() => {
-        handleUserDone(false)
-    }, [])
+        let hasFound = false
+            for (const task of tasksDone) {
+                if (task.key === uuid) {
+                    hasFound = true
+                    break
+                }
+            }
+        if (!hasFound)
+            setTasksDone([...tasksDone, { key: uuid, value: false }])
+	}, [])
 
     const handleSubmission = async (e: React.BaseSyntheticEvent) => {
         e.preventDefault()
@@ -34,8 +45,15 @@ const WelcomePrompts = ({
             body: f
         };
         const res = await fetch(endpoint, options)
-        if (res.ok) {
-            handleUserDone(true)
+            if (res.ok) {
+            let tmp = tasksDone
+			for (const task of tmp) {
+				if (task.key === uuid) {
+					task.value = true
+					break
+				}
+			}
+			setTasksDone(tmp)
             setFormActive(false)
         } else {
             console.warn('error', res.status)

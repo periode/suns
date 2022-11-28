@@ -6,14 +6,10 @@ import IntroContent from "./content/IntroContent"
 interface IntroModuleProps {
     data: IModule,
     epName: string,
-    handleUserDone: Function,
 }
 
-const IntroModule = ({ data, epName, handleUserDone }: IntroModuleProps) => {
+const IntroModule = ({ data, epName }: IntroModuleProps) => {
     
-    useEffect(() => {
-        handleUserDone(true)
-    }, [])
 
     const ctx = useContext(AirTableContext)    
     const contents = ctx.get(epName)

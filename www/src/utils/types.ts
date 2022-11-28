@@ -71,6 +71,7 @@ export interface IContent {
 }
 
 export interface ITask {
+    uuid: string,
     type: string,
     key: string,
     placeholder?: string,
@@ -100,3 +101,8 @@ export interface ISession {
     token: string,
     user: IUser
 }
+
+export  type TaskDoneType = {
+        key: string,
+        value: boolean
+};

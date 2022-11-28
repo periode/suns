@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { IFile } from "../../../../utils/types";
+import { IFile, TaskDoneType } from "../../../../utils/types";
 
 interface TextInputFieldProps {
 	label?: string,
@@ -7,8 +7,10 @@ interface TextInputFieldProps {
 	type?: string
 	handleNewUploads: Function,
 	isRequestingUploads: boolean,
-	handleUserDone: Function,
+	setTasksDone: React.Dispatch<React.SetStateAction<TaskDoneType[]>>,
+	tasksDone: TaskDoneType[],
 	hasUserCompleted: boolean,
+	uuid : string
 }
 
 const TextInputField = ({
@@ -16,14 +18,29 @@ const TextInputField = ({
 	placeholder,
 	handleNewUploads,
 	isRequestingUploads,
-	handleUserDone,
-	hasUserCompleted
+	setTasksDone,
+	tasksDone,
+	hasUserCompleted,
+	uuid
 }: TextInputFieldProps) => {
-	const hasSignifiedDone = useRef(false)
+
+	const minInputLength = 10
+	
 	const [uploads, setUploads] = useState(Array<IFile>)
+
+	// To get inputfield.value
 	const inputRef = useRef<HTMLTextAreaElement>(null)
+
 	useEffect(() => {
-		handleUserDone(false)
+        let hasFound = false
+            for (const task of tasksDone) {
+                if (task.key === uuid) {
+                    hasFound = true
+                    break
+                }
+            }
+        if (!hasFound)
+            setTasksDone([...tasksDone, { key: uuid, value: false }])
 	}, [])
 
 	useEffect(() => {
@@ -39,9 +56,29 @@ const TextInputField = ({
 	}, [isRequestingUploads])
 
 	const handleOnChange = (e: React.BaseSyntheticEvent) => {
-		if (e.target.value.length > 10 && hasSignifiedDone.current == false) {
-			handleUserDone(true)
-			hasSignifiedDone.current = true
+
+		if (e.target.value.length >= minInputLength) {
+			let tmp = [...tasksDone]
+			for (const task of tmp) {
+				// console.log("handleOnChange: ", task)
+				if (task.key === uuid) {
+					task.value = true
+					break
+				}
+			}
+			setTasksDone(tmp)
+		}
+		else 
+		{
+			let tmp = [...tasksDone]
+			for (const task of tmp) {
+				// console.log("handleOnChangeFalse: ", task)
+				if (task.key === uuid) {
+					task.value = false
+					break
+				}
+			}
+			setTasksDone(tmp)
 		}
 	}
 
@@ -68,7 +105,8 @@ const TextInputField = ({
 				placeholder={placeholder} 
 				name={label ? label.toLowerCase() : 'text'} 
 				disabled={hasUserCompleted}
-				minLength={10}
+				minLength={minInputLength}
+				required
 			/>
 		</>
 	)

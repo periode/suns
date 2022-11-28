@@ -8,40 +8,68 @@ import { getSession } from "../../utils/auth";
 import EntrypointActions from "./EntrypointActions";
 import PublicView from "./PublicView";
 import NotFound from "../../NotFound";
-import FinalFirstTimes from "../modules/FinalFirstTimes";
-import { ENTRYPOINT_STATUS, IEntrypoint, IFile, ISession } from "../../utils/types";
+import { ENTRYPOINT_STATUS, IEntrypoint, IFile, ISession, TaskDoneType } from "../../utils/types";
 import IntroModule from "../modules/IntroModule";
 import TaskModule from "../modules/TaskModule";
 import { fetchEntrypoint, progressModule, submitUpload } from "../../utils/entrypoint";
 import WaitingModule from "../modules/WaitingModule";
 import EntrypointLayout from "./Layouts/EntrypointLayout";
+import { Map } from "leaflet";
 
 const FETCH_INTERVAL = 50 * 1000
 const ENTRYPOINT_LIFETIME_MINUTES = 10
 
 const Entrypoint = (props: any) => {
+
+    // Router & navigations infos
     const params = useParams()
-    const hasData = useRef(false)
     const navigate = useNavigate()
+    
+    // Getting Entrypoint data:
+    const hasData = useRef(false) // Check if data is fetched
     const session = getSession()
     const [data, setData] = useState(props.data as IEntrypoint)
-    const [uploads, setUploads] = useState(Array<IFile>)
-    const [endDate, setEndDate] = useState("")
-
-    const [isOwned, setOwned] = useState(false)
+    useEffect(() => {
+    
+    // Fetching data
+    if (hasData.current === false) {
+        fetchEntrypoint(params.id as string, session.token)
+            .then((e: IEntrypoint) => {
+                setData(e as IEntrypoint)
+                setTasksDone([])
+                setTimeout(() => {
+                    fetchEntrypoint(params.id as string, session.token)
+                }, FETCH_INTERVAL)
+            })
+            .catch(err => {
+                console.warn('error', err)
+                navigate('/')
+            })
+        hasData.current = true
+    }
+    }, [params.id, navigate, session.token])
+    
+    // Uploads
+    const [uploads, setUploads] = useState(Array<IFile>) // Array of files that will be submitted
     const [isRequestingUploads, setRequestingUploads] = useState(false)
 
-    //-- userDone keeps track of when the user can submit the module
-    const [isUserDone, setUserDone] = useState(Array<boolean>)
-
-    const [canUserComplete, setCanUserComplete] = useState(false)
-    //-- userCompleted keeps track of when the module is completed
-    const [hasUserCompleted, setUserCompleted] = useState(false)
-    const hasSubmittedModule = useRef(false)
-
-    //-- this checks if the user owns the current entrypoint
-    //-- and what is the expiry date of the entrypoint
+    // End-date for countdown
+    const [endDate, setEndDate] = useState("")
     useEffect(() => {
+        // setting entrypoint expiry date
+        if (data === undefined)
+            return
+        let d = new Date(data.created_at)
+        let end = new Date()
+        end.setMinutes(d.getMinutes() + ENTRYPOINT_LIFETIME_MINUTES)
+        setEndDate(end.toString())
+    }, [data, session])
+
+    // Check if current user is an owner of the entrypoint
+    const [isOwned, setOwned] = useState(false)
+    useEffect(() => {
+        //-- this checks if the user owns the current entrypoint
+        //-- and what is the expiry date of the entrypoint
         if (data === undefined)
             return
         // checking if current user is an owner of the entrypoint
@@ -49,26 +77,39 @@ const Entrypoint = (props: any) => {
             for (let u of data.users)
                 if (u.uuid === session.user.uuid)
                     setOwned(true)
-
-        // setting entrypoint expiry date
-        let d = new Date(data.created_at)
-        let end = new Date()
-        end.setMinutes(d.getMinutes() + ENTRYPOINT_LIFETIME_MINUTES)
-        setEndDate(end.toString())
     }, [data, session])
 
-    //-- this listens for whether a user is done with all tasks on the module
+
+    // Module completion status
+    //
+    // 1 - Is user done with doing the tasks within the module:
+    //-- TasksDone keeps track of when the user can submit the module
+
+   
+    const [tasksDone, setTasksDone] = useState(Array<TaskDoneType>)
+    //
+    // 2 - Can the user click on 'Next' or 'Complete'
+    const [canUserComplete, setCanUserComplete] = useState(false)
+    
     useEffect(() => {
-        if (data === undefined)
-            return
+        //-- this listens for whether a user is done with all tasks on the module        
+        var allTasksDone = true
+        for (const task of tasksDone) {
+            if (task.value === false)
+            {
+                allTasksDone = false
+            }
+        }
+        setCanUserComplete(allTasksDone)
 
-        if (isUserDone.length === data.modules[data.current_module].tasks.length)
-            setCanUserComplete(true)
+    }, [tasksDone])
 
-    }, [isUserDone, data])
 
-    //-- this checks for the completion status per user
+    //
+    // 3 - Can the user click on 'Next' or 'Complete' successfully
+    const [hasUserCompleted, setUserCompleted] = useState(false)
     useEffect(() => {
+        //-- this checks for the completion status per user
         if (data === undefined)
             return
 
@@ -81,36 +122,24 @@ const Entrypoint = (props: any) => {
         }
     }, [isOwned, data, session.user.uuid])
 
+
+
     //-- this checks if all uploads have been submitted before completing the module (should be a useCallback?)
+    const hasSubmittedModule = useRef(false)
+    
     useEffect(() => {
         if (data === undefined)
             return
 
         if (uploads.length === data.modules[data.current_module].tasks.length && !hasSubmittedModule.current) {
+            console.log("completing module")
             completeModule(data, session)
             hasSubmittedModule.current = true
         }
-    }, [uploads])
+    }, [uploads, session, data])
 
-    //-- gets the initial data
-    useEffect(() => {
-        if (hasData.current === false) {
-            fetchEntrypoint(params.id as string, session.token)
-                .then((e: IEntrypoint) => {
-                    setData(e as IEntrypoint)
-                    setUserDone([])
-                    setTimeout(() => {
-                        fetchEntrypoint(params.id as string, session.token)
-                    }, FETCH_INTERVAL)
-                })
-                .catch(err => {
-                    console.warn('error', err)
-                    navigate('/')
-                })
-            hasData.current = true
-        }
-    }, [params.id])
-
+    
+    // Claim entrypoints
     const claimEntrypoint = async () => {
         const endpoint = new URL(`entrypoints/${data.uuid}/claim`, process.env.REACT_APP_API_URL)
 
@@ -141,15 +170,9 @@ const Entrypoint = (props: any) => {
         })
     }
 
-    const handleUserDone = (_val: boolean) => {
-        if (_val === true)
-            setUserDone(prev => {
-                return [...prev, _val] as boolean[]
-            })
-    }
-
     const requestUploads = () => {
-        if (data.modules[data.current_module].tasks.length > 0 && data.modules[data.current_module].tasks[0].type != "prompts_input")
+        // If modules has tasks
+        if (data.modules[data.current_module].tasks.length > 0 && data.modules[data.current_module].tasks[0].type !== "prompts_input")
             setRequestingUploads(true)
         else
             completeModule(data, session)
@@ -173,7 +196,7 @@ const Entrypoint = (props: any) => {
         progressModule(ep.uuid, session.token)
             .then(updated => {
                 //-- completion always means the user is done with their input
-                setUserDone([])
+                setTasksDone([])
 
                 //-- check if we're done with the module
                 if (updated.current_module === ep.current_module)
@@ -195,11 +218,22 @@ const Entrypoint = (props: any) => {
         switch (mod.type) {
             case "intro":
                 return (
-                    <IntroModule epName={ep.name} data={mod} handleUserDone={handleUserDone} />
+                    <IntroModule 
+                        epName={ep.name} 
+                        data={mod} 
+                    />
                 )
             case "task":
                 return (
-                    <TaskModule index={index} ep={ep} data={mod} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted} />
+                    <TaskModule 
+                    index={index} 
+                    ep={ep} 
+                    data={mod} 
+                    handleNewUploads={handleNewUploads} 
+                    isRequestingUploads={isRequestingUploads} 
+                    setTasksDone={setTasksDone} 
+                    tasksDone={tasksDone}
+                    hasUserCompleted={hasUserCompleted} />
                 )
             case "final":
                 return (
@@ -220,16 +254,25 @@ const Entrypoint = (props: any) => {
     const getModule = () => {
 
         //-- if all modules are displayed and the status of the entrypoint is completed, we return the public view
-        if (data.status === ENTRYPOINT_STATUS.EntrypointCompleted) {
-            return (<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}-final`} className="m-1 p-1">{parseModule(data.current_module, data)}</div>)
-        }
 
+        // Rendering public view when completed
+        if (data.status === ENTRYPOINT_STATUS.EntrypointCompleted) {
+            return (<div 
+                    key={`mod-${data.name.split(' ').join('-')}-${data.current_module}-final`} 
+                    className="m-1 p-1">{parseModule(data.current_module, data)}
+                    </div>)
+        }
+        
+        // Waiting module when user has completed and is waiting for the other.
         if (hasUserCompleted) {
             return (<WaitingModule key="module-complete-message" />)
         }
 
-
-        return (<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}`} className="m-1 p-1">{parseModule(data.current_module, data)}</div>)
+        // Current module
+        return (<div 
+                    key={`mod-${data.name.split(' ').join('-')}-${data.current_module}`} 
+                    className="m-1 p-1">{parseModule(data.current_module, data)}
+                </div>)
     }
 
     if (data !== undefined)
@@ -251,12 +294,11 @@ const Entrypoint = (props: any) => {
                                     <h1 className="text-xl font-bold">{data.name}</h1>
                                 </div>
                                 {
-                                    data.cluster.name != "Welcome" ? <div className="cursor-pointer"
+                                    data.cluster.name !== "Welcome" ? <div className="cursor-pointer"
                                         onClick={() => navigate('/', { replace: true })}>
                                         <FiX className="text-[32px]" />
                                     </div> : <></>
                                 }
-
                             </div>
                         </div>
                     }
@@ -264,16 +306,16 @@ const Entrypoint = (props: any) => {
                         <div className="w-full h-full p-4 overflow-scroll">
                             {
                                 isOwned || data.status === ENTRYPOINT_STATUS.EntrypointCompleted ?
-                                    getModule()
-                                    :
-                                    data.users.length < data.max_users ?
-                                        <>
-                                            {parseModule(0, data)}
-                                        </>
-                                        :
-                                        <>
-                                            <PublicView entrypoint={data} />
-                                        </>
+                                getModule()
+                                :
+                                data.users.length < data.max_users ?
+                                <>
+                                    {parseModule(0, data)}
+                                </>
+                                :
+                                <>
+                                    <PublicView entrypoint={data} />
+                                </>
                             }
                         </div>
                     }

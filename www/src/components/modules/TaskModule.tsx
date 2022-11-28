@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { AirTableContext } from "../../contexts/AirContext"
 import { getSession } from "../../utils/auth"
-import { IEntrypoint, IFile, IModule, IUpload } from "../../utils/types"
+import { IEntrypoint, IFile, IModule, IUpload, TaskDoneType } from "../../utils/types"
 import TextInputField from "../commons/forms/inputs/TextInputField"
 import WelcomePrompts from "../entrypoints/welcome/WelcomePrompts"
 import ContentAudio from "./content/ContentAudio"
@@ -17,11 +17,12 @@ interface ITaskModuleProps {
     index: number,
     handleNewUploads: Function,
     isRequestingUploads: boolean,
-    handleUserDone: Function,
-    hasUserCompleted: boolean
+    setTasksDone: React.Dispatch<React.SetStateAction<TaskDoneType[]>>,
+    tasksDone: TaskDoneType[],
+    hasUserCompleted: boolean,
 }
 
-const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, handleUserDone, hasUserCompleted }: ITaskModuleProps) => {
+const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, setTasksDone, tasksDone, hasUserCompleted }: ITaskModuleProps) => {
     const session = getSession()
     const [inputs, setInputs] = useState(Array<IUpload>)
     const ctx = useContext(AirTableContext)
@@ -43,7 +44,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
                                                 " key={`${t.type}-key-${i}`}>
                             <p>{prompt}</p>
 
-                            <AudioRecorder mod={data} index={index} ep={ep} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted} />
+                            <AudioRecorder uuid={t.uuid} mod={data} index={index} ep={ep} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} setTasksDone={setTasksDone} tasksDone={tasksDone} hasUserCompleted={hasUserCompleted} />
                         </div>
                     )
                 case "video_input":
@@ -52,7 +53,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
                                     flex flex-col gap-4
                                             " key={`${t.type}-key-${i}`}>
                             <p>{prompt}</p>
-                            <FileUploader type="video" maxUploads={t.max_uploads} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted} />
+                            <FileUploader uuid={t.uuid} type="video" maxUploads={t.max_uploads} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} setTasksDone={setTasksDone} tasksDone={tasksDone} hasUserCompleted={hasUserCompleted} />
                         </div>)
                 case "image_input":
                     return (
@@ -60,7 +61,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
                                     flex flex-col gap-4
                                             " key={`${t.type}-key-${i}`}>
                             <p>{prompt}</p>
-                            <FileUploader type="image" maxUploads={t.max_uploads} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted} />
+                            <FileUploader uuid={t.uuid} type="image" maxUploads={t.max_uploads} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} setTasksDone={setTasksDone} tasksDone={tasksDone} hasUserCompleted={hasUserCompleted} />
                         </div>)
                 case "text_input":
                     return (
@@ -69,7 +70,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
                                             " key={`${t.type}-key-${i}`}>
                             <p>{prompt}</p>
                             <div className="h-60">
-                                <TextInputField handleNewUploads={handleNewUploads} handleUserDone={handleUserDone} isRequestingUploads={isRequestingUploads} hasUserCompleted={hasUserCompleted} placeholder={t.placeholder && contents?.get(t.placeholder)} />
+                                <TextInputField uuid={t.uuid} handleNewUploads={handleNewUploads} setTasksDone={setTasksDone} tasksDone={tasksDone} isRequestingUploads={isRequestingUploads} hasUserCompleted={hasUserCompleted} placeholder={t.placeholder && contents?.get(t.placeholder)} />
                             </div>
                         </div>)
                 case "prompts_input":
@@ -78,7 +79,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
                             " key={`${t.type}-key-${i}`}>
                         <p>{prompt}</p>
                         <div className="h-60">
-                            <WelcomePrompts handleUserDone={handleUserDone}/>
+                            <WelcomePrompts uuid={t.uuid} setTasksDone={setTasksDone} tasksDone={tasksDone}/>
                         </div>
                     </div>)
                 default:

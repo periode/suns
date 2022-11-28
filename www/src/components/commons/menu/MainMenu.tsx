@@ -60,7 +60,7 @@ const MainMenu = ({ username } : MainMenuProps) => {
 										flex flex-col items-center justify-center text-2xl
 										border border-t-amber-900">
 							<button className="flex items-center justify-center 
-							0" onClick={signout}>Log out</button>
+							" onClick={signout}>Log out</button>
 						</div>
 				</div>
 					:
