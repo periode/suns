@@ -19,6 +19,7 @@ import (
 	"github.com/chai2010/webp"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
+	"github.com/xfrr/goffmpeg/transcoder"
 
 	zero "github.com/periode/suns/api/logger"
 	"github.com/periode/suns/api/models"
@@ -99,6 +100,8 @@ func CreateUpload(c echo.Context) error {
 	return c.JSON(http.StatusOK, module)
 }
 
+var s3Client *s3.S3
+
 func saveFile(file *multipart.FileHeader, ftype string) (string, error) {
 	key := os.Getenv("SPACES_API_KEY")
 	secret := os.Getenv("SPACES_API_SECRET")
@@ -114,7 +117,7 @@ func saveFile(file *multipart.FileHeader, ftype string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	s3Client := s3.New(newSession)
+	s3Client = s3.New(newSession)
 
 	//-- generate target path
 	var fext string
@@ -178,7 +181,7 @@ func saveFile(file *multipart.FileHeader, ftype string) (string, error) {
 			Bucket: aws.String("suns"),
 			Key:    aws.String(fname),
 			Body:   bytes.NewReader(body),
-			ACL:    aws.String("public"),
+			ACL:    aws.String("public-read"),
 		}
 
 		_, err = s3Client.PutObject(&upload)
@@ -192,12 +195,6 @@ func saveFile(file *multipart.FileHeader, ftype string) (string, error) {
 		}
 
 	} else if ftype == models.VideoType {
-		// err := ffmpeg.Input(src).
-		// 	Output(target, ffmpeg.KwArgs{"c:v": "libwebm"}).
-		// 	ErrorToStdOut().Run()
-		// if err != nil {
-		// 	return "", err
-		// }
 		fmt.Println("converting video")
 
 		dst, err := os.Create(target)
@@ -209,6 +206,9 @@ func saveFile(file *multipart.FileHeader, ftype string) (string, error) {
 		if _, err = io.Copy(dst, src); err != nil {
 			return "", err
 		}
+
+		go transcodeAndUploadVideo(uploadsDir, fname)
+
 	} else if ftype == models.AudioType {
 		fmt.Println("converting audio")
 		//-- upload object
@@ -216,7 +216,7 @@ func saveFile(file *multipart.FileHeader, ftype string) (string, error) {
 			Bucket: aws.String("suns"),
 			Key:    aws.String(fname),
 			Body:   src,
-			ACL:    aws.String("public"),
+			ACL:    aws.String("public-read"),
 		}
 
 		_, err = s3Client.PutObject(&upload)
@@ -228,4 +228,54 @@ func saveFile(file *multipart.FileHeader, ftype string) (string, error) {
 	}
 
 	return fname, nil
+}
+
+func transcodeAndUploadVideo(dir string, original string) {
+
+	trans := new(transcoder.Transcoder)
+	transcoded := fmt.Sprintf("%s_transcoded.mp4", strings.Split(original, ".")[0])
+	src := filepath.Join(dir, original)
+	dst := filepath.Join(dir, transcoded)
+
+	err := trans.Initialize(src, dst) //-- overwrite video
+	if err != nil {
+		zero.Error(err.Error())
+		return
+	}
+
+	done := trans.Run(false)
+	err = <-done
+	if err != nil {
+		zero.Error(err.Error())
+		return
+	}
+
+	body, err := os.ReadFile(dst)
+	if err != nil {
+		zero.Error(err.Error())
+	}
+
+	//-- upload object
+	upload := s3.PutObjectInput{
+		Bucket: aws.String("suns"),
+		Key:    aws.String(transcoded),
+		Body:   bytes.NewReader(body),
+		ACL:    aws.String("public-read"),
+	}
+
+	_, err = s3Client.PutObject(&upload)
+	if err != nil {
+		zero.Error(err.Error())
+	}
+
+	//-- cleanup after yourself
+	err = os.Remove(src)
+	if err != nil {
+		zero.Error(err.Error())
+	}
+
+	err = os.Remove(dst)
+	if err != nil {
+		zero.Error(err.Error())
+	}
 }
