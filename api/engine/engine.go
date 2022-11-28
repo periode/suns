@@ -195,7 +195,7 @@ func sendMonthlyEmails() {
 	}
 }
 
-// -- updateMap queries the database for the current entrypoints, then marshals it as JSON and sends a request to the map generator to create a new background image
+// -- updateMap queries the database for the current entrypoints, then creates a POST request from it and sends a request to the map generator to create a new background image
 func updateMap() {
 	for {
 		time.Sleep(Conf.MAP_INTERVAL)
@@ -213,11 +213,12 @@ func updateMap() {
 		for i, ep := range eps {
 			body.Add(fmt.Sprintf("p%d", i), fmt.Sprintf("%d,%s,%s,%f,%f", ep.Generation, ep.Status, ep.Cluster.Name, ep.Lat, ep.Lng))
 		}
-		res, err := http.PostForm(fmt.Sprintf("%s/post", os.Getenv("MAP_HOST")), body)
+		endpoint := fmt.Sprintf("%s/post", os.Getenv("MAP_HOST"))
+		res, err := http.PostForm(endpoint, body)
 		if err != nil {
 			zero.Error(err.Error())
 		} else {
-			zero.Debugf("response from map: %d", res.StatusCode)
+			zero.Debugf("response from %s: %d", endpoint, res.StatusCode)
 		}
 	}
 }

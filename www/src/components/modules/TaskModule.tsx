@@ -95,17 +95,17 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
         let inputElements = []
         for (const i of inputs) {
             if (i.user_uuid !== session.user.uuid)
-                switch (true) {
-                    case i.type.startsWith("text/plain"):
+                switch (i.type) {
+                    case UPLOAD_TYPE.Text:
                         inputElements.push((<ContentText key={i.uuid} text={i.text} />))
                         break;
-                    case i.type.startsWith("audio/"):
+                    case UPLOAD_TYPE.Audio:
                         inputElements.push((<ContentAudio key={i.uuid} src={`${process.env.REACT_APP_API_URL}/static/${i.url}`} />))
                         break;
-                    case i.type.startsWith("video/"):
+                    case UPLOAD_TYPE.Video:
                         inputElements.push((<ContentVideoInternal key={i.uuid} src={`${process.env.REACT_APP_API_URL}/static/${i.url}`} />))
                         break;
-                    case i.type.startsWith("image/"):
+                    case UPLOAD_TYPE.Image:
                         inputElements.push((<ContentPhoto key={i.uuid} src={`${process.env.REACT_APP_API_URL}/static/${i.url}`} />))
                         break;
 

@@ -1,4 +1,4 @@
-import { FINAL_TYPE, IEntrypoint, IModule, IUpload, IUser } from "../../utils/types"
+import { FINAL_TYPE, IEntrypoint, IModule, IUpload, IUser, UPLOAD_TYPE } from "../../utils/types"
 import ContentAudio from "../modules/content/ContentAudio"
 import ContentPhoto from "../modules/content/ContentPhoto"
 import ContentVideoInternal from "../modules/content/ContentVideoInternal"
@@ -13,20 +13,20 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
     const getUploadContent = (upload: IUpload): JSX.Element => {
         if (upload === undefined)
             return <>Couldnt get upload.type: undefined</>
-        switch (true) {
-            case upload.type.startsWith("text/"):
+        switch (upload.type) {
+            case UPLOAD_TYPE.Text:
                 return (
                     <ContentText key={upload.uuid} text={upload.text} />
                 )
-            case upload.type.startsWith("image/"):
+            case UPLOAD_TYPE.Image:
                 return (
                     <ContentPhoto key={upload.uuid} src={upload.url} />
                 )
-            case upload.type.startsWith("video/"):
+            case UPLOAD_TYPE.Video:
                 return (
                     <ContentVideoInternal key={upload.uuid} src={upload.url} />
                 )
-            case upload.type.startsWith("audio/"):
+            case UPLOAD_TYPE.Audio:
                 return (
                     <ContentAudio key={upload.uuid} src={upload.url} />
                 )
