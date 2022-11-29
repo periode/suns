@@ -92,7 +92,7 @@ const SignUp = ({mark} : SignUpProps) => {
 							<div className="flex flex-col items-start justify-center w-full h-full md:h-auto gap-4">
 								<h2 className="text-6xl ">Sign up</h2>
 								<div className="flex flex-col gap-1 items-start w-full">
-									<InputField label="Email" onChange={handleSignupNameChange } placeholder="Mohammed Li" type="text"/>
+									<InputField label="Screen name" onChange={handleSignupNameChange } placeholder="Mohammed Li" type="text"/>
 								</div>
 								<div className="flex flex-col gap-1 items-start w-full">
 									<InputField label="Email" onChange={handleSignupEmailChange } placeholder="example@example.com" type="text"/>

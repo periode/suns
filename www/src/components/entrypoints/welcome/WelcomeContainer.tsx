@@ -24,7 +24,22 @@ const Welcome = () => {
         }
     })
 
+    const saveMark = () => {
+		let el = document.getElementById("defaultCanvas0") as HTMLCanvasElement
+		let f : File
+		 el.toBlob(blob => {
+			if(blob)
+				f = new File([blob], "mark.png")
+			else
+				console.warn("mark blob is empty!", blob)
+
+			setMark(f)
+		 })
+	}
+
     const handleNextStage = () => {
+        if(stage === 1)
+            saveMark()
         let s = stage + 1
         setStage(s)
     }

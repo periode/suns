@@ -11,6 +11,7 @@ interface TextInputFieldProps {
 }
 
 const MIN_LIMIT = 2
+const MAX_LIMIT = 300
 
 const TextInputField = ({
 	label, placeholder, uuid, maxLimit, handleNewUploads
@@ -19,7 +20,11 @@ const TextInputField = ({
 
 	useEffect(() => {
 		handleNewUploads([{uuid: uuid, file: undefined, text: "", type: UPLOAD_TYPE.Text }])
-	}, [])
+
+
+		if(maxLimit === undefined || maxLimit < MIN_LIMIT)
+			maxLimit = MAX_LIMIT
+	}, [maxLimit])
 
 	const handleOnChange = (e: React.BaseSyntheticEvent) => {
 		if (e.target.value.length > MIN_LIMIT && inputRef.current !== null) {

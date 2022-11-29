@@ -41,7 +41,9 @@ const Entrypoint = (props: any) => {
                     setData(e as IEntrypoint)
 
                     let current = e.modules[e.current_module]
-                    if(current.type === "intro" || (current.type === "task" && current.tasks[0].type === "prompts_input"))
+                    if(current.type === "intro"
+                    || (current.type === "task" && current.tasks[0].type === "prompts_input")
+                    || (current.type === "final" && e.current_module < e.modules.length -1))
                         setCanUserComplete(true)
                 })
                 .catch(err => {

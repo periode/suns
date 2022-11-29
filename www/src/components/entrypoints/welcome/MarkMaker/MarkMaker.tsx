@@ -75,28 +75,12 @@ function MarkMaker({setMark} : MarkMakerProps) {
 			setIsUpdated(true)
 		}
 	}
-
-	const handleConfirmation = () => {
-		let el = document.getElementById("defaultCanvas0") as HTMLCanvasElement
-		let f : File
-		 el.toBlob(blob => {
-			if(blob)
-				f = new File([blob], "mark.png")
-			else
-				console.warn("mark blob is empty!", blob)
-			
-			setMark(f)
-
-			//-- todo handle UX change (confirm should do the same job as next)
-		 })
-	}
 	
 	return (
 		<>
 			<Sketch setup={setup} draw={draw} />
 			<button onClick={() => setIsCreated(false)}>Create</button>
 			<button onClick={() => setIsUpdated(false)}>Update</button>
-			<button onClick={handleConfirmation}>Confirm</button>
 		</>
 	);
 }
