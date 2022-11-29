@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import AirContext from "../../../contexts/AirContext"
 import SignUp from "../../../pages/auth/SignUp"
-import MarkMaking from "../../modules/tasks/MarkMaking"
+import MarkMaker from "./MarkMaker/MarkMaker"
 import WelcomeIntro from "./WelcomeIntro"
 
 const Welcome = () => {
@@ -35,7 +35,7 @@ const Welcome = () => {
                 {
                     stage === 0 ?
                         <WelcomeIntro/>
-                        : stage === 1 ? <MarkMaking setMark={setMark} />
+                        : stage === 1 ? <MarkMaker setMark={setMark} />
                             : stage === 2 ? <SignUp mark={mark}/>
                       
                             : <>This stage is too far. We should rather be redirecting you to a created entrypoint.</>
