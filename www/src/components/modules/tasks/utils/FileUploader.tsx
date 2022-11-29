@@ -18,7 +18,7 @@ const FileUploader = ({ type, uuid, maxUploads = 1, handleNewUploads, isRequesti
     const [uploads, setUploads] = useState(Array<IFile>)
     const [uploadIndex, setUploadIndex] = useState(1)
     useEffect(() => {
-        handleTasksDone({key: uuid, value: false})
+        handleTasksDone({ key: uuid, value: false })
     }, [])
 
     useEffect(() => {
@@ -27,7 +27,7 @@ const FileUploader = ({ type, uuid, maxUploads = 1, handleNewUploads, isRequesti
                 let u = uploadIndex + 1
                 setUploadIndex(u)
             } else if (uploads.length == maxUploads) {
-                handleTasksDone({key: uuid, value: true})
+                handleTasksDone({ key: uuid, value: true })
             }
         }
     }, [uploads])

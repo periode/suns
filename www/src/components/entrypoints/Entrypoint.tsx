@@ -163,8 +163,6 @@ const Entrypoint = (props: any) => {
     }
 
     const handleNext = () => {
-        console.log('triggering next module, currently requesting uploads:', isRequestingUploads);
-
         if (data.modules[data.current_module].tasks.length > 0 && data.modules[data.current_module].tasks[0].type != "prompts_input")
             setRequestingUploads(true)
         else
@@ -216,7 +214,7 @@ const Entrypoint = (props: any) => {
                 )
             case "task":
                 return (
-                    <TaskModule index={index} ep={ep} data={mod} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleTasksDone={handleTasksDone} hasUserCompleted={hasUserCompleted} />
+                    <TaskModule index={index} ep={ep} data={mod} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleTasksDone={handleTasksDone} />
                 )
             case "final":
                 return (

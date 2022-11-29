@@ -18,10 +18,9 @@ interface ITaskModuleProps {
     handleNewUploads: Function,
     isRequestingUploads: boolean,
     handleTasksDone: Function,
-    hasUserCompleted: boolean
 }
 
-const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, handleTasksDone, hasUserCompleted }: ITaskModuleProps) => {
+const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, handleTasksDone }: ITaskModuleProps) => {
     const session = getSession()
     const [inputs, setInputs] = useState(Array<IUpload>)
     const ctx = useContext(AirTableContext)

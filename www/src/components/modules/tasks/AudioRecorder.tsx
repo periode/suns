@@ -25,8 +25,8 @@ const AudioRecorder = ({ uuid, mod, ep, handleNewUploads, isRequestingUploads, h
     const [stream, setStream] = useState({} as MediaStream)
     const [blobURL, setBlobURL] = useState("")
 
-    useEffect(() => {        
-        handleTasksDone({key: uuid, value: false})
+    useEffect(() => {
+        handleTasksDone({ key: uuid, value: false })
     }, [])
 
     useEffect(() => {
@@ -87,7 +87,7 @@ const AudioRecorder = ({ uuid, mod, ep, handleNewUploads, isRequestingUploads, h
         setBlobURL(URL.createObjectURL(audioBlob as Blob))
         setUploads([{ file: new File([audioBlob], "recording.wav"), text: "", type: UPLOAD_TYPE.Audio }])
 
-        handleTasksDone({key: uuid, value: true})
+        handleTasksDone({ key: uuid, value: true })
     }
 
     const resetRecording = () => {
@@ -96,7 +96,7 @@ const AudioRecorder = ({ uuid, mod, ep, handleNewUploads, isRequestingUploads, h
         setRecordingMessage("Ready to record")
         setRecordingState("idle")
         setUploads([])
-        handleTasksDone({key: uuid, value: false})
+        handleTasksDone({ key: uuid, value: false })
     }
 
     const handleRecordButtonClick = () => {
