@@ -5,7 +5,7 @@ import { IEntrypoint, IModule, IUpload, UPLOAD_TYPE } from "../../utils/types"
 import TextInputField from "../commons/forms/inputs/TextInputField"
 import WelcomePrompts from "../entrypoints/welcome/WelcomePrompts"
 import ContentAudio from "./content/ContentAudio"
-import ContentPhoto from "./content/ContentPhoto"
+import ContentImage from "./content/ContentImage"
 import ContentText from "./content/ContentText"
 import ContentVideoInternal from "./content/ContentVideoInternal"
 import AudioRecorder from "./tasks/AudioRecorder"
@@ -103,7 +103,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads }: ITaskModuleProps) => 
                         inputElements.push((<ContentVideoInternal key={i.uuid} src={i.url} />))
                         break;
                     case UPLOAD_TYPE.Image:
-                        inputElements.push((<ContentPhoto key={i.uuid} src={i.url} />))
+                        inputElements.push((<ContentImage key={i.uuid} src={i.url} />))
                         break;
 
                     default:

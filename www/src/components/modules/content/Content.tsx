@@ -1,5 +1,5 @@
 import ContentAudio from "./ContentAudio"
-import ContentPhoto from "./ContentPhoto"
+import ContentImage from "./ContentImage"
 import ContentVideoExternal from "./ContentVideoExternal"
 
 interface ContentProps {
@@ -13,7 +13,7 @@ const Content = ({ type, airkey, contents }: ContentProps) => {
     switch (type) {
         case "img":
             return (
-                <ContentPhoto src={contents.get(airkey) || ""}/>)
+                <ContentImage src={contents.get(airkey) || ""}/>)
         case "wav":
             return (
                 <ContentAudio src={contents.get(airkey) || ""}/>

@@ -1,6 +1,6 @@
 import { FINAL_TYPE, IEntrypoint, IModule, IUpload, IUser, UPLOAD_TYPE } from "../../utils/types"
 import ContentAudio from "../modules/content/ContentAudio"
-import ContentPhoto from "../modules/content/ContentPhoto"
+import ContentImage from "../modules/content/ContentImage"
 import ContentVideoInternal from "../modules/content/ContentVideoInternal"
 import ContentText from "../modules/content/ContentText"
 
@@ -20,7 +20,7 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
                 )
             case UPLOAD_TYPE.Image:
                 return (
-                    <ContentPhoto key={upload.uuid} src={upload.url} />
+                    <ContentImage key={upload.uuid} src={upload.url} />
                 )
             case UPLOAD_TYPE.Video:
                 return (
