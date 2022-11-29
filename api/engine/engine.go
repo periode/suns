@@ -50,6 +50,14 @@ func StartEngine() {
 	go updateMap()
 }
 
+func GetWeeklyPrompt(i int) string {
+	return prompts.Weekly[i].Body
+}
+
+func GetMonthlyPrompt(i int) string {
+	return prompts.Monthly[i].Body
+}
+
 // -- createEntrypoints queries the database to know about the status of entrypoints from this generation
 // -- if there are a certain amounts of entrypoints which are not open
 // -- then we create new entrypoints

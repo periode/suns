@@ -12,6 +12,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/periode/suns/api/auth"
+	"github.com/periode/suns/api/engine"
 	zero "github.com/periode/suns/api/logger"
 	"github.com/periode/suns/api/models"
 	"github.com/periode/suns/mailer"
@@ -207,10 +208,22 @@ func UpdateUserPrompts(c echo.Context) error {
 
 	if c.FormValue("weekly") == "on" {
 		user.CanReceiveWeeklyPrompts = true
+		p := mailer.PromptPayload{
+			Body: engine.GetWeeklyPrompt(0),
+			Name: user.Name,
+		}
+
+		mailer.SendMail(user.Email, "SIMPLE Rewilding Prompt #1", "weekly_intro", p)
 	}
 
 	if c.FormValue("monthly") == "on" {
 		user.CanReceiveMonthlyPrompts = true
+		p := mailer.PromptPayload{
+			Body: engine.GetMonthlyPrompt(0),
+			Name: user.Name,
+		}
+
+		mailer.SendMail(user.Email, "COMPLEX Rewilding Prompt #1", "monthly_intro", p)
 	}
 
 	fmt.Printf("updating user preferences - weekly (%v) monthly (%v)\n", user.CanReceiveWeeklyPrompts, user.CanReceiveMonthlyPrompts)
