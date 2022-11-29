@@ -4,7 +4,7 @@ import { IFile, UPLOAD_TYPE } from "../../../../utils/types";
 interface TextInputFieldProps {
 	label?: string,
 	placeholder?: string,
-	type?: string
+	text_type?: string
 	uuid: string,
 	maxLimit?: number,
 	handleNewUploads: Function,
@@ -14,15 +14,17 @@ const MIN_LIMIT = 2
 const MAX_LIMIT = 300
 
 const TextInputField = ({
-	label, placeholder, uuid, maxLimit, handleNewUploads
+	label, placeholder, text_type, uuid, maxLimit, handleNewUploads
 }: TextInputFieldProps) => {
-	const inputRef = useRef<HTMLTextAreaElement>(null)
+	const inputRef = useRef<any>(null)
 
+	console.log(text_type);
+	
 	useEffect(() => {
-		handleNewUploads([{uuid: uuid, file: undefined, text: "", type: UPLOAD_TYPE.Text }])
+		handleNewUploads([{ uuid: uuid, file: undefined, text: "", type: UPLOAD_TYPE.Text }])
 
 
-		if(maxLimit === undefined || maxLimit < MIN_LIMIT)
+		if (maxLimit === undefined || maxLimit < MIN_LIMIT)
 			maxLimit = MAX_LIMIT
 	}, [maxLimit])
 
@@ -30,7 +32,7 @@ const TextInputField = ({
 		if (e.target.value.length > MIN_LIMIT && inputRef.current !== null) {
 			console.log(inputRef.current.value);
 
-			handleNewUploads([{uuid: uuid, file: undefined, text: inputRef.current.value, type: UPLOAD_TYPE.Text }])
+			handleNewUploads([{ uuid: uuid, file: undefined, text: inputRef.current.value, type: UPLOAD_TYPE.Text }])
 		}
 	}
 
@@ -42,17 +44,31 @@ const TextInputField = ({
 						disabled:opacity-50"
 					htmlFor={label?.toLowerCase()}>{label}</label>
 			}
-			<textarea className="	
-								w-full h-full p-3 
-								hover:border-amber-500
-								disabled:opacity-50
-								focus:outline-amber-500 focus:rounded-none 
-								border border-amber-900 bg-amber-100 font-serif text-amber-700
-								placeholder:text-amber-900/50 placeholder:font-mono
-								transition-colors ease-in duration-300
-								"
-				ref={inputRef} onChange={handleOnChange} placeholder={placeholder} maxLength={maxLimit} name={label ? label.toLowerCase() : 'text'}/>
-				<p>Please input at least {MIN_LIMIT} characters.</p>
+			{
+				text_type === "area" ?
+					<textarea className="	
+				w-full h-full p-3 
+				hover:border-amber-500
+				disabled:opacity-50
+				focus:outline-amber-500 focus:rounded-none 
+				border border-amber-900 bg-amber-100 font-serif text-amber-700
+				placeholder:text-amber-900/50 placeholder:font-mono
+				transition-colors ease-in duration-300
+				"
+						ref={inputRef} onChange={handleOnChange} placeholder={placeholder} maxLength={maxLimit} name={label ? label.toLowerCase() : 'text'} />
+					:
+					<input type="text" className="	
+						w-full p-3 
+						hover:border-amber-500
+						disabled:opacity-50
+						focus:outline-amber-500 focus:rounded-none 
+						border border-amber-900 bg-amber-100 font-serif text-amber-700
+						placeholder:text-amber-900/50 placeholder:font-mono
+						transition-colors ease-in duration-300
+						"
+						ref={inputRef} onChange={handleOnChange} placeholder={placeholder} maxLength={maxLimit} name={label ? label.toLowerCase() : 'text'} />
+			}
+			<p>Please input at least {MIN_LIMIT} characters.</p>
 		</>
 	)
 }

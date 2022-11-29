@@ -65,8 +65,8 @@ const TaskModule = ({ data, ep, index, handleNewUploads }: ITaskModuleProps) => 
                                     flex flex-col gap-4
                                             " key={`${t.type}-key-${i}`}>
                             <p>{prompt}</p>
-                            <div className="h-60">
-                                <TextInputField uuid={t.uuid} maxLimit={t.max_limit} handleNewUploads={handleNewUploads} placeholder={t.placeholder && contents?.get(t.placeholder)} />
+                            <div className="h-auto">
+                                <TextInputField uuid={t.uuid} text_type={t.text_type} maxLimit={t.max_limit} handleNewUploads={handleNewUploads} placeholder={t.placeholder && contents?.get(t.placeholder)} />
                             </div>
                         </div>)
                 case "prompts_input":

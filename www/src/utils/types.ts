@@ -85,6 +85,7 @@ export interface ITask {
     key: string,
     placeholder?: string,
     max_limit?: number,
+    text_type?: string,
     value?: string
 }
 

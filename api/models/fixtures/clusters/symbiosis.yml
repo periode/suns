@@ -27,6 +27,7 @@ entrypoints:
           - type: "text_input"
             key: "textinput_info_txt"
             max_limit: 300
+            text_type: "input"
         hint: "This is the second content"
       - name: "Upload 1 Image"
         type: "task"

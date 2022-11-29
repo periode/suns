@@ -114,6 +114,7 @@ entrypoints:
           - type: "text_input"
             key: "textinput_info_txt_1"
             max_limit: 300
+            text_type: "input"
           - type: "image_input"
             key: "imgupload_info_txt_1"
             max_limit: 1
