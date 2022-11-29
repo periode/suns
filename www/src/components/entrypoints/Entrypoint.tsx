@@ -59,21 +59,17 @@ const Entrypoint = (props: any) => {
 
     //-- this listens for whether a user is done with all tasks on the module
     useEffect(() => {
-        if(tasksDone.length == 0) return
-        console.log(tasksDone);
-        
-       let isDone = true
-       for (const task of tasksDone) {
-        if(task.value == false){
-            isDone = false
-            break
+        if (tasksDone.length == 0) return
+
+        let isDone = true
+        for (const task of tasksDone) {
+            if (task.value == false) {
+                isDone = false
+                break
+            }
         }
-       }
 
-       console.log(isDone);
-       
-       setCanUserComplete(isDone)
-
+        setCanUserComplete(isDone)
     }, [tasksDone])
 
     //-- this checks for the completion status per user
@@ -107,8 +103,9 @@ const Entrypoint = (props: any) => {
             fetchEntrypoint(params.id as string, session.token)
                 .then((e: IEntrypoint) => {
                     setData(e as IEntrypoint)
-                    let tasks = e.modules[e.current_module].tasks.map(t => {return {key: t.uuid, value: false}})
+                    let tasks = e.modules[e.current_module].tasks.map(t => { return { key: t.uuid, value: false } })
                     setTasksDone(tasks)
+                    setRequestingUploads(false)
                 })
                 .catch(err => {
                     console.warn('error', err)
@@ -149,25 +146,25 @@ const Entrypoint = (props: any) => {
     }
 
     const handleTasksDone = (_task: TaskDoneType) => {
-        console.log('new task done:', _task);
-        
         let tmp = [...tasksDone]
         let hasFound = false
         for (const task of tmp) {
-            if(task.key === _task.key){                
+            if (task.key === _task.key) {
                 task.value = _task.value
                 hasFound = true
                 break
             }
         }
 
-        if(!hasFound)
+        if (!hasFound)
             tmp.push(_task)
 
         setTasksDone(tmp)
     }
 
-    const requestUploads = () => {
+    const handleNext = () => {
+        console.log('triggering next module, currently requesting uploads:', isRequestingUploads);
+
         if (data.modules[data.current_module].tasks.length > 0 && data.modules[data.current_module].tasks[0].type != "prompts_input")
             setRequestingUploads(true)
         else
@@ -193,6 +190,7 @@ const Entrypoint = (props: any) => {
             .then(updated => {
                 //-- completion always means the user is done with their input
                 setTasksDone([])
+                setRequestingUploads(false)
 
                 //-- check if we're done with the module
                 if (updated.current_module === ep.current_module)
@@ -237,15 +235,13 @@ const Entrypoint = (props: any) => {
     }
 
     const getModule = () => {
+        if (data.status === ENTRYPOINT_STATUS.EntrypointCompleted)
+            return (<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}-final`} className="m-1 p-1">
+                {parseModule(data.current_module, data)}
+            </div>)
 
-        //-- style the module as final
-        if (data.status === ENTRYPOINT_STATUS.EntrypointCompleted) {
-            return (<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}-final`} className="m-1 p-1">{parseModule(data.current_module, data)}</div>)
-        }
-
-        if (hasUserCompleted) {
+        if (hasUserCompleted)
             return (<WaitingModule key="module-complete-message" />)
-        }
 
 
         return (<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}`} className="m-1 p-1">{parseModule(data.current_module, data)}</div>)
@@ -282,7 +278,7 @@ const Entrypoint = (props: any) => {
                     module={
                         <div className="w-full h-full p-4 overflow-scroll">
                             {
-                                isOwned || data.status === ENTRYPOINT_STATUS.EntrypointCompleted || data.status === ENTRYPOINT_STATUS.EntrypointOpen?
+                                isOwned || data.status === ENTRYPOINT_STATUS.EntrypointCompleted || data.status === ENTRYPOINT_STATUS.EntrypointOpen ?
                                     getModule()
                                     :
                                     <PublicView entrypoint={data} />
@@ -291,10 +287,10 @@ const Entrypoint = (props: any) => {
                     }
                     entrypointactions={
                         <EntrypointActions
-                            entryPointData={data}
+                            ep={data}
                             isOwner={isOwned}
                             claimEntryPointFunction={claimEntrypoint}
-                            completeModuleFunction={requestUploads}
+                            handleNext={handleNext}
                             hasUserCompleted={hasUserCompleted}
                             canUserComplete={canUserComplete}
                         />

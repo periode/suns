@@ -52,7 +52,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
                                     flex flex-col gap-4
                                             " key={`${t.type}-key-${i}`}>
                             <p>{prompt}</p>
-                            <FileUploader uuid={t.uuid} type={UPLOAD_TYPE.Video} maxUploads={t.max_limit} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleTasksDone={handleTasksDone} hasUserCompleted={hasUserCompleted} />
+                            <FileUploader uuid={t.uuid} type={UPLOAD_TYPE.Video} maxUploads={t.max_limit} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleTasksDone={handleTasksDone}/>
                         </div>)
                 case "image_input":
                     return (
@@ -60,7 +60,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
                                     flex flex-col gap-4
                                             " key={`${t.type}-key-${i}`}>
                             <p>{prompt}</p>
-                            <FileUploader uuid={t.uuid} type={UPLOAD_TYPE.Image} maxUploads={t.max_limit} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleTasksDone={handleTasksDone} hasUserCompleted={hasUserCompleted} />
+                            <FileUploader uuid={t.uuid} type={UPLOAD_TYPE.Image} maxUploads={t.max_limit} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleTasksDone={handleTasksDone}/>
                         </div>)
                 case "text_input":
                     return (
@@ -69,7 +69,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
                                             " key={`${t.type}-key-${i}`}>
                             <p>{prompt}</p>
                             <div className="h-60">
-                                <TextInputField uuid={t.uuid} maxLimit={t.max_limit} handleNewUploads={handleNewUploads} handleTasksDone={handleTasksDone} isRequestingUploads={isRequestingUploads} hasUserCompleted={hasUserCompleted} placeholder={t.placeholder && contents?.get(t.placeholder)} />
+                                <TextInputField uuid={t.uuid} maxLimit={t.max_limit} handleNewUploads={handleNewUploads} handleTasksDone={handleTasksDone} isRequestingUploads={isRequestingUploads}placeholder={t.placeholder && contents?.get(t.placeholder)} />
                             </div>
                         </div>)
                 case "prompts_input":

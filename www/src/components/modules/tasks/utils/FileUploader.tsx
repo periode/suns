@@ -9,13 +9,12 @@ interface IFileUploadProps {
     maxUploads?: number,
     handleNewUploads: Function,
     isRequestingUploads: boolean,
-    handleTasksDone: Function,
-    hasUserCompleted: boolean
+    handleTasksDone: Function
 }
 
 const MAX_FILE_SIZE = 32
 
-const FileUploader = ({ type, uuid, maxUploads = 1, handleNewUploads, isRequestingUploads, handleTasksDone, hasUserCompleted }: IFileUploadProps) => {
+const FileUploader = ({ type, uuid, maxUploads = 1, handleNewUploads, isRequestingUploads, handleTasksDone }: IFileUploadProps) => {
     const [uploads, setUploads] = useState(Array<IFile>)
     const [uploadIndex, setUploadIndex] = useState(1)
     useEffect(() => {

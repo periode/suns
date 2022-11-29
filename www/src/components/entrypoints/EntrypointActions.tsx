@@ -2,18 +2,18 @@ import { ENTRYPOINT_STATUS, IEntrypoint, PARTNER_STATUS } from "../../utils/type
 import { FiShare2, FiArrowRight } from "react-icons/fi"
 
 interface EntrypointActionsProps {
-	entryPointData: IEntrypoint,
+	ep: IEntrypoint,
 	isOwner: boolean,
 	canUserComplete: boolean,
 	hasUserCompleted: boolean,
 	claimEntryPointFunction: () => {},
-	completeModuleFunction: () => void,
+	handleNext: () => void,
 }
 
 function EntrypointActions({
-	entryPointData,
+	ep,
 	claimEntryPointFunction,
-	completeModuleFunction,
+	handleNext,
 	isOwner,
 	canUserComplete,
 	hasUserCompleted
@@ -48,7 +48,7 @@ function EntrypointActions({
 							cursor-pointer
 							flex items-center
 							gap-1`}
-			onClick={() => {if (!hasUserCompleted) completeModuleFunction() }} disabled={hasUserCompleted}>
+			onClick={() => handleNext() }>
 			<p>Next</p>
 			<FiArrowRight className="text-xs" />
 		</button>
@@ -58,7 +58,7 @@ function EntrypointActions({
 							cursor-pointer
 							flex items-center
 							gap-1"
-			onClick={() => completeModuleFunction()}>
+			onClick={() => handleNext()}>
 			<p>Finish</p>
 			<FiArrowRight className="text-xs" />
 		</button>
@@ -68,18 +68,18 @@ function EntrypointActions({
 					flex items-center justify-center
 					text-center  font-mono
 					opacity-50">
-			{entryPointData.current_module + 1} / {entryPointData.modules.length}
+			{ep.current_module + 1} / {ep.modules.length}
 		</p>
 
 	const rightButtonDisplay = () => {
-		if (!isOwner && (entryPointData.partner_status === PARTNER_STATUS.PartnerPartial || entryPointData.partner_status === PARTNER_STATUS.PartnerNone))
+		if (!isOwner && (ep.partner_status === PARTNER_STATUS.PartnerPartial || ep.partner_status === PARTNER_STATUS.PartnerNone))
 			return StartButton
 
 		if (hasUserCompleted)
 			return <></>
 
-		if (isOwner && canUserComplete && entryPointData.status === ENTRYPOINT_STATUS.EntrypointPending) {
-			if (entryPointData.current_module === entryPointData.modules.length - 2)
+		if (isOwner && canUserComplete && ep.status === ENTRYPOINT_STATUS.EntrypointPending) {
+			if (ep.current_module === ep.modules.length - 2)
 				return FinishButton
 			else
 				return NextButton
@@ -96,7 +96,7 @@ function EntrypointActions({
 				{ShareButton}
 			</div>
 			{
-				entryPointData.status === ENTRYPOINT_STATUS.EntrypointPending && isOwner &&
+				ep.status === ENTRYPOINT_STATUS.EntrypointPending && isOwner &&
 				Step
 			}
 			<div className="w-16">

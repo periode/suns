@@ -10,38 +10,25 @@ interface TextInputFieldProps {
 	handleNewUploads: Function,
 	isRequestingUploads: boolean,
 	handleTasksDone: Function,
-	hasUserCompleted: boolean,
 }
 
 const MIN_LIMIT = 2
 
 const TextInputField = ({
-	label,
-	placeholder,
-	uuid,
-	maxLimit,
-	handleNewUploads,
-	isRequestingUploads,
-	handleTasksDone,
-	hasUserCompleted
+	label, placeholder, uuid, maxLimit, handleNewUploads, isRequestingUploads, handleTasksDone
 }: TextInputFieldProps) => {
 	const hasSignifiedDone = useRef(false)
-	const [uploads, setUploads] = useState(Array<IFile>)
 	const inputRef = useRef<HTMLTextAreaElement>(null)
+
 	useEffect(() => {
 		handleTasksDone({key: uuid, value: false})
 	}, [])
 
 	useEffect(() => {
-		if (isRequestingUploads)
-			handleNewUploads(uploads)
-	}, [uploads])
-
-	useEffect(() => {
-		if (inputRef.current == null)
+		if (inputRef.current === null || isRequestingUploads === false)
 			return
 
-		setUploads([{ file: undefined, text: inputRef.current.value, type: UPLOAD_TYPE.Text }])
+		handleNewUploads([{ file: undefined, text: inputRef.current.value, type: UPLOAD_TYPE.Text }])
 	}, [isRequestingUploads])
 
 	const handleOnChange = (e: React.BaseSyntheticEvent) => {
@@ -68,7 +55,7 @@ const TextInputField = ({
 								placeholder:text-amber-900/50 placeholder:font-mono
 								transition-colors ease-in duration-300
 								"
-				ref={inputRef} onChange={handleOnChange} placeholder={placeholder} maxLength={maxLimit} name={label ? label.toLowerCase() : 'text'} disabled={hasUserCompleted} />
+				ref={inputRef} onChange={handleOnChange} placeholder={placeholder} maxLength={maxLimit} name={label ? label.toLowerCase() : 'text'}/>
 		</>
 	)
 }
