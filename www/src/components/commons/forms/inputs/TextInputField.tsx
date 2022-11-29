@@ -47,6 +47,7 @@ const TextInputField = ({
 								transition-colors ease-in duration-300
 								"
 				ref={inputRef} onChange={handleOnChange} placeholder={placeholder} maxLength={maxLimit} name={label ? label.toLowerCase() : 'text'}/>
+				<p>Please input at least {MIN_LIMIT} characters.</p>
 		</>
 	)
 }
