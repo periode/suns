@@ -17,8 +17,6 @@ const TextInputField = ({
 	label, placeholder, text_type, uuid, maxLimit, handleNewUploads
 }: TextInputFieldProps) => {
 	const inputRef = useRef<any>(null)
-
-	console.log(text_type);
 	
 	useEffect(() => {
 		handleNewUploads([{ uuid: uuid, file: undefined, text: "", type: UPLOAD_TYPE.Text }])

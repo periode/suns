@@ -94,7 +94,6 @@ const Entrypoint = (props: any) => {
                 break
             }
         }
-
         setCanUserComplete(isDone)
     }, [uploads])
 
@@ -116,7 +115,8 @@ const Entrypoint = (props: any) => {
         if (res.ok) {
             const updated = await res.json()
             setData(updated)
-            setCanUserComplete(false)
+            if(updated.max_users > 1)
+                setCanUserComplete(false)
         } else {
             console.warn('error', res.status)
         }
@@ -162,7 +162,7 @@ const Entrypoint = (props: any) => {
 
         progressModule(ep.uuid, session.token)
             .then(updated => {
-                //-- completion always means the user is done with their input
+                setUploads([])
 
                 //-- check if we're done with the module
                 if (updated.current_module === ep.current_module)
@@ -170,7 +170,8 @@ const Entrypoint = (props: any) => {
                 else
                     setUserCompleted(false) //-- we move on to the next module
 
-                setCanUserComplete(false)
+                if(updated.max_users > 1)
+                    setCanUserComplete(false)
                 setData(updated)
             })
             .catch(err => {
