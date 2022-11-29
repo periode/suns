@@ -67,6 +67,7 @@ export interface IUpload {
 }
 
 export interface IFile {
+    uuid: string,
     file?: File,
     text: string,
     type: UPLOAD_TYPE
@@ -108,9 +109,4 @@ export interface IUser {
 export interface ISession {
     token: string,
     user: IUser
-}
-
-export interface TaskDoneType {
-    key: string,
-    value: boolean
 }

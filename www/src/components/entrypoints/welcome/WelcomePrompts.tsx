@@ -1,21 +1,15 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { getSession } from "../../../utils/auth"
 
 interface PromptsInputProps {
     uuid: string,
-    handleTasksDone: Function,
 }
 
 const WelcomePrompts = ({
-    handleTasksDone,
     uuid,
 }: PromptsInputProps) => {
     const session = getSession()
     const [isFormActive, setFormActive] = useState(true)
-
-    useEffect(() => {
-        handleTasksDone({key: uuid, value: false})
-    }, [])
 
     const handleSubmission = async (e: React.BaseSyntheticEvent) => {
         e.preventDefault()
@@ -36,7 +30,6 @@ const WelcomePrompts = ({
         };
         const res = await fetch(endpoint, options)
         if (res.ok) {
-            handleTasksDone(true)
             setFormActive(false)
         } else {
             console.warn('error', res.status)

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import { FiMic, FiRotateCcw, FiSquare } from "react-icons/fi"
-import { getSession } from "../../../utils/auth"
-import { IEntrypoint, IFile, IModule, IUpload, UPLOAD_TYPE } from "../../../utils/types"
+import { IEntrypoint, IModule, UPLOAD_TYPE } from "../../../utils/types"
 import AudioRecorderCountdown from "./utils/AudioRecorderCountdown"
 
 const MediaStreamRecorder = require('msr')
@@ -11,28 +10,19 @@ interface AudioRecorderProps {
     mod: IModule,
     ep: IEntrypoint,
     handleNewUploads: Function,
-    isRequestingUploads: boolean,
-    handleTasksDone: Function,
 }
 
 const MAX_RECORD_TIME = 3 * 60 * 1000
 var recorder: any
 
-const AudioRecorder = ({ uuid, mod, ep, handleNewUploads, isRequestingUploads, handleTasksDone }: AudioRecorderProps) => {
-    const [uploads, setUploads] = useState(Array<IFile>)
+const AudioRecorder = ({ uuid, mod, ep, handleNewUploads }: AudioRecorderProps) => {
     const [recordingState, setRecordingState] = useState("idle")
     const [recordingMessage, setRecordingMessage] = useState("Ready to record")
-    const [stream, setStream] = useState({} as MediaStream)
     const [blobURL, setBlobURL] = useState("")
 
     useEffect(() => {
-        handleTasksDone({ key: uuid, value: false })
+        handleNewUploads([{ uuid: uuid, file: undefined, text: "", type: UPLOAD_TYPE.Audio }])
     }, [])
-
-    useEffect(() => {
-        if (isRequestingUploads)
-            handleNewUploads(uploads)
-    }, [isRequestingUploads])
 
     var audioBlob = {} as Blob
 
@@ -60,7 +50,6 @@ const AudioRecorder = ({ uuid, mod, ep, handleNewUploads, isRequestingUploads, h
         function startUserMedia(_st: MediaStream) {
             setRecordingMessage("starting...")
             setRecordingState("recording")
-            setStream(_st)
 
             recorder = new MediaStreamRecorder(_st);
             recorder.mimeType = 'audio/wav'
@@ -85,9 +74,8 @@ const AudioRecorder = ({ uuid, mod, ep, handleNewUploads, isRequestingUploads, h
         setRecordingMessage("done!")
         setRecordingState("done")
         setBlobURL(URL.createObjectURL(audioBlob as Blob))
-        setUploads([{ file: new File([audioBlob], "recording.wav"), text: "", type: UPLOAD_TYPE.Audio }])
 
-        handleTasksDone({ key: uuid, value: true })
+        handleNewUploads([{ uuid: uuid, file: new File([audioBlob], "recording.wav"), text: "", type: UPLOAD_TYPE.Audio }])
     }
 
     const resetRecording = () => {
@@ -95,8 +83,7 @@ const AudioRecorder = ({ uuid, mod, ep, handleNewUploads, isRequestingUploads, h
         setBlobURL("")
         setRecordingMessage("Ready to record")
         setRecordingState("idle")
-        setUploads([])
-        handleTasksDone({ key: uuid, value: false })
+        handleNewUploads([{ uuid: uuid, file: undefined, text: "", type: UPLOAD_TYPE.Audio }])
     }
 
     const handleRecordButtonClick = () => {

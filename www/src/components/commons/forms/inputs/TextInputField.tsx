@@ -8,33 +8,24 @@ interface TextInputFieldProps {
 	uuid: string,
 	maxLimit?: number,
 	handleNewUploads: Function,
-	isRequestingUploads: boolean,
-	handleTasksDone: Function,
 }
 
 const MIN_LIMIT = 2
 
 const TextInputField = ({
-	label, placeholder, uuid, maxLimit, handleNewUploads, isRequestingUploads, handleTasksDone
+	label, placeholder, uuid, maxLimit, handleNewUploads
 }: TextInputFieldProps) => {
-	const hasSignifiedDone = useRef(false)
 	const inputRef = useRef<HTMLTextAreaElement>(null)
 
 	useEffect(() => {
-		handleTasksDone({key: uuid, value: false})
+		handleNewUploads([{uuid: uuid, file: undefined, text: "", type: UPLOAD_TYPE.Text }])
 	}, [])
 
-	useEffect(() => {
-		if (inputRef.current === null || isRequestingUploads === false)
-			return
-
-		handleNewUploads([{ file: undefined, text: inputRef.current.value, type: UPLOAD_TYPE.Text }])
-	}, [isRequestingUploads])
-
 	const handleOnChange = (e: React.BaseSyntheticEvent) => {
-		if (e.target.value.length > MIN_LIMIT && hasSignifiedDone.current == false) {
-			handleTasksDone({key: uuid, value: true})
-			hasSignifiedDone.current = true
+		if (e.target.value.length > MIN_LIMIT && inputRef.current !== null) {
+			console.log(inputRef.current.value);
+
+			handleNewUploads([{uuid: uuid, file: undefined, text: inputRef.current.value, type: UPLOAD_TYPE.Text }])
 		}
 	}
 

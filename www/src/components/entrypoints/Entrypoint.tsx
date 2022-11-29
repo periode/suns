@@ -8,8 +8,7 @@ import { getSession } from "../../utils/auth";
 import EntrypointActions from "./EntrypointActions";
 import PublicView from "./PublicView";
 import NotFound from "../../NotFound";
-import FinalFirstTimes from "../modules/FinalFirstTimes";
-import { ENTRYPOINT_STATUS, IEntrypoint, IFile, ISession, TaskDoneType } from "../../utils/types";
+import { ENTRYPOINT_STATUS, IEntrypoint, IFile, ISession } from "../../utils/types";
 import IntroModule from "../modules/IntroModule";
 import TaskModule from "../modules/TaskModule";
 import { fetchEntrypoint, progressModule, submitUpload } from "../../utils/entrypoint";
@@ -24,78 +23,15 @@ const Entrypoint = (props: any) => {
     const hasData = useRef(false)
     const navigate = useNavigate()
     const session = getSession()
+
     const [data, setData] = useState(props.data as IEntrypoint)
     const [uploads, setUploads] = useState(Array<IFile>)
     const [endDate, setEndDate] = useState("")
-
     const [isOwned, setOwned] = useState(false)
-    const [isRequestingUploads, setRequestingUploads] = useState(false)
-
-    //-- tasksDone keeps track of when the user can submit the module
-    const [tasksDone, setTasksDone] = useState(Array<TaskDoneType>)
 
     const [canUserComplete, setCanUserComplete] = useState(false)
-    //-- userCompleted keeps track of when the module is completed
     const [hasUserCompleted, setUserCompleted] = useState(false)
-    const hasSubmittedModule = useRef(false)
 
-    //-- this checks if the user owns the current entrypoint
-    //-- and what is the expiry date of the entrypoint
-    useEffect(() => {
-        if (data === undefined)
-            return
-        // checking if current user is an owner of the entrypoint
-        if (data.users.length > 0 && session.user.uuid !== "")
-            for (let u of data.users)
-                if (u.uuid === session.user.uuid)
-                    setOwned(true)
-
-        // setting entrypoint expiry date
-        let d = new Date(data.created_at)
-        let end = new Date()
-        end.setMinutes(d.getMinutes() + ENTRYPOINT_LIFETIME_MINUTES)
-        setEndDate(end.toString())
-    }, [data, session])
-
-    //-- this listens for whether a user is done with all tasks on the module
-    useEffect(() => {
-        if (tasksDone.length == 0) return
-
-        let isDone = true
-        for (const task of tasksDone) {
-            if (task.value == false) {
-                isDone = false
-                break
-            }
-        }
-
-        setCanUserComplete(isDone)
-    }, [tasksDone])
-
-    //-- this checks for the completion status per user
-    useEffect(() => {
-        if (data === undefined)
-            return
-
-        for (let i = 0; i < data.users.length; i++) {
-            const u = data.users[i];
-            if (u.uuid === session.user.uuid && data.user_completed[i] === 1) {
-                setUserCompleted(true)
-                return
-            }
-        }
-    }, [isOwned, data, session.user.uuid])
-
-    //-- this checks if all uploads have been submitted before completing the module (should be a useCallback?)
-    useEffect(() => {
-        if (data === undefined)
-            return
-
-        if (uploads.length === data.modules[data.current_module].tasks.length && !hasSubmittedModule.current) {
-            completeModule(data, session)
-            hasSubmittedModule.current = true
-        }
-    }, [uploads])
 
     //-- gets the initial data
     useEffect(() => {
@@ -103,9 +39,10 @@ const Entrypoint = (props: any) => {
             fetchEntrypoint(params.id as string, session.token)
                 .then((e: IEntrypoint) => {
                     setData(e as IEntrypoint)
-                    let tasks = e.modules[e.current_module].tasks.map(t => { return { key: t.uuid, value: false } })
-                    setTasksDone(tasks)
-                    setRequestingUploads(false)
+
+                    let current = e.modules[e.current_module]
+                    if(current.type === "intro" || (current.type === "task" && current.tasks[0].type === "prompts_input"))
+                        setCanUserComplete(true)
                 })
                 .catch(err => {
                     console.warn('error', err)
@@ -114,6 +51,50 @@ const Entrypoint = (props: any) => {
             hasData.current = true
         }
     }, [params.id])
+
+
+    //-- this checks if the user owns the current entrypoint
+    //-- and what is the expiry date of the entrypoint
+    useEffect(() => {
+        if (data === undefined)
+            return
+
+        //-- checking if current user is an owner of the entrypoint
+        //-- and whether they have completed it
+        if (data.users.length > 0 && session.user.uuid !== "")
+            for (let i = 0; i < data.users.length; i++) {
+                const u = data.users[i];
+
+                if (u.uuid === session.user.uuid) {
+                    setOwned(true)
+
+                    if (data.user_completed[i] === 1)
+                        setUserCompleted(true)
+                }
+            }
+
+        // setting entrypoint expiry date
+        let d = new Date(data.created_at)
+        let end = new Date()
+        end.setMinutes(d.getMinutes() + ENTRYPOINT_LIFETIME_MINUTES)
+        setEndDate(end.toString())
+
+    }, [data, session])
+
+    //-- this listens for whether a user is done with all tasks on the module
+    useEffect(() => {
+        if (uploads.length === 0) return
+
+        let isDone = true
+        for (const u of uploads) {
+            if (u.file === undefined && u.text === "") { //-- empty upload
+                isDone = false
+                break
+            }
+        }
+
+        setCanUserComplete(isDone)
+    }, [uploads])
 
     const claimEntrypoint = async () => {
         const endpoint = new URL(`entrypoints/${data.uuid}/claim`, process.env.REACT_APP_API_URL)
@@ -140,33 +121,26 @@ const Entrypoint = (props: any) => {
     }
 
     const handleNewUploads = (_new: Array<IFile>) => {
-        setUploads(prev => {
-            return [...prev, ..._new] as IFile[]
-        })
-    }
-
-    const handleTasksDone = (_task: TaskDoneType) => {
-        let tmp = [...tasksDone]
-        let hasFound = false
-        for (const task of tmp) {
-            if (task.key === _task.key) {
-                task.value = _task.value
-                hasFound = true
-                break
+        let tmp = [...uploads]
+        for (const n of _new) {
+            let hasFound = false
+            for (let i = 0; i < tmp.length; i++) {
+                if (tmp[i].uuid === n.uuid) {
+                    tmp[i] = n
+                    hasFound = true
+                    break
+                }
             }
+
+            if (!hasFound)
+                tmp.push(n)
         }
 
-        if (!hasFound)
-            tmp.push(_task)
-
-        setTasksDone(tmp)
+        setUploads(tmp)
     }
 
     const handleNext = () => {
-        if (data.modules[data.current_module].tasks.length > 0 && data.modules[data.current_module].tasks[0].type != "prompts_input")
-            setRequestingUploads(true)
-        else
-            completeModule(data, session)
+        completeModule(data, session)
     }
 
     const completeModule = async (ep: IEntrypoint, session: ISession) => {
@@ -187,8 +161,6 @@ const Entrypoint = (props: any) => {
         progressModule(ep.uuid, session.token)
             .then(updated => {
                 //-- completion always means the user is done with their input
-                setTasksDone([])
-                setRequestingUploads(false)
 
                 //-- check if we're done with the module
                 if (updated.current_module === ep.current_module)
@@ -210,11 +182,11 @@ const Entrypoint = (props: any) => {
         switch (mod.type) {
             case "intro":
                 return (
-                    <IntroModule epName={ep.name} data={mod} handleTasksDone={handleTasksDone} />
+                    <IntroModule epName={ep.name} data={mod} />
                 )
             case "task":
                 return (
-                    <TaskModule index={index} ep={ep} data={mod} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleTasksDone={handleTasksDone} />
+                    <TaskModule index={index} ep={ep} data={mod} handleNewUploads={handleNewUploads} />
                 )
             case "final":
                 return (

@@ -1,5 +1,3 @@
-// needs setUploads, needsPreview
-
 import React, { useState, useEffect } from "react"
 import { IFile } from "../../../../utils/types"
 
@@ -8,34 +6,15 @@ interface IFileUploadProps {
     uuid: string,
     maxUploads?: number,
     handleNewUploads: Function,
-    isRequestingUploads: boolean,
-    handleTasksDone: Function
 }
 
 const MAX_FILE_SIZE = 32
 
-const FileUploader = ({ type, uuid, maxUploads = 1, handleNewUploads, isRequestingUploads, handleTasksDone }: IFileUploadProps) => {
-    const [uploads, setUploads] = useState(Array<IFile>)
+const FileUploader = ({ type, uuid, maxUploads = 1, handleNewUploads }: IFileUploadProps) => {
     const [uploadIndex, setUploadIndex] = useState(1)
     useEffect(() => {
-        handleTasksDone({ key: uuid, value: false })
+        handleNewUploads([{uuid: uuid, file: undefined, text: "", type: type}])
     }, [])
-
-    useEffect(() => {
-        if (uploads.length > 0) {
-            if (uploadIndex < maxUploads) {
-                let u = uploadIndex + 1
-                setUploadIndex(u)
-            } else if (uploads.length == maxUploads) {
-                handleTasksDone({ key: uuid, value: true })
-            }
-        }
-    }, [uploads])
-
-    useEffect(() => {
-        if (isRequestingUploads)
-            handleNewUploads(uploads)
-    }, [isRequestingUploads])
 
     const handleFileChange = (e: React.SyntheticEvent) => {
         const t = e.target as HTMLInputElement
@@ -47,13 +26,13 @@ const FileUploader = ({ type, uuid, maxUploads = 1, handleNewUploads, isRequesti
         }
 
         let f = {
+            uuid: uuid,
             file: t.files[0],
             text: "",
             type: type
         } as IFile
 
-        setUploads([...uploads, f])
-
+        handleNewUploads([f])
     }
 
     const getInputFields = () => {
