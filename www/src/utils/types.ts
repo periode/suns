@@ -41,6 +41,7 @@ export interface IEntrypoint {
     uuid: string,
     created_at: string,
     name: string,
+    key: string,
     status: ENTRYPOINT_STATUS,
     cluster: ICluster,
     visibility: string,
@@ -105,6 +106,7 @@ export interface IModule {
 export interface IUser {
     name: string,
     uuid: string,
+    mark_url?: string,
 }
 
 export interface ISession {

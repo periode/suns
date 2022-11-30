@@ -94,16 +94,16 @@ const TaskModule = ({ data, ep, index, handleNewUploads }: ITaskModuleProps) => 
             if (i.user_uuid !== session.user.uuid)
                 switch (i.type) {
                     case UPLOAD_TYPE.Text:
-                        inputElements.push((<ContentText key={i.uuid} text={i.text} />))
+                        inputElements.push((<ContentText key={i.uuid} text={i.text}/>))
                         break;
                     case UPLOAD_TYPE.Audio:
-                        inputElements.push((<ContentAudio key={i.uuid} src={i.url} />))
+                        inputElements.push((<ContentAudio key={i.uuid} src={i.url}/>))
                         break;
                     case UPLOAD_TYPE.Video:
-                        inputElements.push((<ContentVideoInternal key={i.uuid} src={i.url} />))
+                        inputElements.push((<ContentVideoInternal key={i.uuid} src={i.url}/>))
                         break;
                     case UPLOAD_TYPE.Image:
-                        inputElements.push((<ContentImage key={i.uuid} src={i.url} />))
+                        inputElements.push((<ContentImage key={i.uuid} src={i.url}/>))
                         break;
 
                     default:
