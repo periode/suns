@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FiMenu, FiX } from 'react-icons/fi'
+import { Link, useNavigate } from "react-router-dom";
 
 
 const signout = () => {
@@ -13,6 +14,7 @@ interface MainMenuProps {
 
 const MainMenu = ({ username } : MainMenuProps) => {
 	const [isCollapsed, setIsCollapsed] = useState(false)
+	const navigate = useNavigate()
 	return ( 
 	<>
 			{
@@ -53,6 +55,11 @@ const MainMenu = ({ username } : MainMenuProps) => {
 							</div>
 							<div className="h-24 w-full flex items-center justify-center">
 								<h2 >Help</h2>
+							</div>
+							<div className="h-24 w-full flex items-center justify-center">
+								<h2 onClick={() => {setIsCollapsed(true); navigate(`/entrypoints/archive/sacrifice`, {replace: true})}}>
+									Museum
+								</h2>
 							</div>
 						</div>
 						<div className="w-full h-24

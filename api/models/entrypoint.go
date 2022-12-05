@@ -51,11 +51,12 @@ type Entrypoint struct {
 	UUID      uuid.UUID      `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
 	Status    string         `gorm:"default:unlisted" json:"status"`
 
-	Name       string `gorm:"not null" json:"name" form:"name" binding:"required"`
-	Slug       string `gorm:"" json:"slug"`
-	Icon       string `gorm:"default:black.svg" json:"icon" yaml:"icon"`
-	Generation int    `gorm:"default:0" json:"generation"`
-	Visibility string `gorm:"default:visible" json:"visibility" yaml:"visibility"`
+	Name          string `gorm:"not null" json:"name" form:"name" binding:"required"`
+	Slug          string `gorm:"" json:"slug"`
+	Icon          string `gorm:"default:black.svg" json:"icon" yaml:"icon"`
+	Generation    int    `gorm:"default:0" json:"generation"`
+	SacrificeWave int    `gorm:"default:0" json:"sacrifice_wave"`
+	Visibility    string `gorm:"default:visible" json:"visibility" yaml:"visibility"`
 
 	//-- belongs to a cluster
 	ClusterUUID uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()" json:"cluster_uuid" yaml:"cluster_uuid"`
@@ -131,6 +132,36 @@ func GetEntrypointBySlug(slug string, user_uuid uuid.UUID) (Entrypoint, error) {
 func GetAllEntrypoints() ([]Entrypoint, error) {
 	eps := make([]Entrypoint, 0)
 	result := db.Preload("Modules").Preload("Cluster").Preload("Users").Find(&eps)
+	return eps, result.Error
+}
+
+func GetCrackEntrypoints() ([]Entrypoint, error) {
+	eps := make([]Entrypoint, 0)
+	result := db.Preload("Modules").Preload("Cluster").Preload("Users").Where("status = ?", EntrypointCompleted).Find(&eps)
+
+	cracks := make([]Entrypoint, 0)
+	for _, ep := range eps {
+		if ep.Cluster.Name == "Cracks" {
+			for i := 0; i < len(ep.Modules); i++ {
+				if ep.Modules[i].Name == "Cracks - Donating a picture" {
+					mod, err := GetModule(ep.Modules[i].UUID)
+					if err != nil {
+						return cracks, err
+					}
+
+					ep.Modules[i] = mod
+				}
+			}
+			cracks = append(cracks, ep)
+		}
+	}
+	return cracks, result.Error
+}
+
+func GetSacrificedEntrypoints() ([]Entrypoint, error) {
+	eps := make([]Entrypoint, 0)
+	result := db.Preload("Modules").Preload("Cluster").Preload("Users").Where("status = ?", EntrypointCompleted).Find(&eps)
+
 	return eps, result.Error
 }
 
