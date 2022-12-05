@@ -14,14 +14,19 @@ import TaskModule from "../modules/TaskModule";
 import { fetchEntrypoint, progressModule, submitUpload } from "../../utils/entrypoint";
 import WaitingModule from "../modules/WaitingModule";
 import EntrypointLayout from "./Layouts/EntrypointLayout";
+import { Map } from "leaflet";
 
 const FETCH_INTERVAL = 50 * 1000
 const ENTRYPOINT_LIFETIME_MINUTES = 72 * 60
 
 const Entrypoint = (props: any) => {
+
+    // Router & navigations infos
     const params = useParams()
-    const hasData = useRef(false)
     const navigate = useNavigate()
+    
+    // Getting Entrypoint data:
+    const hasData = useRef(false) // Check if data is fetched
     const session = getSession()
 
     const [data, setData] = useState(props.data as IEntrypoint)
@@ -58,6 +63,7 @@ const Entrypoint = (props: any) => {
     //-- this checks if the user owns the current entrypoint
     //-- and what is the expiry date of the entrypoint
     useEffect(() => {
+        // setting entrypoint expiry date
         if (data === undefined)
             return
 
@@ -216,13 +222,17 @@ const Entrypoint = (props: any) => {
         if (hasUserCompleted)
             return (<WaitingModule key="module-complete-message" />)
 
-
-        return (<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}`} className="m-1 p-1">{parseModule(data.current_module, data)}</div>)
+        // Current module
+        return (<div 
+                    key={`mod-${data.name.split(' ').join('-')}-${data.current_module}`} 
+                    className="m-1 p-1">{parseModule(data.current_module, data)}
+                </div>)
     }
 
     if (data !== undefined)
         return (
             <div className="absolute z-20 w-full h-full p-4 
+                            bg-amber-50/50
                             md:flex md:flex-col md:items-center md:justify-center ">
                 <EntrypointLayout
                     owned={isOwned}
@@ -244,7 +254,6 @@ const Entrypoint = (props: any) => {
                                             <FiX className="text-[32px]" />
                                         </div> : <></>
                                 }
-
                             </div>
                         </div>
                     }

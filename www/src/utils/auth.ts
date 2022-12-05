@@ -120,11 +120,7 @@ const signup = async (_email: string, _email_conf: string, _password: string, _p
         return Promise.reject("The confirmation password you've entered does not match.")
     }
 
-    if (_password.length < 8) {
-        return Promise.reject("The password should be between 8 and 20 characters long.")
-    }
-
-    if (_password.length > 20) {
+    if (_password.length < 8 || _password.length > 20) {
         return Promise.reject("The password should be between 8 and 20 characters long.")
     }
 
@@ -132,8 +128,8 @@ const signup = async (_email: string, _email_conf: string, _password: string, _p
         return Promise.reject("The email you've entered is not valid.")
     }
 
-    if (_name.length < 2) {
-        return Promise.reject("The name should be at least 2 characters long.")
+    if (_name.length < 2 || _name.length > 15) {
+        return Promise.reject("The name should be between 2 and 15 characters long.")
     }
 
     var f = new FormData();

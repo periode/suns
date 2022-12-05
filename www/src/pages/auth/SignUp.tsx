@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import { FiCheck } from "react-icons/fi"
 import { Link, useNavigate } from "react-router-dom"
 import LoginPrimary from "../../components/commons/buttons/LoginPrimary"
-import LoginSecondary from "../../components/commons/buttons/LoginSecondary"
 import InputField from "../../components/commons/forms/inputs/InputField"
 import Toaster, { ToasterType } from "../../components/commons/toaster/Toaster"
 import { signin, signup } from "../../utils/auth"
@@ -18,6 +17,7 @@ const PASSWORD_MIN_LENGTH = 8
 
 const SignUp = ({ mark }: SignUpProps) => {
 
+	console.log(mark)
 	const navigate = useNavigate()
 
 	const [success, setSuccess] = useState(false)
