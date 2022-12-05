@@ -158,6 +158,13 @@ func GetCrackEntrypoints() ([]Entrypoint, error) {
 	return cracks, result.Error
 }
 
+func GetSacrificedEntrypoints() ([]Entrypoint, error) {
+	eps := make([]Entrypoint, 0)
+	result := db.Preload("Modules").Preload("Cluster").Preload("Users").Where("status = ?", EntrypointCompleted).Find(&eps)
+
+	return eps, result.Error
+}
+
 func GetEntrypointsByGeneration(gen int) ([]Entrypoint, error) {
 	eps := make([]Entrypoint, 0)
 	result := db.Where("generation = ?", gen).Find(&eps)

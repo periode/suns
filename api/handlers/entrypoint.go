@@ -33,6 +33,16 @@ func GetCrackEntrypoints(c echo.Context) error {
 	return c.JSON(http.StatusOK, cracks)
 }
 
+func GetSacrificedEntrypoints(c echo.Context) error {
+	sacrificed, err := models.GetSacrificedEntrypoints()
+	if err != nil {
+		zero.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "There was an error getting the Entrypoints.")
+	}
+
+	return c.JSON(http.StatusOK, sacrificed)
+}
+
 func CreateEntrypoint(c echo.Context) error {
 	user_uuid := mustGetUser(c)
 	if user_uuid == uuid.Nil {
