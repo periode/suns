@@ -59,7 +59,7 @@ export class ElementClass implements IElement {
 	
 	hasOpenSide:	boolean	= false
 	openSide:		number	= 0
-	fill:			boolean	= true
+	fill:			boolean	= false
 	
 	addOn:			AddOnFunction	= drawStrokes
 	hasAddOn:		boolean	= false
@@ -79,7 +79,6 @@ export const drawHexagon = (p5: p5Types) => {
 	var number2 : number = p5.width / (1 + silverRatio)
 	var number3: number = p5.width - number2
 
-	p5.push();
 	p5.line(number2,number1,number3,number1);
 	p5.line(number3,number1,number4,number2);
 	p5.line(number4,number2,number4,number3);
@@ -88,7 +87,6 @@ export const drawHexagon = (p5: p5Types) => {
 	p5.line(number2,number4,number1,number3);
 	p5.line(number1,number3,number1,number2);
 	p5.line(number1,number2,number2,number1);
-	p5.pop();
 }
 
 export const drawCross = (
@@ -157,6 +155,7 @@ export const drawArrow = (
 	elements: IElement[],
 	addOnTypes: AddOnFunction[]
 ) => {
+	p5.noFill()
 	var nC: IElement = new ElementClass()
 	if(elements.length <= _index){
         //description of a arrow
@@ -188,7 +187,7 @@ export const drawArrow = (
     p5.translate(p5.width / 2, p5.height / 2);
     p5.rotate(nC.rotation);
     p5.translate(-1 * p5.width / 2, -1 * p5.height / 2);
-
+	
     p5.strokeWeight(nC.lineWidth);
     p5.translate(nC.posx,nC.posy);
     p5.line(0,0,nC.scale,0);
@@ -199,6 +198,7 @@ export const drawArrow = (
     }
     p5.pop(); 
 }
+
 export const drawOpenBox = (
 	p5: p5Types, 
 	_index: number, 
@@ -218,7 +218,7 @@ export const drawOpenBox = (
             lineWidth: 1 + Math.random() * 12,
             hasOpenSide: (Math.random() > 0.5) ? true : false,
             openSide: Math.floor(Math.random() * 4),
-            fill: (Math.random() > 0.5) ? true : false,
+            fill: (Math.random() > 0.5) ? false : false, // ?
             addOn: addOnTypes[Math.floor(addOnTypes.length * Math.random())],
             hasAddOn: (Math.random() > 0.7) ? true : false,
             type: drawOpenBox
@@ -233,7 +233,7 @@ export const drawOpenBox = (
         nC.lineWidth += -0.1 + (Math.random()*0.2);
         nC.hasOpenSide = (Math.random() > 0.5) ? true : false;
         nC.openSide = Math.floor(Math.random() * 4);
-		nC.fill = (Math.random() > 0.5) ? true : false;
+		nC.fill = (Math.random() > 0.5) ? false : false; // ??
         nC.scalex += -10 + (Math.random()*20);
         nC.scaley += -10 + (Math.random()*20);
     }
@@ -258,8 +258,9 @@ export const drawOpenBox = (
         p5.line(-nC.scalex,nC.scaley,-nC.scalex,-nC.scaley);
     }
     if(nC.fill === true){
-        p5.noStroke();
-        p5.fill(255);
+        // p5.noStroke();
+        // p5.fill(255); // ?
+        p5.noFill(); // ?
         p5.rect(nC.scalex * -1,nC.scaley * -1,nC.scalex*2,nC.scaley*2);
     }
 	p5.pop(); 

@@ -28,7 +28,8 @@ function MarkMaker({
 	var elementRef = useRef<IElement[]>([])
 
 	useEffect(() => {
-		elementRef.current = new Array<IElement>()
+		if (!elementRef.current)
+			elementRef.current = new Array<IElement>()
 	}, [])
 
 	let elementFuncs : ElementFunction[]= [drawCross, drawArrow, drawOpenBox];
@@ -36,7 +37,6 @@ function MarkMaker({
 	
 	let framewidth = 100
 
-	
 	const setup = (p5: p5Types, canvasParentRef: Element) => {
 		p5.createCanvas(320, 320).parent(canvasParentRef);
 		p5.angleMode("degrees")
@@ -75,11 +75,10 @@ function MarkMaker({
 	}
 
 	const draw = (p5: p5Types) => {
-
-		p5.createWriter('user')
 		if (!isCreated)	
 		{ 
 			p5.clear();
+			elementRef.current = []
 			createMark(p5)
 			setIsCreated(true)
 		}
