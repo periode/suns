@@ -14,13 +14,23 @@ import (
 )
 
 func GetAllEntrypoints(c echo.Context) error {
-	clusters, err := models.GetAllEntrypoints()
+	eps, err := models.GetAllEntrypoints()
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "There was an error getting the Entrypoints.")
 	}
 
-	return c.JSON(http.StatusOK, clusters)
+	return c.JSON(http.StatusOK, eps)
+}
+
+func GetCrackEntrypoints(c echo.Context) error {
+	cracks, err := models.GetCrackEntrypoints()
+	if err != nil {
+		zero.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "There was an error getting the Entrypoints.")
+	}
+
+	return c.JSON(http.StatusOK, cracks)
 }
 
 func CreateEntrypoint(c echo.Context) error {

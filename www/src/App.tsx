@@ -15,6 +15,8 @@ import AirContext from './contexts/AirContext';
 
 import { IEntrypoint } from './utils/types';
 import Login from './pages/auth/Login';
+import Cracks from './pages/archives/Cracks';
+import Sacrifice from './pages/archives/Sacrifice';
 
 export interface EntrypointInterface {
   uuid: string
@@ -96,6 +98,8 @@ const App = () => {
             </div>
             <Routes>
               <Route path=":id" element={<Entrypoint />} />
+              <Route path="archive/cracks" element={<Cracks/>}/>
+              <Route path="archive/sacrifice" element={<Sacrifice/>}/>
             </Routes>
             <UILayout currentEntrypoint={currentEntrypoint} />
           </>

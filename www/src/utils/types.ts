@@ -45,6 +45,8 @@ export interface IEntrypoint {
     status: ENTRYPOINT_STATUS,
     cluster: ICluster,
     visibility: string,
+    generation: number,
+    sacrifice_wave: number,
     content: string,
     current_module: number,
     modules: Array<IModule>,
