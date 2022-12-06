@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
-import { ImageOverlay, MapContainer } from 'react-leaflet'
+import { ImageOverlay, MapContainer, Marker } from 'react-leaflet'
 import { CRS } from 'leaflet';
 import L from "leaflet";
 
 import { getSession } from './utils/auth'
 import EntrypointMarker from './components/entrypoints/EntrypointMarker';
+import cracksMarker from "./assets/markers/cracks.svg"
 import Entrypoint from './components/entrypoints/Entrypoint';
 
 import MainMenu from './components/commons/menu/MainMenu';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import UILayout from './components/commons/layout/UILayout';
 import AirContext from './contexts/AirContext';
 
@@ -30,13 +31,21 @@ const HEIGHT = 1000;
 const MIN_ZOOOM = 0.5;
 const MAX_ZOOM = 6;
 const backgroundMap = "https://map.joiningsuns.online/map.png?refresh"
+const { noise } = require('@chriscourses/perlin-noise')
 
 const App = () => {
   var currentEntrypoint: IEntrypoint = {} as IEntrypoint
   const hasData = useRef(false)
+  const navigate = useNavigate()
+  const step = useRef(0)
   const [entrypoints, setEntrypoints] = useState(Array<IEntrypoint>)
   const bounds = new L.LatLngBounds(new L.LatLng(0, 0), new L.LatLng(WIDTH, HEIGHT))
   const session = getSession()
+  const [cracksCoords, setCracksCoords] = useState(new L.LatLng(500, 500))
+  const cracksIcon = new L.Icon({
+    iconUrl: cracksMarker,
+    iconSize: [36, 36],
+  })
 
   useEffect(() => {
     const endpoint = new URL('entrypoints/', process.env.REACT_APP_API_URL)
@@ -65,7 +74,19 @@ const App = () => {
     }
 
   }, [session.token])
+
   
+  const moveCracks = () => {
+    const x = noise(step.current)
+    const y = noise(step.current+0.1)
+    step.current+=0.001
+    setCracksCoords(new L.LatLng(x*WIDTH, y*HEIGHT));
+  }
+
+  useEffect(() => {
+    setInterval(moveCracks, 1000)
+  }, [])
+
   return (
 
     <AirContext>
@@ -80,25 +101,33 @@ const App = () => {
                 <ImageOverlay url={backgroundMap} bounds={bounds} />
                 <>
                   {entrypoints.map((ep, index) => {
-                    if (ep.visibility == "visible"){
+                    if (ep.visibility == "visible") {
                       return (
                         <EntrypointMarker
                           key={`ep-${ep.name.replace(' ', '-')}-${index}-${ep.uuid}`}
                           data={ep}
                         />
                       )
-                    }else{
-                      return(<></>)
+                    } else {
+                      return (<></>)
                     }
                   })
                   }
                 </>
+                <Marker
+                  position={cracksCoords}
+                  key={`marker-cracks`}
+                  icon={cracksIcon}
+                  eventHandlers={{
+                    click: () => { navigate(`/entrypoints/archive/cracks`, { replace: true }) },
+                  }}>
+                </Marker>
               </MapContainer>
             </div>
             <Routes>
               <Route path=":id" element={<Entrypoint />} />
-              <Route path="archive/cracks" element={<Cracks/>}/>
-              <Route path="archive/sacrifice" element={<Sacrifice/>}/>
+              <Route path="archive/cracks" element={<Cracks />} />
+              <Route path="archive/sacrifice" element={<Sacrifice />} />
             </Routes>
             <UILayout currentEntrypoint={currentEntrypoint} />
           </>

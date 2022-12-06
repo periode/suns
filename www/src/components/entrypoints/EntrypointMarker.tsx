@@ -11,7 +11,7 @@ const EntrypointMarker = (props: any) => {
         iconUrl: require(`../../assets/markers/${ep.icon}`),
         iconSize: [36, 36],
     })
-
+    
     return (
         <Marker
             position={[ep.lat, ep.lng]}
