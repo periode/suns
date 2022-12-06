@@ -104,9 +104,9 @@ const SignUp = ({ mark }: SignUpProps) => {
 
 	return (
 		<>
-			<div className="w-full h-full font-serif">
+			<div className="w-full h-full font-serif bg-amber-50 overflow-y-scroll">
 				<Toaster message={message} type={success ? ToasterType.success : ToasterType.error} display={isToasterDisplayed} setDisplay={setIsToasterDisplayed} timeoutms={3000}></Toaster>
-				<div className="bg-amber-50 w-full h-screen text-amber-900 flex items-center justify-center">
+				<div className="w-full h-screen text-amber-900 flex items-center justify-center">
 					<form className="	w-full h-full md:w-[720px] md:h-4/5
 											flex flex-col p-4 justify-between md:justify-center md:gap-4" onSubmit={handleSignup}>
 						<div className="flex flex-col items-start justify-center w-full h-full md:h-auto gap-4">
@@ -142,8 +142,10 @@ const SignUp = ({ mark }: SignUpProps) => {
 								</fieldset>
 							</form>
 						</div>
-						<div className="sticky bottom-4 md:static 
-											flex flex-col-reverse md:flex-row w-full gap-4">
+						<div className="	sticky bottom-4 md:static 
+											mt-4
+											flex flex-col-reverse md:flex-row w-full gap-4 bg-amber-50
+											drop-shadow">
 							<div className="flex-1">
 								<LoginPrimary text="Signup" onClick={handleSignup} isEnabled={canSignup}/>
 							</div>

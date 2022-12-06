@@ -50,24 +50,27 @@ const Welcome = () => {
         <AirContext>
             <div className="w-full h-screen p-4
                             bg-amber-50 text-amber-900 font-serif leading-relaxed
-                            flex flex-col items-center justify-between md:justify-center gap-4
+                            flex items-center justify-center gap-4
                             ">
-                <div className="w-full
+                <div className="w-full md:w-[720px] h-full
                                 flex-grow md:flex-grow-0
-                                flex items-center justify-center">
+                                flex flex-col items-center justify-between md:justify-center gap-8">
+                    <div className="w-full h-full flex items-center justify-cente">
                     {
                         stage === 0 ?
                          <WelcomeIntro/>
                         : stage === 1 ? <MarkMaker setMark={setMark} />
                             : stage === 2 ? <SignUp mark={mark}/>
-                      
-                            : <>This stage is too far. We should rather be redirecting you to a created entrypoint.</>
-                    }
-                </div >
+                                    : <>
+                                        This stage is too far. We should rather be redirecting you to a created entrypoint
+                                    </>
+                        }
+                    </div>
                 {
                     stage < 2 &&
                     <NextButton handleNextStage={handleNextStage}/>
                 }
+                </div >
             </div>
         </AirContext>
     )
