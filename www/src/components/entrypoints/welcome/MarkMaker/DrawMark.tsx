@@ -72,14 +72,21 @@ export const drawHexagon = (p5: p5Types) => {
 	// Octagon geometry:
 	// https://en.wikipedia.org/wiki/Silver_ratio
 
+	
 	var silverRatio : number = 1 + Math.SQRT2
+	var strokeWeight : number = 1
+	
+	var number4 : number = p5.width - (2 * strokeWeight)
+	var number1 : number = 0 + strokeWeight
+	var number2 : number = number4 / (1 + silverRatio)
+	var number3 : number = number4 - number2
+	
+	
+	p5.strokeWeight(strokeWeight)
+	p5.stroke(120, 53, 15)
+	
+	p5.line(number2, number1, number3, number1);
 
-	var number4 : number = p5.width
-	var number1 : number = 0
-	var number2 : number = p5.width / (1 + silverRatio)
-	var number3: number = p5.width - number2
-
-	p5.line(number2,number1,number3,number1);
 	p5.line(number3,number1,number4,number2);
 	p5.line(number4,number2,number4,number3);
 	p5.line(number4,number3,number3,number4);

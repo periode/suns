@@ -91,7 +91,7 @@ function MarkMaker({
 	}
 	
 	return (
-		<div className="w-full p-4">
+		<div className="w-full">
 			<div className="w-full flex flex-col gap-4 items-center">
 				<div className="w-80 h-80 flex items-center justify-center ">
 					<Sketch setup={ setup } draw={ draw } />
