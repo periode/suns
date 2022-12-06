@@ -36,6 +36,7 @@ const { noise } = require('@chriscourses/perlin-noise')
 const App = () => {
   var currentEntrypoint: IEntrypoint = {} as IEntrypoint
   const hasData = useRef(false)
+  const hasState = useRef(false)
   const navigate = useNavigate()
   const step = useRef(0)
   const [entrypoints, setEntrypoints] = useState(Array<IEntrypoint>)
@@ -46,6 +47,26 @@ const App = () => {
     iconUrl: cracksMarker,
     iconSize: [36, 36],
   })
+
+  useEffect(() => {
+    const endpoint = new URL('engine/state', process.env.REACT_APP_API_URL)
+
+
+
+    if (hasState.current === false) {
+      hasState.current = true;
+      fetch(endpoint)
+        .then(res => {
+          if (res.ok)
+            return res.json()
+          else
+            console.warn("GET engine state:", res.statusText)
+        })
+        .then(data => {
+          console.log(`current state:\n- generation: ${data.generation}\n- number of sacrifices: ${data.sacrifice_wave}`)
+        })
+    }
+  }, [])
 
   useEffect(() => {
     const endpoint = new URL('entrypoints/', process.env.REACT_APP_API_URL)
@@ -75,12 +96,12 @@ const App = () => {
 
   }, [session.token])
 
-  
+
   const moveCracks = () => {
     const x = noise(step.current)
-    const y = noise(step.current+0.1)
-    step.current+=0.001
-    setCracksCoords(new L.LatLng(x*WIDTH, y*HEIGHT));
+    const y = noise(step.current + 0.1)
+    step.current += 0.001
+    setCracksCoords(new L.LatLng(x * WIDTH, y * HEIGHT));
   }
 
   useEffect(() => {
