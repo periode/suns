@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { FiX } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 import { ENTRYPOINT_STATUS, IEntrypoint, IUser } from "../../utils/types";
 
 interface ISacrifice {
@@ -11,6 +13,7 @@ interface ISacrifice {
 
 const Sacrifice = () => {
     const hasData = useRef(false);
+    const navigate = useNavigate()
     const [sacrificeEntrypoints, setSacrificeEntrypoints] = useState<IEntrypoint[]>()
     const [sacrifices, setSacrifices] = useState<ISacrifice[]>()
 
@@ -59,6 +62,10 @@ const Sacrifice = () => {
                         text-amber-900
                         bg-amber-50
                         ">
+                <div className="cursor-pointer"
+                    onClick={() => navigate('/', { replace: true })}>
+                    <FiX className="text-[32px]" />
+                </div>
                 <h1>This is the sacrifices</h1>
                 <div>
                     {sacrifices?.map(c => {
@@ -66,7 +73,7 @@ const Sacrifice = () => {
                             <div>uuid: {c.uuid}</div>
                             <div>generation: {c.generation}</div>
                             <div>sacrifice_wave: {c.sacrifice_wave}</div>
-                            <div>users: {c.users.map(u => {return(<>u.name</>)})}</div>
+                            <div>users: {c.users.map(u => { return (<>u.name</>) })}</div>
                         </>)
                     })}
                 </div>

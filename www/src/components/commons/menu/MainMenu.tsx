@@ -57,7 +57,7 @@ const MainMenu = ({ username } : MainMenuProps) => {
 								<h2 >Help</h2>
 							</div>
 							<div className="h-24 w-full flex items-center justify-center">
-								<h2 onClick={() => {setIsCollapsed(true); navigate(`/entrypoints/archive/sacrifice`, {replace: true})}}>
+								<h2 onClick={() => {setIsCollapsed(false); navigate(`/entrypoints/archive/sacrifice`, {replace: true})}}>
 									Museum
 								</h2>
 							</div>
