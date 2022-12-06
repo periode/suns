@@ -15,7 +15,8 @@ import (
 )
 
 type State struct {
-	generation int
+	generation    int
+	sacrificeWave int
 }
 
 var (
@@ -31,7 +32,7 @@ func StartEngine() {
 	zero.Info("starting engine...")
 
 	Conf.DefaultConf()
-	state = State{generation: 0}
+	state = State{generation: 0, sacrificeWave: 0}
 	err := pool.Generate()
 	if err != nil {
 		zero.Errorf("error generating pool: %s", err.Error())
@@ -56,6 +57,14 @@ func GetWeeklyPrompt(i int) string {
 
 func GetMonthlyPrompt(i int) string {
 	return prompts.Monthly[i].Body
+}
+
+func GetState() map[string]int {
+	var s = map[string]int{
+		"generation":     state.generation,
+		"sacrifice_wave": state.sacrificeWave,
+	}
+	return s
 }
 
 // -- createEntrypoints queries the database to know about the status of entrypoints from this generation
@@ -124,6 +133,17 @@ func deleteEntrypoints() {
 func sacrificeEntrypoints() {
 	for {
 		time.Sleep(Conf.SACRIFICE_INTERVAL)
+		//-- this should happen in several steps
+		//-- check which area is the most densely populated -> loop over entrypoints, find the ones that are the most surrounded, then pick the average mean center
+		//-- select the center point and save it
+		//-- sending an email to all users involved in Pending entrypoints
+		//-- start a goroutine until the actual sacrifice
+		//-- -- the goroutine would take care of the actual logic
+		//-- -- -- delete all the entrypoints
+		//-- -- -- increase the SacrificeWave
+		//-- -- -- regenerate the map
+
+		//-- inform the frontend of the remaining time before a sacrifice
 	}
 }
 

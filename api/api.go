@@ -85,6 +85,11 @@ func SetupRouter() *echo.Echo {
 		config.POST("/engine", handlers.SetConfig)
 	}
 
+	engine := r.Group("/engine")
+	{
+		engine.GET("/state", handlers.GetState)
+	}
+
 	users := r.Group("/users")
 	{
 		users.GET("/", handlers.GetAllUsers)
