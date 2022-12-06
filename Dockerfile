@@ -1,5 +1,7 @@
 FROM golang:1.18-alpine AS go
 
+RUN apk add build-base
+
 RUN mkdir /app
 COPY go.sum /app
 COPY go.mod /app

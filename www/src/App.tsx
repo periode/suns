@@ -7,14 +7,12 @@ import { getSession } from './utils/auth'
 import EntrypointMarker from './components/entrypoints/EntrypointMarker';
 import Entrypoint from './components/entrypoints/Entrypoint';
 
-import backgroundMap from './map.png'
 import MainMenu from './components/commons/menu/MainMenu';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import UILayout from './components/commons/layout/UILayout';
 import AirContext from './contexts/AirContext';
 
 import { IEntrypoint } from './utils/types';
-import Login from './pages/auth/Login';
 import Cracks from './pages/archives/Cracks';
 import Sacrifice from './pages/archives/Sacrifice';
 
@@ -31,6 +29,7 @@ const WIDTH = 1000;
 const HEIGHT = 1000;
 const MIN_ZOOOM = 0.5;
 const MAX_ZOOM = 6;
+const backgroundMap = "https://map.joiningsuns.online/map.png?refresh"
 
 const App = () => {
   var currentEntrypoint: IEntrypoint = {} as IEntrypoint
