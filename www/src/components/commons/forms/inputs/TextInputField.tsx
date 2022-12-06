@@ -28,8 +28,6 @@ const TextInputField = ({
 
 	const handleOnChange = (e: React.BaseSyntheticEvent) => {
 		if (e.target.value.length > MIN_LIMIT && inputRef.current !== null) {
-			console.log(inputRef.current.value);
-
 			handleNewUploads([{ uuid: uuid, file: undefined, text: inputRef.current.value, type: UPLOAD_TYPE.Text }])
 		}
 	}

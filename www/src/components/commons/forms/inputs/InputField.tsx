@@ -5,7 +5,9 @@ interface InputFieldProps {
 	type? : string
 	onChange?: (e: React.BaseSyntheticEvent) => void,
 	autocomplete? : string,
-	maxlength? : number
+	maxlength?: number
+	minlength? : number
+	
 }
 
 const InputField = ({
@@ -14,15 +16,27 @@ const InputField = ({
 	type = "text",
 	onChange,
 	autocomplete,
-	maxlength
+	maxlength,
+	minlength
  } : InputFieldProps) => {
 	return ( 
 	<>
 		{
 			label &&
-			<label	className="
+				<label className="
+					w-full flex items-center justify-between
 					disabled:opacity-50" 
-					htmlFor={ label?.toLowerCase() }>{ label }</label>
+						htmlFor={label?.toLowerCase()}>
+						<p>
+							{label}
+						</p>
+						{
+							minlength ? 
+								<p className="text-xs opacity-50">min {minlength} char.</p>
+								:
+								<></>
+						}
+			</label>
 		}
 			<input className="	w-full h-14 p-1 pr-2 pl-3 
 							hover:border-amber-500
@@ -38,7 +52,8 @@ const InputField = ({
 				type={type} 
 				name={label ? label.toLowerCase() : type.toLowerCase()} 
 				autoComplete={autocomplete || "off"}
-				maxLength={maxlength}	
+				maxLength={maxlength}
+				minLength={minlength}
 			/>
 	</> 
 	);

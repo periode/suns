@@ -17,7 +17,6 @@ const PASSWORD_MIN_LENGTH = 8
 
 const SignUp = ({ mark }: SignUpProps) => {
 
-	console.log(mark)
 	const navigate = useNavigate()
 
 	const [success, setSuccess] = useState(false)
@@ -36,9 +35,9 @@ const SignUp = ({ mark }: SignUpProps) => {
 	const [checkboxPreferences, setCheckboxPreferences] = useState("")
 
 	useEffect(() => {
-		if(signupName.length > NAME_MIN_LENGTH && signupName.length < NAME_MAX_LENGTH
+		if(signupName.length >= NAME_MIN_LENGTH && signupName.length < NAME_MAX_LENGTH
 		&& signupEmail === signupEmailConf
-		&& signupPassword.length > PASSWORD_MIN_LENGTH && signupEmail === signupEmailConf
+		&& signupPassword.length >= PASSWORD_MIN_LENGTH && signupEmail === signupEmailConf
 		&& checkboxGuidelines === "on" && checkboxPreferences === "on"){
 			setCanSignUp(true)
 		}else{
@@ -112,7 +111,7 @@ const SignUp = ({ mark }: SignUpProps) => {
 						<div className="flex flex-col items-start justify-center w-full h-full md:h-auto gap-4">
 							<h2 className="text-6xl ">Sign up</h2>
 							<div className="flex flex-col gap-1 items-start w-full">
-								<InputField label="Screen name" onChange={handleSignupNameChange} placeholder="Mohammed Li" type="text" />
+								<InputField label="Screen name" onChange={handleSignupNameChange} placeholder="username" type="text" />
 							</div>
 							<div className="flex flex-col gap-1 items-start w-full">
 								<InputField label="Email" onChange={handleSignupEmailChange} placeholder="example@example.com" type="text" />
@@ -121,10 +120,10 @@ const SignUp = ({ mark }: SignUpProps) => {
 								<InputField label="Comfirm Email" onChange={handleSignupEmailConfChange} placeholder="example@example.com" type="text" />
 							</div>
 							<div className="flex flex-col gap-1 items-start w-full">
-								<InputField onChange={handleSignupPasswordChange} label="Password" placeholder="••••••••" type="password" />
+								<InputField onChange={handleSignupPasswordChange} label="Password" placeholder="••••••••" minlength={PASSWORD_MIN_LENGTH} type="password" />
 							</div>
 							<div className="flex flex-col gap-1 items-start w-full">
-								<InputField onChange={handleSignupPasswordConfChange} label="Password" placeholder="••••••••" type="password" />
+								<InputField onChange={handleSignupPasswordConfChange} label="Password" placeholder="••••••••" minlength={PASSWORD_MIN_LENGTH} type="password" />
 							</div>
 						</div>
 						<div>
@@ -142,11 +141,11 @@ const SignUp = ({ mark }: SignUpProps) => {
 								</fieldset>
 							</form>
 						</div>
-						<div className="	sticky bottom-4 md:static 
+						<div className="	sticky bottom-0  md:static 
 											mt-4
 											flex flex-col-reverse md:flex-row w-full gap-4 bg-amber-50
 											drop-shadow">
-							<div className="flex-1">
+							<div className="flex-1 bottom-4">
 								<LoginPrimary text="Signup" onClick={handleSignup} isEnabled={canSignup}/>
 							</div>
 						</div>
