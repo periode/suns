@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from "react";
+import { FiX } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 import { ENTRYPOINT_STATUS, IEntrypoint } from "../../utils/types";
+import Crack from "./Crack";
 
-interface ICrack {
+export interface ICrack {
     url: string,
     uuid: string,
     generation: number,
@@ -10,6 +13,7 @@ interface ICrack {
 }
 
 const Cracks = () => {
+    const navigate = useNavigate()
     const hasData = useRef(false);
     const [crackEntrypoints, setCrackEntrypoints] = useState<IEntrypoint[]>()
     const [cracks, setCracks] = useState<ICrack[]>()
@@ -37,7 +41,7 @@ const Cracks = () => {
     useEffect(() => {
         if (crackEntrypoints == undefined) return
         let crs = crackEntrypoints.map((cep) => {
-            
+
             //-- find the module with the uploads attached
             let mod = cep.modules.filter(m => m.name === "Cracks - Donating a picture")
             return {
@@ -62,16 +66,14 @@ const Cracks = () => {
                         text-amber-900
                         bg-amber-50
                         ">
-                <h1>This is the cracks</h1>
+                <div className="cursor-pointer"
+                    onClick={() => navigate('/', { replace: true })}>
+                    <FiX className="text-[32px]" />
+                </div>
+                <h1 className="text-4xl text-center mb-5">This is the cracks</h1>
                 <div>
                     {cracks?.map(c => {
-                        return (<>
-                            <div>url: {c.url}</div>
-                            <div>uuid: {c.uuid}</div>
-                            <div>generation: {c.generation}</div>
-                            <div>sacrifice_wave: {c.sacrifice_wave}</div>
-                            <div>user_name: {c.user_name}</div>
-                        </>)
+                        return (<Crack data={c}/>)
                     })}
                 </div>
             </div>

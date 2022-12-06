@@ -124,7 +124,7 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
                 {entrypoint.users.map(u => {
                     return (<>
                         <h2 className="text-2xl font-regular">{u.name}</h2>
-                        <img src={u.mark_url}/>
+                        <img src={`${process.env.REACT_APP_SPACES_URL}/${u.mark_url}`}/>
                     </>)
                 })}
             </div>
