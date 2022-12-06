@@ -155,17 +155,16 @@ func saveFile(file *multipart.FileHeader, ftype string) (string, error) {
 	if ftype == models.ImageType {
 
 		//-- convert to webp
-		var buf bytes.Buffer
 		m, _, err := image.Decode(src)
 		if err != nil {
 			return "", err
 		}
-		err = webp.Encode(&buf, m, &webp.Options{Lossless: false})
+		encoded, err := webp.EncodeRGBA(m, 100)
 		if err != nil {
 			return "", err
 		}
 
-		err = os.WriteFile(target, buf.Bytes(), 0666)
+		err = os.WriteFile(target, encoded, 0666)
 		if err != nil {
 			return "", err
 		}
