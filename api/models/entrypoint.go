@@ -135,6 +135,12 @@ func GetAllEntrypoints() ([]Entrypoint, error) {
 	return eps, result.Error
 }
 
+func GetMapEntrypoints() ([]Entrypoint, error) {
+	eps := make([]Entrypoint, 0)
+	result := db.Preload("Cluster").Where("visibility = ?", EntrypointVisible).Find(&eps)
+	return eps, result.Error
+}
+
 func GetCrackEntrypoints() ([]Entrypoint, error) {
 	eps := make([]Entrypoint, 0)
 	result := db.Preload("Modules").Preload("Cluster").Preload("Users").Where("status = ?", EntrypointCompleted).Find(&eps)

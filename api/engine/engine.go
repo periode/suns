@@ -213,7 +213,7 @@ func updateMap() {
 		}
 
 		body := url.Values{}
-		eps, err := models.GetAllEntrypoints()
+		eps, err := models.GetMapEntrypoints()
 		if err != nil {
 			zero.Error(err.Error())
 		}
