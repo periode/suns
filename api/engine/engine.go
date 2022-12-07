@@ -91,10 +91,16 @@ func createEntrypoints() {
 		}
 
 		remaining := float64(open) / float64(len(eps))
-		zero.Debug(fmt.Sprintf("Open entrypoints: %d%% (open %d, total %d)", int(remaining*100), open, len(eps)))
+		zero.Debug(fmt.Sprintf("Open entrypoints: %d%% (%d/%d)", int(remaining*100), open, len(eps)))
 
 		if remaining < Conf.CREATION_THRESHOLD || len(eps) < Conf.MIN_ENTRYPOINTS {
-			_, err = models.AddClusterEntrypoints(pool.Pick())
+			numEntrypoints := 5
+			created, err := models.AddClusterEntrypoints(pool.Pick(numEntrypoints))
+
+			for _, c := range created {
+				fmt.Printf("created entrypoint %s with %d modules\n", c.Name, len(c.Modules))
+			}
+
 			if err != nil {
 				zero.Errorf("Failed to create new entrypoint: %s", err.Error())
 			}
@@ -110,6 +116,7 @@ func createEntrypoints() {
 func deleteEntrypoints() {
 	for {
 		time.Sleep(Conf.DELETE_INTERVAL)
+		zero.Debug("deletting entrypoints...")
 
 		eps, err := models.GetEntrypointsByGeneration(state.generation)
 		if err != nil {
