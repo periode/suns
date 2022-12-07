@@ -19,8 +19,6 @@ function EntrypointActions({
 	hasUserCompleted
 }: EntrypointActionsProps) {
 
-	console.log("Entrypoint Actions: Can user complete? ", canUserComplete)
-
 	const copyToClipboard = (text: string) => {
 		window.prompt("You can share this link: ", text);
 	}

@@ -52,7 +52,7 @@ const Entrypoint = (props: any) => {
                         setCanUserComplete(true)
                 })
                 .catch(err => {
-                    console.warn('error', err)
+                    console.error('error', err)
                     navigate('/')
                 })
             hasData.current = true
@@ -103,6 +103,14 @@ const Entrypoint = (props: any) => {
         setCanUserComplete(isDone)
     }, [uploads])
 
+    //-- this registers ESC to close the modal
+    useEffect(() => {
+        window.addEventListener('keydown', handleClose)
+        return () => {
+            window.removeEventListener('keydown', handleClose)
+        }
+    })
+
     const claimEntrypoint = async () => {
         const endpoint = new URL(`entrypoints/${data.uuid}/claim`, process.env.REACT_APP_API_URL)
 
@@ -149,6 +157,11 @@ const Entrypoint = (props: any) => {
 
     const handleNext = () => {
         completeModule(data, session)
+    }
+
+    const handleClose = (e: KeyboardEvent) => {
+        if(e.key === "Escape")
+            navigate('/', {replace: true})
     }
 
     const completeModule = async (ep: IEntrypoint, session: ISession) => {
