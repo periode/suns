@@ -149,7 +149,9 @@ const signup = async (_email: string, _email_conf: string, _password: string, _p
         const uuid = await res.text()
         return Promise.resolve(uuid)
     } else {
-        return Promise.reject("There was an error creating your account. Please try again later.")
+        const err = await res.text()
+        return Promise.reject(err)
+        // return Promise.reject("There was an error creating your account. Please try again later.")
     }
 }
 

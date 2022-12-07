@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { getSession } from "../../../utils/auth"
 import { TaskDoneType } from "../../../utils/types"
-import SubmitButton from "../../commons/buttons/SubmitButton copy"
+import SubmitButton from "../../commons/buttons/SubmitButton"
 
 interface PromptsInputProps {
     uuid: string,
@@ -46,11 +46,11 @@ const WelcomePrompts = ({
                 </div>
                 <div className="">
                     <input className="m-1" type="checkbox" id="weekly" name="weekly" />
-                    <label htmlFor="weekly">Weekly</label>
+                    <label htmlFor="weekly">+ Weekly</label>
                 </div>
                 <div className="">
                     <input className="m-1" type="checkbox" id="monthly" name="monthly" />
-                    <label htmlFor="monthly">Monthly</label>
+                    <label htmlFor="monthly">+ Monthly</label>
                 </div>
                 <div>
                     {

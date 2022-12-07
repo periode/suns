@@ -8,7 +8,7 @@ function SubmitButton({ onClick } : SubmitButtonProps) {
 	return ( 
 		<>
 			<button className=" flex items-center justify-center gap-1
-								h-8 bg-none pl-4 pr-4
+								h-8 bg-none p-2 pl-4 pr-4
 							text-amber-500 font-mono text-sm font-bold 
 							border border-1 border-amber-500
 							hover:text-amber-600 hover:border-amber-600

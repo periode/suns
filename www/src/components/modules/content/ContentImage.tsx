@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
 import { AirTableContext } from "../../../contexts/AirContext";
 
 interface ContentImageProps {
@@ -10,7 +10,9 @@ interface ContentImageProps {
 
 function ContentImage({ index, src, name, ep_name }: ContentImageProps) {
 	const ctx = useContext(AirTableContext)
-    const contents = ctx.get("PublicView")
+	const contents = ctx.get("PublicView")
+	
+	const hadAttemptedFallback = useRef(false)
 
 	const getLabel = () => {
 		if(index !== undefined && name && name.length > 0 && ep_name && ep_name.length > 0)
@@ -21,7 +23,11 @@ function ContentImage({ index, src, name, ep_name }: ContentImageProps) {
 
 	const handleMissingImage = (e: React.BaseSyntheticEvent) => {
 		const t = e.currentTarget
-		t.src = `${process.env.REACT_APP_API_URL}/static/${src}`
+		if (hadAttemptedFallback.current !== true)
+		{
+			t.src = `${process.env.REACT_APP_API_URL}/static/${src}`
+			hadAttemptedFallback.current = true
+		}
 	}
 
 	return (
