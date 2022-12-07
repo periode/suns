@@ -9,7 +9,9 @@ interface IntroModuleProps {
 }
 
 const IntroModule = ({ data, epName }: IntroModuleProps) => {
-    const ctx = useContext(AirTableContext)
+    
+
+    const ctx = useContext(AirTableContext)    
     const contents = ctx.get(epName)
 
     if (contents === undefined) {

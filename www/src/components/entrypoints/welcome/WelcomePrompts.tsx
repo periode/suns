@@ -1,5 +1,7 @@
 import { useState } from "react"
 import { getSession } from "../../../utils/auth"
+import { TaskDoneType } from "../../../utils/types"
+import SubmitButton from "../../commons/buttons/SubmitButton"
 
 interface PromptsInputProps {
     uuid: string,
@@ -37,20 +39,27 @@ const WelcomePrompts = ({
     }
 
     return (<>
-        <form id="prompts-preference">
-            <fieldset disabled={!isFormActive}>
-                <legend>Pick your prompts frequency:</legend>
-
+        <form id="prompts-preference" onSubmit={handleSubmission}>
+            <fieldset className="flex flex-col gap-2 flex-items" disabled={!isFormActive}>
                 <div>
+                    <legend>Pick your prompts frequency:</legend>
+                </div>
+                <div className="">
                     <input className="m-1" type="checkbox" id="weekly" name="weekly" />
-                    <label htmlFor="weekly">Weekly</label>
+                    <label htmlFor="weekly">+ Weekly</label>
                 </div>
-
-                <div>
+                <div className="">
                     <input className="m-1" type="checkbox" id="monthly" name="monthly" />
-                    <label htmlFor="monthly">Monthly</label>
+                    <label htmlFor="monthly">+ Monthly</label>
                 </div>
-                <button className="border p-1" type="button" onClick={handleSubmission}>Submit</button>
+                <div>
+                    {
+                        isFormActive ? 
+                        <SubmitButton onClick={() => handleSubmission}/> 
+                            :
+                        <p>Thank you!</p>
+                    }
+                </div>
             </fieldset>
         </form>
     </>)

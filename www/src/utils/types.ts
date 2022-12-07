@@ -115,3 +115,8 @@ export interface ISession {
     token: string,
     user: IUser
 }
+
+export  type TaskDoneType = {
+        key: string,
+        value: boolean
+};

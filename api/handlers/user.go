@@ -41,6 +41,7 @@ func CreateUser(c echo.Context) error {
 	err := sanitizeUserCreate(c) // Making sure adress and password are correctly formated
 	if err != nil {
 		zero.Error(err.Error())
+		println("here")
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 

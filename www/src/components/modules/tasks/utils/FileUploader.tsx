@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { IFile } from "../../../../utils/types"
+import { IFile, TaskDoneType } from "../../../../utils/types"
 
 interface IFileUploadProps {
     type: string,
@@ -12,6 +12,7 @@ const MAX_FILE_SIZE = 32
 
 const FileUploader = ({ type, uuid, maxUploads = 1, handleNewUploads }: IFileUploadProps) => {
     const [uploadIndex, setUploadIndex] = useState(1)
+    
     useEffect(() => {
         handleNewUploads([{uuid: uuid, file: undefined, text: "", type: type}])
     }, [])
@@ -38,19 +39,27 @@ const FileUploader = ({ type, uuid, maxUploads = 1, handleNewUploads }: IFileUpl
     const getInputFields = () => {
         let fields = []
         for (let i = 0; i < uploadIndex; i++) {
-            fields.push(<input key={`fileinput-${i}`} type="file" capture="environment" accept={`${type}/*`} onChange={handleFileChange} />)
+            fields.push(
+                <input 
+                key={`fileinput-${i}`} 
+                type="file"
+                capture="environment" 
+                accept={`${type}/*`} 
+                onChange={handleFileChange}
+                className="font-mono text-sm w-full bg-amber-100 p-4 flex flex-col
+                "
+                />
+            )
         }
 
         return fields
     }
 
     return (<>
-        <p>
             {
                 getInputFields()
             }
-        </p>
-    </>)
+            </>)
 }
 
 export default FileUploader

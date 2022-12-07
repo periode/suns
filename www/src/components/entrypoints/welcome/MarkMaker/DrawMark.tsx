@@ -1,11 +1,17 @@
 import p5Types from "p5";
 
+export type AddOnFunction = (
+	p5: p5Types, 
+	posx: number,
+	posy: number
+) => void
+
 export type ElementFunction = (
 	p5: p5Types, 
 	_index: number, 
 	framewidth: number, 
 	elements: IElement[], 
-	addOnTypes: string[]
+	addOnTypes: AddOnFunction[]
 ) => void
 
 export interface IElement {
@@ -29,7 +35,7 @@ export interface IElement {
 	openSide:		number
 	fill:			boolean
 
-	addOn: string
+	addOn:			AddOnFunction
 	hasAddOn:		boolean
 	type:			ElementFunction
 }
@@ -53,25 +59,41 @@ export class ElementClass implements IElement {
 	
 	hasOpenSide:	boolean	= false
 	openSide:		number	= 0
-	fill:			boolean	= true
+	fill:			boolean	= false
 	
-	addOn:			string	= ""
+	addOn:			AddOnFunction	= drawStrokes
 	hasAddOn:		boolean	= false
 	type:			ElementFunction	= drawCross
 }
 
 
 export const drawHexagon = (p5: p5Types) => {
-		p5.push();
-    	p5.line(120,20,280,20);
-    	p5.line(280,20,380,120);
-    	p5.line(380,120,380,280);
-    	p5.line(380,280,280,380);
-    	p5.line(280,380,120,380);
-    	p5.line(120,380,20,280);
-    	p5.line(20,280,20,120);
-    	p5.line(20,120,120,20);
-    	p5.pop();
+
+	// Octagon geometry:
+	// https://en.wikipedia.org/wiki/Silver_ratio
+
+	
+	var silverRatio : number = 1 + Math.SQRT2
+	var strokeWeight : number = 1
+	
+	var number4 : number = p5.width - (2 * strokeWeight)
+	var number1 : number = 0 + strokeWeight
+	var number2 : number = number4 / (1 + silverRatio)
+	var number3 : number = number4 - number2
+	
+	
+	p5.strokeWeight(strokeWeight)
+	p5.stroke(120, 53, 15)
+	
+	p5.line(number2, number1, number3, number1);
+
+	p5.line(number3,number1,number4,number2);
+	p5.line(number4,number2,number4,number3);
+	p5.line(number4,number3,number3,number4);
+	p5.line(number3,number4,number2,number4);
+	p5.line(number2,number4,number1,number3);
+	p5.line(number1,number3,number1,number2);
+	p5.line(number1,number2,number2,number1);
 }
 
 export const drawCross = (
@@ -79,7 +101,7 @@ export const drawCross = (
 	_index: number, 
 	framewidth: number, 
 	elements : IElement[], 
-	addOnTypes: string[]) =>
+	addOnTypes: AddOnFunction[]) =>
 {
 	var nC : IElement = new ElementClass();
 	if (elements.length <= _index) {
@@ -129,10 +151,8 @@ export const drawCross = (
     
 	p5.pop();
 
-	// ?? 
-	// if (nC.hasAddOn) {
-	// 	window[nC.addOn](nC.posx, nC.posy);
-	// }
+	if (nC.hasAddOn)
+		nC.addOn(p5, nC.posx, nC.posy)
 }
 
 export const drawArrow = (
@@ -140,8 +160,9 @@ export const drawArrow = (
 	_index: number, 
 	framewidth: number, 
 	elements: IElement[],
-	addOnTypes: string[]
+	addOnTypes: AddOnFunction[]
 ) => {
+	p5.noFill()
 	var nC: IElement = new ElementClass()
 	if(elements.length <= _index){
         //description of a arrow
@@ -173,7 +194,7 @@ export const drawArrow = (
     p5.translate(p5.width / 2, p5.height / 2);
     p5.rotate(nC.rotation);
     p5.translate(-1 * p5.width / 2, -1 * p5.height / 2);
-
+	
     p5.strokeWeight(nC.lineWidth);
     p5.translate(nC.posx,nC.posy);
     p5.line(0,0,nC.scale,0);
@@ -184,12 +205,13 @@ export const drawArrow = (
     }
     p5.pop(); 
 }
+
 export const drawOpenBox = (
 	p5: p5Types, 
 	_index: number, 
 	framewidth: number, 
 	elements : IElement[], 
-	addOnTypes: string[]) => {
+	addOnTypes: AddOnFunction[]) => {
     var nC = new ElementClass();
     if(elements.length <= _index){
         //description of a box
@@ -203,7 +225,7 @@ export const drawOpenBox = (
             lineWidth: 1 + Math.random() * 12,
             hasOpenSide: (Math.random() > 0.5) ? true : false,
             openSide: Math.floor(Math.random() * 4),
-            fill: (Math.random() > 0.5) ? true : false,
+            fill: (Math.random() > 0.5) ? false : false, // ?
             addOn: addOnTypes[Math.floor(addOnTypes.length * Math.random())],
             hasAddOn: (Math.random() > 0.7) ? true : false,
             type: drawOpenBox
@@ -218,7 +240,7 @@ export const drawOpenBox = (
         nC.lineWidth += -0.1 + (Math.random()*0.2);
         nC.hasOpenSide = (Math.random() > 0.5) ? true : false;
         nC.openSide = Math.floor(Math.random() * 4);
-		nC.fill = (Math.random() > 0.5) ? true : false;
+		nC.fill = (Math.random() > 0.5) ? false : false; // ??
         nC.scalex += -10 + (Math.random()*20);
         nC.scaley += -10 + (Math.random()*20);
     }
@@ -243,25 +265,24 @@ export const drawOpenBox = (
         p5.line(-nC.scalex,nC.scaley,-nC.scalex,-nC.scaley);
     }
     if(nC.fill === true){
-        p5.noStroke();
-        p5.fill(255);
+        // p5.noStroke();
+        // p5.fill(255); // ?
+        p5.noFill(); // ?
         p5.rect(nC.scalex * -1,nC.scaley * -1,nC.scalex*2,nC.scaley*2);
     }
 	p5.pop(); 
 
-	// ????
-    // if(nC.hasAddOn){
-    //     window[nC.addOn](nC.posx,nC.posy);
-    // }
- 
-    //console.log("openBox");
+	
+	if (nC.hasAddOn)
+		nC.addOn(p5, nC.posx, nC.posy)
+
 }
 
 export const drawStrokes = (
 	p5: p5Types, 
 	posx: number,
-	posy:  number,
-	) => {
+	posy: number
+) => {
 		var count = 1 + Math.floor(Math.random() * 5);
 		var start = Math.floor(count / 2) * -1;
 		var end = count + start;
@@ -283,4 +304,5 @@ export const drawStrokes = (
 
 			p5.pop();
 		}
+		
 }
