@@ -34,13 +34,6 @@ entrypoints:
       hint: "This is where you compare your draught stories"
     - name: "Final Draught You"
       type: "final"
-      contents:
-        - type: "txt"
-          key: "public_info_1"
-        - type: "txt"
-          key: "public_hl_1"
-        - type: "txt"
-          key: "public_hl_2" 
       hint: "This is the final view for the draught - you"
 
 - status: "open"
@@ -55,8 +48,8 @@ entrypoints:
     - name: "Start Draught World"
       type: "intro"
       contents:
-        - type: "vid"
-          key: "intro_vid"
+        - type: "wav"
+          key: "intro_aud"
         - type: "txt"
           key: "intro_txt"
     - name: "Record an interview about draught"
@@ -73,11 +66,6 @@ entrypoints:
           max_limit: 1
     - name: "Final Draught World"
       type: "final"
-      contents:
-        - type: "txt"
-          key: "public_info_1"
-        - type: "txt"
-          key: "public_hl_1"
       hint: "This is the final view for the draught - World. It combines both interviews together"
 
 - status: "open"
@@ -112,11 +100,4 @@ entrypoints:
           max_limit: 300
     - name: "Final Draught personal"
       type: "final"
-      contents:
-        - type: "txt"
-          key: "public_info_1"
-        - type: "txt"
-          key: "public_hl_1"
-        - type: "txt"
-          key: "public_hl_2" 
       hint: "This is the final view for the draught - Personal"

@@ -33,10 +33,5 @@ entrypoints:
         hint: "This is what your partner has recorded, please tell the story of when the same thing happened to you."
       - name: "For the first time - Final"
         type: "final"
-        contents:
-          - type: "txt"
-            key: "public_info_1"
-          - type: "txt"
-            key: "public_hl_1"
         hint: "This is the final countdown"
 
