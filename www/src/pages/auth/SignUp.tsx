@@ -11,7 +11,7 @@ interface SignUpProps {
 }
 
 const NAME_MIN_LENGTH = 2
-const NAME_MAX_LENGTH = 50
+const NAME_MAX_LENGTH = 15
 
 const PASSWORD_MIN_LENGTH = 8
 

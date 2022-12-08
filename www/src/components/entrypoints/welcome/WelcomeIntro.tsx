@@ -13,9 +13,7 @@ const WelcomeIntro = () => {
     
     return (
         <div className="">
-            {
-                contents.get("intro_txt_1")
-            }
+            { contents.get("intro_txt_1")}
         </div>
     )
 }

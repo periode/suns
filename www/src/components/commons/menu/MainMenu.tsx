@@ -9,10 +9,12 @@ const signout = () => {
 }
 
 interface MainMenuProps {
-	username : string
+	username: string,
+	markURL: string
 }
 
-const MainMenu = ({ username } : MainMenuProps) => {
+const MainMenu = ({ username, markURL }: MainMenuProps) => {
+
 	const [isCollapsed, setIsCollapsed] = useState(false)
 	const navigate = useNavigate()
 	return ( 
@@ -32,7 +34,10 @@ const MainMenu = ({ username } : MainMenuProps) => {
 								flex items-center justify-between
 								"
 						>
-							<div className="font-mono">
+							<div className="flex items-center font-mono gap-2">
+								<div className="w-12 h-12">
+									<img className="w-full h-full" src={`${process.env.REACT_APP_SPACES_URL}/${markURL}`} alt="usermark"/>
+								</div>
 								{ username }
 							</div>
 							<div className="cursor-pointer text-[40px]"

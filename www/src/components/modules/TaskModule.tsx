@@ -16,9 +16,10 @@ interface ITaskModuleProps {
     ep: IEntrypoint,
     index: number,
     handleNewUploads: Function,
+    setCanUserComplete: Function
 }
 
-const TaskModule = ({ data, ep, index, handleNewUploads }: ITaskModuleProps) => {
+const TaskModule = ({ data, ep, index, handleNewUploads, setCanUserComplete }: ITaskModuleProps) => {
     const session = getSession()
     const [inputs, setInputs] = useState(Array<IUpload>)
     const ctx = useContext(AirTableContext)
@@ -27,7 +28,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads }: ITaskModuleProps) => 
     useEffect(() => {
         if (index > 0 && ep.modules[index - 1] !== undefined)
             setInputs(ep.modules[index - 1].uploads ? ep.modules[index - 1].uploads : [])
-    }, [ep])
+    }, [ep, index])
 
     const getTasks = () => {
         const tasks = data.tasks.map(((t, i) => {
@@ -66,7 +67,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads }: ITaskModuleProps) => 
                                             " key={`${t.type}-key-${i}`}>
                             <p>{prompt}</p>
                             <div className="h-auto">
-                                <TextInputField uuid={t.uuid} text_type={t.text_type} maxLimit={t.max_limit} handleNewUploads={handleNewUploads} placeholder={t.placeholder && contents?.get(t.placeholder)} />
+                                <TextInputField uuid={t.uuid} text_type={t.text_type} minLimit={t.min_limit} maxLimit={t.max_limit} handleNewUploads={handleNewUploads} placeholder={t.placeholder && contents?.get(t.placeholder)} />
                             </div>
                         </div>)
                 case "prompts_input":
@@ -75,7 +76,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads }: ITaskModuleProps) => 
                             " key={`${t.type}-key-${i}`}>
                         <p>{prompt}</p>
                         <div className="h-60">
-                            <WelcomePrompts uuid={t.uuid}/>
+                            <WelcomePrompts uuid={t.uuid} setCanUserComplete={setCanUserComplete} />
                         </div>
                     </div>)
                 default:
@@ -94,7 +95,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads }: ITaskModuleProps) => 
             if (i.user_uuid !== session.user.uuid)
                 switch (i.type) {
                     case UPLOAD_TYPE.Text:
-                        inputElements.push((<ContentText key={i.uuid} text={i.text}/>))
+                        inputElements.push((<ContentText key={i.uuid} text={i.text} final={false} />))
                         break;
                     case UPLOAD_TYPE.Audio:
                         inputElements.push((<ContentAudio key={i.uuid} src={i.url}/>))
@@ -127,7 +128,9 @@ const TaskModule = ({ data, ep, index, handleNewUploads }: ITaskModuleProps) => 
                 }
             </div>
             <div className="w-full h-full flex flex-col gap-6">
-                {getTasks()}
+                {
+                    getTasks()
+                }
             </div>
         </>
 

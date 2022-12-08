@@ -116,7 +116,7 @@ const App = () => {
           <Navigate to="/auth" />
           :
           <>
-            <MainMenu username={session.user.name} />
+            <MainMenu username={session.user.name} markURL={session.user.mark_url} />
             <div className="map-container" id="map">
               <MapContainer center={[WIDTH / 2, HEIGHT / 2]} minZoom={MIN_ZOOOM} maxZoom={MAX_ZOOM} zoom={2} scrollWheelZoom={true} crs={CRS.Simple} maxBounds={bounds} inertia={false}>
                 <ImageOverlay url={backgroundMap} bounds={bounds} />
