@@ -114,6 +114,7 @@ func SetupRouter() *echo.Echo {
 	entrypoints := r.Group("/entrypoints")
 	{
 		entrypoints.GET("/", handlers.GetAllEntrypoints)
+		entrypoints.GET("/map", handlers.GetMapEntrypoints)
 		entrypoints.GET("/cracks", handlers.GetCrackEntrypoints)
 		entrypoints.GET("/sacrifice", handlers.GetSacrificedEntrypoints)
 		entrypoints.GET("/:id", handlers.GetEntrypoint)

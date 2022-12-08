@@ -69,7 +69,7 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    const endpoint = new URL('entrypoints/', process.env.REACT_APP_API_URL)
+    const endpoint = new URL('entrypoints/map', process.env.REACT_APP_API_URL)
 
     async function fetchClusters() {
       const h = new Headers();

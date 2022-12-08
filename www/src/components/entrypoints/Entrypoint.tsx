@@ -53,7 +53,8 @@ const Entrypoint = (props: any) => {
                 })
                 .catch(err => {
                     console.error('error', err)
-                    navigate('/')
+                    // TODO add a modal to explain this entrypoint is gone
+                    navigate('/', {replace: true})
                 })
             hasData.current = true
         }

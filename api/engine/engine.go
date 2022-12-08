@@ -124,7 +124,7 @@ func deleteEntrypoints() {
 		}
 
 		for _, ep := range eps {
-			if time.Since(ep.CreatedAt) > Conf.ENTRYPOINT_LIFETIME && ep.Status == models.EntrypointOpen {
+			if (time.Since(ep.CreatedAt) > Conf.ENTRYPOINT_LIFETIME && ep.Status == models.EntrypointOpen) || len(ep.Modules) == 0 {
 				_, err = models.DeleteEntrypoint(ep.UUID)
 				if err != nil {
 					zero.Errorf("Failed to delete expired entrypoints", err.Error())
