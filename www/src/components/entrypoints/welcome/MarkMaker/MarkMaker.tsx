@@ -93,6 +93,7 @@ function MarkMaker({
 	return (
 		<div className="w-full">
 			<div className="w-full flex flex-col gap-4 items-center">
+				<div>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</div>
 				<div className="w-80 h-80 flex items-center justify-center ">
 					<Sketch setup={ setup } draw={ draw } />
 				</div>
