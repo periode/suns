@@ -18,13 +18,14 @@ import { Map } from "leaflet";
 
 const FETCH_INTERVAL = 50 * 1000
 const ENTRYPOINT_LIFETIME_MINUTES = 72 * 60
+const AUTOMATIC_NEXT_DELAY = 3000
 
 const Entrypoint = (props: any) => {
 
     // Router & navigations infos
     const params = useParams()
     const navigate = useNavigate()
-    
+
     // Getting Entrypoint data:
     const hasData = useRef(false) // Check if data is fetched
     const session = getSession()
@@ -46,15 +47,15 @@ const Entrypoint = (props: any) => {
                     setData(e as IEntrypoint)
 
                     let current = e.modules[e.current_module]
-                    if(current.type === "intro"
-                    || (current.type === "task" && current.tasks[0].type === "prompts_input")
-                    || (current.type === "final" && e.current_module < e.modules.length -1))
+                    if (current.type === "intro"
+                        || (current.type === "task" && current.tasks[0].type === "prompts_input")
+                        || (current.type === "final" && e.current_module < e.modules.length - 1))
                         setCanUserComplete(true)
                 })
                 .catch(err => {
                     console.error('error', err)
                     // TODO add a modal to explain this entrypoint is gone
-                    navigate('/', {replace: true})
+                    navigate('/', { replace: true })
                 })
             hasData.current = true
         }
@@ -130,7 +131,7 @@ const Entrypoint = (props: any) => {
         if (res.ok) {
             const updated = await res.json()
             setData(updated)
-            if(updated.max_users > 1)
+            if (updated.max_users > 1)
                 setCanUserComplete(false)
         } else {
             console.warn('error', res.status)
@@ -161,8 +162,8 @@ const Entrypoint = (props: any) => {
     }
 
     const handleClose = (e: KeyboardEvent) => {
-        if(e.key === "Escape")
-            navigate('/', {replace: true})
+        if (e.key === "Escape")
+            navigate('/', { replace: true })
     }
 
     const completeModule = async (ep: IEntrypoint, session: ISession) => {
@@ -190,9 +191,12 @@ const Entrypoint = (props: any) => {
                 else
                     setUserCompleted(false) //-- we move on to the next module
 
-                if(updated.max_users > 1)
+                if (updated.max_users > 1)
                     setCanUserComplete(false)
-                setData(updated)
+
+                setTimeout(() => {
+                    setData(updated)
+                }, AUTOMATIC_NEXT_DELAY)
             })
             .catch(err => {
                 console.log("failed to complete module, status:", err);
@@ -237,10 +241,10 @@ const Entrypoint = (props: any) => {
             return (<WaitingModule key="module-complete-message" />)
 
         // Current module
-        return (<div 
-                    key={`mod-${data.name.split(' ').join('-')}-${data.current_module}`} 
-                    className="m-1 p-1">{parseModule(data.current_module, data)}
-                </div>)
+        return (<div
+            key={`mod-${data.name.split(' ').join('-')}-${data.current_module}`}
+            className="m-1 p-1">{parseModule(data.current_module, data)}
+        </div>)
     }
 
     if (data !== undefined)
