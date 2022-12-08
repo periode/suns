@@ -302,9 +302,16 @@ func updateMap() {
 		zero.Error(err.Error())
 	}
 
-	fmt.Println("map updating with entrypoints length:", len(eps))
+	finals := make([]models.Entrypoint, 0)
+	for _, ep := range eps {
+		if len(ep.Modules) > 0 {
+			finals = append(finals, ep)
+		}
+	}
 
-	for i, ep := range eps {
+	fmt.Println("map updating with entrypoints length:", len(finals))
+
+	for i, ep := range finals {
 		body.Add(fmt.Sprintf("p%d", i), fmt.Sprintf("%d,%s,%s,%f,%f", ep.Generation, ep.Status, ep.Cluster.Name, ep.Lat, ep.Lng))
 	}
 	endpoint := fmt.Sprintf("%s/post", os.Getenv("MAP_HOST"))
