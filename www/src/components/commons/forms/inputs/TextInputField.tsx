@@ -7,6 +7,7 @@ interface TextInputFieldProps {
 	text_type?: string
 	uuid: string,
 	maxLimit?: number,
+	minLimit?: number,
 	handleNewUploads: Function,
 }
 
@@ -14,7 +15,7 @@ const MIN_LIMIT = 2
 const MAX_LIMIT = 300
 
 const TextInputField = ({
-	label, placeholder, text_type, uuid, maxLimit, handleNewUploads
+	label, placeholder, text_type, uuid, maxLimit, minLimit=1, handleNewUploads
 }: TextInputFieldProps) => {
 	const inputRef = useRef<any>(null)
 	
@@ -46,7 +47,7 @@ const TextInputField = ({
 				w-full h-full p-3 
 				hover:border-amber-500
 				disabled:opacity-50
-				focus:outline-amber-500 focus:rounded-none 
+				focus:outline-amber-500 focus:rounded-none  focus:invalid:outline-red-500
 				border border-amber-900 bg-amber-100 font-serif text-amber-700
 				placeholder:text-amber-900/50 placeholder:font-mono
 				transition-colors ease-in duration-300
@@ -62,7 +63,7 @@ const TextInputField = ({
 						placeholder:text-amber-900/50 placeholder:font-mono
 						transition-colors ease-in duration-300
 						"
-						ref={inputRef} onChange={handleOnChange} placeholder={placeholder} maxLength={maxLimit} name={label ? label.toLowerCase() : 'text'} />
+						ref={inputRef} onChange={handleOnChange} placeholder={placeholder} maxLength={maxLimit} minLength={minLimit} name={label ? label.toLowerCase() : 'text'} />
 			}
 			<p>Please input at least {MIN_LIMIT} characters.</p>
 		</>

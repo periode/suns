@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { getSession } from "../../../utils/auth"
 import { TaskDoneType } from "../../../utils/types"
 import SubmitButton from "../../commons/buttons/SubmitButton"
@@ -12,6 +12,7 @@ const WelcomePrompts = ({
 }: PromptsInputProps) => {
     const session = getSession()
     const [isFormActive, setFormActive] = useState(true)
+
 
     const handleSubmission = async (e: React.BaseSyntheticEvent) => {
         e.preventDefault()
@@ -39,7 +40,7 @@ const WelcomePrompts = ({
     }
 
     return (<>
-        <form id="prompts-preference" onSubmit={handleSubmission}>
+        <form className="bg-amber-100 rounded-sm shadow-inner shadow-amber-900/20 p-4" id="prompts-preference" onSubmit={handleSubmission}>
             <fieldset className="flex flex-col gap-2 flex-items" disabled={!isFormActive}>
                 <div>
                     <legend>Pick your prompts frequency:</legend>
@@ -52,7 +53,7 @@ const WelcomePrompts = ({
                     <input className="m-1" type="checkbox" id="monthly" name="monthly" />
                     <label htmlFor="monthly">+ Monthly</label>
                 </div>
-                <div>
+                <div className="h-12">
                     {
                         isFormActive ? 
                         <SubmitButton onClick={() => handleSubmission}/> 
