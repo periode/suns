@@ -101,10 +101,7 @@ function EntrypointActions({
 
 				{ShareButton}
 			</div>
-			{
-				ep.status === ENTRYPOINT_STATUS.EntrypointPending && isOwner &&
-				Step
-			}
+			{Step}
 			<div className="w-16">
 				{ rightButtonDisplay() }
 			</div>
