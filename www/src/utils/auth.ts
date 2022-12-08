@@ -88,7 +88,6 @@ const signin = async (_email: string, _password: string) => {
     const res = await fetch(endpoint, options)
     if (res.ok) {
         const data = await res.json()
-        console.log(data)
         const token = data.token
         user = {
             uuid: data.user.uuid,

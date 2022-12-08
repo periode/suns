@@ -12,7 +12,6 @@ interface ContentTextProps {
 function ContentText({ index, text, name, ep_name, final }: ContentTextProps) {
 	const ctx = useContext(AirTableContext)
 	const contents = ctx.get("PublicView")
-	console.log(name, ep_name, index);
 	
 	const getLabel = () => {
 		if (index != undefined && name && name.length > 0 && ep_name && ep_name.length > 0)
@@ -20,8 +19,6 @@ function ContentText({ index, text, name, ep_name, final }: ContentTextProps) {
 		else
 			return (<></>)
 	}
-
-
 
 	return (
 		<div className="flex flex-col mb-5">
