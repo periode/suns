@@ -31,6 +31,8 @@ const TextInputField = ({
 		if (e.target.value.length > MIN_LIMIT && inputRef.current !== null) {
 			handleNewUploads([{ uuid: uuid, file: undefined, text: inputRef.current.value, type: UPLOAD_TYPE.Text }])
 		}
+		else
+			handleNewUploads()
 	}
 
 	return (

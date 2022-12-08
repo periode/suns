@@ -195,7 +195,7 @@ const Entrypoint = (props: any) => {
                 )
             case "task":
                 return (
-                    <TaskModule index={index} ep={ep} data={mod} handleNewUploads={handleNewUploads} />
+                    <TaskModule index={index} ep={ep} data={mod} handleNewUploads={handleNewUploads} setCanUserComplete={setCanUserComplete} />
                 )
             case "final":
                 return (

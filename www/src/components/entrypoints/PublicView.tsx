@@ -21,7 +21,7 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
         switch (upload.type) {
             case UPLOAD_TYPE.Text:
                 return (
-                    <ContentText index={index} key={upload.uuid} text={upload.text} name={name} ep_name={entrypoint.name} />
+                    <ContentText index={index} key={upload.uuid} text={upload.text} name={name} ep_name={entrypoint.name} final={true} />
                 )
             case UPLOAD_TYPE.Image:
                 return (

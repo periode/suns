@@ -84,7 +84,7 @@ const Toaster = ({ type, message, display, timeoutms, setDisplay } : ToasterProp
 	}
 	return (
 		display ? 
-		<div className="absolute z-100
+		<div className="absolute top-0 z-100
 						animate-fadeintop">
 			{ content }
 		</div>

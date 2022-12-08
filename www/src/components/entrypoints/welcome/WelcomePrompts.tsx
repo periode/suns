@@ -5,10 +5,12 @@ import SubmitButton from "../../commons/buttons/SubmitButton"
 
 interface PromptsInputProps {
     uuid: string,
+    setCanUserComplete: Function
 }
 
 const WelcomePrompts = ({
     uuid,
+    setCanUserComplete,
 }: PromptsInputProps) => {
     const session = getSession()
     const [isFormActive, setFormActive] = useState(true)
@@ -34,6 +36,7 @@ const WelcomePrompts = ({
         const res = await fetch(endpoint, options)
         if (res.ok) {
             setFormActive(false)
+            setCanUserComplete(true)
         } else {
             console.warn('error', res.status)
         }

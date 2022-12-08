@@ -16,9 +16,10 @@ interface ITaskModuleProps {
     ep: IEntrypoint,
     index: number,
     handleNewUploads: Function,
+    setCanUserComplete: Function
 }
 
-const TaskModule = ({ data, ep, index, handleNewUploads }: ITaskModuleProps) => {
+const TaskModule = ({ data, ep, index, handleNewUploads, setCanUserComplete }: ITaskModuleProps) => {
     const session = getSession()
     const [inputs, setInputs] = useState(Array<IUpload>)
     const ctx = useContext(AirTableContext)
@@ -75,7 +76,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads }: ITaskModuleProps) => 
                             " key={`${t.type}-key-${i}`}>
                         <p>{prompt}</p>
                         <div className="h-60">
-                            <WelcomePrompts uuid={t.uuid}/>
+                            <WelcomePrompts uuid={t.uuid} setCanUserComplete={setCanUserComplete} />
                         </div>
                     </div>)
                 default:
@@ -94,7 +95,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads }: ITaskModuleProps) => 
             if (i.user_uuid !== session.user.uuid)
                 switch (i.type) {
                     case UPLOAD_TYPE.Text:
-                        inputElements.push((<ContentText key={i.uuid} text={i.text}/>))
+                        inputElements.push((<ContentText key={i.uuid} text={i.text} final={false} />))
                         break;
                     case UPLOAD_TYPE.Audio:
                         inputElements.push((<ContentAudio key={i.uuid} src={i.url}/>))

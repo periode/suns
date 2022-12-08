@@ -6,9 +6,10 @@ interface ContentTextProps {
 	text: string,
 	name?: string,
 	ep_name?: string,
+	final : boolean
 }
 
-function ContentText({ index, text, name, ep_name }: ContentTextProps) {
+function ContentText({ index, text, name, ep_name, final }: ContentTextProps) {
 	const ctx = useContext(AirTableContext)
 	const contents = ctx.get("PublicView")
 	console.log(name, ep_name, index);
@@ -20,15 +21,23 @@ function ContentText({ index, text, name, ep_name }: ContentTextProps) {
 			return (<></>)
 	}
 
+
+
 	return (
 		<div className="flex flex-col mb-5">
 			<div>
 				{getLabel()}
 			</div>
-			<div className="w-full p-4 text-serif bg-green-100 text-green-700">
-
-				<p>{text}</p>
-			</div>
+			{
+				final ?
+				<div className="w-full p-4 text-serif bg-green-100 text-green-700">
+					<p>{text}</p>
+				</div>
+				:
+				<div className="w-full p-4 text-serif bg-amber-100 text-amber-600">
+					<p>{text}</p>
+				</div>
+			}
 		</div>
 
 	);
