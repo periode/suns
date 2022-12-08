@@ -77,6 +77,7 @@ entrypoints:
         tasks:
           - type: "text_input"
             key: "textinput_info_txt"
+            max_limit: 300
         hint: "This is the text input"
       - name: "Upload 1 Video"
         type: "task"
