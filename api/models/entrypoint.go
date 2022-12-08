@@ -173,7 +173,7 @@ func GetSacrificedEntrypoints() ([]Entrypoint, error) {
 
 func GetEntrypointsByGeneration(gen int) ([]Entrypoint, error) {
 	eps := make([]Entrypoint, 0)
-	result := db.Where("generation = ?", gen).Find(&eps)
+	result := db.Where("generation = ?", gen).Preload("Modules").Find(&eps)
 	return eps, result.Error
 }
 

@@ -87,6 +87,7 @@ export interface ITask {
     type: string,
     key: string,
     placeholder?: string,
+    min_limit?: number,
     max_limit?: number,
     text_type?: string,
     value?: string
@@ -108,7 +109,7 @@ export interface IModule {
 export interface IUser {
     name: string,
     uuid: string,
-    mark_url?: string,
+    mark_url: string,
 }
 
 export interface ISession {

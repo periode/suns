@@ -1,5 +1,6 @@
 import { ENTRYPOINT_STATUS, IEntrypoint, PARTNER_STATUS } from "../../utils/types"
 import { FiShare2, FiArrowRight } from "react-icons/fi"
+import React from "react";
 
 interface EntrypointActionsProps {
 	ep: IEntrypoint,
@@ -21,6 +22,11 @@ function EntrypointActions({
 
 	const copyToClipboard = (text: string) => {
 		window.prompt("You can share this link: ", text);
+	}
+
+	const handleNextClick = (e: React.BaseSyntheticEvent) => {
+		e.target.setAttribute('disabled', true)
+		handleNext()
 	}
 		
 	const ShareButton =
@@ -48,7 +54,7 @@ function EntrypointActions({
 							cursor-pointer
 							flex items-center
 							gap-1`}
-			onClick={() => handleNext() }>
+			onClick={handleNextClick}>
 			<p>Next</p>
 			<FiArrowRight className="text-xs" />
 		</button>
@@ -58,7 +64,7 @@ function EntrypointActions({
 							cursor-pointer
 							flex items-center
 							gap-1"
-			onClick={() => handleNext()}>
+			onClick={handleNextClick}>
 			<p>Finish</p>
 			<FiArrowRight className="text-xs" />
 		</button>
@@ -95,10 +101,7 @@ function EntrypointActions({
 
 				{ShareButton}
 			</div>
-			{
-				ep.status === ENTRYPOINT_STATUS.EntrypointPending && isOwner &&
-				Step
-			}
+			{Step}
 			<div className="w-16">
 				{ rightButtonDisplay() }
 			</div>

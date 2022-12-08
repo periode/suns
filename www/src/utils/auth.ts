@@ -91,7 +91,8 @@ const signin = async (_email: string, _password: string) => {
         const token = data.token
         user = {
             uuid: data.user.uuid,
-            name: data.user.name
+            name: data.user.name,
+            mark_url: data.user.mark_url
         }
         sessionStorage.setItem("user", JSON.stringify(user))
         sessionStorage.setItem("token", token)
