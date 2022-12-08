@@ -83,6 +83,25 @@ func (c CompletionPayload) Data() interface{} {
 	return c
 }
 
+type SacrificePayload struct {
+	Name           string
+	Host           string
+	EntrypointUUID string
+	EntrypointName string
+}
+
+func (c SacrificePayload) Check() error {
+	var err error
+	if c.Name == "" || c.Host == "" || c.EntrypointUUID == "" {
+		err = fmt.Errorf("the payload should not be empty")
+	}
+	return err
+}
+
+func (c SacrificePayload) Data() interface{} {
+	return c
+}
+
 type PromptPayload struct {
 	Body           string
 	Name           string

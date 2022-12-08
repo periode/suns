@@ -1,0 +1,13 @@
+<html>
+
+<body>
+    <h1>Hello, {{ .Name }}!</h1>
+    <p>The time of the sacrifice is upon us. You still have an open entrypoint ({{ .EntrypointName }}):</p>
+    <p>
+        <a href="{{ .Host}}/entrypoints/{{ .EntrypointUUID}}">Click here to complete the entrypoint</a>
+    </p>
+    <p>Otherwise, your entrypoint will be sacrificed in 3 days.</p>
+    <p>Cheers,<br /></p>
+</body>
+
+</html>
