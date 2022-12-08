@@ -41,7 +41,9 @@ func (p *Pool) Generate() error {
 func (p *Pool) Pick(num int) []models.Entrypoint {
 	var res []models.Entrypoint
 	for i := 0; i < num; i++ {
-		res = append(res, p.entrypoints[rand.Intn(len(p.entrypoints))])
+		ep := p.entrypoints[rand.Intn(len(p.entrypoints))]
+		ep.Generation = state.generation
+		res = append(res, ep)
 	}
 	return res
 }

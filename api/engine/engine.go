@@ -2,6 +2,7 @@ package engine
 
 import (
 	"fmt"
+	"math"
 	"net/http"
 	"net/url"
 	"os"
@@ -17,6 +18,7 @@ import (
 type State struct {
 	generation    int
 	sacrificeWave int
+	sacrificeTime time.Time
 }
 
 var (
@@ -32,6 +34,8 @@ func StartEngine() {
 	zero.Info("starting engine...")
 
 	Conf.DefaultConf()
+	Conf.Print()
+
 	state = State{generation: 0, sacrificeWave: 0}
 	err := pool.Generate()
 	if err != nil {
@@ -48,7 +52,8 @@ func StartEngine() {
 	go sacrificeEntrypoints()
 	go sendWeeklyEmails()
 	go sendMonthlyEmails()
-	go updateMap()
+
+	updateMap()
 }
 
 func GetWeeklyPrompt(i int) string {
@@ -63,6 +68,7 @@ func GetState() map[string]int {
 	var s = map[string]int{
 		"generation":     state.generation,
 		"sacrifice_wave": state.sacrificeWave,
+		"sacrifice_time": int(state.sacrificeTime.Unix()),
 	}
 	return s
 }
@@ -95,17 +101,12 @@ func createEntrypoints() {
 
 		if remaining < Conf.CREATION_THRESHOLD || len(eps) < Conf.MIN_ENTRYPOINTS {
 			numEntrypoints := 5
-			created, err := models.AddClusterEntrypoints(pool.Pick(numEntrypoints))
-
-			for _, c := range created {
-				fmt.Printf("created entrypoint %s with %d modules\n", c.Name, len(c.Modules))
-			}
-
+			_, err := models.AddClusterEntrypoints(pool.Pick(numEntrypoints))
 			if err != nil {
 				zero.Errorf("Failed to create new entrypoint: %s", err.Error())
 			}
 
-			//-- finally, regenerate the map
+			updateMap()
 		}
 
 	}
@@ -132,7 +133,7 @@ func deleteEntrypoints() {
 			}
 		}
 
-		//-- finally, regenerate the map
+		updateMap()
 	}
 }
 
@@ -140,18 +141,75 @@ func deleteEntrypoints() {
 func sacrificeEntrypoints() {
 	for {
 		time.Sleep(Conf.SACRIFICE_INTERVAL)
-		//-- this should happen in several steps
-		//-- check which area is the most densely populated -> loop over entrypoints, find the ones that are the most surrounded, then pick the average mean center
+
+		//-- check which area is the most densely populated
+		eps, err := models.GetMapEntrypoints()
+		if err != nil {
+			zero.Error(err.Error())
+			continue
+		}
+
+		fmt.Println("sacrifice checking with entrypoints length:", len(eps))
+
+		var epicentre models.Entrypoint
+		var neighbors = make([]models.Entrypoint, 0)
+		for _, center := range eps {
+			numberOfNeighbors := 0
+			n := make([]models.Entrypoint, 0)
+
+			for _, periph := range eps {
+				dist := distance(center, periph)
+				if dist < Conf.SACRIFICE_ZONE_RADIUS {
+					numberOfNeighbors++
+					n = append(n, periph)
+					if numberOfNeighbors > len(neighbors) {
+						epicentre = center
+						neighbors = n
+					}
+				}
+			}
+		}
+
+		offerings := append(neighbors, epicentre)
+
 		//-- select the center point and save it
+		fmt.Printf("epicenter of sacrifice is %s (%s), with %d neighbors\n", epicentre.Name, epicentre.UUID.String(), len(neighbors))
+
+		if len(offerings) < Conf.SACRIFICE_THRESHOLD {
+			zero.Debug("not enough points to sacrifice, continuing...")
+			continue
+		}
+
 		//-- sending an email to all users involved in Pending entrypoints
-		//-- start a goroutine until the actual sacrifice
-		//-- -- the goroutine would take care of the actual logic
-		//-- -- -- delete all the entrypoints
-		//-- -- -- increase the SacrificeWave
-		//-- -- -- regenerate the map
+		err = mailer.SendSacrificeEmail(offerings)
+		if err != nil {
+			zero.Error(err.Error())
+			continue
+		}
 
 		//-- inform the frontend of the remaining time before a sacrifice
+		state.sacrificeTime = time.Now().Add(Conf.SACRIFICE_DELAY)
+		go commitSacrifice(offerings)
 	}
+}
+
+// -- -- -- delete all the entrypoints
+// -- -- -- increase the SacrificeWave
+// -- -- -- regenerate the map
+func commitSacrifice(offerings []models.Entrypoint) {
+	zero.Debugf("Commiting sacrifice in %v", Conf.SACRIFICE_DELAY.String())
+	time.Sleep(Conf.SACRIFICE_DELAY)
+
+	zero.Debugf("Commiting sacrifice NOW")
+	for _, o := range offerings {
+		models.DeleteEntrypoint(o.UUID)
+	}
+
+	state.sacrificeWave++
+	state.generation++
+	state.sacrificeTime = time.Time{}
+
+	updateMap()
 }
 
 // -- sendEmails goes through the list of users that have signed up for the emails, then it checks for the frequency of emails, checks at which stage of the emails the user is, and then sends them the subsequent email
@@ -232,28 +290,40 @@ func sendMonthlyEmails() {
 
 // -- updateMap queries the database for the current entrypoints, then creates a POST request from it and sends a request to the map generator to create a new background image
 func updateMap() {
-	for {
-		time.Sleep(Conf.MAP_INTERVAL)
-		if os.Getenv("MAP_HOST") == "" {
-			zero.Error("missing host env for map service.")
-			return
-		}
-
-		body := url.Values{}
-		eps, err := models.GetMapEntrypoints()
-		if err != nil {
-			zero.Error(err.Error())
-		}
-
-		for i, ep := range eps {
-			body.Add(fmt.Sprintf("p%d", i), fmt.Sprintf("%d,%s,%s,%f,%f", ep.Generation, ep.Status, ep.Cluster.Name, ep.Lat, ep.Lng))
-		}
-		endpoint := fmt.Sprintf("%s/post", os.Getenv("MAP_HOST"))
-		res, err := http.PostForm(endpoint, body)
-		if err != nil {
-			zero.Error(err.Error())
-		} else {
-			zero.Debugf("response from %s: %d", endpoint, res.StatusCode)
-		}
+	zero.Debug("updating map")
+	if os.Getenv("MAP_HOST") == "" {
+		zero.Error("missing host env for map service.")
+		return
 	}
+
+	body := url.Values{}
+	eps, err := models.GetMapEntrypoints()
+	if err != nil {
+		zero.Error(err.Error())
+	}
+
+	fmt.Println("map updating with entrypoints length:", len(eps))
+
+	for i, ep := range eps {
+		body.Add(fmt.Sprintf("p%d", i), fmt.Sprintf("%d,%s,%s,%f,%f", ep.Generation, ep.Status, ep.Cluster.Name, ep.Lat, ep.Lng))
+	}
+	endpoint := fmt.Sprintf("%s/post", os.Getenv("MAP_HOST"))
+	res, err := http.PostForm(endpoint, body)
+	if err != nil {
+		zero.Error(err.Error())
+	} else {
+		zero.Debugf("response from %s: %d", endpoint, res.StatusCode)
+	}
+}
+
+func distance(a models.Entrypoint, b models.Entrypoint) float64 {
+	y1 := float64(a.Lat)
+	x1 := float64(a.Lng)
+
+	y2 := float64(b.Lat)
+	x2 := float64(b.Lng)
+
+	dist := math.Sqrt(math.Pow(x1-x2, 2) + math.Pow(y1-y2, 2))
+
+	return dist
 }

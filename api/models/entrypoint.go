@@ -139,14 +139,7 @@ func GetMapEntrypoints() ([]Entrypoint, error) {
 	eps := make([]Entrypoint, 0)
 	result := db.Preload("Cluster").Where("visibility = ?", EntrypointVisible).Find(&eps)
 
-	final := make([]Entrypoint, 0)
-	for _, ep := range eps {
-		if len(ep.Modules) > 0 {
-			final = append(final, ep)
-		}
-	}
-
-	return final, result.Error
+	return eps, result.Error
 }
 
 func GetCrackEntrypoints() ([]Entrypoint, error) {
