@@ -1,6 +1,6 @@
 import { ENTRYPOINT_STATUS, IEntrypoint, PARTNER_STATUS } from "../../utils/types"
 import { FiShare2, FiArrowRight } from "react-icons/fi"
-import React from "react";
+import React, { useRef } from "react";
 
 interface EntrypointActionsProps {
 	ep: IEntrypoint,
@@ -19,6 +19,7 @@ function EntrypointActions({
 	canUserComplete,
 	hasUserCompleted
 }: EntrypointActionsProps) {
+	const hasClicked = useRef(false)
 
 	const copyToClipboard = (text: string) => {
 		window.prompt("You can share this link: ", text);
@@ -26,7 +27,10 @@ function EntrypointActions({
 
 	const handleNextClick = (e: React.BaseSyntheticEvent) => {
 		e.target.setAttribute('disabled', true)
-		handleNext()
+		if(hasClicked.current === false){
+			hasClicked.current = true
+			handleNext()
+		}
 	}
 		
 	const ShareButton =

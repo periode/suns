@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 
 const signout = () => {
-    sessionStorage.removeItem("token")
+    localStorage.removeItem("token")
     window.location.reload()
 }
 
