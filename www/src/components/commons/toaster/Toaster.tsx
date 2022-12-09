@@ -15,7 +15,7 @@ interface ToasterProps {
 	setDisplay: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const Toaster = ({ type, message, display, timeoutms, setDisplay } : ToasterProps) => {
+const  Toaster = ({ type, message, display, timeoutms, setDisplay } : ToasterProps) => {
 	 
 
 
