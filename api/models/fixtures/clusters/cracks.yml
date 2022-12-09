@@ -49,6 +49,7 @@ entrypoints:
         tasks:
           - type: "text_input"
             key: "textinput_info_txt"
+            min_limit: 2
             max_limit: 300
         hint: "This is where you write something about the image."
       - name: "Cracks - Donating a picture"

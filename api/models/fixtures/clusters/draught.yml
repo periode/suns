@@ -22,6 +22,7 @@ entrypoints:
       tasks:
         - type: "text_input"
           key: "textinput_info_txt_1"
+          min_limit: 2
           max_limit: 300
       hint: "Text description of draught"
     - name: "Respond to text prompt"
@@ -30,6 +31,7 @@ entrypoints:
       tasks:
         - type: "text_input"
           key: "textinput_info_txt_2"
+          min_limit: 2
           max_limit: 300
       hint: "This is where you compare your draught stories"
     - name: "Final Draught You"
@@ -101,6 +103,7 @@ entrypoints:
       tasks:
         - type: "text_input"
           key: "textinput_info_txt_1"
+          min_limit: 2
           max_limit: 300
       hint: "This is where you describe in text your personal draught."
     - name: "Respond to personal draught"
@@ -109,6 +112,7 @@ entrypoints:
       tasks:
         - type: "text_input"
           key: "textinput_info_txt_2"
+          min_limit: 2
           max_limit: 300
     - name: "Final Draught personal"
       type: "final"
