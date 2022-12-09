@@ -118,7 +118,7 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
         return (<div className="text-center">
             <div>
                 This is the final outcome of the gesture "{entrypoint.name}".<br />
-                The two contributors:
+                The {entrypoint.max_users === 1 ? "contributor:" : "two contributors:"}
             </div>
             <div className="flex flex-row justify-around">
                 {entrypoint.users.map(u => {
