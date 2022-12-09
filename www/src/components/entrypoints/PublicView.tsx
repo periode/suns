@@ -114,7 +114,7 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
         return <>A problem occured, entrypoint.final_module_type: {entrypoint.final_module_type}</>
     }
 
-    const getHeader = () => {
+    const getHeader = () => { 
         return (<div className="text-center">
             <div>
                 This is the final outcome of the gesture "{entrypoint.name}".<br />
