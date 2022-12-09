@@ -94,18 +94,18 @@ const signin = async (_email: string, _password: string) => {
             name: data.user.name,
             mark_url: data.user.mark_url
         }
-        sessionStorage.setItem("user", JSON.stringify(user))
-        sessionStorage.setItem("token", token)
+        localStorage.setItem("user", JSON.stringify(user))
+        localStorage.setItem("token", token)
         return Promise.resolve("Login successful!")
     } else {
         console.error(`Could not signin! ${res.statusText} (removing token)`)
-        sessionStorage.removeItem("token")
+        localStorage.removeItem("token")
         return Promise.reject("We could not log you in.")
     }
 }
 
 const signout = () => {
-    sessionStorage.removeItem("token")
+    localStorage.removeItem("token")
     window.location.reload()
 }
 
@@ -157,8 +157,8 @@ const signup = async (_email: string, _email_conf: string, _password: string, _p
 }
 
 const getSession = () => {
-    const t = sessionStorage.getItem("token")
-    const u = sessionStorage.getItem("user")
+    const t = localStorage.getItem("token")
+    const u = localStorage.getItem("user")
     const s: ISession = {
         token: t ? t : '',
         user: u ? JSON.parse(u) : { name: '', uuid: '' }
