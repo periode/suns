@@ -304,7 +304,7 @@ func updateMap() {
 
 	finals := make([]models.Entrypoint, 0)
 	for _, ep := range eps {
-		if len(ep.Modules) > 0 {
+		if len(ep.Modules) > 0 && ep.Cluster.Name != "Welcome" {
 			finals = append(finals, ep)
 		}
 	}
