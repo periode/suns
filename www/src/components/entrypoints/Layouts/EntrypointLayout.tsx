@@ -32,11 +32,11 @@ function EntrypointLayout({
                         text-green-600
                         bg-green-50
                         ">
-					<div className="w-full border-b border-green-600">
-						{title}
-					</div>
-					{ module }
-					<div className="h-20
+				<div className="w-full border-b border-green-600">
+					{title}
+				</div>
+				{module}
+				<div className="h-20
                             pl-4 pr-4
                             relative
                             flex items-center justify-between
@@ -54,16 +54,16 @@ function EntrypointLayout({
                         text-amber-900
                         bg-amber-50
                         ">
-					<div className="w-full border-b border-amber-500 text-amber-500">
-						{ title }
+				<div className="w-full border-b border-amber-500 text-amber-500">
+					{title}
+				</div>
+				<div className="w-full md:flex">
+					<div className="w-full border-b border-amber-500">
+						<EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
 					</div>
-					<div className="w-full md:flex">
-						<div className="w-full border-b border-amber-500">
-							<EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
-						</div>
-					</div>
-					{ module }
-					<div className="h-20
+				</div>
+				{module}
+				<div className="h-20
                             pl-4 pr-4
                             relative
                             flex items-center justify-between
@@ -93,13 +93,14 @@ function EntrypointLayout({
 							<EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
 						</div>
 					</div>
-					{ module }
+					{module}
 					<div className="h-20
                             pl-4 pr-4
                             relative
                             flex items-center justify-between
                             border-t border-stone-500">
-					{entrypointactions}
+						{entrypointactions}
+					</div>
 				</div>
 			</div>
 		)
@@ -111,23 +112,23 @@ function EntrypointLayout({
                         text-amber-900
                         bg-amber-50
                         ">
+			<div className="w-full border-b border-amber-900">
+				{title}
+			</div>
+			<div className="w-full md:flex">
+				{
+					data.partner_status === PARTNER_STATUS.PartnerNone &&
 					<div className="w-full border-b border-amber-900">
-						{title}
+						<EntrypointCountdown endDate={endDate} />
 					</div>
-					<div className="w-full md:flex">
-					{
-						data.partner_status === PARTNER_STATUS.PartnerNone && 
-						<div className="w-full border-b border-amber-900">
-							<EntrypointCountdown endDate={endDate} />
-						</div>
-					}
-						<div className="md:w-[2px] md:h-full  bg-amber-900"></div>
-						<div className="w-full border-b border-amber-900">
-							<EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
-						</div>
-					</div>
-					{ module }
-					<div className="h-20
+				}
+				<div className="md:w-[2px] md:h-full  bg-amber-900"></div>
+				<div className="w-full border-b border-amber-900">
+					<EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
+				</div>
+			</div>
+			{module}
+			<div className="h-20
                             pl-4 pr-4
                             relative
                             flex items-center justify-between

@@ -33,32 +33,32 @@ const SignUp = ({ mark }: SignUpProps) => {
 	const [signupPasswordConf, setSignupPasswordConf] = useState("")
 	const [checkboxGuidelines, setCheckboxGuidelines] = useState("")
 	const [checkboxPreferences, setCheckboxPreferences] = useState("")
-	
+
 	const [emailsMatch, SetEmailsMatch] = useState<IValidation | null>(null)
 	const [passwordMatch, SetPasswordMatch] = useState<IValidation | null>(null)
 
 	useEffect(() => {
-		if(signupName.length >= NAME_MIN_LENGTH && signupName.length < NAME_MAX_LENGTH
-		&& signupEmail === signupEmailConf
-		&& signupPassword.length >= PASSWORD_MIN_LENGTH && signupEmail === signupEmailConf
-		&& checkboxGuidelines === "on" && checkboxPreferences === "on"){
+		if (signupName.length >= NAME_MIN_LENGTH && signupName.length < NAME_MAX_LENGTH
+			&& signupEmail === signupEmailConf
+			&& signupPassword.length >= PASSWORD_MIN_LENGTH && signupEmail === signupEmailConf
+			&& checkboxGuidelines === "on" && checkboxPreferences === "on") {
 			setCanSignUp(true)
-		}else{
+		} else {
 			setCanSignUp(false)
 		}
 
 		if (signupPassword.length >= PASSWORD_MIN_LENGTH && signupPasswordConf.length >= PASSWORD_MIN_LENGTH
 			&& signupPassword !== signupPasswordConf)
-			SetPasswordMatch({ok: false, message: "Passwords do not match"})
+			SetPasswordMatch({ ok: false, message: "Passwords do not match" })
 		else
-			SetPasswordMatch({ok: true, message: ""})
+			SetPasswordMatch({ ok: true, message: "" })
 		if (signupEmail.length >= PASSWORD_MIN_LENGTH && signupEmailConf.length >= PASSWORD_MIN_LENGTH
 			&& signupEmail !== signupEmailConf)
-			SetEmailsMatch({ok: false, message: "Emails do not match"})
+			SetEmailsMatch({ ok: false, message: "Emails do not match" })
 		else
-			SetEmailsMatch({ok: true, message: ""})
+			SetEmailsMatch({ ok: true, message: "" })
 
-	}, [signupName, signupEmail, signupEmailConf, signupPassword, signupPasswordConf, checkboxPreferences, checkboxGuidelines ])
+	}, [signupName, signupEmail, signupEmailConf, signupPassword, signupPasswordConf, checkboxPreferences, checkboxGuidelines])
 
 	const autoSignIn = (welcome_entrypoint_uuid: string) => {
 		signin(signupEmail, signupPassword)
@@ -128,39 +128,37 @@ const SignUp = ({ mark }: SignUpProps) => {
 								<InputField label="Screen name" onChange={handleSignupNameChange} placeholder="username" type="text" minlength={NAME_MIN_LENGTH} maxlength={NAME_MAX_LENGTH} />
 							</div>
 							<div className="flex flex-col gap-1 items-start w-full">
-								<InputField label="Email" onChange={handleSignupEmailChange} placeholder="example@example.com" type="text" validation={emailsMatch}/>
+								<InputField label="Email" onChange={handleSignupEmailChange} placeholder="example@example.com" type="text" validation={emailsMatch} />
 							</div>
 							<div className="flex flex-col gap-1 items-start w-full">
-								<InputField label="Comfirm Email" onChange={handleSignupEmailConfChange} placeholder="example@example.com" type="text" validation={emailsMatch}/>
+								<InputField label="Comfirm Email" onChange={handleSignupEmailConfChange} placeholder="example@example.com" type="text" validation={emailsMatch} />
 							</div>
 							<div className="flex flex-col gap-1 items-start w-full">
-								<InputField onChange={handleSignupPasswordChange} label="Password" placeholder="••••••••" maxlength={20} minlength={PASSWORD_MIN_LENGTH} type="password" validation={passwordMatch}/>
+								<InputField onChange={handleSignupPasswordChange} label="Password" placeholder="••••••••" maxlength={20} minlength={PASSWORD_MIN_LENGTH} type="password" validation={passwordMatch} />
 							</div>
 							<div className="flex flex-col gap-1 items-start w-full">
-								<InputField onChange={handleSignupPasswordConfChange} label="Password" placeholder="••••••••" maxlength={20} minlength={PASSWORD_MIN_LENGTH} type="password" validation={passwordMatch}/>
+								<InputField onChange={handleSignupPasswordConfChange} label="Password" placeholder="••••••••" maxlength={20} minlength={PASSWORD_MIN_LENGTH} type="password" validation={passwordMatch} />
 							</div>
 						</div>
 						<div>
-							<form id="prompts-preference">
-								<fieldset>
-									<div className="m-2">
-										<input className="m-1" type="checkbox" id="guidelines" name="guidelines" onClick={(e => setCheckboxGuidelines(e.currentTarget.value))}/>
-										<label htmlFor="guidelines">I agree that any contributions found to contain harmful content, will be immediately deleted along with my registered account.More information about our community guidelines <a className="underline" href="http://joiningsuns.online/guidelines" target="_blank" rel="noopener noreferrer">here</a>.</label>
-									</div>
+							<fieldset>
+								<div className="m-2">
+									<input className="m-1" type="checkbox" id="guidelines" name="guidelines" onClick={(e => setCheckboxGuidelines(e.currentTarget.value))} />
+									<label htmlFor="guidelines">I agree that any contributions found to contain harmful content, will be immediately deleted along with my registered account.More information about our community guidelines <a className="underline" href="http://joiningsuns.online/guidelines" target="_blank" rel="noopener noreferrer">here</a>.</label>
+								</div>
 
-									<div className="m-2">
-										<input className="m-1" type="checkbox" id="preferences" name="preferences" onClick={(e => setCheckboxPreferences(e.currentTarget.value))}/>
-										<label htmlFor="preferences">I understand that in order to delete my account, or amend my preferences, I need to email the following address XXXXX@email.com</label>
-									</div>
-								</fieldset>
-							</form>
+								<div className="m-2">
+									<input className="m-1" type="checkbox" id="preferences" name="preferences" onClick={(e => setCheckboxPreferences(e.currentTarget.value))} />
+									<label htmlFor="preferences">I understand that in order to delete my account, or amend my preferences, I need to email the following address XXXXX@email.com</label>
+								</div>
+							</fieldset>
 						</div>
 						<div className="	sticky bottom-0  md:static 
 											mt-4
 											flex flex-col-reverse md:flex-row w-full gap-4 bg-amber-50
 											drop-shadow">
 							<div className="flex-1 bottom-4">
-								<LoginPrimary text="Signup" onClick={handleSignup} isEnabled={canSignup}/>
+								<LoginPrimary text="Signup" onClick={handleSignup} isEnabled={canSignup} />
 							</div>
 						</div>
 					</form>
