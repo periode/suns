@@ -302,7 +302,7 @@ func updateMap() {
 		zero.Error(err.Error())
 	}
 
-	fmt.Println("map updating with entrypoints length:", len(eps))
+	zero.Debugf("sending non-null entrypoints: %d", len(eps))
 
 	for i, ep := range eps {
 		body.Add(fmt.Sprintf("p%d", i), fmt.Sprintf("%d,%s,%s,%f,%f", ep.Generation, ep.Status, ep.Cluster.Name, ep.Lat, ep.Lng))

@@ -29,7 +29,7 @@ func GetMapEntrypoints(c echo.Context) error {
 	final := make([]models.Entrypoint, 0)
 	for _, ep := range eps {
 		if len(ep.Modules) == 0 {
-			zero.Debugf("no modules on entrypoint: %s", ep.Name)
+			// zero.Debugf("no modules on entrypoint: %s", ep.Name)
 		} else {
 			final = append(final, ep)
 		}

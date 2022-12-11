@@ -89,7 +89,9 @@ func CreateUpload(c echo.Context) error {
 	// it should be done with ffmpeg, but that's going to depend on available libraries to be installed locally and with docker
 	// the writeToDisk function should be changed to return the path of the written file, rather than its type (known before hand)
 
-	zero.Debugf("adding uploads: %v \n", uploads)
+	for _, u := range uploads {
+		zero.Debugf("adding upload: %s - %s", u.Type, u.Name)
+	}
 
 	module, err := models.AddModuleUpload(module_uuid, uploads)
 	if err != nil {
