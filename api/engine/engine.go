@@ -297,7 +297,7 @@ func updateMap() {
 	}
 
 	body := url.Values{}
-	eps, err := models.GetMapEntrypoints()
+	eps, err := models.GetAllEntrypoints()
 	if err != nil {
 		zero.Error(err.Error())
 	}
@@ -309,7 +309,7 @@ func updateMap() {
 		}
 	}
 
-	fmt.Println("map updating with entrypoints length:", len(finals))
+	zero.Debugf("map updating with entrypoints length: %d", len(finals))
 
 	for i, ep := range finals {
 		body.Add(fmt.Sprintf("p%d", i), fmt.Sprintf("%d,%s,%s,%f,%f", ep.Generation, ep.Status, ep.Cluster.Name, ep.Lat, ep.Lng))
