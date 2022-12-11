@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { ENTRYPOINT_STATUS, IEntrypoint, ISession } from "../../../utils/types";
+import { ENTRYPOINT_STATUS, IEntrypoint, ISession, PARTNER_STATUS } from "../../../utils/types";
 import EntrypointCountdown from "../EntrypointCountdown";
 import EntrypointPartners from "../EntrypointPartners";
 
@@ -35,15 +35,6 @@ function EntrypointLayout({
 				<div className="w-full border-b border-green-600">
 					{title}
 				</div>
-				{/* <div className="w-full md:flex">
-						<div className="w-full border-b border-green-600">
-							<EntrypointCountdown endDate={endDate} />
-						</div>
-						<div className="md:w-[2px] md:h-full  bg-green-600"></div>
-						<div className="w-full border-b border-green-600">
-							<EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
-						</div>
-					</div> */}
 				{module}
 				<div className="h-20
                             pl-4 pr-4
@@ -67,16 +58,6 @@ function EntrypointLayout({
 					{title}
 				</div>
 				<div className="w-full md:flex">
-					{
-						data.users.length != data.max_users ?
-							<>
-								<div className="w-full border-b border-amber-500">
-									<EntrypointCountdown endDate={endDate} />
-								</div>
-								<div className="md:w-[2px] md:h-full  bg-amber-500"></div>
-							</>
-							: <></>
-					}
 					<div className="w-full border-b border-amber-500">
 						<EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
 					</div>
@@ -107,18 +88,19 @@ function EntrypointLayout({
 					<div className="w-full border-b border-stone-500">
 						<EntrypointCountdown endDate={endDate} />
 					</div>
-					<div className="md:w-[2px] md:h-full  bg-stone-500"></div>
-					<div className="w-full border-b border-stone-500">
-						<EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
+					<div className="w-full md:flex">
+						<div className="w-full border-b border-stone-500">
+							<EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
+						</div>
 					</div>
-				</div>
-				{module}
-				<div className="h-20
+					{module}
+					<div className="h-20
                             pl-4 pr-4
                             relative
                             flex items-center justify-between
                             border-t border-stone-500">
-					{entrypointactions}
+						{entrypointactions}
+					</div>
 				</div>
 			</div>
 		)
@@ -134,9 +116,12 @@ function EntrypointLayout({
 				{title}
 			</div>
 			<div className="w-full md:flex">
-				<div className="w-full border-b border-amber-900">
-					<EntrypointCountdown endDate={endDate} />
-				</div>
+				{
+					data.partner_status === PARTNER_STATUS.PartnerNone &&
+					<div className="w-full border-b border-amber-900">
+						<EntrypointCountdown endDate={endDate} />
+					</div>
+				}
 				<div className="md:w-[2px] md:h-full  bg-amber-900"></div>
 				<div className="w-full border-b border-amber-900">
 					<EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />

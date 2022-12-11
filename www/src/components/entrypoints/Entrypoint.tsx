@@ -184,19 +184,19 @@ const Entrypoint = (props: any) => {
         progressModule(ep.uuid, session.token)
             .then(updated => {
                 setUploads([])
-
                 //-- check if we're done with the module
                 if (updated.current_module === ep.current_module)
                     setUserCompleted(true) //-- we have a partial state
                 else
                     setUserCompleted(false) //-- we move on to the next module
 
-                if (updated.max_users > 1)
+                //-- the edge case is the Welcome module (two users, but should be able to complete)
+                if (updated.max_users > 1 && updated.cluster.name !== "Welcome")
                     setCanUserComplete(false)
+                else
+                    setCanUserComplete(true)
 
-                setTimeout(() => {
-                    setData(updated)
-                }, AUTOMATIC_NEXT_DELAY)
+                setData(updated)
             })
             .catch(err => {
                 console.log("failed to complete module, status:", err);

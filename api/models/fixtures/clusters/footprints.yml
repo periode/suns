@@ -22,6 +22,7 @@ entrypoints:
         tasks:
           - type: "text_input"
             key: "textinput_info_txt"
+            min_limit: 2
             max_limit: 300
           - type: "image_input"
             key: "imgupload_info_txt"
@@ -60,9 +61,11 @@ entrypoints:
         tasks:
           - type: "text_input"
             key: "textinput_info_txt_1"
+            min_limit: 2
             max_limit: 300
           - type: "text_input"
             key: "textinput_info_txt_2"
+            min_limit: 2
             max_limit: 300
         hint: "This is the text input of a name of a place, and how far it is"
       - name: "Tell us one rule you want to be applied in the place your partner choose"
@@ -104,7 +107,8 @@ entrypoints:
         tasks:
           - type: "text_input"
             key: "textinput_info_txt_1"
-            max_limit: 100
+            min_limit: 2
+            max_limit: 300
             text_type: "input"
           - type: "image_input"
             key: "imgupload_info_txt_1"
@@ -119,6 +123,7 @@ entrypoints:
             max_limit: 1
           - type: "text_input"
             key: "textinput_info_txt_2"
+            min_limit: 2
             max_limit: 300
       - name: "Final Footprints object"
         type: "final"

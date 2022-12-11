@@ -1,6 +1,6 @@
 import { ENTRYPOINT_STATUS, IEntrypoint, PARTNER_STATUS } from "../../utils/types"
 import { FiShare2, FiArrowRight } from "react-icons/fi"
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 interface EntrypointActionsProps {
 	ep: IEntrypoint,
@@ -19,20 +19,24 @@ function EntrypointActions({
 	canUserComplete,
 	hasUserCompleted
 }: EntrypointActionsProps) {
-	const hasClicked = useRef(false)
+	const nextButtonRef = useRef<HTMLButtonElement>(null)
+	
+	useEffect(() => {
+		if (canUserComplete && nextButtonRef.current)
+			nextButtonRef.current.removeAttribute('disabled')
+
+	}, [canUserComplete, ep])
 
 	const copyToClipboard = (text: string) => {
 		window.prompt("You can share this link: ", text);
 	}
 
 	const handleNextClick = (e: React.BaseSyntheticEvent) => {
-		e.target.setAttribute('disabled', true)
-		if(hasClicked.current === false){
-			hasClicked.current = true
-			handleNext()
-		}
+		if (nextButtonRef.current)
+			nextButtonRef.current.setAttribute('disabled', "true")
+		handleNext()
 	}
-		
+
 	const ShareButton =
 		<button className=" font-mono
 							cursor-pointer
@@ -48,28 +52,18 @@ function EntrypointActions({
 							cursor-pointer
 							flex items-center
 							gap-1"
-			onClick={ () => {claimEntryPointFunction()}}>
+			onClick={() => { claimEntryPointFunction() }}>
 			<p>Start</p>
 			<FiArrowRight className="text-xs" />
 		</button>
 
 	const NextButton =
-		<button className={`font-mono
+		<button ref={nextButtonRef} className={`font-mono
 							cursor-pointer
 							flex items-center
-							gap-1`}
+							gap-1 disabled:opacity-50`}
 			onClick={handleNextClick}>
-			<p>Next</p>
-			<FiArrowRight className="text-xs" />
-		</button>
-
-	const FinishButton =
-		<button className=" font-mono
-							cursor-pointer
-							flex items-center
-							gap-1"
-			onClick={handleNextClick}>
-			<p>Finish</p>
+			<p>{ep.current_module === ep.modules.length - 2 ? "Finish" : "Next"}</p>
 			<FiArrowRight className="text-xs" />
 		</button>
 
@@ -89,9 +83,6 @@ function EntrypointActions({
 			return <></>
 
 		if (isOwner && canUserComplete && ep.status === ENTRYPOINT_STATUS.EntrypointPending) {
-			if (ep.current_module === ep.modules.length - 2)
-				return FinishButton
-			else
 				return NextButton
 		}
 
@@ -107,7 +98,7 @@ function EntrypointActions({
 			</div>
 			{Step}
 			<div className="w-16">
-				{ rightButtonDisplay() }
+				{rightButtonDisplay()}
 			</div>
 		</div>
 	);
