@@ -34,28 +34,28 @@ var Conf Config
 func (c *Config) DefaultConf() {
 	d, err := time.ParseDuration(os.Getenv("CREATE_INTERVAL"))
 	if err != nil {
-		c.CREATE_INTERVAL = 30 * time.Second
+		c.CREATE_INTERVAL = 1 * time.Hour
 	} else {
 		c.CREATE_INTERVAL = d
 	}
 
 	d, err = time.ParseDuration(os.Getenv("DELETE_INTERVAL"))
 	if err != nil {
-		c.DELETE_INTERVAL = 30 * time.Minute
+		c.DELETE_INTERVAL = 45 * time.Minute
 	} else {
 		c.DELETE_INTERVAL = d
 	}
 
 	d, err = time.ParseDuration(os.Getenv("SACRIFICE_INTERVAL"))
 	if err != nil {
-		c.SACRIFICE_INTERVAL = 15 * time.Minute
+		c.SACRIFICE_INTERVAL = 144 * time.Hour
 	} else {
 		c.SACRIFICE_INTERVAL = d
 	}
 
 	d, err = time.ParseDuration(os.Getenv("EMAIL_WEEKLY_INTERVAL"))
 	if err != nil {
-		c.EMAIL_WEEKLY_INTERVAL = 5 * time.Minute
+		c.EMAIL_WEEKLY_INTERVAL = 7 * 24 * time.Hour
 	} else {
 		c.EMAIL_WEEKLY_INTERVAL = d
 	}
@@ -63,7 +63,7 @@ func (c *Config) DefaultConf() {
 	d, err = time.ParseDuration(os.Getenv("EMAIL_MONTHLY_INTERVAL"))
 
 	if err != nil {
-		c.EMAIL_MONTHLY_INTERVAL = 20 * time.Minute
+		c.EMAIL_MONTHLY_INTERVAL = 30 * 7 * 24 * time.Hour
 	} else {
 		c.EMAIL_MONTHLY_INTERVAL = d
 	}
@@ -77,7 +77,7 @@ func (c *Config) DefaultConf() {
 
 	d, err = time.ParseDuration(os.Getenv("SACRIFICE_DELAY"))
 	if err != nil {
-		c.SACRIFICE_DELAY = 144 * time.Hour
+		c.SACRIFICE_DELAY = 36 * time.Hour
 	} else {
 		c.SACRIFICE_DELAY = d
 	}
@@ -98,7 +98,7 @@ func (c *Config) DefaultConf() {
 
 	d, err = time.ParseDuration(os.Getenv("ENTRYPOINT_LIFETIME"))
 	if err != nil {
-		c.ENTRYPOINT_LIFETIME = 72 * time.Hour
+		c.ENTRYPOINT_LIFETIME = 48 * time.Hour
 	} else {
 		c.ENTRYPOINT_LIFETIME = d
 	}

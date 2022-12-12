@@ -47,7 +47,7 @@ cd www/
 yarn cypress:headless
 ```
 
-## Providing environment variables
+## Environment variables
 
 The `.env` file contains the information required for deployment.
 
@@ -63,12 +63,26 @@ The `.env` file contains the information required for deployment.
 | API_MODE | The mode in which to run the API (`test`, `debug`, `production`)
 | RUN_FIXTURES | Whether or not to run the fixtures located in `api/models/fixtures` (`true`, `false`) |
 
-There are also two secrets that can be provided, in a `.secrets` file.
+There are also secrets that can be provided, in a `.secrets` file.
 
 | variable | value |
 |----------|-------|
 | MAILGUN_API | The key to connect to Mailgun, in order to send automated emails. |
 | ADMIN_KEY | A valid user UUID which bypasses authentication checks, by providing it as a URL `token` query parameter (e.g. `https://api.common-syllabi.org/syllabi/?token=ADMIN_KEY`) |
+| AIRTABLE_KEY | The key to the Airtable database holding the content |
+| SPACES_API_KEY | The API key to access the DO Spaces instance where the UGC is stored |
+| SPACES_API_SECRET | The secret DO Spaces API token |
+
+
+### Sacrifice variables
+
+| variable | value | default |
+|----------|-------|---------|
+| SACRIFICE_INTERVAL | How often the sacrifice is attempted | `144h` |
+| SACRIFICE_ZONE_RADIUS | How big the sacrifice zone is | `30` |
+| SACRIFICE_THRESHOLD | The minimum amount of entrypoints within SACRIFICE_ZONE_RADIUS needed to trigger a sacrifice | `70` |
+| SACRIFICE_DELAY | Time between the moment the sacrifice emails are sent, and the actual sacrifice happens | `36h` |
+
 
 ## Resources
 
