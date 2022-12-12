@@ -39,7 +39,7 @@ const  Toaster = ({ type, message, display, timeoutms, setDisplay } : ToasterPro
 					<div className="
 						m-4 p-4 border border-1 border-green-500 bg-green-50 md:bg-green-500/20 text-green-500
 						flex gap-2 items-center
-						font-serif 
+						font-mono
 						"
 					>
 					<FiCheck className="text-3xl"/>
@@ -55,7 +55,7 @@ const  Toaster = ({ type, message, display, timeoutms, setDisplay } : ToasterPro
 					<div className="
 						m-4 p-4 border border-1 border-red-500 bg-red-50 md:bg-red-500/20 text-red-500
 						flex gap-2 items-center
-						font-serif
+						font-mono
 						"
 					>
 					<FiAlertOctagon className="text-xl"/>
@@ -71,7 +71,7 @@ const  Toaster = ({ type, message, display, timeoutms, setDisplay } : ToasterPro
 					<div className="
 						m-4 p-4 border border-1 border-stone-500 bg-stone-50 md:bg-stone-500/20 text-stone-500
 						flex gap-2 items-center
-						font-serif font-semibold
+						font-mono
 						"
 					>
 					<FiAlertOctagon className="text-xl"/>

@@ -206,10 +206,12 @@ const Entrypoint = (props: any) => {
     const parseModule = (index: number, ep: IEntrypoint) => {
         const mod = ep.modules[index]
 
+        console.log(ep)
+
         switch (mod.type) {
             case "intro":
                 return (
-                    <IntroModule epName={ep.name} data={mod} />
+                    <IntroModule airtable_key={ep.airtable_key} data={mod} />
                 )
             case "task":
                 return (
@@ -266,7 +268,7 @@ const Entrypoint = (props: any) => {
                                     <h1 className="text-xl font-bold">{data.name}</h1>
                                 </div>
                                 {
-                                    (data.cluster.name != "Welcome" || data.current_module == data.modules.length - 1) ?
+                                    (data.cluster.name !== "Welcome" || data.current_module === data.modules.length - 1) ?
                                         <div className="cursor-pointer"
                                             onClick={() => navigate('/', { replace: true })}>
                                             <FiX className="text-[32px]" />

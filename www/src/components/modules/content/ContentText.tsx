@@ -14,20 +14,20 @@ function ContentText({ index, text, name, ep_name, final }: ContentTextProps) {
 	const contents = ctx.get("PublicView")
 	
 	const getLabel = () => {
-		if (index != undefined && name && name.length > 0 && ep_name && ep_name.length > 0)
+		if (index !== undefined && name && name.length > 0 && ep_name && ep_name.length > 0)
 			return (<div>{name} {contents?.get(`${ep_name}_text_${index}`)}:</div>)
 		else
 			return (<></>)
 	}
 
 	return (
-		<div className="flex flex-col mb-5">
+		<div className="flex flex-col mb-5 break-words">
 			<div>
 				{getLabel()}
 			</div>
 			{
 				final ?
-				<div className="w-full p-4 text-serif bg-green-100 text-green-700">
+				<div className="w-full p-4 text-serif bg-green-100 text-green-700 ">
 					<p>{text}</p>
 				</div>
 				:

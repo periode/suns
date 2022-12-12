@@ -3,7 +3,8 @@ name: "Symbiosis"
 entrypoints:
   - status: "open"
     cluster_uuid: "02ed6a2b-aacb-4c24-b1e1-3495821f846c"
-    name: "SymbiosisGaze"
+    name: "Symbiosis: Gaze"
+    airtable_key: "SymbiosisGaze"
     lat: 240.300
     lng: 240.400
     icon: "green.svg"
@@ -53,7 +54,8 @@ entrypoints:
 
   - status: "open"
     cluster_uuid: "02ed6a2b-aacb-4c24-b1e1-3495821f846c"
-    name: "SymbiosisTask"
+    name: "Symbiosis: Task"
+    airtable_key: "SymbiosisTask"
     lat: 150.300
     lng: 150.400
     icon: "green.svg"
@@ -91,7 +93,8 @@ entrypoints:
 
   - status: "open"
     cluster_uuid: "02ed6a2b-aacb-4c24-b1e1-3495821f846c"
-    name: "SymbiosisMean"
+    name: "Symbiosis: Mean"
+    airtable_key: "SymbiosisMean"
     lat: 540.300
     lng: 550.400
     icon: "green.svg"

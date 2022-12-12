@@ -5,18 +5,18 @@ import Content from "./content/Content"
 
 interface IntroModuleProps {
     data: IModule,
-    epName: string,
+    airtable_key: string,
 }
 
-const IntroModule = ({ data, epName }: IntroModuleProps) => {
+const IntroModule = ({ data, airtable_key }: IntroModuleProps) => {
     
-
+    console.log("airtable_key: " + airtable_key)
     const ctx = useContext(AirTableContext)    
-    const contents = ctx.get(epName)
+    const contents = ctx.get(airtable_key)
 
     if (contents === undefined) {
         return(<>
-            There was a problem getting information from the Airtable
+            Intro module: There was a problem getting information from the database { airtable_key }
         </>)
     }
 
