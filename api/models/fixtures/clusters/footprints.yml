@@ -3,7 +3,8 @@ name: "Footprints"
 entrypoints:
   - status: "open"
     cluster_uuid: "01ed6a2b-aacb-4c24-b1e1-3495821f846b"
-    name: "FootprintsPerson"
+    name: "Footprints: Person"
+    airtable_key: "FootprinstPerson"
     lat: 240.300
     lng: 240.400
     icon: "red.svg"
@@ -42,7 +43,8 @@ entrypoints:
 
   - status: "open"
     cluster_uuid: "01ed6a2b-aacb-4c24-b1e1-3495821f846b"
-    name: "FootprintsPlace"
+    name: "Footprints: Place"
+    airtable_key: "FootprintsPlace"
     lat: 150.300
     lng: 150.400
     icon: "red.svg"
@@ -88,7 +90,8 @@ entrypoints:
 
   - status: "open"
     cluster_uuid: "01ed6a2b-aacb-4c24-b1e1-3495821f846b"
-    name: "FootprintsObject"
+    name: "Footprints: Object"
+    airtable_key: "FootprintsObject"
     lat: 540.300
     lng: 550.400
     icon: "red.svg"

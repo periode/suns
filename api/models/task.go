@@ -18,7 +18,7 @@ type Task struct {
 	Key         string `json:"key" yaml:"key"`
 	Value       string `json:"value" yaml:"value"`
 	Placeholder string `json:"placeholder" yaml:"placeholder"`
-	MaxLimit    int    `gorm:"default:1" json:"max_limit" yaml:"max_limit"`
+	MaxLimit    int    `gorm:"default:300" json:"max_limit" yaml:"max_limit"`
 	TextType    string `gorm:"default:area" json:"text_type" yaml:"text_type"`
 
 	//-- belongs to a module

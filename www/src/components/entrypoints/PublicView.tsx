@@ -1,10 +1,11 @@
-import { FINAL_TYPE, IEntrypoint, IModule, IUpload, IUser, UPLOAD_TYPE } from "../../utils/types"
+import { FINAL_TYPE, IEntrypoint, IModule, IUpload, IUser, PARTNER_STATUS, UPLOAD_TYPE } from "../../utils/types"
 import ContentAudio from "../modules/content/ContentAudio"
 import ContentImage from "../modules/content/ContentImage"
 import ContentVideoInternal from "../modules/content/ContentVideoInternal"
 import ContentText from "../modules/content/ContentText"
 import { AirTableContext } from "../../contexts/AirContext"
-import { useContext, useEffect } from "react"
+import { useContext } from "react"
+import EntrypointPartners from "./EntrypointPartners"
 
 interface PublicViewProps {
     entrypoint: IEntrypoint
@@ -21,19 +22,19 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
         switch (upload.type) {
             case UPLOAD_TYPE.Text:
                 return (
-                    <ContentText index={index} key={upload.uuid} text={upload.text} name={name} ep_name={entrypoint.name} final={true} />
+                    <ContentText index={index} key={upload.uuid} text={upload.text} name={name} ep_name={entrypoint.airtable_key} final={true} />
                 )
             case UPLOAD_TYPE.Image:
                 return (
-                    <ContentImage index={index} key={upload.uuid} src={upload.url} name={name} ep_name={entrypoint.name} />
+                    <ContentImage index={index} key={upload.uuid} src={upload.url} name={name} ep_name={entrypoint.airtable_key} />
                 )
             case UPLOAD_TYPE.Video:
                 return (
-                    <ContentVideoInternal index={index} key={upload.uuid} src={upload.url} name={name} ep_name={entrypoint.name} />
+                    <ContentVideoInternal index={index} key={upload.uuid} src={upload.url} name={name} ep_name={entrypoint.airtable_key} />
                 )
             case UPLOAD_TYPE.Audio:
                 return (
-                    <ContentAudio index={index} key={upload.uuid} src={upload.url} name={name} ep_name={entrypoint.name} />
+                    <ContentAudio index={index} key={upload.uuid} src={upload.url} name={name} ep_name={entrypoint.airtable_key} />
                 )
             default:
                 return <>Couldnt get upload.type: {upload.type}</>
@@ -116,20 +117,20 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
 
     const getHeader = () => { 
         return (<div className="text-center">
-            <div>
-                This is the final outcome of the gesture "{entrypoint.name}".<br />
-                The {entrypoint.max_users === 1 ? "contributor:" : "two contributors:"}
-            </div>
-            <div className="flex flex-row justify-around">
-                {entrypoint.users.map(u => {
-                    return (<>
-                        <h2 className="text-2xl font-regular">{u.name}</h2>
-                        <img className="w-20 h-20" src={`${process.env.REACT_APP_SPACES_URL}/${u.mark_url}`}/>
-                    </>)
-                })}
-            </div>
-            <div>{contents?.get(`${entrypoint.name}_intro`)}</div>
-        </div>)
+                    <div>
+                        This is the final outcome of the gesture <span className="italic">{entrypoint.name}</span> by
+                    </div>
+                    
+                    <div className="flex flex-row justify-center">
+                        
+                        <EntrypointPartners
+                            users={entrypoint.users}
+                            max_users={entrypoint.max_users}
+                            partner_status={PARTNER_STATUS.PartnerFull}
+                        />
+                            </div>
+                            <div>{contents?.get(`${entrypoint.airtable_key}_intro`)}</div>
+                        </div>)
     }
 
 

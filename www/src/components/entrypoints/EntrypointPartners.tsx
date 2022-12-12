@@ -9,14 +9,12 @@ interface EntrypointPartnersProps {
 	users: Array<IUser>,
     max_users: number,
     partner_status: PARTNER_STATUS,
-	sessionUserUuid: string,
 }
 
 const EntrypointPartners = ({
 	users,
 	max_users,
 	partner_status,
-	sessionUserUuid
 }: EntrypointPartnersProps) => {
 	
 	var opacityLeft: number = 0.5;
