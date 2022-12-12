@@ -8,7 +8,8 @@ module.exports = {
         'mono' : ['IBMPlexMono', 'monospace' , 'mono']
       },
       animation: {
-        fadeintop : 'fadeintop 500ms ease-in-out'
+        fadeintop: 'fadeintop 500ms ease-in-out',
+        slowspin: 'spin 4s linear infinite'
       },
       keyframes: {
         fadeintop : {

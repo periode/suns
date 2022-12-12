@@ -113,11 +113,14 @@ function EntrypointLayout({
 					<div className="w-full md:flex">
 					{
 						data.partner_status === PARTNER_STATUS.PartnerNone && 
-						<div className="w-full border-b border-amber-900">
-							<EntrypointCountdown endDate={endDate} />
-						</div>
+						<>
+							<div className="w-full border-b border-amber-900">
+								<EntrypointCountdown endDate={endDate} />
+							</div>
+							<div className="md:w-[2px] md:h-full  bg-amber-900"></div>
+						</>	
 					}
-						<div className="md:w-[2px] md:h-full  bg-amber-900"></div>
+				
 						<div className="w-full border-b border-amber-900">
 							<EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
 						</div>

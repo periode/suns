@@ -24,13 +24,13 @@ function ContentText({ index, text, name, ep_name, final }: ContentTextProps) {
 
 
 	return (
-		<div className="flex flex-col mb-5">
+		<div className="flex flex-col mb-5 break-words">
 			<div>
 				{getLabel()}
 			</div>
 			{
 				final ?
-				<div className="w-full p-4 text-serif bg-green-100 text-green-700">
+				<div className="w-full p-4 text-serif bg-green-100 text-green-700 ">
 					<p>{text}</p>
 				</div>
 				:
