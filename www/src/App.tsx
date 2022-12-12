@@ -28,8 +28,8 @@ export interface EntrypointInterface {
 
 const WIDTH = 1000;
 const HEIGHT = 1000;
-const MIN_ZOOOM = 0.5;
-const MAX_ZOOM = 6;
+const MIN_ZOOOM = 1;
+const MAX_ZOOM = 1;
 const backgroundMap = "https://map.joiningsuns.online/map.png?refresh"
 const { noise } = require('@chriscourses/perlin-noise')
 
@@ -50,8 +50,6 @@ const App = () => {
 
   useEffect(() => {
     const endpoint = new URL('engine/state', process.env.REACT_APP_API_URL)
-
-
 
     if (hasState.current === false) {
       hasState.current = true;
