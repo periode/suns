@@ -25,7 +25,7 @@ type Prompts struct {
 	Monthly []Prompt
 }
 
-const DB_ID = "appO4245S69TqEnGW"
+const AIRTABLE_DB_ID = "appO4245S69TqEnGW"
 
 func (p *Prompts) Populate() error {
 	if os.Getenv("AIRTABLE_API_KEY") == "" {
@@ -33,7 +33,7 @@ func (p *Prompts) Populate() error {
 	}
 
 	client := airtable.NewClient(os.Getenv("AIRTABLE_API_KEY"))
-	table := client.GetTable(DB_ID, "PromptsWeekly")
+	table := client.GetTable(AIRTABLE_DB_ID, "PromptsWeekly")
 	result, err := table.GetRecords().Do()
 	if err != nil {
 		return err
@@ -52,7 +52,7 @@ func (p *Prompts) Populate() error {
 		p.Weekly = append(p.Weekly, pr)
 	}
 
-	table = client.GetTable(DB_ID, "PromptsMonthly")
+	table = client.GetTable(AIRTABLE_DB_ID, "PromptsMonthly")
 	result, err = table.GetRecords().Do()
 	if err != nil {
 		return err

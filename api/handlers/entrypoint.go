@@ -14,13 +14,53 @@ import (
 )
 
 func GetAllEntrypoints(c echo.Context) error {
-	clusters, err := models.GetAllEntrypoints()
+	eps, err := models.GetAllEntrypoints()
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "There was an error getting the Entrypoints.")
 	}
 
-	return c.JSON(http.StatusOK, clusters)
+	return c.JSON(http.StatusOK, eps)
+}
+
+func GetMapEntrypoints(c echo.Context) error {
+	eps, err := models.GetAllEntrypoints()
+
+	final := make([]models.Entrypoint, 0)
+	for _, ep := range eps {
+		if len(ep.Modules) == 0 {
+			// zero.Debugf("no modules on entrypoint: %s", ep.Name)
+		} else {
+			final = append(final, ep)
+		}
+	}
+
+	if err != nil {
+		zero.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "There was an error getting the Entrypoints.")
+	}
+
+	return c.JSON(http.StatusOK, final)
+}
+
+func GetCrackEntrypoints(c echo.Context) error {
+	cracks, err := models.GetCrackEntrypoints()
+	if err != nil {
+		zero.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "There was an error getting the Entrypoints.")
+	}
+
+	return c.JSON(http.StatusOK, cracks)
+}
+
+func GetSacrificedEntrypoints(c echo.Context) error {
+	sacrificed, err := models.GetSacrificedEntrypoints()
+	if err != nil {
+		zero.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "There was an error getting the Entrypoints.")
+	}
+
+	return c.JSON(http.StatusOK, sacrificed)
 }
 
 func CreateEntrypoint(c echo.Context) error {
@@ -110,6 +150,10 @@ func ProgressEntrypoint(c echo.Context) error {
 
 	if ep.CurrentModule == len(ep.Modules)-1 {
 		return c.String(http.StatusPreconditionFailed, "The entrypoint has all modules completed.")
+	}
+
+	if ep.PartnerStatus == models.PartnerPartial || ep.PartnerStatus == models.PartnerNone {
+		return c.String(http.StatusPreconditionFailed, "You cannot progress an entrypoint which doesn't have all necessary users!")
 	}
 
 	mod := ep.Modules[ep.CurrentModule]

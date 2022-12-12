@@ -8,89 +8,36 @@ import { getSession } from "../../utils/auth";
 import EntrypointActions from "./EntrypointActions";
 import PublicView from "./PublicView";
 import NotFound from "../../NotFound";
-import FinalFirstTimes from "../modules/FinalFirstTimes";
 import { ENTRYPOINT_STATUS, IEntrypoint, IFile, ISession } from "../../utils/types";
 import IntroModule from "../modules/IntroModule";
 import TaskModule from "../modules/TaskModule";
 import { fetchEntrypoint, progressModule, submitUpload } from "../../utils/entrypoint";
 import WaitingModule from "../modules/WaitingModule";
 import EntrypointLayout from "./Layouts/EntrypointLayout";
+import { Map } from "leaflet";
 
 const FETCH_INTERVAL = 50 * 1000
-const ENTRYPOINT_LIFETIME_MINUTES = 10
+const ENTRYPOINT_LIFETIME_MINUTES = 72 * 60
+const AUTOMATIC_NEXT_DELAY = 3000
 
 const Entrypoint = (props: any) => {
+
+    // Router & navigations infos
     const params = useParams()
-    const hasData = useRef(false)
     const navigate = useNavigate()
+
+    // Getting Entrypoint data:
+    const hasData = useRef(false) // Check if data is fetched
     const session = getSession()
+
     const [data, setData] = useState(props.data as IEntrypoint)
     const [uploads, setUploads] = useState(Array<IFile>)
     const [endDate, setEndDate] = useState("")
-
     const [isOwned, setOwned] = useState(false)
-    const [isRequestingUploads, setRequestingUploads] = useState(false)
-
-    //-- userDone keeps track of when the user can submit the module
-    const [isUserDone, setUserDone] = useState(Array<boolean>)
 
     const [canUserComplete, setCanUserComplete] = useState(false)
-    //-- userCompleted keeps track of when the module is completed
     const [hasUserCompleted, setUserCompleted] = useState(false)
-    const hasSubmittedModule = useRef(false)
 
-    //-- this checks if the user owns the current entrypoint
-    //-- and what is the expiry date of the entrypoint
-    useEffect(() => {
-        if (data === undefined)
-            return
-        // checking if current user is an owner of the entrypoint
-        if (data.users.length > 0 && session.user.uuid !== "")
-            for (let u of data.users)
-                if (u.uuid === session.user.uuid)
-                    setOwned(true)
-
-        // setting entrypoint expiry date
-        let d = new Date(data.created_at)
-        let end = new Date()
-        end.setMinutes(d.getMinutes() + ENTRYPOINT_LIFETIME_MINUTES)
-        setEndDate(end.toString())
-    }, [data, session])
-
-    //-- this listens for whether a user is done with all tasks on the module
-    useEffect(() => {
-        if (data === undefined)
-            return
-
-        if (isUserDone.length === data.modules[data.current_module].tasks.length)
-            setCanUserComplete(true)
-
-    }, [isUserDone, data])
-
-    //-- this checks for the completion status per user
-    useEffect(() => {
-        if (data === undefined)
-            return
-
-        for (let i = 0; i < data.users.length; i++) {
-            const u = data.users[i];
-            if (u.uuid === session.user.uuid && data.user_completed[i] === 1) {
-                setUserCompleted(true)
-                return
-            }
-        }
-    }, [isOwned, data, session.user.uuid])
-
-    //-- this checks if all uploads have been submitted before completing the module (should be a useCallback?)
-    useEffect(() => {
-        if (data === undefined)
-            return
-
-        if (uploads.length === data.modules[data.current_module].tasks.length && !hasSubmittedModule.current) {
-            completeModule(data, session)
-            hasSubmittedModule.current = true
-        }
-    }, [uploads])
 
     //-- gets the initial data
     useEffect(() => {
@@ -98,18 +45,73 @@ const Entrypoint = (props: any) => {
             fetchEntrypoint(params.id as string, session.token)
                 .then((e: IEntrypoint) => {
                     setData(e as IEntrypoint)
-                    setUserDone([])
-                    setTimeout(() => {
-                        fetchEntrypoint(params.id as string, session.token)
-                    }, FETCH_INTERVAL)
+
+                    let current = e.modules[e.current_module]
+                    if (current.type === "intro"
+                        || (current.type === "task" && current.tasks[0].type === "prompts_input")
+                        || (current.type === "final" && e.current_module < e.modules.length - 1))
+                        setCanUserComplete(true)
                 })
                 .catch(err => {
-                    console.warn('error', err)
-                    navigate('/')
+                    console.error('error', err)
+                    // TODO add a modal to explain this entrypoint is gone
+                    navigate('/', { replace: true })
                 })
             hasData.current = true
         }
     }, [params.id])
+
+
+    //-- this checks if the user owns the current entrypoint
+    //-- and what is the expiry date of the entrypoint
+    useEffect(() => {
+        // setting entrypoint expiry date
+        if (data === undefined)
+            return
+
+        //-- checking if current user is an owner of the entrypoint
+        //-- and whether they have completed it
+        if (data.users.length > 0 && session.user.uuid !== "")
+            for (let i = 0; i < data.users.length; i++) {
+                const u = data.users[i];
+
+                if (u.uuid === session.user.uuid) {
+                    setOwned(true)
+
+                    if (data.user_completed[i] === 1)
+                        setUserCompleted(true)
+                }
+            }
+
+        // setting entrypoint expiry date
+        let d = new Date(data.created_at)
+        let end = new Date()
+        end.setMinutes(d.getMinutes() + ENTRYPOINT_LIFETIME_MINUTES)
+        setEndDate(end.toString())
+
+    }, [data, session])
+
+    //-- this listens for whether a user is done with all tasks on the module
+    useEffect(() => {
+        if (uploads.length === 0) return
+
+        let isDone = true
+        for (const u of uploads) {
+            if (u.file === undefined && u.text === "") { //-- empty upload
+                isDone = false
+                break
+            }
+        }
+        setCanUserComplete(isDone)
+    }, [uploads])
+
+    //-- this registers ESC to close the modal
+    useEffect(() => {
+        window.addEventListener('keydown', handleClose)
+        return () => {
+            window.removeEventListener('keydown', handleClose)
+        }
+    })
 
     const claimEntrypoint = async () => {
         const endpoint = new URL(`entrypoints/${data.uuid}/claim`, process.env.REACT_APP_API_URL)
@@ -129,30 +131,39 @@ const Entrypoint = (props: any) => {
         if (res.ok) {
             const updated = await res.json()
             setData(updated)
-            setCanUserComplete(false)
+            if (updated.max_users > 1)
+                setCanUserComplete(false)
         } else {
             console.warn('error', res.status)
         }
     }
 
     const handleNewUploads = (_new: Array<IFile>) => {
-        setUploads(prev => {
-            return [...prev, ..._new] as IFile[]
-        })
+        let tmp = [...uploads]
+        for (const n of _new) {
+            let hasFound = false
+            for (let i = 0; i < tmp.length; i++) {
+                if (tmp[i].uuid === n.uuid) {
+                    tmp[i] = n
+                    hasFound = true
+                    break
+                }
+            }
+
+            if (!hasFound)
+                tmp.push(n)
+        }
+
+        setUploads(tmp)
     }
 
-    const handleUserDone = (_val: boolean) => {
-        if (_val === true)
-            setUserDone(prev => {
-                return [...prev, _val] as boolean[]
-            })
+    const handleNext = () => {
+        completeModule(data, session)
     }
 
-    const requestUploads = () => {
-        if (data.modules[data.current_module].tasks.length > 0 && data.modules[data.current_module].tasks[0].type != "prompts_input")
-            setRequestingUploads(true)
-        else
-            completeModule(data, session)
+    const handleClose = (e: KeyboardEvent) => {
+        if (e.key === "Escape")
+            navigate('/', { replace: true })
     }
 
     const completeModule = async (ep: IEntrypoint, session: ISession) => {
@@ -172,16 +183,19 @@ const Entrypoint = (props: any) => {
 
         progressModule(ep.uuid, session.token)
             .then(updated => {
-                //-- completion always means the user is done with their input
-                setUserDone([])
-
+                setUploads([])
                 //-- check if we're done with the module
                 if (updated.current_module === ep.current_module)
                     setUserCompleted(true) //-- we have a partial state
                 else
                     setUserCompleted(false) //-- we move on to the next module
 
-                setCanUserComplete(false)
+                //-- the edge case is the Welcome module (two users, but should be able to complete)
+                if (updated.max_users > 1 && updated.cluster.name !== "Welcome")
+                    setCanUserComplete(false)
+                else
+                    setCanUserComplete(true)
+
                 setData(updated)
             })
             .catch(err => {
@@ -195,11 +209,11 @@ const Entrypoint = (props: any) => {
         switch (mod.type) {
             case "intro":
                 return (
-                    <IntroModule epName={ep.name} data={mod} handleUserDone={handleUserDone} />
+                    <IntroModule epName={ep.name} data={mod} />
                 )
             case "task":
                 return (
-                    <TaskModule index={index} ep={ep} data={mod} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted} />
+                    <TaskModule index={index} ep={ep} data={mod} handleNewUploads={handleNewUploads} setCanUserComplete={setCanUserComplete} />
                 )
             case "final":
                 return (
@@ -218,23 +232,25 @@ const Entrypoint = (props: any) => {
     }
 
     const getModule = () => {
+        if (data.status === ENTRYPOINT_STATUS.EntrypointCompleted)
+            return (<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}-final`} className="m-1 p-1">
+                {parseModule(data.current_module, data)}
+            </div>)
 
-        //-- if all modules are displayed and the status of the entrypoint is completed, we return the public view
-        if (data.status === ENTRYPOINT_STATUS.EntrypointCompleted) {
-            return (<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}-final`} className="m-1 p-1">{parseModule(data.current_module, data)}</div>)
-        }
-
-        if (hasUserCompleted) {
+        if (hasUserCompleted)
             return (<WaitingModule key="module-complete-message" />)
-        }
 
-
-        return (<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}`} className="m-1 p-1">{parseModule(data.current_module, data)}</div>)
+        // Current module
+        return (<div
+            key={`mod-${data.name.split(' ').join('-')}-${data.current_module}`}
+            className="m-1 p-1">{parseModule(data.current_module, data)}
+        </div>)
     }
 
     if (data !== undefined)
         return (
             <div className="absolute z-20 w-full h-full p-4 
+                            bg-amber-50/50
                             md:flex md:flex-col md:items-center md:justify-center ">
                 <EntrypointLayout
                     owned={isOwned}
@@ -250,38 +266,31 @@ const Entrypoint = (props: any) => {
                                     <h1 className="text-xl font-bold">{data.name}</h1>
                                 </div>
                                 {
-                                    data.cluster.name != "Welcome" ? <div className="cursor-pointer"
-                                        onClick={() => navigate('/', { replace: true })}>
-                                        <FiX className="text-[32px]" />
-                                    </div> : <></>
+                                    (data.cluster.name != "Welcome" || data.current_module == data.modules.length - 1) ?
+                                        <div className="cursor-pointer"
+                                            onClick={() => navigate('/', { replace: true })}>
+                                            <FiX className="text-[32px]" />
+                                        </div> : <></>
                                 }
-
                             </div>
                         </div>
                     }
                     module={
                         <div className="w-full h-full p-4 overflow-scroll">
                             {
-                                isOwned || data.status === ENTRYPOINT_STATUS.EntrypointCompleted ?
+                                isOwned || data.status === ENTRYPOINT_STATUS.EntrypointCompleted || data.status === ENTRYPOINT_STATUS.EntrypointOpen ?
                                     getModule()
                                     :
-                                    data.users.length < data.max_users ?
-                                        <>
-                                            {parseModule(0, data)}
-                                        </>
-                                        :
-                                        <>
-                                            <PublicView entrypoint={data} />
-                                        </>
+                                    <PublicView entrypoint={data} />
                             }
                         </div>
                     }
                     entrypointactions={
                         <EntrypointActions
-                            entryPointData={data}
+                            ep={data}
                             isOwner={isOwned}
                             claimEntryPointFunction={claimEntrypoint}
-                            completeModuleFunction={requestUploads}
+                            handleNext={handleNext}
                             hasUserCompleted={hasUserCompleted}
                             canUserComplete={canUserComplete}
                         />

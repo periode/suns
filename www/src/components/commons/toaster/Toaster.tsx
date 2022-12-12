@@ -15,7 +15,7 @@ interface ToasterProps {
 	setDisplay: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const Toaster = ({ type, message, display, timeoutms, setDisplay } : ToasterProps) => {
+const  Toaster = ({ type, message, display, timeoutms, setDisplay } : ToasterProps) => {
 	 
 
 
@@ -37,12 +37,12 @@ const Toaster = ({ type, message, display, timeoutms, setDisplay } : ToasterProp
 			content = 
 				<div>
 					<div className="
-						m-4 p-4 border border-1 border-green-500 bg-green-500/20 text-green-500
+						m-4 p-4 border border-1 border-green-500 bg-green-50 md:bg-green-500/20 text-green-500
 						flex gap-2 items-center
 						font-serif 
 						"
 					>
-					<FiCheck className="text-xl"/>
+					<FiCheck className="text-3xl"/>
 					<p>
 						{ message }
 					</p>
@@ -53,7 +53,7 @@ const Toaster = ({ type, message, display, timeoutms, setDisplay } : ToasterProp
 			content = 
 				<div>
 					<div className="
-						m-4 p-4 border border-1 border-red-500 bg-red-500/20 text-red-500
+						m-4 p-4 border border-1 border-red-500 bg-red-50 md:bg-red-500/20 text-red-500
 						flex gap-2 items-center
 						font-serif
 						"
@@ -69,7 +69,7 @@ const Toaster = ({ type, message, display, timeoutms, setDisplay } : ToasterProp
 			content = 
 				<div>
 					<div className="
-						m-4 p-4 border border-1 border-stone-500 bg-stone-500/20 text-stone-500
+						m-4 p-4 border border-1 border-stone-500 bg-stone-50 md:bg-stone-500/20 text-stone-500
 						flex gap-2 items-center
 						font-serif font-semibold
 						"
@@ -84,7 +84,7 @@ const Toaster = ({ type, message, display, timeoutms, setDisplay } : ToasterProp
 	}
 	return (
 		display ? 
-		<div className="absolute z-100
+		<div className="absolute top-0 z-100
 						animate-fadeintop">
 			{ content }
 		</div>

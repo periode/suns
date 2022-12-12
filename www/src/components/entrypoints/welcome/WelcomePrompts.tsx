@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react"
 import { getSession } from "../../../utils/auth"
+import { TaskDoneType } from "../../../utils/types"
+import SubmitButton from "../../commons/buttons/SubmitButton"
 
 interface PromptsInputProps {
-    handleUserDone: Function,
+    uuid: string,
+    setCanUserComplete: Function
 }
 
 const WelcomePrompts = ({
-    handleUserDone,
+    uuid,
+    setCanUserComplete,
 }: PromptsInputProps) => {
     const session = getSession()
     const [isFormActive, setFormActive] = useState(true)
 
-    useEffect(() => {
-        handleUserDone(false)
-    }, [])
 
     const handleSubmission = async (e: React.BaseSyntheticEvent) => {
         e.preventDefault()
@@ -34,28 +35,35 @@ const WelcomePrompts = ({
         };
         const res = await fetch(endpoint, options)
         if (res.ok) {
-            handleUserDone(true)
             setFormActive(false)
+            setCanUserComplete(true)
         } else {
             console.warn('error', res.status)
         }
     }
 
     return (<>
-        <form id="prompts-preference">
-            <fieldset disabled={!isFormActive}>
-                <legend>Pick your prompts frequency:</legend>
-
+        <form className="bg-amber-100 rounded-sm shadow-inner shadow-amber-900/20 p-4" id="prompts-preference" onSubmit={handleSubmission}>
+            <fieldset className="flex flex-col gap-2 flex-items" disabled={!isFormActive}>
                 <div>
+                    <legend>Pick your prompts frequency:</legend>
+                </div>
+                <div className="">
                     <input className="m-1" type="checkbox" id="weekly" name="weekly" />
-                    <label htmlFor="weekly">Weekly</label>
+                    <label htmlFor="weekly">+ Weekly</label>
                 </div>
-
-                <div>
+                <div className="">
                     <input className="m-1" type="checkbox" id="monthly" name="monthly" />
-                    <label htmlFor="monthly">Monthly</label>
+                    <label htmlFor="monthly">+ Monthly</label>
                 </div>
-                <button className="border p-1" type="button" onClick={handleSubmission}>Submit</button>
+                <div className="h-12">
+                    {
+                        isFormActive ? 
+                        <SubmitButton onClick={() => handleSubmission}/> 
+                            :
+                        <p>Thank you!</p>
+                    }
+                </div>
             </fieldset>
         </form>
     </>)

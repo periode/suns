@@ -1079,6 +1079,11 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@chriscourses/perlin-noise@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@chriscourses/perlin-noise/-/perlin-noise-1.0.5.tgz#c57078a8213a0c9b2d50a80d6b6e284152bfb913"
+  integrity sha512-AjIAlGT1M1Pc4/P3MkztzETXRI/LyGMl/fRglbY/Vgdb8Sl6Rn/yOd1XiHQD5ftiUev6i33UbReVWI95wtntpg==
+
 "@csstools/normalize.css@*":
   version "12.0.0"
   resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-12.0.0.tgz#a9583a75c3f150667771f30b60d9f059473e62c4"

@@ -20,7 +20,7 @@ const Content = ({ type, airkey, contents, value }: ContentProps) => {
                 return (<div className="flex h-24 m-auto w-auto">
                     <img className="object-contain" src={contents.get(airkey)} />
                 </div>)
-            case "mp3":
+            case "wav":
                 return (<>
                     <audio src=""></audio>
                     <div>{contents.get(airkey)}</div>

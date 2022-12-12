@@ -42,29 +42,29 @@ func CreateCluster(cluster *Cluster) (Cluster, error) {
 }
 
 func GetCluster(uuid uuid.UUID, user_uuid uuid.UUID) (Cluster, error) {
-	var coll Cluster
-	result := db.Where("uuid = ?", uuid).First(&coll)
+	var cluster Cluster
+	result := db.Where("uuid = ?", uuid).First(&cluster)
 	if result.Error != nil {
-		return coll, result.Error
+		return cluster, result.Error
 	}
 
-	return coll, nil
+	return cluster, nil
 }
 
 func GetClusterBySlug(slug string, user_uuid uuid.UUID) (Cluster, error) {
-	var coll Cluster
-	result := db.Where("slug = ?", slug).First(&coll)
+	var cluster Cluster
+	result := db.Where("slug = ?", slug).First(&cluster)
 	if result.Error != nil {
-		return coll, result.Error
+		return cluster, result.Error
 	}
 
-	return coll, nil
+	return cluster, nil
 }
 
 func GetAllClusters(user_uuid uuid.UUID) ([]Cluster, error) {
 	clusters := make([]Cluster, 0)
-	result := db.Preload("Entrypoints").Find(&clusters)
-	return clusters, result.Error
+	err := db.Association("Entrypoints").Find(&clusters)
+	return clusters, err
 }
 
 func UpdateCluster(uuid uuid.UUID, user_uuid uuid.UUID, cluster *Cluster) (Cluster, error) {
@@ -92,8 +92,6 @@ func AddClusterEntrypoints(eps []Entrypoint) ([]Entrypoint, error) {
 			return updated, err
 		}
 
-		updated = append(updated, ep)
-
 		err = db.Model(&ep).Where("uuid = ?", ep.UUID).Association("Modules").Replace(&ep.Modules)
 		if err != nil {
 			return updated, err
@@ -114,18 +112,20 @@ func AddClusterEntrypoints(eps []Entrypoint) ([]Entrypoint, error) {
 				}
 			}
 		}
+
+		updated = append(updated, ep)
 	}
 
 	return updated, nil
 }
 
 func DeleteCluster(uuid uuid.UUID, user_uuid uuid.UUID) (Cluster, error) {
-	var coll Cluster
-	result := db.Where("uuid = ?", uuid).First(&coll)
+	var cluster Cluster
+	result := db.Where("uuid = ?", uuid).First(&cluster)
 	if result.Error != nil {
-		return coll, result.Error
+		return cluster, result.Error
 	}
 
-	result = db.Where("uuid = ?", uuid).Delete(&coll)
-	return coll, result.Error
+	result = db.Where("uuid = ?", uuid).Delete(&cluster)
+	return cluster, result.Error
 }

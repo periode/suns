@@ -8,11 +8,11 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/periode/suns/api/auth"
+	"github.com/periode/suns/api/engine"
 	zero "github.com/periode/suns/api/logger"
 	"github.com/periode/suns/api/models"
 	"github.com/periode/suns/mailer"
@@ -41,14 +41,8 @@ func CreateUser(c echo.Context) error {
 	err := sanitizeUserCreate(c) // Making sure adress and password are correctly formated
 	if err != nil {
 		zero.Error(err.Error())
+		println("here")
 		return c.String(http.StatusBadRequest, err.Error())
-	}
-
-	var uploadsDir string
-	if os.Getenv("UPLOADS_DIR") == "" {
-		uploadsDir = "/tmp/suns/uploads"
-	} else {
-		uploadsDir = os.Getenv("UPLOADS_DIR")
 	}
 
 	var user models.User
@@ -66,11 +60,7 @@ func CreateUser(c echo.Context) error {
 	}
 
 	mark := form.File["mark"][0]
-	fname := mark.Filename
-	fpath := fmt.Sprintf("%d_%s_%s", time.Now().Unix(), user.Name, fname)
-	target := filepath.Join(uploadsDir, fpath)
-
-	_, err = writeFileToDisk(mark, target)
+	fpath, err := saveFile(mark, models.ImageType)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusBadRequest, "Error saving the mark to disk")
@@ -219,10 +209,22 @@ func UpdateUserPrompts(c echo.Context) error {
 
 	if c.FormValue("weekly") == "on" {
 		user.CanReceiveWeeklyPrompts = true
+		p := mailer.PromptPayload{
+			Body: engine.GetWeeklyPrompt(0),
+			Name: user.Name,
+		}
+
+		mailer.SendMail(user.Email, "SIMPLE Rewilding Prompt #1", "weekly_intro", p)
 	}
 
 	if c.FormValue("monthly") == "on" {
 		user.CanReceiveMonthlyPrompts = true
+		p := mailer.PromptPayload{
+			Body: engine.GetMonthlyPrompt(0),
+			Name: user.Name,
+		}
+
+		mailer.SendMail(user.Email, "COMPLEX Rewilding Prompt #1", "monthly_intro", p)
 	}
 
 	fmt.Printf("updating user preferences - weekly (%v) monthly (%v)\n", user.CanReceiveWeeklyPrompts, user.CanReceiveMonthlyPrompts)

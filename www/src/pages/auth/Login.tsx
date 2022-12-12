@@ -56,10 +56,10 @@ const Login = () => {
 					<div className="flex flex-col items-start justify-center w-full h-full md:h-auto gap-4">
 						<h2 className="text-6xl ">Login</h2>
 						<div className="flex flex-col gap-1 items-start w-full">
-							<InputField label="Email" onChange={handleEmailChange} placeholder="example@example.com" type="text"/>
+							<InputField label="Email" onChange={handleEmailChange} placeholder="example@example.com" type="text" autocomplete="email"/>
 						</div>
 						<div className="flex flex-col gap-1 items-start w-full">
-							<InputField onChange={handlePasswordChange} label="Password" placeholder="•••••" type="password"/>
+							<InputField onChange={handlePasswordChange} label="Password" placeholder="•••••" type="password" autocomplete="password"/>
 							
 							<Link className="font-mono self-end text-xs hover:text-amber-500 transition-all ease-in duration-300" to="/auth/lost-password" state={{preFilledEmail : email}}>Forgot your Password?</Link>
 						</div>

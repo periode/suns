@@ -22,10 +22,11 @@ entrypoints:
         tasks:
           - type: "text_input"
             key: "textinput_info_txt"
-            max_uploads: 1
+            min_limit: 2
+            max_limit: 300
           - type: "image_input"
             key: "imgupload_info_txt"
-            max_uploads: 1
+            max_limit: 1
         hint: "You should upload the name of someone and an image that represents them"
       - name: "Name the other picture"
         type: "task"
@@ -33,17 +34,10 @@ entrypoints:
         tasks:
           - type: "audio_input"
             key: "audioupload_info_txt"
-            max_uploads: 1
+            max_limit: 1
         hint: "This is where you name your partner's picture"
       - name: "Final Footprints Person"
-        type: "final"
-        contents:
-          - type: "txt"
-            key: "public_info_1"
-          - type: "txt"
-            key: "public_hl_1"
-          - type: "txt"
-            key: "public_hl_2"            
+        type: "final"         
         hint: "This is the final view for the footprints - person"
 
   - status: "open"
@@ -67,27 +61,29 @@ entrypoints:
         tasks:
           - type: "text_input"
             key: "textinput_info_txt_1"
+            min_limit: 2
+            max_limit: 300
           - type: "text_input"
             key: "textinput_info_txt_2"
+            min_limit: 2
+            max_limit: 300
         hint: "This is the text input of a name of a place, and how far it is"
-      - name: "Upload an image of the distance of that place"
+      - name: "Tell us one rule you want to be applied in the place your partner choose"
         type: "task"
         show_previous_uploads: true
         tasks:
+          - type: "text_input"
+            key: "textinput_info_txt_3"
+            max_limit: 100
+      - name: "Upload a picture of an object and its name"
+        type: "task"
+        tasks:
           - type: "image_input"
             key: "imageupload_info_txt"
-            max_uploads: 1
+            max_limit: 1
+        hint: "Please up load a photo as a memory from your current place"
       - name: "Final Footprints Place"
         type: "final"
-        contents:
-          - type: "txt"
-            key: "public_info_1"
-          - type: "txt"
-            key: "public_hl_1"
-          - type: "txt"
-            key: "public_hl_2" 
-          - type: "txt"
-            key: "public_hl_3" 
         hint: "This is the final view for the footprints - Place. It should show the videos"
 
   - status: "open"
@@ -111,9 +107,12 @@ entrypoints:
         tasks:
           - type: "text_input"
             key: "textinput_info_txt_1"
+            min_limit: 2
+            max_limit: 300
+            text_type: "input"
           - type: "image_input"
             key: "imgupload_info_txt_1"
-            max_uploads: 1
+            max_limit: 1
         hint: "This is the text input for the name and the image input for the picture of an object"
       - name: "Upload a picture of a similar object, and how you name it"
         type: "task"
@@ -121,16 +120,11 @@ entrypoints:
         tasks:
           - type: "image_input"
             key: "imgupload_info_txt_2"
-            max_uploads: 1
+            max_limit: 1
           - type: "text_input"
             key: "textinput_info_txt_2"
+            min_limit: 2
+            max_limit: 300
       - name: "Final Footprints object"
         type: "final"
-        contents:
-          - type: "txt"
-            key: "public_info_1"
-          - type: "txt"
-            key: "public_hl_1"
-          - type: "txt"
-            key: "public_hl_2" 
         hint: "This is the final view for the footprints - Object"

@@ -21,6 +21,13 @@ export enum FINAL_TYPE {
     Crack = "Crack"
 }
 
+export enum UPLOAD_TYPE {
+    Text = "txt",
+    Image = "img",
+    Video = "vid",
+    Audio = "wav"
+}
+
 //--------
 //-- types
 //--------
@@ -34,9 +41,12 @@ export interface IEntrypoint {
     uuid: string,
     created_at: string,
     name: string,
+    key: string,
     status: ENTRYPOINT_STATUS,
     cluster: ICluster,
     visibility: string,
+    generation: number,
+    sacrifice_wave: number,
     content: string,
     current_module: number,
     modules: Array<IModule>,
@@ -60,8 +70,10 @@ export interface IUpload {
 }
 
 export interface IFile {
+    uuid: string,
     file?: File,
-    text: string
+    text: string,
+    type: UPLOAD_TYPE
 }
 
 export interface IContent {
@@ -71,10 +83,13 @@ export interface IContent {
 }
 
 export interface ITask {
+    uuid: string,
     type: string,
     key: string,
     placeholder?: string,
-    max_uploads?: number,
+    min_limit?: number,
+    max_limit?: number,
+    text_type?: string,
     value?: string
 }
 
@@ -94,9 +109,15 @@ export interface IModule {
 export interface IUser {
     name: string,
     uuid: string,
+    mark_url: string,
 }
 
 export interface ISession {
     token: string,
     user: IUser
 }
+
+export  type TaskDoneType = {
+        key: string,
+        value: boolean
+};

@@ -7,6 +7,13 @@ import (
 	"gorm.io/gorm"
 )
 
+const (
+	TextType  = "txt"
+	ImageType = "img"
+	VideoType = "vid"
+	AudioType = "wav"
+)
+
 type Upload struct {
 	ID        uint           `gorm:"primaryKey"`
 	CreatedAt time.Time      `json:"created_at"`

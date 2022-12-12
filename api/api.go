@@ -62,7 +62,7 @@ func SetupRouter() *echo.Echo {
 		Format: "\033[32m${time_rfc3339}\033[0m | ${method} | ${uri} | ${status} | ${remote_ip} | ${error.message}\n",
 	}))
 	r.Use(middleware.Recover())
-	r.Use(middleware.BodyLimit("32M"))
+	r.Use(middleware.BodyLimit("256M"))
 	r.Use(injectConfig)
 
 	r.Static("/static", conf.UploadsDir)
@@ -83,6 +83,11 @@ func SetupRouter() *echo.Echo {
 	{
 		config.GET("/engine", handlers.GetConfig)
 		config.POST("/engine", handlers.SetConfig)
+	}
+
+	engine := r.Group("/engine")
+	{
+		engine.GET("/state", handlers.GetState)
 	}
 
 	users := r.Group("/users")
@@ -109,6 +114,9 @@ func SetupRouter() *echo.Echo {
 	entrypoints := r.Group("/entrypoints")
 	{
 		entrypoints.GET("/", handlers.GetAllEntrypoints)
+		entrypoints.GET("/map", handlers.GetMapEntrypoints)
+		entrypoints.GET("/cracks", handlers.GetCrackEntrypoints)
+		entrypoints.GET("/sacrifice", handlers.GetSacrificedEntrypoints)
 		entrypoints.GET("/:id", handlers.GetEntrypoint)
 
 		entrypoints.POST("/", handlers.CreateEntrypoint)

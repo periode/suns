@@ -50,11 +50,6 @@ func SetConfig(c echo.Context) error {
 		updated.EMAIL_MONTHLY_INTERVAL = d
 	}
 
-	d, err = time.ParseDuration(c.FormValue("MAP_INTERVAL"))
-	if err == nil {
-		updated.MAP_INTERVAL = d
-	}
-
 	d, err = time.ParseDuration(c.FormValue("ENTRYPOINT_LIFETIME"))
 	if err == nil {
 		updated.ENTRYPOINT_LIFETIME = d

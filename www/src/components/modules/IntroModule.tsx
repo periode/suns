@@ -1,19 +1,15 @@
-import { useContext, useEffect } from "react"
+import { useContext } from "react"
 import { AirTableContext } from "../../contexts/AirContext"
 import { IModule } from "../../utils/types"
-import IntroContent from "./content/IntroContent"
+import Content from "./content/Content"
 
 interface IntroModuleProps {
     data: IModule,
     epName: string,
-    handleUserDone: Function,
 }
 
-const IntroModule = ({ data, epName, handleUserDone }: IntroModuleProps) => {
+const IntroModule = ({ data, epName }: IntroModuleProps) => {
     
-    useEffect(() => {
-        handleUserDone(true)
-    }, [])
 
     const ctx = useContext(AirTableContext)    
     const contents = ctx.get(epName)
@@ -29,7 +25,7 @@ const IntroModule = ({ data, epName, handleUserDone }: IntroModuleProps) => {
             {
                 data.contents.map((c) => {
                     return (
-                        <IntroContent key={c.key} type={c.type} airkey={c.key} contents={contents} />
+                        <Content key={c.key} type={c.type} airkey={c.key} contents={contents} />
                     )   
                 })
             }

@@ -10,12 +10,16 @@ import (
 
 // Config holds engine variables
 type Config struct {
-	CREATE_INTERVAL        time.Duration `form:"CREATE_INTERVAL"`
-	DELETE_INTERVAL        time.Duration `form:"DELETE_INTERVAL"`
-	SACRIFICE_INTERVAL     time.Duration `form:"SACRIFICE_INTERVAL"`
+	CREATE_INTERVAL time.Duration `form:"CREATE_INTERVAL"`
+	DELETE_INTERVAL time.Duration `form:"DELETE_INTERVAL"`
+
 	EMAIL_WEEKLY_INTERVAL  time.Duration `form:"EMAIL_WEEKLY_INTERVAL"`
 	EMAIL_MONTHLY_INTERVAL time.Duration `form:"EMAIL_MONTHLY_INTERVAL"`
-	MAP_INTERVAL           time.Duration `form:"MAP_INTERVAL" type:"time"`
+
+	SACRIFICE_INTERVAL    time.Duration `form:"SACRIFICE_INTERVAL"`
+	SACRIFICE_ZONE_RADIUS float64       `form:"SACRIFICE_ZONE_RADIUS"`
+	SACRIFICE_DELAY       time.Duration `form:"SACRIFICE_DELAY"`
+	SACRIFICE_THRESHOLD   int           `form:"SACRIFICE_THRESHOLD"`
 
 	CREATION_THRESHOLD  float64       `form:"CREATION_THRESHOLD"`
 	ENTRYPOINT_LIFETIME time.Duration `form:"ENTRYPOINT_LIFETIME"`
@@ -64,14 +68,28 @@ func (c *Config) DefaultConf() {
 		c.EMAIL_MONTHLY_INTERVAL = d
 	}
 
-	d, err = time.ParseDuration(os.Getenv("MAP_INTERVAL"))
+	f, err := strconv.ParseFloat(os.Getenv("SACRIFICE_ZONE_RADIUS"), 64)
 	if err != nil {
-		c.MAP_INTERVAL = 10 * time.Second
+		c.SACRIFICE_ZONE_RADIUS = 30
 	} else {
-		c.MAP_INTERVAL = d
+		c.SACRIFICE_ZONE_RADIUS = f
 	}
 
-	f, err := strconv.ParseFloat(os.Getenv("CREATION_THRESHOLD"), 64)
+	d, err = time.ParseDuration(os.Getenv("SACRIFICE_DELAY"))
+	if err != nil {
+		c.SACRIFICE_DELAY = 144 * time.Hour
+	} else {
+		c.SACRIFICE_DELAY = d
+	}
+
+	i, err := strconv.Atoi(os.Getenv("SACRIFICE_THRESHOLD"))
+	if err != nil {
+		c.SACRIFICE_THRESHOLD = 70
+	} else {
+		c.SACRIFICE_THRESHOLD = i
+	}
+
+	f, err = strconv.ParseFloat(os.Getenv("CREATION_THRESHOLD"), 64)
 	if err != nil {
 		c.CREATION_THRESHOLD = 0.25
 	} else {
@@ -85,20 +103,35 @@ func (c *Config) DefaultConf() {
 		c.ENTRYPOINT_LIFETIME = d
 	}
 
-	i, err := strconv.Atoi(os.Getenv("MIN_ENTRYPOINTS"))
+	i, err = strconv.Atoi(os.Getenv("MIN_ENTRYPOINTS"))
 	if err != nil {
-		c.MIN_ENTRYPOINTS = 10
+		c.MIN_ENTRYPOINTS = 70
 	} else {
 		c.MIN_ENTRYPOINTS = i
 	}
 
 	i, err = strconv.Atoi(os.Getenv("MAX_ENTRYPOINTS"))
 	if err != nil {
-		c.MAX_ENTRYPOINTS = 100
+		c.MAX_ENTRYPOINTS = 1000
 	} else {
 		c.MAX_ENTRYPOINTS = i
 	}
+}
 
+func (c *Config) Print() {
+	fmt.Println("Engine configuration:")
+	fmt.Printf("CREATE_INTERVAL: %v\n", c.CREATE_INTERVAL)
+	fmt.Printf("DELETE_INTERVAL: %v\n", c.DELETE_INTERVAL)
+	fmt.Printf("SACRIFICE_INTERVAL: %v\n", c.SACRIFICE_INTERVAL)
+	fmt.Printf("EMAIL_WEEKLY_INTERVAL: %v\n", c.EMAIL_WEEKLY_INTERVAL)
+	fmt.Printf("EMAIL_MONTHLY_INTERVAL: %v\n", c.EMAIL_MONTHLY_INTERVAL)
+	fmt.Printf("SACRIFICE_ZONE_RADIUS: %v\n", c.SACRIFICE_ZONE_RADIUS)
+	fmt.Printf("SACRIFICE_DELAY: %v\n", c.SACRIFICE_DELAY)
+	fmt.Printf("SACRIFICE_THRESHOLD: %v\n", c.SACRIFICE_THRESHOLD)
+	fmt.Printf("CREATION_THRESHOLD: %v\n", c.CREATION_THRESHOLD)
+	fmt.Printf("ENTRYPOINT_LIFETIME: %v\n", c.ENTRYPOINT_LIFETIME)
+	fmt.Printf("MIN_ENTRYPOINTS: %v\n", c.MIN_ENTRYPOINTS)
+	fmt.Printf("MAX_ENTRYPOINTS: %v\n", c.MAX_ENTRYPOINTS)
 }
 
 func (c *Config) Set(updated Config) (Config, error) {

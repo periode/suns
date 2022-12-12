@@ -56,13 +56,17 @@ func (p *Pool) Generate() error {
 
 	}
 
-	zero.Debugf("Picked up entrypoints: %d", len(p.entrypoints))
+	zero.Debugf("engine generated entrypoints: %d", len(p.entrypoints))
 
 	return nil
 }
 
-func (p *Pool) Pick() []models.Entrypoint {
+func (p *Pool) Pick(num int) []models.Entrypoint {
 	var res []models.Entrypoint
-	res = append(res, p.entrypoints[rand.Intn(len(p.entrypoints))])
+	for i := 0; i < num; i++ {
+		ep := p.entrypoints[rand.Intn(len(p.entrypoints))]
+		ep.Generation = state.generation
+		res = append(res, ep)
+	}
 	return res
 }

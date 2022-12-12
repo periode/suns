@@ -1,10 +1,10 @@
 import { ReactNode } from "react";
-import { ENTRYPOINT_STATUS, IEntrypoint, ISession } from "../../../utils/types";
+import { ENTRYPOINT_STATUS, IEntrypoint, ISession, PARTNER_STATUS } from "../../../utils/types";
 import EntrypointCountdown from "../EntrypointCountdown";
 import EntrypointPartners from "../EntrypointPartners";
 
 interface EntrypointLayoutProps {
-	owned : boolean,
+	owned: boolean,
 	data: IEntrypoint,
 	session: ISession,
 	endDate: string
@@ -32,88 +32,76 @@ function EntrypointLayout({
                         text-green-600
                         bg-green-50
                         ">
-					<div className="w-full border-b border-green-600">
-						{title}
-					</div>
-					{/* <div className="w-full md:flex">
-						<div className="w-full border-b border-green-600">
-							<EntrypointCountdown endDate={endDate} />
-						</div>
-						<div className="md:w-[2px] md:h-full  bg-green-600"></div>
-						<div className="w-full border-b border-green-600">
-							<EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
-						</div>
-					</div> */}
-					{ module }
-					<div className="h-20
+				<div className="w-full border-b border-green-600">
+					{title}
+				</div>
+				{module}
+				<div className="h-20
                             pl-4 pr-4
                             relative
                             flex items-center justify-between
                             border-t border-green-600">
-                        { entrypointactions }
-                    </div>
+					{entrypointactions}
+				</div>
 			</div>
 		)
 	if (owned)
 		return (
-		<div className="
+			<div className="
                         flex flex-col
                         w-full h-full md:w-[720px] md:h-4/5 
                         border border-amber-500 
                         text-amber-900
                         bg-amber-50
                         ">
-					<div className="w-full border-b border-amber-500 text-amber-500">
-						{title}
+				<div className="w-full border-b border-amber-500 text-amber-500">
+					{title}
+				</div>
+				<div className="w-full md:flex">
+					<div className="w-full border-b border-amber-500">
+						<EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
 					</div>
-					<div className="w-full md:flex">
-						<div className="w-full border-b border-amber-500">
-							<EntrypointCountdown endDate={endDate} />
-						</div>
-						<div className="md:w-[2px] md:h-full  bg-amber-500"></div>
-						<div className="w-full border-b border-amber-500">
-							<EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
-						</div>
-					</div>
-					{ module }
-					<div className="h-20
+				</div>
+				{module}
+				<div className="h-20
                             pl-4 pr-4
                             relative
                             flex items-center justify-between
                             border-t border-amber-500">
-                        { entrypointactions }
-                    </div>
+					{entrypointactions}
+				</div>
 			</div>
 		)
 	if (data.status === ENTRYPOINT_STATUS.EntrypointPending)
 		return (
-		<div className="
+			<div className="
                         flex flex-col
                         w-full h-full md:w-[720px] md:h-4/5 
                         border border-stone-500 
                         text-stone-500
                         bg-stone-50
                         ">
+				<div className="w-full border-b border-stone-500">
+					{title}
+				</div>
+				<div className="w-full md:flex">
 					<div className="w-full border-b border-stone-500">
-						{title}
+						<EntrypointCountdown endDate={endDate} />
 					</div>
 					<div className="w-full md:flex">
-						<div className="w-full border-b border-stone-500">
-							<EntrypointCountdown endDate={endDate} />
-						</div>
-						<div className="md:w-[2px] md:h-full  bg-stone-500"></div>
 						<div className="w-full border-b border-stone-500">
 							<EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
 						</div>
 					</div>
-					{ module }
+					{module}
 					<div className="h-20
                             pl-4 pr-4
                             relative
                             flex items-center justify-between
                             border-t border-stone-500">
-                        { entrypointactions }
-                    </div>
+						{entrypointactions}
+					</div>
+				</div>
 			</div>
 		)
 	return (
@@ -124,27 +112,30 @@ function EntrypointLayout({
                         text-amber-900
                         bg-amber-50
                         ">
+			<div className="w-full border-b border-amber-900">
+				{title}
+			</div>
+			<div className="w-full md:flex">
+				{
+					data.partner_status === PARTNER_STATUS.PartnerNone &&
 					<div className="w-full border-b border-amber-900">
-						{title}
+						<EntrypointCountdown endDate={endDate} />
 					</div>
-					<div className="w-full md:flex">
-						<div className="w-full border-b border-amber-900">
-							<EntrypointCountdown endDate={endDate} />
-						</div>
-						<div className="md:w-[2px] md:h-full  bg-amber-900"></div>
-						<div className="w-full border-b border-amber-900">
-							<EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
-						</div>
-					</div>
-					{ module }
-					<div className="h-20
+				}
+				<div className="md:w-[2px] md:h-full  bg-amber-900"></div>
+				<div className="w-full border-b border-amber-900">
+					<EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
+				</div>
+			</div>
+			{module}
+			<div className="h-20
                             pl-4 pr-4
                             relative
                             flex items-center justify-between
                             border-t border-amber-900">
-                        { entrypointactions }
-                    </div>
+				{entrypointactions}
 			</div>
+		</div>
 	);
 }
 

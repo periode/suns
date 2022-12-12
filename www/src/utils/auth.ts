@@ -91,20 +91,21 @@ const signin = async (_email: string, _password: string) => {
         const token = data.token
         user = {
             uuid: data.user.uuid,
-            name: data.user.name
+            name: data.user.name,
+            mark_url: data.user.mark_url
         }
-        sessionStorage.setItem("user", JSON.stringify(user))
-        sessionStorage.setItem("token", token)
+        localStorage.setItem("user", JSON.stringify(user))
+        localStorage.setItem("token", token)
         return Promise.resolve("Login successful!")
     } else {
         console.error(`Could not signin! ${res.statusText} (removing token)`)
-        sessionStorage.removeItem("token")
+        localStorage.removeItem("token")
         return Promise.reject("We could not log you in.")
     }
 }
 
 const signout = () => {
-    sessionStorage.removeItem("token")
+    localStorage.removeItem("token")
     window.location.reload()
 }
 
@@ -120,11 +121,7 @@ const signup = async (_email: string, _email_conf: string, _password: string, _p
         return Promise.reject("The confirmation password you've entered does not match.")
     }
 
-    if (_password.length < 8) {
-        return Promise.reject("The password should be between 8 and 20 characters long.")
-    }
-
-    if (_password.length > 20) {
+    if (_password.length < 8 || _password.length > 20) {
         return Promise.reject("The password should be between 8 and 20 characters long.")
     }
 
@@ -132,8 +129,8 @@ const signup = async (_email: string, _email_conf: string, _password: string, _p
         return Promise.reject("The email you've entered is not valid.")
     }
 
-    if (_name.length < 2) {
-        return Promise.reject("The name should be at least 2 characters long.")
+    if (_name.length < 2 || _name.length > 15) {
+        return Promise.reject("The name should be between 2 and 15 characters long.")
     }
 
     var f = new FormData();
@@ -153,13 +150,15 @@ const signup = async (_email: string, _email_conf: string, _password: string, _p
         const uuid = await res.text()
         return Promise.resolve(uuid)
     } else {
-        return Promise.reject("There was an error creating your account. Please try again later.")
+        const err = await res.text()
+        return Promise.reject(err)
+        // return Promise.reject("There was an error creating your account. Please try again later.")
     }
 }
 
 const getSession = () => {
-    const t = sessionStorage.getItem("token")
-    const u = sessionStorage.getItem("user")
+    const t = localStorage.getItem("token")
+    const u = localStorage.getItem("user")
     const s: ISession = {
         token: t ? t : '',
         user: u ? JSON.parse(u) : { name: '', uuid: '' }

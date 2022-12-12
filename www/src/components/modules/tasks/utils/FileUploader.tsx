@@ -1,41 +1,21 @@
-// needs setUploads, needsPreview
-
 import React, { useState, useEffect } from "react"
-import { IFile } from "../../../../utils/types"
+import { IFile, TaskDoneType } from "../../../../utils/types"
 
 interface IFileUploadProps {
     type: string,
+    uuid: string,
     maxUploads?: number,
     handleNewUploads: Function,
-    isRequestingUploads: boolean,
-    handleUserDone: Function,
-    hasUserCompleted: boolean
 }
 
 const MAX_FILE_SIZE = 32
 
-const FileUploader = ({ type, maxUploads = 1, handleNewUploads, isRequestingUploads, handleUserDone, hasUserCompleted }: IFileUploadProps) => {
-    const [uploads, setUploads] = useState(Array<IFile>)
+const FileUploader = ({ type, uuid, maxUploads = 1, handleNewUploads }: IFileUploadProps) => {
     const [uploadIndex, setUploadIndex] = useState(1)
+    
     useEffect(() => {
-        handleUserDone(false)
+        handleNewUploads([{uuid: uuid, file: undefined, text: "", type: type}])
     }, [])
-
-    useEffect(() => {
-        if (uploads.length > 0) {
-            if (uploadIndex < maxUploads) {
-                let u = uploadIndex + 1
-                setUploadIndex(u)
-            } else if (uploads.length == maxUploads) {
-                handleUserDone(true)
-            }
-        }
-    }, [uploads])
-
-    useEffect(() => {
-        if (isRequestingUploads)
-            handleNewUploads(uploads)
-    }, [isRequestingUploads])
 
     const handleFileChange = (e: React.SyntheticEvent) => {
         const t = e.target as HTMLInputElement
@@ -47,30 +27,39 @@ const FileUploader = ({ type, maxUploads = 1, handleNewUploads, isRequestingUplo
         }
 
         let f = {
+            uuid: uuid,
             file: t.files[0],
-            text: ""
+            text: "",
+            type: type
         } as IFile
 
-        setUploads([...uploads, f])
-
+        handleNewUploads([f])
     }
 
     const getInputFields = () => {
         let fields = []
         for (let i = 0; i < uploadIndex; i++) {
-            fields.push(<input key={`fileinput-${i}`} type="file" capture="environment" accept={`${type}/*`} onChange={handleFileChange} />)
+            fields.push(
+                <input 
+                key={`fileinput-${i}`} 
+                type="file"
+                capture="environment" 
+                accept={`${type}/*`} 
+                onChange={handleFileChange}
+                className="font-mono text-sm w-full bg-amber-100 p-4 flex flex-col
+                "
+                />
+            )
         }
 
         return fields
     }
 
     return (<>
-        <p>
             {
                 getInputFields()
             }
-        </p>
-    </>)
+            </>)
 }
 
 export default FileUploader

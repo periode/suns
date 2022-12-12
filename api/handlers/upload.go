@@ -1,31 +1,37 @@
 package handlers
 
 import (
+	"bytes"
 	"fmt"
+	"image"
 	"io"
 	"mime/multipart"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
-	"github.com/gabriel-vasile/mimetype"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/chai2010/webp"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
+	"github.com/xfrr/goffmpeg/transcoder"
 
 	zero "github.com/periode/suns/api/logger"
 	"github.com/periode/suns/api/models"
+
+	_ "image/gif"
+	_ "image/jpeg"
+	_ "image/png"
 )
 
 // -- create upload parses the form info (module_uuid, partner_index and file), adds the user_uuid from the auth session and then appends the upload to the specified module
 func CreateUpload(c echo.Context) error {
 	user_uuid := mustGetUser(c)
-	var uploadsDir string
-	if os.Getenv("UPLOADS_DIR") == "" {
-		uploadsDir = "/tmp/suns/uploads"
-	} else {
-		uploadsDir = os.Getenv("UPLOADS_DIR")
-	}
 
 	// Read form fields - module uuid is to know to which module to attach it to, and partner index is whether this is upload by partner 0 or 1
 	module_uuid, err := uuid.Parse(c.FormValue("module_uuid"))
@@ -34,13 +40,21 @@ func CreateUpload(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Cannot parse the module UUID")
 	}
 
-	var ftype, fname, fpath string
+	var ftype, fpath string
 	uploads := make([]models.Upload, 0)
 
-	txt := c.FormValue("text[]")
-	ftype = "text/plain"
-	//-- if there is an empty string, it means we have to deal with a file
-	if txt == "" {
+	ftype = c.FormValue("type")
+	if ftype == models.TextType {
+		txt := c.FormValue("text[]")
+		u := models.Upload{
+			Name:     "",
+			URL:      fpath,
+			UserUUID: user_uuid.String(),
+			Text:     txt,
+			Type:     ftype,
+		}
+		uploads = append(uploads, u)
+	} else if ftype == models.VideoType || ftype == models.ImageType || ftype == models.AudioType {
 		form, err := c.MultipartForm()
 		if err != nil {
 			zero.Error(err.Error())
@@ -48,39 +62,36 @@ func CreateUpload(c echo.Context) error {
 		}
 
 		files := form.File["files[]"]
-		for index, file := range files {
-			fname := file.Filename
-			fpath := fmt.Sprintf("%d_%s_%s_%d_%s", time.Now().Unix(), module_uuid.String()[:8], user_uuid.String()[:8], index, fname)
-			target := filepath.Join(uploadsDir, fpath)
+		for _, file := range files {
 
-			ftype, err := writeFileToDisk(file, target)
+			fpath, err := saveFile(file, ftype)
 			if err != nil {
 				zero.Error(err.Error())
 				return c.String(http.StatusBadRequest, "Error uploading the file")
 			}
 
 			u := models.Upload{
-				Name:     fname,
+				Name:     file.Filename,
 				URL:      fpath,
 				UserUUID: user_uuid.String(),
-				Text:     txt,
+				Text:     "",
 				Type:     ftype,
 			}
 
 			uploads = append(uploads, u)
 		}
 	} else {
-		u := models.Upload{
-			Name:     fname,
-			URL:      fpath,
-			UserUUID: user_uuid.String(),
-			Text:     txt,
-			Type:     ftype,
-		}
-		uploads = append(uploads, u)
+		zero.Error("unrecognized file type")
+		return c.String(http.StatusBadRequest, "Error uploading the file: unknown file type")
 	}
 
-	zero.Debugf("adding uploads: %v \n", uploads)
+	// based on that uploaded file, we can convert it to a known file extension
+	// it should be done with ffmpeg, but that's going to depend on available libraries to be installed locally and with docker
+	// the writeToDisk function should be changed to return the path of the written file, rather than its type (known before hand)
+
+	for _, u := range uploads {
+		zero.Debugf("adding upload: %s - %s", u.Type, u.Name)
+	}
 
 	module, err := models.AddModuleUpload(module_uuid, uploads)
 	if err != nil {
@@ -91,30 +102,181 @@ func CreateUpload(c echo.Context) error {
 	return c.JSON(http.StatusOK, module)
 }
 
-func writeFileToDisk(file *multipart.FileHeader, target string) (string, error) {
+var s3Client *s3.S3
+
+func saveFile(file *multipart.FileHeader, ftype string) (string, error) {
+	key := os.Getenv("SPACES_API_KEY")
+	secret := os.Getenv("SPACES_API_SECRET")
+
+	s3Config := &aws.Config{
+		Credentials:      credentials.NewStaticCredentials(key, secret, ""),
+		Endpoint:         aws.String("https://fra1.digitaloceanspaces.com/"),
+		Region:           aws.String("us-east-1"),
+		S3ForcePathStyle: aws.Bool(false), // Depending on your version, alternatively use o.UsePathStyle = false
+	}
+
+	newSession, err := session.NewSession(s3Config)
+	if err != nil {
+		return "", err
+	}
+	s3Client = s3.New(newSession)
+
+	//-- generate target path
+	var fext string
+	switch ftype {
+	case models.ImageType:
+		fext = "webp"
+	case models.VideoType:
+		fext = "mp4"
+	case models.AudioType:
+		fext = "wav"
+	}
+
+	fname := fmt.Sprintf("%d_%s_%s.%s",
+		time.Now().Unix(),
+		uuid.New().String()[:8],
+		strings.Split(file.Filename, ".")[0],
+		fext,
+	)
+
+	var uploadsDir string
+	if os.Getenv("UPLOADS_DIR") == "" {
+		uploadsDir = "/tmp/suns/uploads"
+	} else {
+		uploadsDir = os.Getenv("UPLOADS_DIR")
+	}
+
+	target := filepath.Join(uploadsDir, fname)
+
 	src, err := file.Open()
 	if err != nil {
 		return "", err
 	}
 	defer src.Close()
 
-	dst, err := os.Create(target)
+	if ftype == models.ImageType {
+
+		//-- convert to webp
+		m, _, err := image.Decode(src)
+		if err != nil {
+			return "", err
+		}
+		encoded, err := webp.EncodeRGBA(m, 100)
+		if err != nil {
+			return "", err
+		}
+
+		err = os.WriteFile(target, encoded, 0666)
+		if err != nil {
+			return "", err
+		}
+
+		//-- read the converted file
+		body, err := os.ReadFile(target)
+		if err != nil {
+			return "", err
+		}
+
+		//-- upload object
+		upload := s3.PutObjectInput{
+			Bucket: aws.String("suns"),
+			Key:    aws.String(fname),
+			Body:   bytes.NewReader(body),
+			ACL:    aws.String("public-read"),
+		}
+
+		_, err = s3Client.PutObject(&upload)
+		if err != nil {
+			return "", err
+		}
+
+		err = os.Remove(target)
+		if err != nil {
+			return "", err
+		}
+
+	} else if ftype == models.VideoType {
+		fmt.Println("converting video")
+
+		dst, err := os.Create(target)
+		if err != nil {
+			return "", err
+		}
+		defer dst.Close()
+
+		if _, err = io.Copy(dst, src); err != nil {
+			return "", err
+		}
+
+		go transcodeAndUploadVideo(uploadsDir, fname)
+
+	} else if ftype == models.AudioType {
+		fmt.Println("converting audio")
+		//-- upload object
+		upload := s3.PutObjectInput{
+			Bucket: aws.String("suns"),
+			Key:    aws.String(fname),
+			Body:   src,
+			ACL:    aws.String("public-read"),
+		}
+
+		_, err = s3Client.PutObject(&upload)
+		if err != nil {
+			return "", err
+		}
+	} else {
+		fmt.Println("unknown upload type")
+	}
+
+	return fname, nil
+}
+
+func transcodeAndUploadVideo(dir string, original string) {
+
+	trans := new(transcoder.Transcoder)
+	transcoded := fmt.Sprintf("%s_transcoded.mp4", strings.Split(original, ".")[0])
+	src := filepath.Join(dir, original)
+	dst := filepath.Join(dir, transcoded)
+
+	err := trans.Initialize(src, dst) //-- overwrite video
 	if err != nil {
-		return "", err
-	}
-	defer dst.Close()
-
-	if _, err = io.Copy(dst, src); err != nil {
-		return "", err
+		zero.Error(err.Error())
+		return
 	}
 
-	// check mimetype
-	bytes, err := os.ReadFile(target)
+	done := trans.Run(false)
+	err = <-done
 	if err != nil {
-		return "", err
+		zero.Error(err.Error())
+		return
 	}
-	m := mimetype.Detect(bytes)
-	ftype := m.String()
 
-	return ftype, nil
+	body, err := os.ReadFile(dst)
+	if err != nil {
+		zero.Error(err.Error())
+	}
+
+	//-- upload object
+	upload := s3.PutObjectInput{
+		Bucket: aws.String("suns"),
+		Key:    aws.String(transcoded),
+		Body:   bytes.NewReader(body),
+		ACL:    aws.String("public-read"),
+	}
+
+	_, err = s3Client.PutObject(&upload)
+	if err != nil {
+		zero.Error(err.Error())
+	}
+
+	//-- cleanup after yourself
+	err = os.Remove(src)
+	if err != nil {
+		zero.Error(err.Error())
+	}
+
+	err = os.Remove(dst)
+	if err != nil {
+		zero.Error(err.Error())
+	}
 }

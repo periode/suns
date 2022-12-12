@@ -9,76 +9,94 @@ entrypoints:
     icon: "grey.svg"
     final_module_type: "Separate"
     modules:
+
       - name: "Welcome"
         type: "intro"
         contents:
           - type: "txt"
             key: "intro_txt_1"
-          - type: "vid"
-            key: "intro_vid_1"
+          - type: "img"
+            key: "intro_img_1"
+          - type: "txt"
+            key: "intro_txt_2"
+          - type: "img"
+            key: "intro_img_2"
+        uploads:
+          - user_uuid: "e8b74bcd-c864-41ee-b5a7-d3031f76c8a8"
+            url: "based-nerd.gif"
+            text: ""
+            type: "img"
+
       - name: "Welcome - Prompts"
         type: "task"
+        show_previous_uploads: true
         tasks:
           - type: "prompts_input"
             key: "intro_prompts_task"
-        contents:
-          - type: "vid"
-            key: "intro_prompts"
         hint: "This is the choice of prompts frequency"
-      - name: "Welcome - Map"
+
+      - name: "Welcome - DUO"
         type: "intro"
         contents:
           - type: "txt"
-            key: "intro_txt_2"
+            key: "intro_txt_duo_1"
           - type: "vid"
-            key: "intro_vid_2"
-        hint: "This is the part where you learn about the map"
-      - name: "Welcome - Co-creation 1"
+            key: "intro_vid_duo_2"
+          - type: "txt"
+            key: "intro_txt_duo_2"
+        hint: "This is the part where you learn about the gestures"
+
+      - name: "Welcome - See and Hear"
         type: "intro"
         contents:
-          - type: "txt"
-            key: "intro_txt_3"
-          - type: "vid"
-            key: "intro_vid_3"
-        hint: "This is the part where you learn about co-creation"
-      - name: "Welcome - Co-creation Image"
+          - type: "wav"
+            key: "intro_audio_1"
+        hint: "This is the part where you learn about the gestures and co-creation"
+        uploads:
+          - user_uuid: "e8b74bcd-c864-41ee-b5a7-d3031f76c8a8"
+            url: "sample.wav"
+            text: ""
+            type: "wav"
+
+      - name: "Welcome - Co-creation 1 Audio recording"
         type: "task"
+        show_previous_uploads: true
         tasks:
-          - type: "image_input"
-            key: "intro_txt_img_input"
           - type: "audio_input"
             key: "intro_txt_audio_input"
         uploads:
           - user_uuid: "e8b74bcd-c864-41ee-b5a7-d3031f76c8a8"
-            url: "sample.png"
+            url: "based-nerd.gif"
             text: ""
-            type: "image/png"
-          - user_uuid: "e8b74bcd-c864-41ee-b5a7-d3031f76c8a8"
-            url: "sample.wav"
-            text: ""
-            type: "audio/wav"
+            type: "img"
         hint: "This is where you upload a picture for the co-creation"
-      - name: "Welcome - Co-creation Video"
+
+      - name: "Welcome - Co-creation Text"
         type: "task"
-        tasks:
-          - type: "video_input"
-            key: "intro_txt_5"
-        uploads:
-          - user_uuid: "e8b74bcd-c864-41ee-b5a7-d3031f76c8a8"
-            url: "sample.mp4"
-            text: ""
-            type: "video/mp4"
-        hint: "This is where you upload a video for the co-creation"
-      - name: "Welcome - Co-creation text"
-        type: "task"
+        show_previous_uploads: true
         tasks:
           - type: "text_input"
+            key: "intro_txt_5"
+            min_limit: 2
+            max_limit: 300
+        uploads:
+          - user_uuid: "e8b74bcd-c864-41ee-b5a7-d3031f76c8a8"
+            url: ""
+            text: "yo this is the prompt you get from the bot bro"
+            type: "txt"
+        hint: "This is where you write a text based on the image you receive"
+      - name: "Welcome - Co-creation text"
+        type: "task"
+        show_previous_uploads: true
+        tasks:
+          - type: "image_input"
             key: "intro_txt_6"
+            max_limit: 1
         uploads:
           - user_uuid: "e8b74bcd-c864-41ee-b5a7-d3031f76c8a8"
             url: ""
             text: "this is the sample from the bot"
-            type: "text/plain"
+            type: "txt"
         hint: "This is where you upload a video for the co-creation"
       - name: "Welcome - Final"
         type: "final"
@@ -94,5 +112,13 @@ entrypoints:
             key: "intro_txt_sacrifice"
           - type: "vid"
             key: "conclusion_video"
-        hint: "This is the final countdown"
+        hint: "This is the final countdown for the sacrifice"
+      - name: "Welcome - Final message"
+        type: "intro"
+        contents:
+          - type: "txt"
+            key: "intro_txt_final"
+          - type: "vid"
+            key: "final_video"
+        hint: "This is the final countdown for the sacrifice"
 

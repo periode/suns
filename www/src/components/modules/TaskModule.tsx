@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from "react"
 import { AirTableContext } from "../../contexts/AirContext"
 import { getSession } from "../../utils/auth"
-import { IEntrypoint, IFile, IModule, IUpload } from "../../utils/types"
+import { IEntrypoint, IModule, IUpload, UPLOAD_TYPE } from "../../utils/types"
 import TextInputField from "../commons/forms/inputs/TextInputField"
 import WelcomePrompts from "../entrypoints/welcome/WelcomePrompts"
 import ContentAudio from "./content/ContentAudio"
-import ContentPhoto from "./content/ContentPhoto"
+import ContentImage from "./content/ContentImage"
 import ContentText from "./content/ContentText"
 import ContentVideoInternal from "./content/ContentVideoInternal"
 import AudioRecorder from "./tasks/AudioRecorder"
@@ -16,25 +16,23 @@ interface ITaskModuleProps {
     ep: IEntrypoint,
     index: number,
     handleNewUploads: Function,
-    isRequestingUploads: boolean,
-    handleUserDone: Function,
-    hasUserCompleted: boolean
+    setCanUserComplete: Function
 }
 
-const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, handleUserDone, hasUserCompleted }: ITaskModuleProps) => {
+const TaskModule = ({ data, ep, index, handleNewUploads, setCanUserComplete }: ITaskModuleProps) => {
     const session = getSession()
     const [inputs, setInputs] = useState(Array<IUpload>)
     const ctx = useContext(AirTableContext)
     const contents = ctx.get(ep.name)
 
     useEffect(() => {
-        if (index > 0 && ep.modules[index - 1] != undefined)
+        if (index > 0 && ep.modules[index - 1] !== undefined)
             setInputs(ep.modules[index - 1].uploads ? ep.modules[index - 1].uploads : [])
-    }, [ep])
+    }, [ep, index])
 
     const getTasks = () => {
         const tasks = data.tasks.map(((t, i) => {
-            const prompt = contents ? contents.get(t.key) : t.value != "" ? t.value : "No prompt for this task"
+            const prompt = contents ? contents.get(t.key) : t.value !== "" ? t.value : "No prompt for this task"
             switch (t.type) {
                 case "audio_input":
                     return (
@@ -43,7 +41,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
                                                 " key={`${t.type}-key-${i}`}>
                             <p>{prompt}</p>
 
-                            <AudioRecorder mod={data} index={index} ep={ep} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted} />
+                            <AudioRecorder uuid={t.uuid} mod={data} ep={ep} handleNewUploads={handleNewUploads}  />
                         </div>
                     )
                 case "video_input":
@@ -52,7 +50,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
                                     flex flex-col gap-4
                                             " key={`${t.type}-key-${i}`}>
                             <p>{prompt}</p>
-                            <FileUploader type="video" maxUploads={t.max_uploads} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted} />
+                            <FileUploader uuid={t.uuid} type={UPLOAD_TYPE.Video} maxUploads={t.max_limit} handleNewUploads={handleNewUploads} />
                         </div>)
                 case "image_input":
                     return (
@@ -60,7 +58,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
                                     flex flex-col gap-4
                                             " key={`${t.type}-key-${i}`}>
                             <p>{prompt}</p>
-                            <FileUploader type="image" maxUploads={t.max_uploads} handleNewUploads={handleNewUploads} isRequestingUploads={isRequestingUploads} handleUserDone={handleUserDone} hasUserCompleted={hasUserCompleted} />
+                            <FileUploader uuid={t.uuid} type={UPLOAD_TYPE.Image} maxUploads={t.max_limit} handleNewUploads={handleNewUploads} />
                         </div>)
                 case "text_input":
                     return (
@@ -68,8 +66,8 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
                                     flex flex-col gap-4
                                             " key={`${t.type}-key-${i}`}>
                             <p>{prompt}</p>
-                            <div className="h-60">
-                                <TextInputField handleNewUploads={handleNewUploads} handleUserDone={handleUserDone} isRequestingUploads={isRequestingUploads} hasUserCompleted={hasUserCompleted} placeholder={t.placeholder && contents?.get(t.placeholder)} />
+                            <div className="h-auto">
+                                <TextInputField uuid={t.uuid} text_type={t.text_type} minLimit={t.min_limit} maxLimit={t.max_limit} handleNewUploads={handleNewUploads} placeholder={t.placeholder && contents?.get(t.placeholder)} />
                             </div>
                         </div>)
                 case "prompts_input":
@@ -78,7 +76,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
                             " key={`${t.type}-key-${i}`}>
                         <p>{prompt}</p>
                         <div className="h-60">
-                            <WelcomePrompts handleUserDone={handleUserDone}/>
+                            <WelcomePrompts uuid={t.uuid} setCanUserComplete={setCanUserComplete} />
                         </div>
                     </div>)
                 default:
@@ -95,25 +93,25 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
         let inputElements = []
         for (const i of inputs) {
             if (i.user_uuid !== session.user.uuid)
-                switch (true) {
-                    case i.type.startsWith("text/plain"):
-                        inputElements.push((<ContentText key={i.uuid} text={i.text} />))
+                switch (i.type) {
+                    case UPLOAD_TYPE.Text:
+                        inputElements.push((<ContentText key={i.uuid} text={i.text} final={false} />))
                         break;
-                    case i.type.startsWith("audio/"):
-                        inputElements.push((<ContentAudio key={i.uuid} src={`${process.env.REACT_APP_API_URL}/static/${i.url}`} />))
+                    case UPLOAD_TYPE.Audio:
+                        inputElements.push((<ContentAudio key={i.uuid} src={i.url}/>))
                         break;
-                    case i.type.startsWith("video/"):
-                        inputElements.push((<ContentVideoInternal key={i.uuid} src={`${process.env.REACT_APP_API_URL}/static/${i.url}`} />))
+                    case UPLOAD_TYPE.Video:
+                        inputElements.push((<ContentVideoInternal key={i.uuid} src={i.url}/>))
                         break;
-                    case i.type.startsWith("image/"):
-                        inputElements.push((<ContentPhoto key={i.uuid} src={`${process.env.REACT_APP_API_URL}/static/${i.url}`} />))
+                    case UPLOAD_TYPE.Image:
+                        inputElements.push((<ContentImage key={i.uuid} src={i.url}/>))
                         break;
 
                     default:
                         break;
                 }
         }
-        if (inputElements.length == 0)
+        if (inputElements.length === 0)
             return (<>Could not find proper prompt</>)
         else
             return inputElements
@@ -130,7 +128,9 @@ const TaskModule = ({ data, ep, index, handleNewUploads, isRequestingUploads, ha
                 }
             </div>
             <div className="w-full h-full flex flex-col gap-6">
-                {getTasks()}
+                {
+                    getTasks()
+                }
             </div>
         </>
 

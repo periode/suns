@@ -26,7 +26,9 @@ entrypoints:
         tasks:
           - type: "text_input"
             key: "textinput_info_txt"
-            max_uploads: 1
+            min_limit: 2
+            max_limit: 300
+            text_type: "input"
         hint: "This is the second content"
       - name: "Upload 1 Image"
         type: "task"
@@ -34,7 +36,7 @@ entrypoints:
         tasks:
           - type: "image_input"
             key: "imgupload_info_txt"
-            max_uploads: 1
+            max_limit: 1
         hint: "This is the 1 single image input"
       - name: "Label random image from the 1 previous"
         type: "task"
@@ -42,12 +44,11 @@ entrypoints:
         tasks:
           - type: "text_input"
             key: "textinput_info_txt_2"
+            min_limit: 2
+            max_limit: 300
         hint: "This is the 1 grid image input"
       - name: "Final Symbiosis Gaze"
         type: "final"
-        contents:
-          - type: "txt"
-            key: "public_info_1"
         hint: "This is the final view for the symbiosis - gaze"
 
   - status: "open"
@@ -75,6 +76,7 @@ entrypoints:
         tasks:
           - type: "text_input"
             key: "textinput_info_txt"
+            max_limit: 300
         hint: "This is the text input"
       - name: "Upload 1 Video"
         type: "task"
@@ -82,16 +84,9 @@ entrypoints:
         tasks:
           - type: "video_input"
             key: "vidupload_info_txt"
-            max_uploads: 3
+            max_uploads: 1
       - name: "Final Symbiosis Task"
         type: "final"
-        contents:
-        - type: "txt"
-          key: "public_info_1"
-        - type: "txt"
-          key: "public_hl_1"
-        - type: "txt"
-          key: "public_hl_2"
         hint: "This is the final view for the symbiosis - Task. It should show the videos"
 
   - status: "open"
@@ -119,17 +114,20 @@ entrypoints:
         tasks:
           - type: "text_input"
             key: "textinput_info_txt"
+            min_limit: 2
+            max_limit: 300
         hint: "This is the text input"
-      - name: "Upload Audio"
+      - name: "Upload Video"
         type: "task"
         show_previous_uploads: true
         tasks:
           - type: "text_input"
             key: "input_1"
-            max_uploads: 1
-          - type: "audio_input"
-            key: "input_2"
-            max_uploads: 1
+            min_limit: 2
+            max_limit: 300
+          - type: "video_input"
+            key: "vidupload_info_txt"
+            max_limit: 1
       - name: "Final Symbiosis mean"
         type: "final"
         hint: "This is the final view for the symbiosis - Mean"

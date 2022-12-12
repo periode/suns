@@ -18,7 +18,8 @@ type Task struct {
 	Key         string `json:"key" yaml:"key"`
 	Value       string `json:"value" yaml:"value"`
 	Placeholder string `json:"placeholder" yaml:"placeholder"`
-	MaxUploads  int    `gorm:"default:1" json:"max_uploads" yaml:"max_uploads"`
+	MaxLimit    int    `gorm:"default:1" json:"max_limit" yaml:"max_limit"`
+	TextType    string `gorm:"default:area" json:"text_type" yaml:"text_type"`
 
 	//-- belongs to a module
 	ModuleUUID uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()" json:"module_uuid" yaml:"module_uuid"`

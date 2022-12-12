@@ -79,3 +79,26 @@ func SendModuleProgress(dest *models.User, ep *models.Entrypoint) error {
 	SendMail(dest.Email, "Module progress", "module_progress", body)
 	return nil
 }
+
+func SendSacrificeEmail(offerings []models.Entrypoint) error {
+	host := os.Getenv("FRONTEND_HOST")
+	for _, o := range offerings {
+		if o.Status == models.EntrypointPending || o.Status == models.EntrypointCompleted {
+			for _, u := range o.Users {
+				body := SacrificePayload{
+					Name:           u.Name,
+					Host:           host,
+					EntrypointUUID: o.UUID.String(),
+					EntrypointName: o.Name,
+				}
+
+				err := SendMail(u.Email, "Coming Sacrifice", "sacrifice", body)
+				if err != nil {
+					return err
+				}
+			}
+		}
+	}
+
+	return nil
+}

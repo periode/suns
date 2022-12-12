@@ -1,5 +1,5 @@
 import ContentAudio from "./ContentAudio"
-import ContentPhoto from "./ContentPhoto"
+import ContentImage from "./ContentImage"
 import ContentVideoExternal from "./ContentVideoExternal"
 
 interface ContentProps {
@@ -8,13 +8,13 @@ interface ContentProps {
     contents: Map<string, string>
 }
 
-const IntroContent = ({ type, airkey, contents }: ContentProps) => {
+const Content = ({ type, airkey, contents }: ContentProps) => {
     
     switch (type) {
         case "img":
             return (
-                <ContentPhoto src={contents.get(airkey) || ""}/>)
-        case "mp3":
+                <ContentImage src={contents.get(airkey) || ""}/>)
+        case "wav":
             return (
                 <ContentAudio src={contents.get(airkey) || ""}/>
                )
@@ -31,4 +31,4 @@ const IntroContent = ({ type, airkey, contents }: ContentProps) => {
     }
 }
 
-export default IntroContent
+export default Content
