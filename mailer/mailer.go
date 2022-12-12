@@ -83,7 +83,7 @@ func SendModuleProgress(dest *models.User, ep *models.Entrypoint) error {
 func SendSacrificeEmail(offerings []models.Entrypoint) error {
 	host := os.Getenv("FRONTEND_HOST")
 	for _, o := range offerings {
-		if o.Status == models.EntrypointPending {
+		if o.Status == models.EntrypointPending || o.Status == models.EntrypointCompleted {
 			for _, u := range o.Users {
 				body := SacrificePayload{
 					Name:           u.Name,
