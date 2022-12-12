@@ -188,10 +188,12 @@ const Entrypoint = (props: any) => {
     const parseModule = (index: number, ep: IEntrypoint) => {
         const mod = ep.modules[index]
 
+        console.log(ep)
+
         switch (mod.type) {
             case "intro":
                 return (
-                    <IntroModule epName={ep.name} data={mod} />
+                    <IntroModule airtable_key={ep.airtable_key} data={mod} />
                 )
             case "task":
                 return (

@@ -7,7 +7,7 @@ const WelcomeIntro = () => {
     const contents = ctx.get("Welcome")
     if (contents === undefined) {
         return (<>
-            There was a problem getting information from the Airtable
+            Intro : There was a problem getting information from the database
         </>)
     }
     

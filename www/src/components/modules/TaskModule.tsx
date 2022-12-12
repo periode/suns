@@ -23,7 +23,7 @@ const TaskModule = ({ data, ep, index, handleNewUploads, setCanUserComplete }: I
     const session = getSession()
     const [inputs, setInputs] = useState(Array<IUpload>)
     const ctx = useContext(AirTableContext)
-    const contents = ctx.get(ep.name)
+    const contents = ctx.get(ep.airtable_key)
 
     useEffect(() => {
         if (index > 0 && ep.modules[index - 1] !== undefined)

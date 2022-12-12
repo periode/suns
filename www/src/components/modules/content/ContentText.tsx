@@ -15,7 +15,7 @@ function ContentText({ index, text, name, ep_name, final }: ContentTextProps) {
 	console.log(name, ep_name, index);
 	
 	const getLabel = () => {
-		if (index != undefined && name && name.length > 0 && ep_name && ep_name.length > 0)
+		if (index !== undefined && name && name.length > 0 && ep_name && ep_name.length > 0)
 			return (<div>{name} {contents?.get(`${ep_name}_text_${index}`)}:</div>)
 		else
 			return (<></>)

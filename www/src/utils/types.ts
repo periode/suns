@@ -41,6 +41,7 @@ export interface IEntrypoint {
     uuid: string,
     created_at: string,
     name: string,
+    airtable_key: string,
     key: string,
     status: ENTRYPOINT_STATUS,
     cluster: ICluster,

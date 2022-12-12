@@ -3,7 +3,8 @@ name: "Draught"
 entrypoints:
 - status: "open"
   cluster_uuid: "03ed6a2b-aacb-4c24-b1e1-3495821f846d"
-  name: "DraughtYou"
+  name: "Draught: You"
+  airtable_key: "DraughtYou"
   lat: 240.300
   lng: 240.400
   icon: "yellow.svg"
@@ -47,7 +48,8 @@ entrypoints:
 
 - status: "open"
   cluster_uuid: "03ed6a2b-aacb-4c24-b1e1-3495821f846d"
-  name: "DraughtWorld"
+  name: "Draught: World"
+  airtable_key: "DraughtWorld"
   lat: 150.300
   lng: 150.400
   icon: "yellow.svg"
@@ -84,7 +86,8 @@ entrypoints:
 
 - status: "open"
   cluster_uuid: "03ed6a2b-aacb-4c24-b1e1-3495821f846d"
-  name: "DraughtPersonal"
+  name: "Draught: Personal"
+  airtable_key:  "DraughtPersonal"
   lat: 540.300
   lng: 550.400
   icon: "yellow.svg"

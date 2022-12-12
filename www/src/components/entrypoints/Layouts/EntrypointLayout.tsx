@@ -59,7 +59,7 @@ function EntrypointLayout({
 					</div>
 					<div className="w-full md:flex">
 						<div className="w-full border-b border-amber-500">
-							<EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
+							<EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status}/>
 						</div>
 					</div>
 					{ module }
@@ -86,7 +86,7 @@ function EntrypointLayout({
 					</div>
 					<div className="w-full md:flex">
 						<div className="w-full border-b border-stone-500">
-							<EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
+							<EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status}/>
 						</div>
 					</div>
 					{ module }
@@ -122,7 +122,7 @@ function EntrypointLayout({
 					}
 				
 						<div className="w-full border-b border-amber-900">
-							<EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status} sessionUserUuid={session.user.uuid} />
+							<EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status}/>
 						</div>
 					</div>
 					{ module }

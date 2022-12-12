@@ -51,7 +51,9 @@ type Entrypoint struct {
 	UUID      uuid.UUID      `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
 	Status    string         `gorm:"default:unlisted" json:"status"`
 
-	Name          string `gorm:"not null" json:"name" form:"name" binding:"required"`
+	Name        string `gorm:"not null" json:"name" form:"name" binding:"required"`
+	AirtableKey string `gorm:"not null" json:"airtable_key" yaml:"airtable_key" binding:"required"`
+
 	Slug          string `gorm:"" json:"slug"`
 	Icon          string `gorm:"default:black.svg" json:"icon" yaml:"icon"`
 	Generation    int    `gorm:"default:0" json:"generation"`

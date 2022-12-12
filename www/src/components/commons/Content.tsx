@@ -40,7 +40,7 @@ const Content = ({ type, airkey, contents, value }: ContentProps) => {
     }
 
     return (<>
-        There was a problem getting information from the Airtable
+        Content: There was a problem getting information from the database
     </>)
 }
 

@@ -5,6 +5,7 @@ entrypoints:
     cluster_uuid: "06ed6a2b-bbcb-4c24-b1e1-3495821f846a"
     visibility: "hidden"
     name: "Welcome"
+    airtable_key:  "Welcome"
     max_users: 2
     icon: "grey.svg"
     final_module_type: "Separate"
