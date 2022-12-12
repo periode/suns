@@ -10,6 +10,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/gosimple/slug"
 	"github.com/lib/pq"
+	zero "github.com/periode/suns/api/logger"
 	"gorm.io/gorm"
 )
 
@@ -90,10 +91,46 @@ func (e *Entrypoint) BeforeCreate(tx *gorm.DB) (err error) {
 		e.UserCompleted = append(e.UserCompleted, 0)
 	}
 
-	e.Lat = rand.Float32()*900 + 50
-	e.Lng = rand.Float32()*900 + 50
+	lng, lat := generatePosition()
+	e.Lat = lat
+	e.Lng = lng
 
 	return nil
+}
+
+const POSITION_DISTANCE = 50
+
+// -- generatePosition generates a pair of coordinates that are guaranteed to not be closer to any other entrypoint than POSITION_DISTANCE
+func generatePosition() (float32, float32) {
+	var lng, lat float32
+
+	//generate two numbers
+	lng = rand.Float32()*900 + 50
+	lat = rand.Float32()*900 + 50
+
+	eps, err := GetAllEntrypoints()
+	if err != nil {
+		zero.Error(err.Error())
+		return 0, 0
+	}
+
+	isTooClose := false
+	for _, ep := range eps {
+		if distance(lng, lat, ep.Lng, ep.Lat) < POSITION_DISTANCE {
+			isTooClose = true
+		}
+	}
+
+	if !isTooClose {
+		return lng, lat
+	} else {
+		return generatePosition()
+	}
+}
+
+func distance(y1 float32, x1 float32, y2 float32, x2 float32) float64 {
+	dist := math.Sqrt(math.Pow(float64(x1-x2), 2) + math.Pow(float64(y1-y2), 2))
+	return dist
 }
 
 func CreateEntrypoint(entry *Entrypoint) (Entrypoint, error) {
