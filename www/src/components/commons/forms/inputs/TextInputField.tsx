@@ -32,7 +32,7 @@ const TextInputField = ({
 			handleNewUploads([{ uuid: uuid, file: undefined, text: inputRef.current.value, type: UPLOAD_TYPE.Text }])
 		}
 		else
-			handleNewUploads() //-- TODO we might need to pass an empty array here?
+			handleNewUploads([{ uuid: uuid, file: undefined, text: "", type: UPLOAD_TYPE.Text }])
 	}
 
 	return (
