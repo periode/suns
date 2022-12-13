@@ -206,8 +206,6 @@ const Entrypoint = (props: any) => {
     const parseModule = (index: number, ep: IEntrypoint) => {
         const mod = ep.modules[index]
 
-        console.log(ep)
-
         switch (mod.type) {
             case "intro":
                 return (

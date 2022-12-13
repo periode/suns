@@ -6,6 +6,7 @@ import ContentText from "../modules/content/ContentText"
 import { AirTableContext } from "../../contexts/AirContext"
 import { useContext } from "react"
 import EntrypointPartners from "./EntrypointPartners"
+import SeperatorFinal from "../commons/layout/SeperatorFinal"
 
 interface PublicViewProps {
     entrypoint: IEntrypoint
@@ -116,21 +117,22 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
     }
 
     const getHeader = () => { 
-        return (<div className="text-center">
-                    <div>
-                        This is the final outcome of the gesture <span className="italic">{entrypoint.name}</span> by
-                    </div>
-                    
-                    <div className="flex flex-row justify-center">
-                        
-                        <EntrypointPartners
-                            users={entrypoint.users}
-                            max_users={entrypoint.max_users}
-                            partner_status={PARTNER_STATUS.PartnerFull}
-                        />
-                            </div>
-                            <div>{contents?.get(`${entrypoint.airtable_key}_intro`)}</div>
-                        </div>)
+        return (
+        <div className="w-full flex flex-col items-center pt-4
+                                text-center text-sm">
+            <div>
+                This is the final outcome of the gesture <span className="italic">{entrypoint.name}</span> by
+            </div>
+            <EntrypointPartners
+                users={entrypoint.users}
+                max_users={entrypoint.max_users}
+                partner_status={PARTNER_STATUS.PartnerFull}
+            />
+            <div>
+                {contents?.get(`${entrypoint.airtable_key}_intro`)}
+            </div>
+        </div>
+        )
     }
 
 

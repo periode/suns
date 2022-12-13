@@ -14,13 +14,6 @@ function ContentImage({ index, src, name, ep_name }: ContentImageProps) {
 	
 	const hadAttemptedFallback = useRef(false)
 
-	const getLabel = () => {
-		if(index !== undefined && name && name.length > 0 && ep_name && ep_name.length > 0)
-			return(<div>{name} {contents?.get(`${ep_name}_image_${index}`)}:</div>)
-		else
-			return(<></>)
-	}
-
 	const handleMissingImage = (e: React.BaseSyntheticEvent) => {
 		const t = e.currentTarget
 		if (hadAttemptedFallback.current !== true)
@@ -30,10 +23,24 @@ function ContentImage({ index, src, name, ep_name }: ContentImageProps) {
 		}
 	}
 
+	var assetIntro = () => {
+
+		const narrationString : string | undefined = contents?.get(`${ep_name}_image_${index}`)
+		
+		if (narrationString && name)
+			return narrationString.replace("{user}", name)
+		else
+			return name + ":"
+	}
+
+
 	return (
-		<div className="flex flex-col items-center justify-start mb-5">
-			{getLabel()}
-			<img className="w-auto max-h-80"
+		<div className="w-full flex flex-col gap-2 justify-start mb-5">
+			{
+				index !== undefined && name && name.length > 0 && ep_name && ep_name.length > 0 &&
+					<div className="text-sm">{ assetIntro() }</div>
+			}
+			<img className="w-auto md:max-h-80 self-center"
 				src={`${process.env.REACT_APP_SPACES_URL}/${src}`}
 				alt={src}
 				onError={handleMissingImage} />

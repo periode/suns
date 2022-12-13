@@ -19,7 +19,7 @@ function EntrypointCountdown( {endDate} : EntrypointCountdownProps ) {
 		<div className="w-full h-12 
 						flex-1
 						flex items-center justify-center
-						font-mono
+						font-mono text-sm
 						">
 			{
 				isNaN(days) ? '-- : -- : -- : --' :

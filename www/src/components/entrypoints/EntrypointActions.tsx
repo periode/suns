@@ -70,7 +70,7 @@ function EntrypointActions({
 	const Step =
 		<p className=" 	w-full h-full
 					flex items-center justify-center
-					text-center  font-mono
+					text-center  font-mono text-sm
 					opacity-50">
 			{ep.current_module + 1} / {ep.modules.length}
 		</p>
@@ -91,7 +91,7 @@ function EntrypointActions({
 
 
 	return (
-		<div className="w-full flex items-center justify-between">
+		<div className="w-full flex items-center justify-between text-sm">
 			<div className="w-16">
 
 				{ShareButton}

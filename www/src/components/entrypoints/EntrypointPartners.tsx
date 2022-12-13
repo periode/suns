@@ -17,25 +17,8 @@ const EntrypointPartners = ({
 	partner_status,
 }: EntrypointPartnersProps) => {
 	
-	var opacityLeft: number = 0.5;
-	var opacityRight: number = 0.5;
-	if (partner_status === PARTNER_STATUS.PartnerNone) {
-		opacityLeft = 0.5
-		opacityRight = 0.5
-	}
-	else if (partner_status === PARTNER_STATUS.PartnerPartial) {
-		opacityLeft = 1
-		opacityRight = 0.5
-	}
-	else {
-		opacityLeft = 1
-		opacityRight = 1
-	}
-
-
 	if (partner_status === PARTNER_STATUS.PartnerNone)
 	{
-		if (max_users !== 1) {
 			return (
 				<div className="h-12 w-full
 							pl-2 pr-2
@@ -47,8 +30,6 @@ const EntrypointPartners = ({
 					}
 				</div>
 			)
-		}
-		else return <></>
 	}
 	else if (partner_status === PARTNER_STATUS.PartnerPartial)
 	{
