@@ -100,6 +100,7 @@ func createEntrypoints() {
 		zero.Debug(fmt.Sprintf("Open entrypoints: %d%% (%d/%d)", int(remaining*100), open, len(eps)))
 
 		if remaining < Conf.CREATION_THRESHOLD || len(eps) < Conf.MIN_ENTRYPOINTS {
+			state.generation++
 			numEntrypoints := 5
 			_, err := models.AddClusterEntrypoints(pool.Pick(numEntrypoints))
 			if err != nil {
@@ -206,7 +207,6 @@ func commitSacrifice(offerings []models.Entrypoint) {
 	}
 
 	state.sacrificeWave++
-	state.generation++
 	state.sacrificeTime = time.Time{}
 
 	updateMap()
