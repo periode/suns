@@ -16,6 +16,7 @@ import AirContext from './contexts/AirContext';
 import { IEntrypoint } from './utils/types';
 import Cracks from './pages/archives/Cracks';
 import Sacrifice from './pages/archives/Sacrifice';
+import EntrypointNotFound from './components/entrypoints/EntrypointNotFound';
 
 export interface EntrypointInterface {
   uuid: string
@@ -145,6 +146,7 @@ const App = () => {
             </div>
             <Routes>
               <Route path=":id" element={<Entrypoint />} />
+              <Route path="gone" element={<EntrypointNotFound />} />
               <Route path="archive/cracks" element={<Cracks />} />
               <Route path="archive/sacrifice" element={<Sacrifice />} />
             </Routes>

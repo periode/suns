@@ -47,6 +47,11 @@ const Entrypoint = (props: any) => {
                     setData(e as IEntrypoint)
 
                     let current = e.modules[e.current_module]
+                    if(current == null){
+                        navigate('/entrypoints/gone', {replace: true})
+                        return
+                    }
+
                     if (current.type === "intro"
                         || (current.type === "task" && current.tasks[0].type === "prompts_input")
                         || (current.type === "final" && e.current_module < e.modules.length - 1))
@@ -55,7 +60,7 @@ const Entrypoint = (props: any) => {
                 .catch(err => {
                     console.error('error', err)
                     // TODO add a modal to explain this entrypoint is gone
-                    navigate('/', { replace: true })
+                    navigate('/entrypoints/gone', { replace: true })
                 })
             hasData.current = true
         }
