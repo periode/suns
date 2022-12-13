@@ -53,7 +53,6 @@ func (p *Pool) Generate() error {
 				p.entrypoints = append(p.entrypoints, ep)
 			}
 		}
-
 	}
 
 	zero.Debugf("engine generated entrypoints: %d", len(p.entrypoints))

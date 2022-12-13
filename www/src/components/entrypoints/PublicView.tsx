@@ -7,13 +7,14 @@ import { AirTableContext } from "../../contexts/AirContext"
 import { useContext } from "react"
 import EntrypointPartners from "./EntrypointPartners"
 import SeperatorFinal from "../commons/layout/SeperatorFinal"
+import { useNavigate } from "react-router-dom"
 
 interface PublicViewProps {
     entrypoint: IEntrypoint
 }
 
 const PublicView = ({ entrypoint }: PublicViewProps) => {
-
+    const navigate = useNavigate()
     const ctx = useContext(AirTableContext)
     const contents = ctx.get("PublicView")
 
@@ -116,22 +117,22 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
         return <>A problem occured, entrypoint.final_module_type: {entrypoint.final_module_type}</>
     }
 
-    const getHeader = () => { 
+    const getHeader = () => {
         return (
-        <div className="w-full flex flex-col items-center pt-4
+            <div className="w-full flex flex-col items-center pt-4
                                 text-center text-sm">
-            <div>
-                This is the final outcome of the gesture <span className="italic">{entrypoint.name}</span> by
+                <div>
+                    This is the final outcome of the gesture <span className="italic">{entrypoint.name}</span> by
+                </div>
+                <EntrypointPartners
+                    users={entrypoint.users}
+                    max_users={entrypoint.max_users}
+                    partner_status={PARTNER_STATUS.PartnerFull}
+                />
+                <div>
+                    {contents?.get(`${entrypoint.airtable_key}_intro`)}
+                </div>
             </div>
-            <EntrypointPartners
-                users={entrypoint.users}
-                max_users={entrypoint.max_users}
-                partner_status={PARTNER_STATUS.PartnerFull}
-            />
-            <div>
-                {contents?.get(`${entrypoint.airtable_key}_intro`)}
-            </div>
-        </div>
         )
     }
 
@@ -151,6 +152,14 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
                     )
                 })}
             </div>
+            {entrypoint.name === "Cracks" ?
+                <button className=" flex items-center justify-center gap-1
+                    h-8 bg-none p-2 pl-4 pr-4
+                text-green-500 font-mono text-sm font-bold 
+                border border-1 border-green-500
+                hover:text-green-600 hover:border-green-600
+                transition-all ease-in duration-300" onClick={() => { navigate(`/entrypoints/archive/sacrifice`, { replace: true }) }}>Go to the cracks archive</button>
+                : <></>}
         </div >
     )
 
