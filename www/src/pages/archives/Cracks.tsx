@@ -80,17 +80,8 @@ const Cracks = () => {
                 </div>
                 <div className="   w-full p-4
                                      flex items-start justify-start flex-wrap gap-4 " >
-                    {cracks?.map(c => {
-                        return (<Crack data={c}/>)
-                    })}
-                    {cracks?.map(c => {
-                        return (<Crack data={c}/>)
-                    })}
-                    {cracks?.map(c => {
-                        return (<Crack data={c}/>)
-                    })}
-                    {cracks?.map(c => {
-                        return (<Crack data={c}/>)
+                    { cracks?.map((c, i) => {
+                        return (<Crack key={"crack-" + i} data={c}/>)
                     })}
                 </div>
             </div>

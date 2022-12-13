@@ -122,7 +122,7 @@ const App = () => {
                 <ImageOverlay url={backgroundMap} bounds={bounds} />
                 <>
                   {entrypoints.map((ep, index) => {
-                    if (ep.visibility == "visible") {
+                    if (ep.visibility === "visible") {
                       return (
                         <EntrypointMarker
                           key={`ep-${ep.name.replace(' ', '-')}-${index}-${ep.uuid}`}
