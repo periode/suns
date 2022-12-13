@@ -10,22 +10,6 @@ const Welcome = () => {
     const [stage, setStage] = useState(0) //-- 0 = text, 1 = mark making, 2 = signup
     const [mark, setMark] = useState<Blob>()
 
-    useEffect(() => {
-        switch (stage) {
-            case 1:
-                console.log("done with intro");
-                break;
-            case 2:
-                console.log("done with mark making, hold it in memory for now");
-                break;
-            case 3:
-                console.log("done with signing up, let's fetch all of this to the server. on promise resolve, open the new entrypoint.");
-                break;
-            default:
-                break;
-        }
-    })
-
     const saveMark = () => {
 		let el = document.getElementById("defaultCanvas0") as HTMLCanvasElement
 		let f : File

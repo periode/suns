@@ -46,7 +46,7 @@ const FileUploader = ({ type, uuid, maxUploads = 1, handleNewUploads }: IFileUpl
                     key={`fileinput-${i}`} 
                     type="file"
                     capture="environment" 
-                    accept={`${type}/*`} 
+                    accept={type === "img" ? "image/*" : "video/*"}
                     onChange={handleFileChange}
                     className="font-mono text-sm w-full bg-amber-100 p-4 flex flex-col gap-4 text-amber-900/50 
                                 file:p-2 file:pr-4 file:pl-4 file:bg-transparent file:border-amber-500 file:text-amber-500 file:font-semibold file:border-[1px] file:shadow-none file:border-solid file:mr-4

@@ -87,7 +87,6 @@ const AudioRecorder = ({ uuid, mod, ep, handleNewUploads }: AudioRecorderProps) 
     }
 
     const handleRecordButtonClick = () => {
-        console.log("Calling handleRecordButtonClick with recordingState: " + recordingState)
         switch (recordingState) {
             case "idle":
                 startRecording()

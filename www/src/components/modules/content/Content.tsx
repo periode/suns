@@ -20,7 +20,6 @@ const Content = ({ type, airkey, contents }: ContentProps) => {
                 <ContentAudio src={contents.get(airkey) || ""}/>
                )
         case "txt":
-            console.log(contents.get(airkey))
             return (
                 <ContentTextFromCSS>{ contents.get(airkey) || "" }</ContentTextFromCSS>
             )
