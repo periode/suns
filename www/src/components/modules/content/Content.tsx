@@ -1,5 +1,6 @@
 import ContentAudio from "./ContentAudio"
 import ContentImage from "./ContentImage"
+import ContentTextFromCSS from "./ContentTextFromCMS"
 import ContentVideoExternal from "./ContentVideoExternal"
 
 interface ContentProps {
@@ -19,8 +20,9 @@ const Content = ({ type, airkey, contents }: ContentProps) => {
                 <ContentAudio src={contents.get(airkey) || ""}/>
                )
         case "txt":
+            console.log(contents.get(airkey))
             return (
-                <p>{ contents.get(airkey) || "" }</p>
+                <ContentTextFromCSS>{ contents.get(airkey) || "" }</ContentTextFromCSS>
             )
         case "vid":
             return (
