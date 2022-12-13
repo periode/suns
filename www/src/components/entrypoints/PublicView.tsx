@@ -117,20 +117,23 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
     }
 
     const getHeader = () => { 
+
+        const publicIntro = contents?.get(`${entrypoint.airtable_key}_intro`)
+
         return (
-        <div className="w-full flex flex-col items-center pt-4
+        <div className="w-full flex flex-col items-center gap-2
                                 text-center text-sm">
-            <div>
-                This is the final outcome of the gesture <span className="italic">{entrypoint.name}</span> by
+            <div className="text-xs">
+                This is the final outcome of the gesture <span className="italic">{entrypoint.name}</span>
             </div>
-            <EntrypointPartners
-                users={entrypoint.users}
-                max_users={entrypoint.max_users}
-                partner_status={PARTNER_STATUS.PartnerFull}
-            />
-            <div>
-                {contents?.get(`${entrypoint.airtable_key}_intro`)}
-            </div>
+            {
+                publicIntro && 
+                <div className="w-full text-sm flex flex-col items-center gap-2 ">
+                    <SeperatorFinal />
+                        {publicIntro}
+                    <SeperatorFinal/>
+                </div>
+            }
         </div>
         )
     }

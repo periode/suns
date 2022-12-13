@@ -1,5 +1,21 @@
 import { IFile, IModule } from "./types";
 
+
+export const assetIntro = (
+    contents: Map<string, string> | undefined,
+    type: string,
+    ep_name: string,
+    index: number,
+    name: string,
+) => {
+		const narrationString : string | undefined = contents?.get(`${ep_name}_${type}_${index}`)
+		
+		if (narrationString && name)
+			return narrationString.replace("{user}", name)
+		else
+			return name + ":"
+}
+
 export async function fetchEntrypoint(id: string, token: string) {
     const endpoint = new URL(`entrypoints/${id}`, process.env.REACT_APP_API_URL)
 

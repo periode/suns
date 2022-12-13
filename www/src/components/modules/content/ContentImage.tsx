@@ -1,5 +1,6 @@
 import React, { useContext, useRef } from "react";
 import { AirTableContext } from "../../../contexts/AirContext";
+import { assetIntro } from "../../../utils/entrypoint";
 
 interface ContentImageProps {
 	index?: number,
@@ -23,22 +24,28 @@ function ContentImage({ index, src, name, ep_name }: ContentImageProps) {
 		}
 	}
 
-	var assetIntro = () => {
+	// var assetIntro = () => {
 
-		const narrationString : string | undefined = contents?.get(`${ep_name}_image_${index}`)
+	// 	const narrationString : string | undefined = contents?.get(`${ep_name}_image_${index}`)
 		
-		if (narrationString && name)
-			return narrationString.replace("{user}", name)
-		else
-			return name + ":"
-	}
+	// 	if (narrationString && name)
+	// 		return narrationString.replace("{user}", name)
+	// 	else
+	// 		return name + ":"
+	// }
 
 
 	return (
-		<div className="w-full flex flex-col gap-2 justify-start mb-5">
+		<div className="w-full flex flex-col gap-2 items-center justify-start mb-5">
 			{
 				index !== undefined && name && name.length > 0 && ep_name && ep_name.length > 0 &&
-					<div className="text-sm">{ assetIntro() }</div>
+				<div className="text-sm">{assetIntro(
+						contents,
+						"img",
+						ep_name,
+						index,
+						name
+					) }</div>
 			}
 			<img className="w-auto md:max-h-80 self-center"
 				src={`${process.env.REACT_APP_SPACES_URL}/${src}`}

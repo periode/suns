@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { FiX } from "react-icons/fi";
+import { FiX, FiZap } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { ENTRYPOINT_STATUS, IEntrypoint } from "../../utils/types";
 import Crack from "./Crack";
@@ -62,16 +62,33 @@ const Cracks = () => {
             <div className="
                         flex flex-col
                         w-full h-full md:w-[720px] md:h-4/5 
-                        border border-amber-500 
-                        text-amber-900
-                        bg-amber-50
+                        border border-slate-500 
+                        text-slate-900
+                        bg-slate-50
                         ">
-                <div className="cursor-pointer"
-                    onClick={() => navigate('/', { replace: true })}>
-                    <FiX className="text-[32px]" />
+                <div className="w-full
+                                flex justify-between p-4 items-center
+                                border-b border-slate-500 text-slate-500">
+
+                    <div className="full flex items-center gap-4  ">
+                        <FiZap className="text-[32px]" />
+                        <h1 className="text-xl font-bold">Cracks</h1>
+                    </div>
+                    <div className="cursor-pointer" onClick={() => navigate('/', { replace: true })}>
+                        <FiX className="text-[32px]" />
+                    </div>
                 </div>
-                <h1 className="text-4xl text-center mb-5">This is the cracks</h1>
-                <div>
+                <div className="   w-full p-4
+                                     flex items-start justify-start flex-wrap gap-4 " >
+                    {cracks?.map(c => {
+                        return (<Crack data={c}/>)
+                    })}
+                    {cracks?.map(c => {
+                        return (<Crack data={c}/>)
+                    })}
+                    {cracks?.map(c => {
+                        return (<Crack data={c}/>)
+                    })}
                     {cracks?.map(c => {
                         return (<Crack data={c}/>)
                     })}

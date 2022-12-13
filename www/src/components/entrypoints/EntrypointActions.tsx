@@ -96,7 +96,11 @@ function EntrypointActions({
 
 				{ShareButton}
 			</div>
-			{Step}
+
+			{
+				ep.current_module + 1 !== ep.modules.length &&
+					Step
+			}
 			<div className="w-16">
 				{rightButtonDisplay()}
 			</div>
