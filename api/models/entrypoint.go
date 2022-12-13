@@ -174,13 +174,24 @@ func GetAllEntrypoints() ([]Entrypoint, error) {
 	return eps, result.Error
 }
 
+// -- GetMapEntrypoints returns all entrypoints that are visible on the map and that have modules. It is used to generate the map, and to determine the creation of new entrypoints.
 func GetMapEntrypoints() ([]Entrypoint, error) {
 	eps := make([]Entrypoint, 0)
-	result := db.Preload("Cluster").Where("visibility = ?", EntrypointVisible).Find(&eps)
+	result := db.Preload("Modules").Preload("Cluster").Preload("Users").Where("visibility = ?", EntrypointVisible).Find(&eps)
 
-	return eps, result.Error
+	final := make([]Entrypoint, 0)
+	for _, ep := range eps {
+		if len(ep.Modules) == 0 {
+			// zero.Debugf("no modules on entrypoint: %s", ep.Name)
+		} else {
+			final = append(final, ep)
+		}
+	}
+
+	return final, result.Error
 }
 
+// -- GetCrackEntrypoints returns all entrypoints associated with the Cracks cluster type
 func GetCrackEntrypoints() ([]Entrypoint, error) {
 	eps := make([]Entrypoint, 0)
 	result := db.Preload("Modules").Preload("Cluster").Preload("Users").Where("status = ?", EntrypointCompleted).Find(&eps)

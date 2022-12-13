@@ -24,23 +24,14 @@ func GetAllEntrypoints(c echo.Context) error {
 }
 
 func GetMapEntrypoints(c echo.Context) error {
-	eps, err := models.GetAllEntrypoints()
-
-	final := make([]models.Entrypoint, 0)
-	for _, ep := range eps {
-		if len(ep.Modules) == 0 {
-			// zero.Debugf("no modules on entrypoint: %s", ep.Name)
-		} else {
-			final = append(final, ep)
-		}
-	}
+	eps, err := models.GetMapEntrypoints()
 
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "There was an error getting the Entrypoints.")
 	}
 
-	return c.JSON(http.StatusOK, final)
+	return c.JSON(http.StatusOK, eps)
 }
 
 func GetCrackEntrypoints(c echo.Context) error {

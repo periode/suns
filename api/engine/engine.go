@@ -80,9 +80,9 @@ func createEntrypoints() {
 	for {
 		time.Sleep(Conf.CREATE_INTERVAL)
 
-		eps, err := models.GetEntrypointsByGeneration(state.generation)
+		eps, err := models.GetMapEntrypoints()
 		if err != nil {
-			zero.Errorf("Failed getting current generation entrypoints", err.Error())
+			zero.Errorf("Failed getting current map entrypoints", err.Error())
 		}
 
 		if len(eps) > Conf.MAX_ENTRYPOINTS {
@@ -97,12 +97,12 @@ func createEntrypoints() {
 		}
 
 		remaining := float64(open) / float64(len(eps))
-		zero.Debug(fmt.Sprintf("Open entrypoints: %d%% (%d/%d)", int(remaining*100), open, len(eps)))
+		zero.Debug(fmt.Sprintf("open entrypoints: %d%% (%d/%d)", int(remaining*100), open, len(eps)))
 
 		if remaining < Conf.CREATION_THRESHOLD || len(eps) < Conf.MIN_ENTRYPOINTS {
 			state.generation++
-			numEntrypoints := 5
-			_, err := models.AddClusterEntrypoints(pool.Pick(numEntrypoints))
+			newEps := pool.Pick(Conf.NEW_ENTRYPOINT_AMOUNT)
+			_, err := models.AddClusterEntrypoints(newEps)
 			if err != nil {
 				zero.Errorf("Failed to create new entrypoint: %s", err.Error())
 			}
@@ -144,7 +144,7 @@ func sacrificeEntrypoints() {
 		time.Sleep(Conf.SACRIFICE_INTERVAL)
 
 		//-- check which area is the most densely populated
-		eps, err := models.GetMapEntrypoints()
+		eps, err := models.GetAllEntrypoints()
 		if err != nil {
 			zero.Error(err.Error())
 			continue
@@ -297,21 +297,14 @@ func updateMap() {
 	}
 
 	body := url.Values{}
-	eps, err := models.GetAllEntrypoints()
+	eps, err := models.GetMapEntrypoints()
 	if err != nil {
 		zero.Error(err.Error())
 	}
 
-	finals := make([]models.Entrypoint, 0)
-	for _, ep := range eps {
-		if len(ep.Modules) > 0 && ep.Cluster.Name != "Welcome" {
-			finals = append(finals, ep)
-		}
-	}
+	zero.Debugf("map updating with entrypoints length: %d", len(eps))
 
-	zero.Debugf("map updating with entrypoints length: %d", len(finals))
-
-	for i, ep := range finals {
+	for i, ep := range eps {
 		body.Add(fmt.Sprintf("p%d", i), fmt.Sprintf("%d,%s,%s,%f,%f", ep.Generation, ep.Status, ep.Cluster.Name, ep.Lat, ep.Lng))
 	}
 	endpoint := fmt.Sprintf("%s/post", os.Getenv("MAP_HOST"))

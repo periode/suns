@@ -21,8 +21,9 @@ type Config struct {
 	SACRIFICE_DELAY       time.Duration `form:"SACRIFICE_DELAY"`
 	SACRIFICE_THRESHOLD   int           `form:"SACRIFICE_THRESHOLD"`
 
-	CREATION_THRESHOLD  float64       `form:"CREATION_THRESHOLD"`
-	ENTRYPOINT_LIFETIME time.Duration `form:"ENTRYPOINT_LIFETIME"`
+	CREATION_THRESHOLD    float64       `form:"CREATION_THRESHOLD"`
+	ENTRYPOINT_LIFETIME   time.Duration `form:"ENTRYPOINT_LIFETIME"`
+	NEW_ENTRYPOINT_AMOUNT int           `form:"NEW_ENTRYPOINT_AMOUNT"`
 
 	MIN_ENTRYPOINTS int `form:"MIN_ENTRYPOINTS"`
 	MAX_ENTRYPOINTS int `form:"MAX_ENTRYPOINTS"`
@@ -108,6 +109,13 @@ func (c *Config) DefaultConf() {
 		c.MIN_ENTRYPOINTS = 70
 	} else {
 		c.MIN_ENTRYPOINTS = i
+	}
+
+	i, err = strconv.Atoi(os.Getenv("NEW_ENTRYPOINT_AMOUNT"))
+	if err != nil {
+		c.NEW_ENTRYPOINT_AMOUNT = 5
+	} else {
+		c.NEW_ENTRYPOINT_AMOUNT = i
 	}
 
 	i, err = strconv.Atoi(os.Getenv("MAX_ENTRYPOINTS"))
