@@ -297,14 +297,21 @@ func updateMap() {
 	}
 
 	body := url.Values{}
-	eps, err := models.GetMapEntrypoints()
+	eps, err := models.GetAllEntrypoints()
 	if err != nil {
 		zero.Error(err.Error())
 	}
 
-	zero.Debugf("sending non-null entrypoints: %d", len(eps))
+	finals := make([]models.Entrypoint, 0)
+	for _, ep := range eps {
+		if len(ep.Modules) > 0 && ep.Cluster.Name != "Welcome" {
+			finals = append(finals, ep)
+		}
+	}
 
-	for i, ep := range eps {
+	zero.Debugf("map updating with entrypoints length: %d", len(finals))
+
+	for i, ep := range finals {
 		body.Add(fmt.Sprintf("p%d", i), fmt.Sprintf("%d,%s,%s,%f,%f", ep.Generation, ep.Status, ep.Cluster.Name, ep.Lat, ep.Lng))
 	}
 	endpoint := fmt.Sprintf("%s/post", os.Getenv("MAP_HOST"))
