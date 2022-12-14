@@ -118,19 +118,20 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
 
     const getHeader = () => { 
 
-        const publicIntro = contents?.get(`${entrypoint.airtable_key}_intro`)
+        var publicIntro = contents?.get(`${entrypoint.airtable_key}_intro`)
+        publicIntro = "Trotsky's conception of the Permanent Revolution is based on his understanding, drawing on the work of the founder of Russian Marxism Georgy Plekhanov, that in 'backward' countries the tasks of the Bourgeois Democratic Revolution could not be achieved by the bourgeoisie itself."
 
         return (
         <div className="w-full flex flex-col items-center gap-2
                                 text-center text-sm">
-            <div className="text-xs">
+            <div className="text-sm">
                 This is the final outcome of the gesture <span className="italic">{entrypoint.name}</span>
             </div>
             {
                 publicIntro && 
                 <div className="w-full text-sm flex flex-col items-center gap-2 ">
                     <SeperatorFinal />
-                        {publicIntro}
+                        { publicIntro }
                     <SeperatorFinal/>
                 </div>
             }
@@ -142,7 +143,7 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
     return (
         <div className="w-full h-full flex flex-col gap-8">
             {getHeader()}
-            <div className="flex flex-row justify-between">
+            <div className="w-full flex flex-col md:flex-row justify-between">
                 {entrypoint.users.map(u => {
                     return (
                         <div className="

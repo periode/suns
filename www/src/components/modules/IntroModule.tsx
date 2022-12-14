@@ -21,17 +21,11 @@ const IntroModule = ({ data, airtable_key }: IntroModuleProps) => {
     }
 
     return (<>
-        <div className="w-full flex flex-col gap-8 items-center">
+        <div className="w-full flex flex-col gap-4 items-center">
             {
                 data.contents.map((c, i) => {
                     return (
-                        <>
                             <Content key={c.key} type={c.type} airkey={c.key} contents={contents} />
-                            { 
-                                i < data.contents.length - 1 &&
-                                    <Seperator/>
-                            }
-                        </>
                     )   
                 })
             }

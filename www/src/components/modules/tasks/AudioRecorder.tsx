@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { FiMic, FiRotateCcw, FiSquare } from "react-icons/fi"
 import { IEntrypoint, IModule, UPLOAD_TYPE } from "../../../utils/types"
+import AudioPlayer from "../content/AudioPlayer"
 import AudioRecorderCountdown from "./utils/AudioRecorderCountdown"
 
 const MediaStreamRecorder = require('msr')
@@ -122,7 +123,7 @@ const AudioRecorder = ({ uuid, mod, ep, handleNewUploads }: AudioRecorderProps) 
                                 </div>
                                 :
                                 recordingState === "done" ?
-                                    <audio className="flex-1 bg-transparent" src={blobURL} controls></audio>
+                                    <AudioPlayer src={blobURL}/>
                                     :
                                     <span className="text-sm text-amber-900/50"> {recordingMessage} </span>
                         }

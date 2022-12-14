@@ -14,7 +14,7 @@ function ContentAudio({index, src, name, ep_name} : ContentAudioProps) {
     const contents = ctx.get("PublicView")
 
 	return ( 
-		<div className="w-full flex flex-col gap-2 items-center justify-start mb-5">
+		<div className="w-full flex flex-col gap-2 items-center justify-start">
 			{
 				index !== undefined && name && name.length > 0 && ep_name && ep_name.length > 0 &&
 				<div className="text-sm">{assetIntro(
@@ -25,7 +25,7 @@ function ContentAudio({index, src, name, ep_name} : ContentAudioProps) {
 						name
 					) }</div>
 			}
-			<audio className="w-auto max-h-80"
+			<audio className="w-full max-h-80"
 				src={`${process.env.REACT_APP_SPACES_URL}/${src}`} controls />
 		</div>
 	 );
