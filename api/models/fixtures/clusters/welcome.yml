@@ -86,6 +86,7 @@ entrypoints:
             text: "yo this is the prompt you get from the bot bro"
             type: "txt"
         hint: "This is where you write a text based on the image you receive"
+
       - name: "Welcome - Co-creation text"
         type: "task"
         show_previous_uploads: true
@@ -99,6 +100,7 @@ entrypoints:
             text: "this is the sample from the bot"
             type: "txt"
         hint: "This is where you upload a video for the co-creation"
+
       - name: "Welcome - Final"
         type: "final"
         contents:
@@ -106,13 +108,14 @@ entrypoints:
             key: "public_info_1"
           - type: "txt"
             key: "public_hl_1"
+
       - name: "Welcome - Sacrifice"
         type: "intro"
         contents:
           - type: "txt"
             key: "intro_txt_sacrifice"
           - type: "vid"
-            key: "conclusion_video"
+            key: "intro_vid_sacrifice"
         hint: "This is the final countdown for the sacrifice"
       - name: "Welcome - Final message"
         type: "intro"
@@ -120,6 +123,6 @@ entrypoints:
           - type: "txt"
             key: "intro_txt_final"
           - type: "vid"
-            key: "final_video"
+            key: "intro_vid_final"
         hint: "This is the final countdown for the sacrifice"
 
