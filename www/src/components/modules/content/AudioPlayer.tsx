@@ -8,6 +8,7 @@ interface AudioPlayerProps {
 function AudioPlayer({ src }: AudioPlayerProps) {
 	
 	const [isPlaying, setPlaying] = useState(false)
+	const [time, setTime] = useState(0)
 	const audioElement: HTMLAudioElement = new Audio(src)
 
 	const [duration, setDuration] = useState(0)
@@ -31,8 +32,12 @@ function AudioPlayer({ src }: AudioPlayerProps) {
 		setPlaying(true)
 	});
 	audioElement.addEventListener("ended", () => {
-		
+		audioElement.currentTime = 0
 		setPlaying(false)
+	});
+
+	audioElement.addEventListener('timeupdate', () => {
+  		setTime(audioElement.currentTime);
 	});
 
 	if (audioElement.readyState > 0)
@@ -57,12 +62,15 @@ function AudioPlayer({ src }: AudioPlayerProps) {
 	return ( 
 		<div className="w-full h-full flex items-center gap-4">
 			<div className="w-16 h-16 flex items-center justify-center cursor-pointer
-							border border-amber-500 text-amber-500"
+							border border-amber-500 text-amber-50
+							bg-amber-500"
 					onClick={handlePlay}>
 				{ !isPlaying ? <FiPlay/> : <FiPause/> }
 			</div>
-			<div className="text-sm opacity-50">
-				{ calculateTime(duration) } / { calculateTime(duration) }
+			<div className="flex-1 ">
+				<div className="text-sm opacity-50">
+					{ calculateTime(time) } / { calculateTime(duration) }
+				</div>
 			</div>
 		</div>
 	 );
