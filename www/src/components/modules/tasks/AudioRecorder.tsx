@@ -59,11 +59,14 @@ const AudioRecorder = ({ uuid, mod, ep, handleNewUploads }: AudioRecorderProps) 
             };
             recorder.start(MAX_RECORD_TIME)
 
-            setTimeout(stopRecording, MAX_RECORD_TIME + 1)
+            let timeout = setTimeout(stopRecording, MAX_RECORD_TIME + 1)
+            clearTimeout(timeout)
         }
     }
 
-    const stopRecording = () => {
+    const stopRecording = (timeout: NodeJS.Timeout | null) => {
+        if (timeout)
+            clearTimeout(timeout)
         if (recordingState === "done")
             return
 
@@ -94,7 +97,7 @@ const AudioRecorder = ({ uuid, mod, ep, handleNewUploads }: AudioRecorderProps) 
                 startRecording()
                 break;
             case "recording":
-                stopRecording()
+                stopRecording(null)
                 break;
             case "done":
                 resetRecording()
@@ -112,7 +115,7 @@ const AudioRecorder = ({ uuid, mod, ep, handleNewUploads }: AudioRecorderProps) 
             </p>
             <div className="w-full flex flex-col items-start bg-amber-200">
                 <div className="flex items-center justify-between gap-2
-                                w-full p-2 bg-amber-100">
+                                w-full ">
                     <div className="flex-1 h-full
                                         flex items-center justify-center">
                         {
@@ -128,10 +131,10 @@ const AudioRecorder = ({ uuid, mod, ep, handleNewUploads }: AudioRecorderProps) 
                                     <span className="text-sm text-amber-900/50"> {recordingMessage} </span>
                         }
                     </div>
-                    <div className="w-10 h-10">
+                    <div className="w-10 h-10 m-2">
                         <button className={
                             recordingState === "recording" ?
-                                "w-full h-full flex items-center justify-center text-lg relative hover:border-amber-600 hover:text-amber-600 text-white bg-amber-500 border border-1 border-amber-500 transition-colors ease-in-out duration-300"
+                                "w-full h-full flex items-center justify-center text-lg relative hover:border-amber-600 hover:text-amber-600 text-amber-50 bg-amber-500 border border-1 border-amber-500 transition-colors ease-in-out duration-300"
                                 :
                                 "w-full h-full flex items-center justify-center text-lg relative hover:border-amber-600 hover:text-amber-600 text-amber-500 bg-transparent border border-1 border-amber-500 transition-colors ease-in-out duration-300"
 

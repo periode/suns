@@ -35,7 +35,7 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
                 )
             case UPLOAD_TYPE.Audio:
                 return (
-                    <ContentAudio index={index} key={upload.uuid} src={upload.url} name={name} ep_name={entrypoint.airtable_key} />
+                    <ContentAudio index={index} key={upload.uuid} src={upload.url} name={name} ep_name={entrypoint.airtable_key} final={true} />
                 )
             default:
                 return <>Couldnt get upload.type: {upload.type}</>
