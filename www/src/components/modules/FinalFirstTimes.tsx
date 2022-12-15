@@ -1,3 +1,5 @@
+import AudioPlayer from "./content/AudioPlayer"
+
 const FinalFirstTimes = (props: any) => {
     const data = props.data
     const getUserContent = (user: any) => {
@@ -15,9 +17,9 @@ const FinalFirstTimes = (props: any) => {
         return (
             <>
                 question of partner 1:
-                <audio src={`${process.env.REACT_APP_API_URL}/static/${promptURL}`} controls></audio>
+                <AudioPlayer src={`${process.env.REACT_APP_API_URL}/static/${promptURL}`} final={true} />
                 answer of partner 2:
-                <audio src={`${process.env.REACT_APP_API_URL}/static/${answerURL}`} controls></audio>
+                <AudioPlayer src={`${process.env.REACT_APP_API_URL}/static/${answerURL}`} final={true}/>
             </>
         )
     }

@@ -1,15 +1,17 @@
 import { useContext } from "react";
 import { AirTableContext } from "../../../contexts/AirContext";
 import { assetIntro } from "../../../utils/entrypoint";
+import AudioPlayer from "./AudioPlayer";
 
 interface ContentAudioProps {
 	index?: number,
 	src: string,
 	name?: string,
 	ep_name?: string,
+	final? : boolean
 }
 
-function ContentAudio({index, src, name, ep_name} : ContentAudioProps) {
+function ContentAudio({index, src, name, ep_name, final=false} : ContentAudioProps) {
 	const ctx = useContext(AirTableContext)
     const contents = ctx.get("PublicView")
 
@@ -25,8 +27,7 @@ function ContentAudio({index, src, name, ep_name} : ContentAudioProps) {
 						name
 					) }</div>
 			}
-			<audio className="w-full max-h-80"
-				src={`${process.env.REACT_APP_SPACES_URL}/${src}`} controls />
+			<AudioPlayer src={`${process.env.REACT_APP_SPACES_URL}/${src}`} final={final}/>
 		</div>
 	 );
 }
