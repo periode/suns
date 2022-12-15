@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { AirTableContext } from "../../../contexts/AirContext";
+import { assetIntro } from "../../../utils/entrypoint";
 
 interface ContentTextProps {
 	index?: number,
@@ -14,10 +15,16 @@ function ContentText({ index, text, name, ep_name, final }: ContentTextProps) {
 	const contents = ctx.get("PublicView")
 	
 	return (
-		<div className="w-full flex flex-col mb-5 gap-2 break-words">
+		<div className="w-full flex flex-col gap-2 items-center justify-start mb-5 break-words">
 			{
 				index !== undefined && name && name.length > 0 && ep_name && ep_name.length > 0 &&
-					<div>{name} {contents?.get(`${ep_name}_text_${index}`)}:</div>
+				<div className="text-sm">{assetIntro(
+						contents,
+						"text",
+						ep_name,
+						index,
+						name
+					) }</div>
 			}
 			{
 				final ?

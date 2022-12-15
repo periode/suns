@@ -35,6 +35,13 @@ function EntrypointLayout({
 				<div className="w-full border-b border-green-600">
 					{title}
 				</div>
+				<div className="w-full border-b border-green-600">
+					<EntrypointPartners
+                		users={data.users}
+                		max_users={data.max_users}
+                		partner_status={PARTNER_STATUS.PartnerFull}
+            		/>
+				</div>
 				{module}
 				<div className="h-20
                             pl-4 pr-4

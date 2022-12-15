@@ -4,7 +4,7 @@ entrypoints:
   - status: "open"
     cluster_uuid: "01ed6a2b-aacb-4c24-b1e1-3495821f846b"
     name: "Footprints: Person"
-    airtable_key: "FootprinstPerson"
+    airtable_key: "FootprintsPerson"
     lat: 240.300
     lng: 240.400
     icon: "red.svg"
