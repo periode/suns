@@ -16,9 +16,7 @@ import Auth from './components/auth/Auth';
 import AccountConfirm from './pages/auth/AccountConfirm';
 import AccountRecovery from './pages/auth/AccountRecovery';
 import AccountRecoveryConfirm from './pages/auth/AccountRecoveryConfirm';
-import SignUp from './pages/auth/SignUp';
 import WelcomeContainer from './components/entrypoints/welcome/WelcomeContainer';
-import Entrypoint from './components/entrypoints/Entrypoint';
 import Archive from './pages/archives/Archive';
 
 const router = createBrowserRouter([
