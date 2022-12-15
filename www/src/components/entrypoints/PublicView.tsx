@@ -120,7 +120,6 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
     const getHeader = () => { 
 
         var publicIntro = contents?.get(`${entrypoint.airtable_key}_intro`)
-        publicIntro = "Trotsky's conception of the Permanent Revolution is based on his understanding, drawing on the work of the founder of Russian Marxism Georgy Plekhanov, that in 'backward' countries the tasks of the Bourgeois Democratic Revolution could not be achieved by the bourgeoisie itself."
 
         return (
         <div className="w-full flex flex-col items-center gap-2
