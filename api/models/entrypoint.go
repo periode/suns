@@ -53,7 +53,7 @@ type Entrypoint struct {
 	Status    string         `gorm:"default:unlisted" json:"status"`
 
 	Name        string `gorm:"not null" json:"name" form:"name" binding:"required"`
-	AirtableKey string `gorm:"not null" json:"airtable_key" yaml:"airtable_key" binding:"required"`
+	AirtableKey string `gorm:"not null;default:missing" json:"airtable_key" yaml:"airtable_key" binding:"required"`
 
 	Slug          string `gorm:"" json:"slug"`
 	Icon          string `gorm:"default:black.svg" json:"icon" yaml:"icon"`

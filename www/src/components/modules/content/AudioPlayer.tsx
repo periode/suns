@@ -1,4 +1,4 @@
-import { MouseEventHandler, useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { FiPause, FiPlay, FiRotateCcw } from "react-icons/fi";
 
 interface AudioPlayerProps {

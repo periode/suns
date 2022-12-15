@@ -1,7 +1,6 @@
 import { useContext } from "react"
 import { AirTableContext } from "../../contexts/AirContext"
 import { IModule } from "../../utils/types"
-import Seperator from "../commons/layout/Seperator"
 import Content from "./content/Content"
 
 interface IntroModuleProps {
