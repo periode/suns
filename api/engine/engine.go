@@ -101,8 +101,12 @@ func createEntrypoints() {
 
 		if remaining < Conf.CREATION_THRESHOLD || len(eps) < Conf.MIN_ENTRYPOINTS {
 			state.generation++
-			newEps := pool.Pick(Conf.NEW_ENTRYPOINT_AMOUNT)
-			_, err := models.AddClusterEntrypoints(newEps)
+			newEps, err := pool.Pick(Conf.NEW_ENTRYPOINT_AMOUNT)
+			if err != nil {
+				zero.Errorf("Failed to generate new entrypoint: %s", err.Error())
+			}
+
+			_, err = models.AddClusterEntrypoints(newEps)
 			if err != nil {
 				zero.Errorf("Failed to create new entrypoint: %s", err.Error())
 			}
@@ -118,7 +122,7 @@ func createEntrypoints() {
 func deleteEntrypoints() {
 	for {
 		time.Sleep(Conf.DELETE_INTERVAL)
-		zero.Debug("deletting entrypoints...")
+		zero.Debug("deleting entrypoints...")
 
 		eps, err := models.GetEntrypointsByGeneration(state.generation)
 		if err != nil {
@@ -127,6 +131,7 @@ func deleteEntrypoints() {
 
 		for _, ep := range eps {
 			if (time.Since(ep.CreatedAt) > Conf.ENTRYPOINT_LIFETIME && ep.Status == models.EntrypointOpen) || len(ep.Modules) == 0 {
+				zero.Debugf("deleting: %s", ep.Name)
 				_, err = models.DeleteEntrypoint(ep.UUID)
 				if err != nil {
 					zero.Errorf("Failed to delete expired entrypoints", err.Error())

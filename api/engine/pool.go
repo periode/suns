@@ -60,12 +60,31 @@ func (p *Pool) Generate() error {
 	return nil
 }
 
-func (p *Pool) Pick(num int) []models.Entrypoint {
+func (p *Pool) Pick(num int) ([]models.Entrypoint, error) {
 	var res []models.Entrypoint
+	var candidates []models.Entrypoint
+
+	for _, f := range fixtures {
+		bytes, err := os.ReadFile(filepath.Join(Basepath, "../models/fixtures/clusters", fmt.Sprintf("%s.yml", f)))
+		if err != nil {
+			return res, err
+		}
+
+		var new models.Cluster
+		err = yaml.Unmarshal(bytes, &new)
+		if err != nil {
+			return res, err
+		}
+
+		for _, ep := range new.Entrypoints {
+			candidates = append(candidates, ep)
+		}
+	}
+
 	for i := 0; i < num; i++ {
-		ep := p.entrypoints[rand.Intn(len(p.entrypoints))]
+		ep := candidates[rand.Intn(len(candidates))]
 		ep.Generation = state.generation
 		res = append(res, ep)
 	}
-	return res
+	return res, nil
 }
