@@ -312,7 +312,7 @@ func updateMap() {
 	for i, ep := range eps {
 		body.Add(fmt.Sprintf("p%d", i), fmt.Sprintf("%d,%s,%s,%f,%f", ep.Generation, ep.Status, ep.Cluster.Name, ep.Lat, ep.Lng))
 	}
-	endpoint := fmt.Sprintf("%s/post", os.Getenv("MAP_HOST"))
+	endpoint := os.Getenv("MAP_HOST")
 	res, err := http.PostForm(endpoint, body)
 	if err != nil {
 		zero.Error(err.Error())

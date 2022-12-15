@@ -27,10 +27,10 @@ export interface EntrypointInterface {
   max_users: number
 }
 
-const WIDTH = 1000;
-const HEIGHT = 1000;
+const WIDTH = 2500;
+const HEIGHT = 2500;
 const MIN_ZOOOM = 1;
-const MAX_ZOOM = 1;
+const MAX_ZOOM = 3;
 const backgroundMap = "https://map.joiningsuns.online/map.png?refresh"
 const { noise } = require('@chriscourses/perlin-noise')
 

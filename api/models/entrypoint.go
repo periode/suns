@@ -101,14 +101,15 @@ func (e *Entrypoint) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 const POSITION_DISTANCE = 50
+const MAP_DIMENSION = 2500
 
 // -- generatePosition generates a pair of coordinates that are guaranteed to not be closer to any other entrypoint than POSITION_DISTANCE
 func generatePosition() (float32, float32) {
 	var lng, lat float32
 
 	//generate two numbers
-	lng = rand.Float32()*900 + 50
-	lat = rand.Float32()*900 + 50
+	lng = rand.Float32()*(MAP_DIMENSION*0.9) + (MAP_DIMENSION * 0.05)
+	lat = rand.Float32()*(MAP_DIMENSION*0.9) + (MAP_DIMENSION * 0.05)
 
 	eps, err := GetAllEntrypoints()
 	if err != nil {
