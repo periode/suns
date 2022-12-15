@@ -47,8 +47,8 @@ const Entrypoint = (props: any) => {
                     setData(e as IEntrypoint)
 
                     let current = e.modules[e.current_module]
-                    if(current == null){
-                        navigate('/entrypoints/gone', {replace: true})
+                    if (current == null) {
+                        navigate('/entrypoints/gone', { replace: true })
                         return
                     }
 
@@ -139,6 +139,8 @@ const Entrypoint = (props: any) => {
                 setCanUserComplete(false)
         } else {
             console.warn('error', res.status)
+            if (res.status === 401)
+                Navigate({ to: "/auth" })
         }
     }
 
