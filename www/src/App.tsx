@@ -31,7 +31,6 @@ const WIDTH = 2500;
 const HEIGHT = 2500;
 const MIN_ZOOOM = 1;
 const MAX_ZOOM = 3;
-const backgroundMap = "https://map.joiningsuns.online/map.png?refresh"
 const { noise } = require('@chriscourses/perlin-noise')
 
 const App = () => {
@@ -44,6 +43,7 @@ const App = () => {
   const bounds = new L.LatLngBounds(new L.LatLng(0, 0), new L.LatLng(WIDTH, HEIGHT))
   const session = getSession()
   const [cracksCoords, setCracksCoords] = useState(new L.LatLng(500, 500))
+  const [backgroundMap, setBackgroundMap] = useState("https://map.joiningsuns.online/map.png?refresh")
   const cracksIcon = new L.Icon({
     iconUrl: cracksMarker,
     iconSize: [36, 36],
@@ -54,6 +54,7 @@ const App = () => {
 
     if (hasState.current === false) {
       hasState.current = true;
+      setBackgroundMap("https://map.joiningsuns.online/map.png?refresh"+Date.now().toString().substring(9))
       fetch(endpoint)
         .then(res => {
           if (res.ok)
