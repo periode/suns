@@ -9,10 +9,13 @@ function AudioPlayer({ src }: AudioPlayerProps) {
 	
 	const [isPlaying, setPlaying] = useState(false)
 	const [time, setTime] = useState(0)
+
+
 	const audioElement: HTMLAudioElement = new Audio(src)
 
 	const [duration, setDuration] = useState(0)
 
+	
 
 	const calculateTime = (secs:number) => {
 		const minutes = Math.floor(secs / 60);
@@ -28,8 +31,11 @@ function AudioPlayer({ src }: AudioPlayerProps) {
 	});
 
 	audioElement.addEventListener("playing", () => {
-		
 		setPlaying(true)
+	});
+	audioElement.addEventListener("pause", () => {
+		console.log("PAUSED")
+		setPlaying(false)
 	});
 	audioElement.addEventListener("ended", () => {
 		audioElement.currentTime = 0
@@ -50,10 +56,13 @@ function AudioPlayer({ src }: AudioPlayerProps) {
 	const handlePlay = () => {
 		if (isPlaying)
 		{
+			// pause
+			console.log("pause")
 			audioElement?.pause()
 		}
 		else	
 		{
+			// play
 			console.log("play")
 			audioElement?.play()
 		}
@@ -61,7 +70,7 @@ function AudioPlayer({ src }: AudioPlayerProps) {
 
 	return ( 
 		<div className="w-full h-full flex items-center gap-4">
-			<div className="w-16 h-16 flex items-center justify-center cursor-pointer
+			<div className="w-10 h-10 flex items-center justify-center cursor-pointer
 							border border-amber-500 text-amber-50
 							bg-amber-500"
 					onClick={handlePlay}>

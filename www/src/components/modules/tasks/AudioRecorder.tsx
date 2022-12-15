@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { FiMic, FiRotateCcw, FiSquare } from "react-icons/fi"
+import { FiMic, FiRotateCcw, FiSquare, FiX } from "react-icons/fi"
 import { IEntrypoint, IModule, UPLOAD_TYPE } from "../../../utils/types"
 import AudioPlayer from "../content/AudioPlayer"
 import AudioRecorderCountdown from "./utils/AudioRecorderCountdown"
@@ -128,7 +128,7 @@ const AudioRecorder = ({ uuid, mod, ep, handleNewUploads }: AudioRecorderProps) 
                                     <span className="text-sm text-amber-900/50"> {recordingMessage} </span>
                         }
                     </div>
-                    <div className="w-16 h-16">
+                    <div className="w-10 h-10">
                         <button className={
                             recordingState === "recording" ?
                                 "w-full h-full flex items-center justify-center text-lg relative hover:border-amber-600 hover:text-amber-600 text-white bg-amber-500 border border-1 border-amber-500 transition-colors ease-in-out duration-300"
@@ -145,7 +145,7 @@ const AudioRecorder = ({ uuid, mod, ep, handleNewUploads }: AudioRecorderProps) 
                                         <FiSquare className="" />
                                         :
                                         recordingState === "done" ?
-                                            <FiRotateCcw className="" />
+                                            <FiX className="" />
                                             :
                                             <p>error: recording state: {recordingState}</p>
                             }
