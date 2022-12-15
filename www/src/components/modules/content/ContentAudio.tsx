@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { AirTableContext } from "../../../contexts/AirContext";
 import { assetIntro } from "../../../utils/entrypoint";
+import { UPLOAD_TYPE } from "../../../utils/types";
 import AudioPlayer from "./AudioPlayer";
 
 interface ContentAudioProps {
@@ -21,7 +22,7 @@ function ContentAudio({index, src, name, ep_name, final=false} : ContentAudioPro
 				index !== undefined && name && name.length > 0 && ep_name && ep_name.length > 0 &&
 				<div className="text-sm">{assetIntro(
 						contents,
-						"audio",
+						UPLOAD_TYPE.Audio,
 						ep_name,
 						index,
 						name

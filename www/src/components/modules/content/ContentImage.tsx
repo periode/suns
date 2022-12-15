@@ -1,6 +1,7 @@
 import React, { useContext, useRef } from "react";
 import { AirTableContext } from "../../../contexts/AirContext";
 import { assetIntro } from "../../../utils/entrypoint";
+import { UPLOAD_TYPE } from "../../../utils/types";
 
 interface ContentImageProps {
 	index?: number,
@@ -41,7 +42,7 @@ function ContentImage({ index, src, name, ep_name }: ContentImageProps) {
 				index !== undefined && name && name.length > 0 && ep_name && ep_name.length > 0 &&
 				<div className="text-sm">{assetIntro(
 						contents,
-						"img",
+						UPLOAD_TYPE.Image,
 						ep_name,
 						index,
 						name
