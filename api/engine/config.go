@@ -71,7 +71,7 @@ func (c *Config) DefaultConf() {
 
 	f, err := strconv.ParseFloat(os.Getenv("SACRIFICE_ZONE_RADIUS"), 64)
 	if err != nil {
-		c.SACRIFICE_ZONE_RADIUS = 30
+		c.SACRIFICE_ZONE_RADIUS = 600
 	} else {
 		c.SACRIFICE_ZONE_RADIUS = f
 	}
