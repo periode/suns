@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { FiX, FiZap } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { ENTRYPOINT_STATUS, IEntrypoint } from "../../utils/types";
@@ -16,7 +16,8 @@ const Cracks = () => {
     const navigate = useNavigate()
     const hasData = useRef(false);
     const [crackEntrypoints, setCrackEntrypoints] = useState<IEntrypoint[]>()
-    const [cracks, setCracks] = useState<ICrack[]>()
+    const [cracks, setCracks] = useState<ICrack[]>([])
+    const [crackGenerations, setCrackGenerations] = useState<number[]>([])
 
     useEffect(() => {
         if (hasData.current === false) {
@@ -38,10 +39,32 @@ const Cracks = () => {
         }
     }, [])
 
+    //-- this registers ESC to close the modal
     useEffect(() => {
-        if (crackEntrypoints == undefined) return
-        let crs = crackEntrypoints.map((cep) => {
+        window.addEventListener('keydown', (e : KeyboardEvent) => {
+            if (e.key === "Escape")
+            navigate('/', { replace: true })
+        })
+        return () => {
+            window.removeEventListener('keydown', (e : KeyboardEvent) => {
+                if (e.key === "Escape")
+                navigate('/', { replace: true })
+            })
+        }
+    })
+    
+    useEffect(() => {
+        if (crackEntrypoints === undefined) return
 
+        let gens = [] as Array<number>
+        for (const ep of crackEntrypoints) {
+            if (gens.indexOf(ep.generation) === -1)
+                gens.push(ep.generation)
+        }
+        gens.reverse()
+        setCrackGenerations(gens)
+
+        let crs = crackEntrypoints.map((cep) => {
             //-- find the module with the uploads attached
             let mod = cep.modules.filter(m => m.name === "Cracks - Donating a picture")
             return {
@@ -55,6 +78,22 @@ const Cracks = () => {
 
         setCracks(crs)
     }, [crackEntrypoints])
+
+    const generateCracksLayoutByGeneration = () => {
+        let elems = [] as Array<ReactNode>
+        crackGenerations.map((gen) => {
+            elems.push(<h1 className="w-full text-xl block">Generation {gen}</h1>)
+
+            cracks?.map((c, i) => {
+                if (c.generation === gen)
+                    elems.push(<Crack key={"crack-" + i} data={c} />)
+            })
+        })
+
+
+
+        return (elems)
+    }
 
     return (<>
         <div className="absolute z-20 w-full h-full p-4 
@@ -80,9 +119,10 @@ const Cracks = () => {
                 </div>
                 <div className="   w-full p-4
                                      flex items-start justify-start flex-wrap gap-4 " >
-                    { cracks?.map((c, i) => {
-                        return (<Crack key={"crack-" + i} data={c}/>)
-                    })}
+                    {
+
+                    }
+                    {cracks?.length > 0 ? generateCracksLayoutByGeneration() : <>No cracks have been donated.</>}
                 </div>
             </div>
         </div>

@@ -140,7 +140,7 @@ const Entrypoint = (props: any) => {
         } else {
             console.warn('error', res.status)
             if (res.status === 401)
-                Navigate({ to: "/auth" })
+                navigate("/auth")
         }
     }
 

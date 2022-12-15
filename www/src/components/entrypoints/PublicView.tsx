@@ -161,7 +161,7 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
                 text-green-500 font-mono text-sm font-bold 
                 border border-1 border-green-500
                 hover:text-green-600 hover:border-green-600
-                transition-all ease-in duration-300" onClick={() => { navigate(`/entrypoints/archive/sacrifice`, { replace: true }) }}>Go to the cracks archive</button>
+                transition-all ease-in duration-300" onClick={() => { navigate(`/entrypoints/archive/cracks`, { replace: true }) }}>Go to the cracks archive</button>
                 : <></>}
         </div >
     )
