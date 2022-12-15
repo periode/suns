@@ -20,15 +20,24 @@ function EntrypointActions({
 	hasUserCompleted
 }: EntrypointActionsProps) {
 	const nextButtonRef = useRef<HTMLButtonElement>(null)
-	
+
 	useEffect(() => {
 		if (canUserComplete && nextButtonRef.current)
 			nextButtonRef.current.removeAttribute('disabled')
 
 	}, [canUserComplete, ep])
 
-	const copyToClipboard = (text: string) => {
-		window.prompt("You can share this link: ", text);
+	const shareEntrypoint = async (url: string) => {
+		try {
+			const shareData = {
+				title: "The sun sets 194 times",
+				text: "Join me in completing this gesture point!",
+				url: url
+			}
+			await navigator.share(shareData);
+		} catch (error) {
+			window.prompt("You can share this link: ", url);
+		}
 	}
 
 	const handleNextClick = (e: React.BaseSyntheticEvent) => {
@@ -42,7 +51,7 @@ function EntrypointActions({
 							cursor-pointer
 							flex items-center
 							gap-1"
-			onClick={() => { copyToClipboard(window.location.href) }}>
+			onClick={() => { shareEntrypoint(window.location.href) }}>
 			<FiShare2 className="text-xs" />
 			<p>Share</p>
 		</button>
@@ -83,7 +92,7 @@ function EntrypointActions({
 			return <></>
 
 		if (isOwner && canUserComplete && ep.status === ENTRYPOINT_STATUS.EntrypointPending) {
-				return NextButton
+			return NextButton
 		}
 
 		return <></>
@@ -99,7 +108,7 @@ function EntrypointActions({
 
 			{
 				ep.current_module + 1 !== ep.modules.length &&
-					Step
+				Step
 			}
 			<div className="w-16">
 				{rightButtonDisplay()}
