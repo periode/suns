@@ -32,6 +32,7 @@ import (
 // -- create upload parses the form info (module_uuid, partner_index and file), adds the user_uuid from the auth session and then appends the upload to the specified module
 func CreateUpload(c echo.Context) error {
 	user_uuid := mustGetUser(c)
+	user, err := models.GetUser(user_uuid)
 
 	// Read form fields - module uuid is to know to which module to attach it to, and partner index is whether this is upload by partner 0 or 1
 	module_uuid, err := uuid.Parse(c.FormValue("module_uuid"))
@@ -50,6 +51,7 @@ func CreateUpload(c echo.Context) error {
 			Name:     "",
 			URL:      fpath,
 			UserUUID: user_uuid.String(),
+			UserName: user.Name,
 			Text:     txt,
 			Type:     ftype,
 		}
@@ -74,6 +76,7 @@ func CreateUpload(c echo.Context) error {
 				Name:     file.Filename,
 				URL:      fpath,
 				UserUUID: user_uuid.String(),
+				UserName: user.Name,
 				Text:     "",
 				Type:     ftype,
 			}

@@ -63,6 +63,7 @@ export interface IEntrypoint {
 
 export interface IUpload {
     user_uuid: string,
+    user_name: string,
     url: string,
     name: string,
     text: string,

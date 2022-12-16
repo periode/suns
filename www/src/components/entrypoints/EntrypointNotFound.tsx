@@ -43,8 +43,13 @@ const EntrypointNotFound = () => {
                         </div>
                     </div>
                 </div>
-                <div className="self-center justify-self-center text-xl text-center m-auto">
-                    We're sorry!<br /><br />We could not find the entrypoint you are trying to access.
+                <div className="self-center justify-self-center text-center m-auto flex flex-col items-center gap-4 p-4">
+                    <p className="text-5xl">
+                        We're sorry!
+                    </p>
+                    <p className="">
+                        We could not find the entrypoint you are trying to access.
+                    </p>
                 </div>
 
             </div>

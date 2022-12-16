@@ -122,7 +122,12 @@ const Cracks = () => {
                     {
 
                     }
-                    {cracks?.length > 0 ? generateCracksLayoutByGeneration() : <>No cracks have been donated.</>}
+                    {
+                        cracks?.length > 0 ? generateCracksLayoutByGeneration() :
+                        <div className="w-full h-full items-center justify-center text-6xl text-slate-300">
+                            No cracks have been donated yet!
+                            </div>
+                    }
                 </div>
             </div>
         </div>
