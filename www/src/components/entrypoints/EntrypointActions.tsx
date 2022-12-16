@@ -20,11 +20,14 @@ function EntrypointActions({
 	hasUserCompleted
 }: EntrypointActionsProps) {
 	const nextButtonRef = useRef<HTMLButtonElement>(null)
+	const hasClicked = useRef(false)
 
 	useEffect(() => {
 		if (canUserComplete && nextButtonRef.current)
 			nextButtonRef.current.removeAttribute('disabled')
 
+		if(canUserComplete && hasClicked.current)
+			hasClicked.current = false
 	}, [canUserComplete, ep])
 
 	const shareEntrypoint = async (url: string) => {
@@ -43,7 +46,13 @@ function EntrypointActions({
 	const handleNextClick = (e: React.BaseSyntheticEvent) => {
 		if (nextButtonRef.current)
 			nextButtonRef.current.setAttribute('disabled', "true")
-		handleNext()
+
+		if(!hasClicked.current){
+			console.log("handling next")
+			hasClicked.current = true
+			handleNext()
+		}
+
 	}
 
 	const ShareButton =
