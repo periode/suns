@@ -154,7 +154,7 @@ func saveFile(file *multipart.FileHeader, ftype string) (string, error) {
 	defer src.Close()
 
 	if ftype == models.ImageType {
-
+		zero.Debugf("converting image: %s", fname)
 		//-- convert to webp
 		m, _, err := image.Decode(src)
 		if err != nil {
@@ -195,7 +195,7 @@ func saveFile(file *multipart.FileHeader, ftype string) (string, error) {
 		}
 
 	} else if ftype == models.VideoType {
-		fmt.Println("converting video")
+		zero.Debugf("converting video: %s", fname)
 
 		dst, err := os.Create(target)
 		if err != nil {
@@ -210,7 +210,8 @@ func saveFile(file *multipart.FileHeader, ftype string) (string, error) {
 		go transcodeAndUploadVideo(uploadsDir, fname)
 
 	} else if ftype == models.AudioType {
-		fmt.Println("converting audio")
+		zero.Debugf("converting audio: %s", fname)
+
 		//-- upload object
 		upload := s3.PutObjectInput{
 			Bucket: aws.String("suns"),
@@ -258,7 +259,7 @@ func transcodeAndUploadVideo(dir string, original string) {
 	//-- upload object
 	upload := s3.PutObjectInput{
 		Bucket: aws.String("suns"),
-		Key:    aws.String(transcoded),
+		Key:    aws.String(original), //-- reuse the original fname
 		Body:   bytes.NewReader(body),
 		ACL:    aws.String("public-read"),
 	}
