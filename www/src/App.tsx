@@ -50,25 +50,6 @@ const App = () => {
   })
 
   useEffect(() => {
-    const endpoint = new URL('engine/state', process.env.REACT_APP_API_URL)
-
-    if (hasState.current === false) {
-      hasState.current = true;
-      setBackgroundMap("https://map.joiningsuns.online/map.png?refresh"+Date.now().toString().substring(9))
-      fetch(endpoint)
-        .then(res => {
-          if (res.ok)
-            return res.json()
-          else
-            console.warn("GET engine state:", res.statusText)
-        })
-        .then(data => {
-          console.log(`current state:\n- generation: ${data.generation}\n- number of sacrifices: ${data.sacrifice_wave}`)
-        })
-    }
-  }, [])
-
-  useEffect(() => {
     const endpoint = new URL('entrypoints/map', process.env.REACT_APP_API_URL)
 
     async function fetchClusters() {
@@ -91,6 +72,8 @@ const App = () => {
 
     if (hasData.current === false) {
       fetchClusters()
+      setBackgroundMap("https://map.joiningsuns.online/map.png?refresh"+Date.now().toString().substring(9))
+
       hasData.current = true
     }
 

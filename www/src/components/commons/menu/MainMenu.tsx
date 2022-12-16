@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FiMenu, FiX } from 'react-icons/fi'
 import { Link, useNavigate } from "react-router-dom";
+import EngineState from "./EngineState";
 
 
 const signout = () => {
@@ -66,6 +67,7 @@ const MainMenu = ({ username, markURL }: MainMenuProps) => {
 									Museum
 								</h2>
 							</div>
+							<EngineState/>
 						</div>
 						<div className="w-full h-24
 										font-mono

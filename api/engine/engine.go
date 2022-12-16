@@ -36,7 +36,7 @@ func StartEngine() {
 	Conf.DefaultConf()
 	Conf.Print()
 
-	state = State{generation: 0, sacrificeWave: 0}
+	state = State{generation: 0, sacrificeWave: 0, sacrificeTime: time.Time{}}
 	err := pool.Generate()
 	if err != nil {
 		zero.Errorf("error generating pool: %s", err.Error())
@@ -295,7 +295,6 @@ func sendMonthlyEmails() {
 
 // -- updateMap queries the database for the current entrypoints, then creates a POST request from it and sends a request to the map generator to create a new background image
 func updateMap() {
-	zero.Debug("updating map")
 	if os.Getenv("MAP_HOST") == "" {
 		zero.Error("missing host env for map service.")
 		return
@@ -307,7 +306,7 @@ func updateMap() {
 		zero.Error(err.Error())
 	}
 
-	zero.Debugf("map updating with entrypoints length: %d", len(eps))
+	zero.Debugf("map updating with entrypoints: %d", len(eps))
 
 	for i, ep := range eps {
 		body.Add(fmt.Sprintf("p%d", i), fmt.Sprintf("%d,%s,%s,%f,%f", ep.Generation, ep.Status, ep.Cluster.Name, ep.Lat, ep.Lng))
