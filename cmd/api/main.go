@@ -14,14 +14,11 @@ func main() {
 
 	switch os.Getenv("API_MODE") {
 	case "debug":
-		zero.Warn("setting API_MODE to DEBUG")
 		zero.InitLog(0)
 	case "test":
-		zero.Warn("setting API_MODE to INFO")
-		zero.InitLog(1)
+		zero.InitLog(0)
 	default:
-		zero.Warn("setting API_MODE to WARN")
-		zero.InitLog(2)
+		zero.InitLog(1)
 	}
 
 	var conf api.Config
@@ -30,7 +27,7 @@ func main() {
 	url := os.Getenv("DATABASE_URL")
 	if url == "" {
 		if os.Getenv("DB_USER") == "" || os.Getenv("DB_PASSWORD") == "" || os.Getenv("DB_HOST") == "" || os.Getenv("DB_PORT") == "" {
-			zero.Log.Fatal().Msgf("missing env DB_ variables!")
+			zero.Log.Fatal().Msg("missing env DB_ variables!")
 		}
 
 		url = fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s", os.Getenv("DB_HOST"), os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_NAME"), os.Getenv("DB_PORT"))
@@ -44,7 +41,8 @@ func main() {
 
 	_, err := models.InitDB(url)
 	if err != nil {
-		zero.Log.Fatal().Msgf("error initializing database: %v", err)
+		zero.Log.Fatal().Err(err).Msg("error initializing database")
+		return
 	}
 
 	go engine.StartEngine()

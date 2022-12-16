@@ -38,7 +38,7 @@ func StartServer(port string, c Config) {
 
 	// from https://gist.github.com/ivan3bx/b0f14449803ce5b0aa72afaa1dfc75e1
 	go func() {
-		zero.Infof("server starting on port %s", port)
+		zero.Log.Info().Str("port", port).Str("mode", os.Getenv("API_MODE")).Msg("server started")
 		if err := s.ListenAndServe(); err != http.ErrServerClosed {
 			panic(err)
 		}
@@ -48,7 +48,7 @@ func StartServer(port string, c Config) {
 	if os.Getenv("API_MODE") != "test" {
 		signal.Notify(shutdown, os.Interrupt, syscall.SIGTERM)
 		<-shutdown // block until signal received
-		zero.Info("Shutting down...")
+		zero.Log.Info().Msg("shutting down... ciao!")
 		s.Shutdown(context.Background())
 	}
 }
@@ -151,7 +151,7 @@ func injectConfig(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		id, err := auth.Authenticate(c)
 		if err != nil {
-			zero.Warn(err.Error())
+			zero.Log.Warn().Err(err).Msg("error injecting config")
 			id = uuid.Nil
 		}
 		c.Set("user_uuid", id)

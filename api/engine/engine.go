@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"errors"
 	"fmt"
 	"math"
 	"net/http"
@@ -31,20 +32,18 @@ var (
 )
 
 func StartEngine() {
-	zero.Info("starting engine...")
-
 	Conf.DefaultConf()
 	Conf.Print()
 
 	state = State{generation: 0, sacrificeWave: 0, sacrificeTime: time.Time{}}
 	err := pool.Generate()
 	if err != nil {
-		zero.Errorf("error generating pool: %s", err.Error())
+		zero.Log.Error().Err(err).Msg("error generating pool")
 	}
 
 	err = prompts.Populate()
 	if err != nil {
-		zero.Errorf("error populating prompts: %s", err.Error())
+		zero.Log.Error().Err(err).Msg("error populating prompts")
 	}
 
 	go createEntrypoints()
@@ -82,7 +81,7 @@ func createEntrypoints() {
 
 		eps, err := models.GetMapEntrypoints()
 		if err != nil {
-			zero.Errorf("Failed getting current map entrypoints", err.Error())
+			zero.Log.Error().Err(err).Msg("failed getting current map entrypoints")
 		}
 
 		if len(eps) > Conf.MAX_ENTRYPOINTS {
@@ -97,7 +96,8 @@ func createEntrypoints() {
 		}
 
 		remaining := float64(open) / float64(len(eps))
-		zero.Debug(fmt.Sprintf("open entrypoints: %d%% (%d/%d)", int(remaining*100), open, len(eps)))
+
+		zero.Log.Info().Int("percent", int(remaining*100)).Int("open", open).Int("total", len(eps)).Msg("available entrypoints")
 
 		if remaining < Conf.CREATION_THRESHOLD || len(eps) < Conf.MIN_ENTRYPOINTS {
 			state.generation++
@@ -122,19 +122,19 @@ func createEntrypoints() {
 func deleteEntrypoints() {
 	for {
 		time.Sleep(Conf.DELETE_INTERVAL)
-		zero.Debug("deleting entrypoints...")
+		zero.Log.Info().Msg("deleting entrypoints")
 
 		eps, err := models.GetEntrypointsByGeneration(state.generation)
 		if err != nil {
-			zero.Errorf("Failed getting current generation entrypoints", err.Error())
+			zero.Log.Error().Err(err).Msg("failed getting current generation")
 		}
 
 		for _, ep := range eps {
 			if (time.Since(ep.CreatedAt) > Conf.ENTRYPOINT_LIFETIME && ep.Status == models.EntrypointOpen) || len(ep.Modules) == 0 {
-				zero.Debugf("deleting: %s", ep.Name)
+				zero.Log.Info().Str("name", ep.Name).Msg("deleting")
 				_, err = models.DeleteEntrypoint(ep.UUID)
 				if err != nil {
-					zero.Errorf("Failed to delete expired entrypoints", err.Error())
+					zero.Log.Error().Err(err).Msg("failed to delete expired")
 				}
 			}
 		}
@@ -151,11 +151,9 @@ func sacrificeEntrypoints() {
 		//-- check which area is the most densely populated
 		eps, err := models.GetMapEntrypoints()
 		if err != nil {
-			zero.Error(err.Error())
+			zero.Log.Error().Err(err).Msg("failed to get map entrypoints")
 			continue
 		}
-
-		fmt.Println("sacrifice checking with entrypoints length:", len(eps))
 
 		var epicentre models.Entrypoint
 		var neighbors = make([]models.Entrypoint, 0)
@@ -179,17 +177,17 @@ func sacrificeEntrypoints() {
 		offerings := append(neighbors, epicentre)
 
 		//-- select the center point and save it
-		fmt.Printf("epicenter of sacrifice is %s (%s), with %d neighbors\n", epicentre.Name, epicentre.UUID.String(), len(neighbors))
+		zero.Log.Info().Str("epicenter", epicentre.Name).Int("neighbors", len(neighbors)).Msg("sacrifice")
 
 		if len(offerings) < Conf.SACRIFICE_THRESHOLD {
-			zero.Debug("not enough points to sacrifice, continuing...")
+			zero.Log.Info().Int("offerings", len(offerings)).Msg("not enough points to sacrifice")
 			continue
 		}
 
 		//-- sending an email to all users involved in Pending entrypoints
 		err = mailer.SendSacrificeEmail(offerings)
 		if err != nil {
-			zero.Error(err.Error())
+			zero.Log.Error().Err(err).Msg("error sending sacrifice email")
 			continue
 		}
 
@@ -199,16 +197,17 @@ func sacrificeEntrypoints() {
 	}
 }
 
-// -- -- -- delete all the entrypoints
-// -- -- -- increase the SacrificeWave
-// -- -- -- regenerate the map
+// -- commitSacrifice waits for SACRIFICE_DELAY then sets the status of all offerings to models.EntrypointSacrificed
 func commitSacrifice(offerings []models.Entrypoint) {
-	zero.Debugf("Commiting sacrifice in %v", Conf.SACRIFICE_DELAY.String())
+	zero.Log.Info().Msgf("Commiting sacrifice in %v", Conf.SACRIFICE_DELAY.String())
 	time.Sleep(Conf.SACRIFICE_DELAY)
 
-	zero.Debugf("Commiting sacrifice NOW")
+	zero.Log.Info().Msg("Commiting sacrifice NOW")
 	for _, o := range offerings {
-		models.DeleteEntrypoint(o.UUID)
+		err := models.SacrificeEntrypoint(o.UUID)
+		if err != nil {
+			zero.Log.Error().Err(err).Msg("error sacrificing entrypoint")
+		}
 	}
 
 	state.sacrificeWave++
@@ -225,7 +224,7 @@ func sendWeeklyEmails() {
 		//-- for all users, send them the prompt
 		users, err := models.GetAllUsers()
 		if err != nil {
-			zero.Error(err.Error())
+			zero.Log.Error().Err(err).Msg("error getting weekly prompts users")
 		}
 
 		for _, user := range users {
@@ -235,7 +234,7 @@ func sendWeeklyEmails() {
 
 			prompt, ep, err := prompts.CreateEntrypoint(user, mailer.WEEKLY)
 			if err != nil {
-				zero.Error(err.Error())
+				zero.Log.Error().Err(err).Msg("error creating prompt entrypoint")
 			}
 
 			p := mailer.PromptPayload{
@@ -250,7 +249,7 @@ func sendWeeklyEmails() {
 			user.WeeklyPromptsIndex++
 			_, err = models.UpdateUser(user.UUID, user.UUID, &user)
 			if err != nil {
-				zero.Error(err.Error())
+				zero.Log.Error().Err(err).Msg("")
 			}
 		}
 	}
@@ -262,7 +261,7 @@ func sendMonthlyEmails() {
 
 		users, err := models.GetAllUsers()
 		if err != nil {
-			zero.Error(err.Error())
+			zero.Log.Error().Err(err).Msg("error getting prompt users")
 		}
 
 		for _, user := range users {
@@ -272,7 +271,7 @@ func sendMonthlyEmails() {
 
 			prompt, ep, err := prompts.CreateEntrypoint(user, mailer.MONTHLY)
 			if err != nil {
-				zero.Error(err.Error())
+				zero.Log.Error().Err(err).Msg("error creating prompt entrypoints")
 			}
 
 			p := mailer.PromptPayload{
@@ -287,7 +286,7 @@ func sendMonthlyEmails() {
 			user.MonthlyPromptsIndex++
 			_, err = models.UpdateUser(user.UUID, user.UUID, &user)
 			if err != nil {
-				zero.Error(err.Error())
+				zero.Log.Error().Err(err).Msg("")
 			}
 		}
 	}
@@ -296,27 +295,25 @@ func sendMonthlyEmails() {
 // -- updateMap queries the database for the current entrypoints, then creates a POST request from it and sends a request to the map generator to create a new background image
 func updateMap() {
 	if os.Getenv("MAP_HOST") == "" {
-		zero.Error("missing host env for map service.")
+		zero.Log.Error().Err(errors.New("missing host env for map service")).Msg("MAP_HOST environment variable missing")
 		return
 	}
 
 	body := url.Values{}
 	eps, err := models.GetMapEntrypoints()
 	if err != nil {
-		zero.Error(err.Error())
+		zero.Log.Error().Err(err).Msg("error getting map entrypoints")
 	}
 
-	zero.Debugf("map updating with entrypoints: %d", len(eps))
+	zero.Log.Info().Int("entrypoints", len(eps)).Msg("updating map")
 
 	for i, ep := range eps {
 		body.Add(fmt.Sprintf("p%d", i), fmt.Sprintf("%d,%s,%s,%f,%f", ep.Generation, ep.Status, ep.Cluster.Name, ep.Lat, ep.Lng))
 	}
 	endpoint := os.Getenv("MAP_HOST")
-	res, err := http.PostForm(endpoint, body)
+	_, err = http.PostForm(endpoint, body)
 	if err != nil {
-		zero.Error(err.Error())
-	} else {
-		zero.Debugf("response from %s: %d", endpoint, res.StatusCode)
+		zero.Log.Error().Err(err).Msg("failed to request map update")
 	}
 }
 

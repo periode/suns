@@ -16,10 +16,11 @@ import (
 
 const (
 	// Status of Entrypoint with regards to completion
-	EntrypointUnlisted  string = "unlisted"  // Entrypoint exists but is not displayed yet
-	EntrypointOpen      string = "open"      // Entrypoint is ready to be claimed
-	EntrypointPending   string = "pending"   // Entrypoint is claimed and someone is working on it
-	EntrypointCompleted string = "completed" // Entrypoint has been completed
+	EntrypointUnlisted   string = "unlisted"   // Entrypoint exists but is not displayed yet
+	EntrypointOpen       string = "open"       // Entrypoint is ready to be claimed
+	EntrypointPending    string = "pending"    // Entrypoint is claimed and someone is working on it
+	EntrypointCompleted  string = "completed"  // Entrypoint has been completed
+	EntrypointSacrificed string = "sacrificed" // Entrypoint has been sacrificed
 )
 
 const (
@@ -218,7 +219,7 @@ func GetCrackEntrypoints() ([]Entrypoint, error) {
 
 func GetSacrificedEntrypoints() ([]Entrypoint, error) {
 	eps := make([]Entrypoint, 0)
-	result := db.Preload("Modules").Preload("Cluster").Preload("Users").Where("status = ?", EntrypointCompleted).Find(&eps)
+	result := db.Preload("Cluster").Preload("Users").Where("status = ?", EntrypointSacrificed).Find(&eps)
 
 	return eps, result.Error
 }
@@ -262,6 +263,17 @@ func ClaimEntrypoint(entry *Entrypoint, user *User) (Entrypoint, error) {
 
 	updated, err := GetEntrypoint(entry.UUID)
 	return updated, err
+}
+
+func SacrificeEntrypoint(uuid uuid.UUID) error {
+	var entry Entrypoint
+	err := db.Where("uuid = ?", uuid).First(&entry).Error
+	if err != nil {
+		return err
+	}
+
+	err = db.Model(&entry).Update("status", EntrypointSacrificed).Error
+	return err
 }
 
 func DeleteEntrypoint(uuid uuid.UUID) (Entrypoint, error) {

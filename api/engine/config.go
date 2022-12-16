@@ -6,6 +6,8 @@ import (
 	"reflect"
 	"strconv"
 	"time"
+
+	zero "github.com/periode/suns/api/logger"
 )
 
 // Config holds engine variables
@@ -120,26 +122,27 @@ func (c *Config) DefaultConf() {
 
 	i, err = strconv.Atoi(os.Getenv("MAX_ENTRYPOINTS"))
 	if err != nil {
-		c.MAX_ENTRYPOINTS = 1000
+		c.MAX_ENTRYPOINTS = 200
 	} else {
 		c.MAX_ENTRYPOINTS = i
 	}
 }
 
 func (c *Config) Print() {
-	fmt.Println("Engine configuration:")
-	fmt.Printf("CREATE_INTERVAL: %v\n", c.CREATE_INTERVAL)
-	fmt.Printf("DELETE_INTERVAL: %v\n", c.DELETE_INTERVAL)
-	fmt.Printf("SACRIFICE_INTERVAL: %v\n", c.SACRIFICE_INTERVAL)
-	fmt.Printf("EMAIL_WEEKLY_INTERVAL: %v\n", c.EMAIL_WEEKLY_INTERVAL)
-	fmt.Printf("EMAIL_MONTHLY_INTERVAL: %v\n", c.EMAIL_MONTHLY_INTERVAL)
-	fmt.Printf("SACRIFICE_ZONE_RADIUS: %v\n", c.SACRIFICE_ZONE_RADIUS)
-	fmt.Printf("SACRIFICE_DELAY: %v\n", c.SACRIFICE_DELAY)
-	fmt.Printf("SACRIFICE_THRESHOLD: %v\n", c.SACRIFICE_THRESHOLD)
-	fmt.Printf("CREATION_THRESHOLD: %v\n", c.CREATION_THRESHOLD)
-	fmt.Printf("ENTRYPOINT_LIFETIME: %v\n", c.ENTRYPOINT_LIFETIME)
-	fmt.Printf("MIN_ENTRYPOINTS: %v\n", c.MIN_ENTRYPOINTS)
-	fmt.Printf("MAX_ENTRYPOINTS: %v\n", c.MAX_ENTRYPOINTS)
+	zero.Log.Info().
+		Dur("CREATE_INTERVAL", c.CREATE_INTERVAL).
+		Dur("DELETE_INTERVAL", c.DELETE_INTERVAL).
+		Dur("SACRIFICE_INTERVAL", c.SACRIFICE_INTERVAL).
+		Dur("EMAIL_WEEKLY_INTERVAL", c.EMAIL_WEEKLY_INTERVAL).
+		Dur("EMAIL_MONTHLY_INTERVAL", c.EMAIL_MONTHLY_INTERVAL).
+		Float64("SACRIFICE_ZONE_RADIUS", c.SACRIFICE_ZONE_RADIUS).
+		Dur("SACRIFICE_DELAY", c.SACRIFICE_DELAY).
+		Int("SACRIFICE_THRESHOLD", c.SACRIFICE_THRESHOLD).
+		Float64("CREATION_THRESHOLD", c.CREATION_THRESHOLD).
+		Dur("ENTRYPOINT_LIFETIME", c.ENTRYPOINT_LIFETIME).
+		Int("MIN_ENTRYPOINTS", c.MIN_ENTRYPOINTS).
+		Int("MAX_ENTRYPOINTS", c.MAX_ENTRYPOINTS).
+		Msg("engine started with configuration")
 }
 
 func (c *Config) Set(updated Config) (Config, error) {

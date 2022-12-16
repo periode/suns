@@ -52,7 +52,6 @@ function EntrypointActions({
 			hasClicked.current = true
 			handleNext()
 		}
-
 	}
 
 	const ShareButton =

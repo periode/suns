@@ -49,13 +49,14 @@ func (p *Pool) Generate() error {
 
 		//-- add the entrypoint as many times as the name
 		for _, ep := range new.Entrypoints {
-			for i := 0; i < weights[ep.Name]; i++ {
+			for i := 0; i < weights[ep.AirtableKey]; i++ {
 				p.entrypoints = append(p.entrypoints, ep)
+
 			}
 		}
 	}
 
-	zero.Debugf("engine generated entrypoints: %d", len(p.entrypoints))
+	zero.Log.Debug().Int("entrypoints", len(p.entrypoints)).Msg("picked entrypoints from fixtures")
 
 	return nil
 }
@@ -76,9 +77,7 @@ func (p *Pool) Pick(num int) ([]models.Entrypoint, error) {
 			return res, err
 		}
 
-		for _, ep := range new.Entrypoints {
-			candidates = append(candidates, ep)
-		}
+		candidates = append(candidates, new.Entrypoints...)
 	}
 
 	for i := 0; i < num; i++ {
