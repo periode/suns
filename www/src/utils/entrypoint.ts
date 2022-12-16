@@ -8,8 +8,14 @@ export const assetIntro = (
     index: number,
     name: string,
 ) => {
+        console.log("ASSETINTRO_______________________" )
+        console.log("contents: " + contents)
+        console.log("type: " + type)
+        console.log("ep_name: " + ep_name)
+        console.log("index: " + index)
+        console.log("name: " + name)
 		const narrationString : string | undefined = contents?.get(`${ep_name}_${type}_${index}`)
-		
+            console.log(`${ep_name}_${type}_${index}`)
 		if (narrationString && name)
 			return narrationString.replace("{user}", name)
 		else

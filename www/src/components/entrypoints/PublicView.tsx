@@ -24,33 +24,33 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
         switch (upload.type) {
             case UPLOAD_TYPE.Text:
                 return (
-                    <ContentText index={index} key={upload.uuid} text={upload.text} name={name} ep_name={entrypoint.airtable_key} final={true} />
+                    <ContentText index={index} key={upload.uuid} text={upload.text} name={upload.user_name} ep_name={entrypoint.airtable_key} final={true} />
                 )
             case UPLOAD_TYPE.Image:
                 return (
-                    <ContentImage index={index} key={upload.uuid} src={upload.url} name={name} ep_name={entrypoint.airtable_key} />
+                    <ContentImage index={index} key={upload.uuid} src={upload.url} name={upload.user_name} ep_name={entrypoint.airtable_key} />
                 )
             case UPLOAD_TYPE.Video:
                 return (
-                    <ContentVideoInternal index={index} key={upload.uuid} src={upload.url} name={name} ep_name={entrypoint.airtable_key} />
+                    <ContentVideoInternal index={index} key={upload.uuid} src={upload.url} name={upload.user_name} ep_name={entrypoint.airtable_key} />
                 )
             case UPLOAD_TYPE.Audio:
                 return (
-                    <ContentAudio index={index} key={upload.uuid} src={upload.url} name={name} ep_name={entrypoint.airtable_key} final={true} />
+                    <ContentAudio index={index} key={upload.uuid} src={upload.url} name={upload.user_name} ep_name={entrypoint.airtable_key} final={true} />
                 )
             default:
                 return <>Couldnt get upload.type: {upload.type}</>
         }
     }
 
-    const getUploads = (uploads: Array<IUpload>, user: IUser, compare: (x: string, y: string) => boolean, alternate: boolean,): JSX.Element[] => {
+    const getUploads = (uploads: Array<IUpload>, user: IUser, compare: (x: string, y: string) => boolean, alternate: boolean, moduleID: number): JSX.Element[] => {
         var Content: JSX.Element[] = []
 
         for (let i = 0; i < uploads.length; i++) {
             if (!alternate && compare(uploads[i].user_uuid, user.uuid))
-                Content.push(getUploadContent(i, uploads[i], user.name))
+                Content.push(getUploadContent(moduleID, uploads[i], user.name))
             if (alternate && !compare(uploads[i].user_uuid, user.uuid))
-                Content.push(getUploadContent(i, uploads[i], user.name))
+                Content.push(getUploadContent(moduleID, uploads[i], user.name))
         }
         return (Content)
     }
@@ -68,7 +68,7 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
                 if (!modules[moduleID].uploads[0])
                     Content.push(<>Upload does not exist</>)
                 else
-                    Content.push(...getUploads(entrypoint.modules[moduleID].uploads, user, compare, isAlternated))
+                    Content.push(...getUploads(entrypoint.modules[moduleID].uploads, user, compare, isAlternated, moduleID))
                 if (alternate)
                     isAlternated = !isAlternated
             }
@@ -93,6 +93,7 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
 
 
     const getContent = (user: IUser): JSX.Element => {
+        // console.log("entrypoint.final_module_type: ", entrypoint.final_module_type)
         if (
             entrypoint === undefined
             || entrypoint.modules.length === 0
@@ -143,14 +144,23 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
     return (
         <div className="w-full h-full flex flex-col gap-8">
             {getHeader()}
-            <div className="w-full flex flex-col md:flex-row justify-between">
-                {entrypoint.users.map(u => {
+            <div className="w-full flex flex-col gap-4 md:flex-row justify-between">
+                {entrypoint.users.map((u, i) => {
                     return (
                         <div className="
                         flex-1 
-                        flex flex-col gap-4 m-1
+                        flex flex-col
+
                         " key={u.uuid}>
-                            {getContent(u)}
+                            {
+                                getContent(u)
+                            }
+                            {
+                                entrypoint.users.length > 1 && i === 0 &&
+                                <div className="block md:hidden">
+                                    <SeperatorFinal/>
+                                </div>
+                            }
                         </div>
                     )
                 })}

@@ -16,10 +16,10 @@ function ContentVideoInternal({ index, key, src, name, ep_name }: ContentVideoPr
     const contents = ctx.get("PublicView")
 
 	return (
-		<div className="w-full flex flex-col gap-2 items-center justify-start mb-5">
+		<div className="w-full flex flex-col gap-2 items-start justify-start mb-5 break-words">
 			{
 				index !== undefined && name && name.length > 0 && ep_name && ep_name.length > 0 &&
-				<div className="text-sm">{assetIntro(
+				<div className="font-mono text-xs opacity-70">{assetIntro(
 						contents,
 						UPLOAD_TYPE.Video,
 						ep_name,
@@ -27,7 +27,7 @@ function ContentVideoInternal({ index, key, src, name, ep_name }: ContentVideoPr
 						name
 					) }</div>
 			}
-			<video className="w-auto max-h-80"
+			<video className="w-full max-h-80"
 				key={key}
 				src={`${process.env.REACT_APP_SPACES_URL}/${src}`}
 				controls />

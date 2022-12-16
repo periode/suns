@@ -10,14 +10,14 @@ function ContentVideoExternal({
 	} : ContentVideoExternalProps) {
 
 	return ( 
-			<iframe
-				className="w-auto flex-1"
+
+		<iframe
+			className="aspect-video"
 				title={title}
-				src={src}
-				//width="640"
-				//height="320"
+			src={src}
+				style={{ width: "100%", height: "100%" }}
 				allow="autoplay; fullscreen; picture-in-picture"
-				></iframe>
+			></iframe>
 	 );
 }
 
