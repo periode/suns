@@ -85,10 +85,6 @@ func CreateUpload(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Error uploading the file: unknown file type")
 	}
 
-	// based on that uploaded file, we can convert it to a known file extension
-	// it should be done with ffmpeg, but that's going to depend on available libraries to be installed locally and with docker
-	// the writeToDisk function should be changed to return the path of the written file, rather than its type (known before hand)
-
 	for _, u := range uploads {
 		zero.Debugf("adding upload: %s - %s", u.Type, u.Name)
 	}

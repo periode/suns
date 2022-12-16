@@ -149,7 +149,7 @@ func sacrificeEntrypoints() {
 		time.Sleep(Conf.SACRIFICE_INTERVAL)
 
 		//-- check which area is the most densely populated
-		eps, err := models.GetAllEntrypoints()
+		eps, err := models.GetMapEntrypoints()
 		if err != nil {
 			zero.Error(err.Error())
 			continue

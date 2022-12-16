@@ -175,7 +175,7 @@ func GetAllEntrypoints() ([]Entrypoint, error) {
 	return eps, result.Error
 }
 
-// -- GetMapEntrypoints returns all entrypoints that are visible on the map and that have modules. It is used to generate the map, and to determine the creation of new entrypoints.
+// -- GetMapEntrypoints returns all entrypoints that are visible on the map and that have modules. It is used to generate the map, to find which entrypoints should be sacrificed, and to determine the creation of new entrypoints.
 func GetMapEntrypoints() ([]Entrypoint, error) {
 	eps := make([]Entrypoint, 0)
 	result := db.Preload("Modules").Preload("Cluster").Preload("Users").Where("visibility = ?", EntrypointVisible).Find(&eps)
