@@ -24,17 +24,6 @@ function ContentImage({ index, src, name, ep_name }: ContentImageProps) {
 		}
 	}
 
-	// var assetIntro = () => {
-
-	// 	const narrationString : string | undefined = contents?.get(`${ep_name}_image_${index}`)
-		
-	// 	if (narrationString && name)
-	// 		return narrationString.replace("{user}", name)
-	// 	else
-	// 		return name + ":"
-	// }
-
-
 	return (
 		<div className="w-full flex flex-col gap-2 items-center justify-start mb-5">
 			{

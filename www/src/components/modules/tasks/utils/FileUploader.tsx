@@ -10,7 +10,10 @@ interface IFileUploadProps {
     handleNewUploads: Function,
 }
 
-const MAX_FILE_SIZE = 32
+const MAX_FILE_SIZE: {[key: string]: number} = {
+    "img": 32,
+    "vid": 300
+}
 
 const FileUploader = ({ type, uuid, maxUploads = 1, handleNewUploads }: IFileUploadProps) => {
     const [uploadIndex, setUploadIndex] = useState(1)
@@ -23,7 +26,7 @@ const FileUploader = ({ type, uuid, maxUploads = 1, handleNewUploads }: IFileUpl
         const t = e.target as HTMLInputElement
         if (t.files == null) return
 
-        if (t.files[0].size / 1024 / 1024 > MAX_FILE_SIZE) {
+        if (t.files[0].size / 1024 / 1024 > MAX_FILE_SIZE[type]) {
             setIsToasterDisplayed(true)
             return
         }
@@ -61,7 +64,7 @@ const FileUploader = ({ type, uuid, maxUploads = 1, handleNewUploads }: IFileUpl
     return (<>
         <Toaster
             type={ ToasterType.error }
-            message={"File is too big, max size: " + MAX_FILE_SIZE + "mb."}
+            message={"File is too big, max size: " + MAX_FILE_SIZE[type] + "mb."}
             display={isToasterDisplayed} 
             setDisplay={setIsToasterDisplayed} 
             timeoutms={3000}
