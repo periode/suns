@@ -24,7 +24,7 @@ function EntrypointActions({
 
 	useEffect(() => {
 		if (canUserComplete && nextButtonRef.current)
-			nextButtonRef.current.removeAttribute('disabled')
+			nextButtonRef.current.disabled = false
 
 		if(canUserComplete && hasClicked.current)
 			hasClicked.current = false
@@ -55,7 +55,7 @@ function EntrypointActions({
 	}
 
 	const ShareButton =
-		<button className=" font-mono
+		<button className=" font-mono italic
 							cursor-pointer
 							flex items-center
 							gap-1"
@@ -75,7 +75,7 @@ function EntrypointActions({
 		</button>
 
 	const NextButton =
-		<button ref={nextButtonRef} className={`font-mono
+		<button ref={nextButtonRef} className={`font-mono italic
 							cursor-pointer
 							flex items-center
 							gap-1 disabled:opacity-50`}
@@ -108,7 +108,8 @@ function EntrypointActions({
 
 
 	return (
-		<div className="w-full flex items-center justify-between text-sm">
+		
+		<div className="w-full flex items-center justify-between text-sm italic">
 			<div className="w-16">
 
 				{ShareButton}
