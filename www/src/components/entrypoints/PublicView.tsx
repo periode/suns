@@ -8,6 +8,7 @@ import { useContext } from "react"
 import EntrypointPartners from "./EntrypointPartners"
 import SeperatorFinal from "../commons/layout/SeperatorFinal"
 import { useNavigate } from "react-router-dom"
+import { FiArrowRight } from "react-icons/fi"
 
 interface PublicViewProps {
     entrypoint: IEntrypoint
@@ -109,6 +110,8 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
                 return (getModules(user, entrypoint.modules, equalString, true))
             case FINAL_TYPE.TangledInverted:
                 return (getModules(user, entrypoint.modules, notequalString, true))
+            case FINAL_TYPE.Crack:
+                return (getModules(user, entrypoint.modules, equalString, false))
             default:
                 {
                     break;
@@ -165,14 +168,15 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
                     )
                 })}
             </div>
-            {entrypoint.name === "Cracks" ?
-                <button className=" flex items-center justify-center gap-1
-                    h-8 bg-none p-2 pl-4 pr-4
-                text-green-500 font-mono text-sm font-bold 
-                border border-1 border-green-500
-                hover:text-green-600 hover:border-green-600
-                transition-all ease-in duration-300" onClick={() => { navigate(`/entrypoints/archive/cracks`, { replace: true }) }}>Go to the cracks archive</button>
-                : <></>}
+            {
+                entrypoint.name === "Cracks" ?
+                    <button className=" 
+                        flex items-center justify-center gap-2
+                        text-green-500 font-mono text-lg font-bold italic
+                        hover:text-green-600 hover:border-green-600
+                        transition-all ease-in duration-300" onClick={() => { navigate(`/entrypoints/archive/cracks`, { replace: true }) }}>Go to the cracks archive <FiArrowRight/></button>
+                    : <></>
+            }
         </div >
     )
 
