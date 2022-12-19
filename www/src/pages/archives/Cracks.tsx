@@ -82,7 +82,7 @@ const Cracks = () => {
     const generateCracksLayoutByGeneration = () => {
         let elems = [] as Array<ReactNode>
         crackGenerations.map((gen) => {
-            elems.push(<h1 className="w-full text-xl block">Generation {gen}</h1>)
+            elems.push(<h1 className="w-full text-xl font-mono block text-slate-400">Generation {gen}</h1>)
 
             cracks?.map((c, i) => {
                 if (c.generation === gen)

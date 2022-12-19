@@ -37,7 +37,7 @@ function ContentImage({ index, src, name, ep_name }: ContentImageProps) {
 						name
 					) }</div>
 			}
-			<img className="w-auto md:max-h-80 self-center"
+			<img className="w-auto md:max-h-80"
 				src={`${process.env.REACT_APP_SPACES_URL}/${src}`}
 				alt={src}
 				onError={handleMissingImage} />

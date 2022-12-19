@@ -1,5 +1,12 @@
 import { IFile, IModule } from "./types";
 
+export const fillDynamicContent = (text: string, username: string) : string =>
+{
+    if (text && username)
+        return text.replace("{user}", username)
+    else
+        return (text)
+}
 
 export const assetIntro = (
     contents: Map<string, string> | undefined,
@@ -17,7 +24,7 @@ export const assetIntro = (
 		const narrationString : string | undefined = contents?.get(`${ep_name}_${type}_${index}`)
             console.log(`${ep_name}_${type}_${index}`)
 		if (narrationString && name)
-			return narrationString.replace("{user}", name)
+			return fillDynamicContent(narrationString, name)
 		else
 			return name + ":"
 }
