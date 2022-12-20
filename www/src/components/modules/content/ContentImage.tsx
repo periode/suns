@@ -1,7 +1,8 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { AirTableContext } from "../../../contexts/AirContext";
 import { assetIntro } from "../../../utils/entrypoint";
 import { UPLOAD_TYPE } from "../../../utils/types";
+import SpinnerSmall from "../../commons/Spinners/SpinnerSmall";
 
 interface ContentImageProps {
 	index?: number,
@@ -15,6 +16,7 @@ function ContentImage({ index, src, name, ep_name }: ContentImageProps) {
 	const contents = ctx.get("PublicView")
 	
 	const hadAttemptedFallback = useRef(false)
+	const [hasLoaded, setLoaded] = useState(false)
 
 	const handleMissingImage = (e: React.BaseSyntheticEvent) => {
 		const t = e.currentTarget
@@ -25,6 +27,11 @@ function ContentImage({ index, src, name, ep_name }: ContentImageProps) {
 		}
 	}
 
+	var styleImg: React.CSSProperties
+	if (hasLoaded)
+		styleImg = { display: "block" }
+	else
+		styleImg = { display: "hidden" }
 	return (
 		<div className="w-full flex flex-col gap-2 items-start justify-start mb-5 break-words">
 			{
@@ -37,10 +44,15 @@ function ContentImage({ index, src, name, ep_name }: ContentImageProps) {
 						name
 					) }</div>
 			}
+			{
+				!hasLoaded && <SpinnerSmall/>
+			 }
 			<img className="w-auto md:max-h-80"
 				src={`${process.env.REACT_APP_SPACES_URL}/${src}`}
 				alt={src}
-				onError={handleMissingImage} />
+				onError={handleMissingImage}
+				style={styleImg}
+				onLoad={ () => setLoaded(true)} />
 		</div>
 	);
 }
