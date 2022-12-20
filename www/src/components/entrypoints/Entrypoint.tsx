@@ -8,13 +8,12 @@ import { getSession } from "../../utils/auth";
 import EntrypointActions from "./EntrypointActions";
 import PublicView from "./PublicView";
 import NotFound from "../../NotFound";
-import { ENTRYPOINT_STATUS, IEntrypoint, IFile, ISession } from "../../utils/types";
+import { ENTRYPOINT_STATUS, IEntrypoint, IFile, IModule, ISession } from "../../utils/types";
 import IntroModule from "../modules/IntroModule";
 import TaskModule from "../modules/TaskModule";
 import { fetchEntrypoint, progressModule, submitUpload } from "../../utils/entrypoint";
 import WaitingModule from "../modules/WaitingModule";
 import EntrypointLayout from "./Layouts/EntrypointLayout";
-import { Map } from "leaflet";
 
 const FETCH_INTERVAL = 50 * 1000
 const ENTRYPOINT_LIFETIME_MINUTES = 72 * 60
@@ -134,6 +133,7 @@ const Entrypoint = (props: any) => {
         const res = await fetch(endpoint, options)
         if (res.ok) {
             const updated = await res.json()
+            updated.modules.sort((a:IModule, b:IModule) => parseInt(a.ID) - parseInt(b.ID))
             setData(updated)
             if (updated.max_users > 1)
                 setCanUserComplete(false)
