@@ -34,6 +34,7 @@ const Entrypoint = (props: any) => {
     const [uploads, setUploads] = useState(Array<IFile>)
     const [endDate, setEndDate] = useState("")
     const [isOwned, setOwned] = useState(false)
+    const [isFetching, setFetching] = useState(false)
 
     const [canUserComplete, setCanUserComplete] = useState(false)
     const [hasUserCompleted, setUserCompleted] = useState(false)
@@ -63,7 +64,8 @@ const Entrypoint = (props: any) => {
                 })
             hasData.current = true
         }
-    }, [params.id])
+    }, [params.id, session.token, navigate])
+
 
 
     //-- this checks if the user owns the current entrypoint
@@ -132,13 +134,16 @@ const Entrypoint = (props: any) => {
             body: session.user.uuid
         };
 
+        setFetching(true)
         const res = await fetch(endpoint, options)
         if (res.ok) {
+            setFetching(false)
             const updated = await res.json()
             setData(updated)
             if (updated.max_users > 1)
                 setCanUserComplete(false)
         } else {
+            setFetching(false)
             console.warn('error', res.status)
             if (res.status === 401)
                 navigate("/auth")
@@ -177,18 +182,22 @@ const Entrypoint = (props: any) => {
         if (session.token === "")
             Navigate({ to: "/auth" })
 
-
+        setFetching(true)
         uploads.forEach(u => {
-
             submitUpload(session.token, data.modules[data.current_module].uuid, u)
                 .then(() => {
                     console.log("uploaded file!")
                 })
-                .catch((err) => console.error(err))
+                .catch(
+                    (err) => {
+                        console.error(err)
+                    }
+                )
         })
 
         progressModule(ep.uuid, session.token)
             .then(updated => {
+                setFetching(false)
                 setUploads([])
                 //-- check if we're done with the module
                 if (updated.current_module === ep.current_module)
@@ -205,6 +214,7 @@ const Entrypoint = (props: any) => {
                 setData(updated)
             })
             .catch(err => {
+                setFetching(false)
                 console.log("failed to complete module, status:", err);
             })
     }
@@ -304,6 +314,7 @@ const Entrypoint = (props: any) => {
                             handleNext={handleNext}
                             hasUserCompleted={hasUserCompleted}
                             canUserComplete={canUserComplete}
+                            isFetching={isFetching}
                         />
                     }
                 />

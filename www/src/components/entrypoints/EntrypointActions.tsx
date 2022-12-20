@@ -1,6 +1,7 @@
 import { ENTRYPOINT_STATUS, IEntrypoint, PARTNER_STATUS } from "../../utils/types"
 import { FiShare2, FiArrowRight } from "react-icons/fi"
 import React, { useEffect, useRef } from "react";
+import SpinnerSmall from "../commons/Spinners/SpinnerSmall";
 
 interface EntrypointActionsProps {
 	ep: IEntrypoint,
@@ -9,6 +10,7 @@ interface EntrypointActionsProps {
 	hasUserCompleted: boolean,
 	claimEntryPointFunction: () => {},
 	handleNext: () => void,
+	isFetching: boolean
 }
 
 function EntrypointActions({
@@ -17,7 +19,8 @@ function EntrypointActions({
 	handleNext,
 	isOwner,
 	canUserComplete,
-	hasUserCompleted
+	hasUserCompleted,
+	isFetching
 }: EntrypointActionsProps) {
 	const nextButtonRef = useRef<HTMLButtonElement>(null)
 	const hasClicked = useRef(false)
@@ -92,6 +95,8 @@ function EntrypointActions({
 		</p>
 
 	const rightButtonDisplay = () => {
+		if (isFetching)
+			return <SpinnerSmall/>
 		if (!isOwner && (ep.partner_status === PARTNER_STATUS.PartnerPartial || ep.partner_status === PARTNER_STATUS.PartnerNone))
 			return StartButton
 
