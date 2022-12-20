@@ -286,11 +286,13 @@ const Entrypoint = (props: any) => {
                         <div className="w-full h-full p-4 overflow-scroll">
                             {
                                 
-                                (isOwned || data.status === ENTRYPOINT_STATUS.EntrypointCompleted || data.status === ENTRYPOINT_STATUS.EntrypointOpen)
-                                    && (data.modules[data.current_module].type !== "final") ?
-                                    getModule()
-                                    :
+                                (data.modules[data.current_module].type === "final") ?
                                     <PublicView entrypoint={data} />
+                                    :
+                                    data.status === ENTRYPOINT_STATUS.EntrypointPending && !isOwned ?
+                                        <IntroModule airtable_key={data.airtable_key} data={data.modules[0]} />
+                                    :
+                                    getModule()
                             }
                         </div>
                     }

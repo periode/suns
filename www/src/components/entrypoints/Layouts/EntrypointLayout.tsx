@@ -96,13 +96,13 @@ function EntrypointLayout({
 							<EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status}/>
 						</div>
 					</div>
-					{module}
+					{ module }
 					<div className="h-20
                             pl-4 pr-4
                             relative
                             flex items-center justify-between
                             border-t border-stone-500">
-						{entrypointactions}
+						{ entrypointactions }
 					</div>
 			</div>
 		)
