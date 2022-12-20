@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 500 500" width="500"
+    height="500" style="width: 100%; height: 100%; transform: translate3d(0px, 0px, 0px);"
+    preserveAspectRatio="xMidYMid meet">
+    <defs>
+        <clipPath id="__lottie_element_93">
+            <rect width="500" height="500" x="0" y="0"></rect>
+        </clipPath>
+    </defs>
+    <g clip-path="url(#__lottie_element_93)">
+        <g style="display: block;" transform="matrix(0.5400000214576721,0,0,0.5400000214576721,200,269)" opacity="1">
+            <g opacity="1" transform="matrix(1,0,0,1,0,0)">
+                <path fill="rgb(255,255,255)" fill-opacity="1"
+                    d=" M0,-100 C-50,-100 -50,-50 -50,0 C0,50 0,50 50,0 C50,-50 50,-100 0,-100z"></path>
+                <path stroke-linecap="butt" stroke-linejoin="miter" fill-opacity="0" stroke-miterlimit="4"
+                    stroke="rgb(255,255,255)" stroke-opacity="1" stroke-width="8"
+                    d=" M0,-100 C-50,-100 -50,-50 -50,0 C0,50 0,50 50,0 C50,-50 50,-100 0,-100z"></path>
+            </g>
+        </g>
+        <g style="display: block;" transform="matrix(0.5400000214576721,0,0,0.5400000214576721,300,269)" opacity="1">
+            <g opacity="1" transform="matrix(1,0,0,1,0,0)">
+                <path fill="rgb(255,255,255)" fill-opacity="1"
+                    d=" M0,-100 C-50,-100 -50,-50 -50,0 C0,50 0,50 50,0 C50,-50 50,-100 0,-100z"></path>
+                <path stroke-linecap="butt" stroke-linejoin="miter" fill-opacity="0" stroke-miterlimit="4"
+                    stroke="rgb(255,255,255)" stroke-opacity="1" stroke-width="8"
+                    d=" M0,-100 C-50,-100 -50,-50 -50,0 C0,50 0,50 50,0 C50,-50 50,-100 0,-100z"></path>
+            </g>
+        </g>
+        <g style="display: none;" transform="matrix(0.5400000214576721,0,0,0.5400000214576721,300,166.875)"
+            opacity="0.11249999999999802">
+            <g opacity="1" transform="matrix(1,0,0,1,0,0)">
+                <path fill="rgb(255,255,255)" fill-opacity="1"
+                    d=" M0,-100 C-50,-100 -50,-50 -50,0 C0,50 0,50 50,0 C50,-50 50,-100 0,-100z"></path>
+                <path stroke-linecap="butt" stroke-linejoin="miter" fill-opacity="0" stroke-miterlimit="4"
+                    stroke="rgb(255,255,255)" stroke-opacity="1" stroke-width="8"
+                    d=" M0,-100 C-50,-100 -50,-50 -50,0 C0,50 0,50 50,0 C50,-50 50,-100 0,-100z"></path>
+            </g>
+        </g>
+        <g style="display: none;" transform="matrix(0.5400000214576721,0,0,0.5400000214576721,300,366.875)"
+            opacity="0.10999999999999674">
+            <g opacity="1" transform="matrix(1,0,0,1,0,0)">
+                <path fill="rgb(255,255,255)" fill-opacity="1"
+                    d=" M0,-100 C-50,-100 -50,-50 -50,0 C0,50 0,50 50,0 C50,-50 50,-100 0,-100z"></path>
+                <path stroke-linecap="butt" stroke-linejoin="miter" fill-opacity="0" stroke-miterlimit="4"
+                    stroke="rgb(255,255,255)" stroke-opacity="1" stroke-width="8"
+                    d=" M0,-100 C-50,-100 -50,-50 -50,0 C0,50 0,50 50,0 C50,-50 50,-100 0,-100z"></path>
+            </g>
+        </g>
+        <g style="display: none;" transform="matrix(0.5400000214576721,0,0,0.5400000214576721,200,366.875)"
+            opacity="0.08499999999999545">
+            <g opacity="1" transform="matrix(1,0,0,1,0,0)">
+                <path fill="rgb(255,255,255)" fill-opacity="1"
+                    d=" M0,-100 C-50,-100 -50,-50 -50,0 C0,50 0,50 50,0 C50,-50 50,-100 0,-100z"></path>
+                <path stroke-linecap="butt" stroke-linejoin="miter" fill-opacity="0" stroke-miterlimit="4"
+                    stroke="rgb(255,255,255)" stroke-opacity="1" stroke-width="8"
+                    d=" M0,-100 C-50,-100 -50,-50 -50,0 C0,50 0,50 50,0 C50,-50 50,-100 0,-100z"></path>
+            </g>
+        </g>
+        <g style="display: none;" transform="matrix(0.5400000214576721,0,0,0.5400000214576721,200,166.875)"
+            opacity="0.0899999999999946">
+            <g opacity="1" transform="matrix(1,0,0,1,0,0)">
+                <path fill="rgb(255,255,255)" fill-opacity="1"
+                    d=" M0,-100 C-50,-100 -50,-50 -50,0 C0,50 0,50 50,0 C50,-50 50,-100 0,-100z"></path>
+                <path stroke-linecap="butt" stroke-linejoin="miter" fill-opacity="0" stroke-miterlimit="4"
+                    stroke="rgb(255,255,255)" stroke-opacity="1" stroke-width="8"
+                    d=" M0,-100 C-50,-100 -50,-50 -50,0 C0,50 0,50 50,0 C50,-50 50,-100 0,-100z"></path>
+            </g>
+        </g>
+        <g style="display: none;" transform="matrix(0.5400000214576721,0,0,0.5400000214576721,100,166.875)"
+            opacity="0.09999999999999432">
+            <g opacity="1" transform="matrix(1,0,0,1,0,0)">
+                <path fill="rgb(255,255,255)" fill-opacity="1"
+                    d=" M0,-100 C-50,-100 -50,-50 -50,0 C0,50 0,50 50,0 C50,-50 50,-100 0,-100z"></path>
+                <path stroke-linecap="butt" stroke-linejoin="miter" fill-opacity="0" stroke-miterlimit="4"
+                    stroke="rgb(255,255,255)" stroke-opacity="1" stroke-width="8"
+                    d=" M0,-100 C-50,-100 -50,-50 -50,0 C0,50 0,50 50,0 C50,-50 50,-100 0,-100z"></path>
+            </g>
+        </g>
+        <g style="display: none;" transform="matrix(0.5400000214576721,0,0,0.5400000214576721,100,266.875)"
+            opacity="0.08499999999999204">
+            <g opacity="1" transform="matrix(1,0,0,1,0,0)">
+                <path fill="rgb(255,255,255)" fill-opacity="1"
+                    d=" M0,-100 C-50,-100 -50,-50 -50,0 C0,50 0,50 50,0 C50,-50 50,-100 0,-100z"></path>
+                <path stroke-linecap="butt" stroke-linejoin="miter" fill-opacity="0" stroke-miterlimit="4"
+                    stroke="rgb(255,255,255)" stroke-opacity="1" stroke-width="8"
+                    d=" M0,-100 C-50,-100 -50,-50 -50,0 C0,50 0,50 50,0 C50,-50 50,-100 0,-100z"></path>
+            </g>
+        </g>
+        <g style="display: none;" transform="matrix(0.5400000214576721,0,0,0.5400000214576721,100,366.875)"
+            opacity="0.09250000000000114">
+            <g opacity="1" transform="matrix(1,0,0,1,0,0)">
+                <path fill="rgb(255,255,255)" fill-opacity="1"
+                    d=" M0,-100 C-50,-100 -50,-50 -50,0 C0,50 0,50 50,0 C50,-50 50,-100 0,-100z"></path>
+                <path stroke-linecap="butt" stroke-linejoin="miter" fill-opacity="0" stroke-miterlimit="4"
+                    stroke="rgb(255,255,255)" stroke-opacity="1" stroke-width="8"
+                    d=" M0,-100 C-50,-100 -50,-50 -50,0 C0,50 0,50 50,0 C50,-50 50,-100 0,-100z"></path>
+            </g>
+        </g>
+        <g style="display: none;" transform="matrix(0.5400000214576721,0,0,0.5400000214576721,400,366.875)"
+            opacity="0.09499999999999886">
+            <g opacity="1" transform="matrix(1,0,0,1,0,0)">
+                <path fill="rgb(255,255,255)" fill-opacity="1"
+                    d=" M0,-100 C-50,-100 -50,-50 -50,0 C0,50 0,50 50,0 C50,-50 50,-100 0,-100z"></path>
+                <path stroke-linecap="butt" stroke-linejoin="miter" fill-opacity="0" stroke-miterlimit="4"
+                    stroke="rgb(255,255,255)" stroke-opacity="1" stroke-width="8"
+                    d=" M0,-100 C-50,-100 -50,-50 -50,0 C0,50 0,50 50,0 C50,-50 50,-100 0,-100z"></path>
+            </g>
+        </g>
+        <g style="display: none;" transform="matrix(0.5400000214576721,0,0,0.5400000214576721,400,266.875)"
+            opacity="0.09000000000000696">
+            <g opacity="1" transform="matrix(1,0,0,1,0,0)">
+                <path fill="rgb(255,255,255)" fill-opacity="1"
+                    d=" M0,-100 C-50,-100 -50,-50 -50,0 C0,50 0,50 50,0 C50,-50 50,-100 0,-100z"></path>
+                <path stroke-linecap="butt" stroke-linejoin="miter" fill-opacity="0" stroke-miterlimit="4"
+                    stroke="rgb(255,255,255)" stroke-opacity="1" stroke-width="8"
+                    d=" M0,-100 C-50,-100 -50,-50 -50,0 C0,50 0,50 50,0 C50,-50 50,-100 0,-100z"></path>
+            </g>
+        </g>
+        <g style="display: none;" transform="matrix(0.5400000214576721,0,0,0.5400000214576721,400,166.875)"
+            opacity="0.08749999999999503">
+            <g opacity="1" transform="matrix(1,0,0,1,0,0)">
+                <path fill="rgb(255,255,255)" fill-opacity="1"
+                    d=" M0,-100 C-50,-100 -50,-50 -50,0 C0,50 0,50 50,0 C50,-50 50,-100 0,-100z"></path>
+                <path stroke-linecap="butt" stroke-linejoin="miter" fill-opacity="0" stroke-miterlimit="4"
+                    stroke="rgb(255,255,255)" stroke-opacity="1" stroke-width="8"
+                    d=" M0,-100 C-50,-100 -50,-50 -50,0 C0,50 0,50 50,0 C50,-50 50,-100 0,-100z"></path>
+            </g>
+        </g>
+        <g style="display: block;" transform="matrix(1,0,0,1,250,250)" opacity="1">
+            <g opacity="1" transform="matrix(1,0,0,1,0.5,2.5)">
+                <path stroke-linecap="butt" stroke-linejoin="miter" fill-opacity="0" stroke-miterlimit="4"
+                    stroke="rgb(255,255,255)" stroke-opacity="1" stroke-width="8"
+                    d=" M125.5,-78.5 C125.5,-78.5 125.5,78.5 125.5,78.5 C125.5,78.5 -125.5,78.5 -125.5,78.5 C-125.5,78.5 -125.5,-78.5 -125.5,-78.5 C-125.5,-78.5 125.5,-78.5 125.5,-78.5z">
+                </path>
+            </g>
+        </g>
+    </g>
+</svg>

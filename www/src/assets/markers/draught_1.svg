@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 500 500" width="500"
+    height="500" style="width: 100%; height: 100%; transform: translate3d(0px, 0px, 0px);"
+    preserveAspectRatio="xMidYMid meet">
+    <defs>
+        <clipPath id="__lottie_element_14">
+            <rect width="500" height="500" x="0" y="0"></rect>
+        </clipPath>
+    </defs>
+    <g clip-path="url(#__lottie_element_14)">
+        <g style="display: block;" transform="matrix(0.7828599810600281,0,0,0.7828599810600281,241,229.85800170898438)"
+            opacity="1">
+            <g opacity="1" transform="matrix(1,0,0,1,0,0)">
+                <path fill="rgb(255,255,255)" fill-opacity="1"
+                    d=" M0,-142.97799682617188 C-35.28725051879883,-14.80424976348877 -95.25599670410156,16.606000900268555 -95.52899932861328,80.38300323486328 C-95.8030014038086,144.34300231933594 -63.86899948120117,176.8249969482422 0,176.55099487304688 C63.86899948120117,176.27699279785156 95.8030014038086,144.34300231933594 95.52899932861328,80.38300323486328 C95.8030014038086,16.604999542236328 31.93400001525879,-15.32800006866455 0,-142.97799682617188z">
+                </path>
+            </g>
+        </g>
+        <g style="display: block;" transform="matrix(1,0,0,1,241,343)" opacity="1">
+            <g opacity="1" transform="matrix(1,0,0,1,0,0)">
+                <path stroke-linecap="round" stroke-linejoin="miter" fill-opacity="0" stroke-miterlimit="4"
+                    stroke="rgb(0,0,0)" stroke-opacity="1" stroke-width="8" d=" M59,-30 C50.5,0 35,2.5 22.5,10"></path>
+            </g>
+        </g>
+    </g>
+</svg>

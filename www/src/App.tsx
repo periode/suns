@@ -127,7 +127,8 @@ const App = () => {
                       return (
                         <EntrypointMarker
                           key={`ep-${ep.name.replace(' ', '-')}-${index}-${ep.uuid}`}
-                          data={ep}
+                          ep={ep}
+                          session={session}
                         />
                       )
                     } else {

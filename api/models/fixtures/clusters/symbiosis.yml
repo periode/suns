@@ -7,7 +7,7 @@ entrypoints:
     airtable_key: "SymbiosisGaze"
     lat: 240.300
     lng: 240.400
-    icon: "green.svg"
+    icon: "symbiosis_1.svg"
     max_users: 2
     final_module_type: "Tangled Inverted"
     modules:
@@ -58,7 +58,7 @@ entrypoints:
     airtable_key: "SymbiosisTask"
     lat: 150.300
     lng: 150.400
-    icon: "green.svg"
+    icon: "symbiosis_2.svg"
     max_users: 2
     final_module_type: "Tangled Inverted"
     modules:
@@ -97,7 +97,7 @@ entrypoints:
     airtable_key: "SymbiosisMean"
     lat: 540.300
     lng: 550.400
-    icon: "green.svg"
+    icon: "symbiosis_3.svg"
     max_users: 2
     final_module_type: "Tangled Inverted"
     modules:
