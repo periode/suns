@@ -18,6 +18,7 @@ const AirTablePages : string[] = [
 	"Cracks",
 	"Welcome",
 	"PublicView",
+	"Sacrifice"
 ]
 
 var AirTableMap = new Map<string, Map<string, string>>()
