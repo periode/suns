@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
@@ -60,14 +61,14 @@ func CreateUser(c echo.Context) error {
 	}
 
 	mark := form.File["mark"][0]
-	fpath, err := saveFile(mark, models.ImageType)
-	if err != nil {
-		zero.Error(err.Error())
-		return c.String(http.StatusBadRequest, "Error saving the mark to disk")
-	}
-
-	user.MarkURL = fpath
-	//-- done saving the mark
+	fname := fmt.Sprintf("%d_%s_%s.%s",
+		time.Now().Unix(),
+		uuid.New().String()[:8],
+		strings.Split(mark.Filename, ".")[0],
+		"webp",
+	)
+	go saveFile(mark, models.ImageType, fname)
+	user.MarkURL = fname
 
 	hashed, err := bcrypt.GenerateFromPassword([]byte(c.FormValue("password")), bcrypt.DefaultCost) // Hash password
 	if err != nil {

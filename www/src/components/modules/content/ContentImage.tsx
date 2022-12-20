@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { AirTableContext } from "../../../contexts/AirContext";
 import { assetIntro } from "../../../utils/entrypoint";
 import { UPLOAD_TYPE } from "../../../utils/types";
@@ -11,17 +11,19 @@ interface ContentImageProps {
 }
 
 function ContentImage({ index, src, name, ep_name }: ContentImageProps) {
+	const [errorMessage, setErrorMessage] = useState("The image is currently processing...")
 	const ctx = useContext(AirTableContext)
 	const contents = ctx.get("PublicView")
 	
-	const hadAttemptedFallback = useRef(false)
+	const fallbackAttempts = useRef(0)
 
 	const handleMissingImage = (e: React.BaseSyntheticEvent) => {
 		const t = e.currentTarget
-		if (hadAttemptedFallback.current !== true)
-		{
-			t.src = `${process.env.REACT_APP_API_URL}/static/${src}`
-			hadAttemptedFallback.current = true
+		if (fallbackAttempts.current < 5) {
+			setTimeout(() => {
+				t.src = `${process.env.REACT_APP_SPACES_URL}/${src}`
+			}, 3000)
+			fallbackAttempts.current++
 		}
 	}
 
@@ -30,17 +32,19 @@ function ContentImage({ index, src, name, ep_name }: ContentImageProps) {
 			{
 				index !== undefined && name && name.length > 0 && ep_name && ep_name.length > 0 &&
 				<div className="font-mono text-xs opacity-70">{assetIntro(
-						contents,
-						UPLOAD_TYPE.Image,
-						ep_name,
-						index,
-						name
-					) }</div>
+					contents,
+					UPLOAD_TYPE.Image,
+					ep_name,
+					index,
+					name
+				)}</div>
 			}
 			<img className="w-auto md:max-h-80"
 				src={`${process.env.REACT_APP_SPACES_URL}/${src}`}
 				alt={src}
-				onError={handleMissingImage} />
+				onError={handleMissingImage}
+				onLoad={() => { setErrorMessage("") }} />
+			<div>{errorMessage}</div>
 		</div>
 	);
 }

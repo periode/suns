@@ -43,6 +43,7 @@ const Entrypoint = (props: any) => {
         if (hasData.current === false) {
             fetchEntrypoint(params.id as string, session.token)
                 .then((e: IEntrypoint) => {
+                    e.modules.sort((a:IModule, b:IModule) => parseInt(a.ID) - parseInt(b.ID))
                     setData(e as IEntrypoint)
 
                     let current = e.modules[e.current_module]
