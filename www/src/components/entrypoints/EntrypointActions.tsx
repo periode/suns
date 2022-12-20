@@ -48,7 +48,6 @@ function EntrypointActions({
 			nextButtonRef.current.setAttribute('disabled', "true")
 
 		if(!hasClicked.current){
-			console.log("handling next")
 			hasClicked.current = true
 			handleNext()
 		}

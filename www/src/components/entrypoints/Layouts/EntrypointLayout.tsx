@@ -91,10 +91,6 @@ function EntrypointLayout({
 				<div className="w-full border-b border-stone-500">
 					{title}
 				</div>
-				<div className="w-full md:flex">
-					<div className="w-full border-b border-stone-500">
-						<EntrypointCountdown endDate={endDate} />
-					</div>
 					<div className="w-full md:flex">
 						<div className="w-full border-b border-stone-500">
 							<EntrypointPartners users={data.users} max_users={data.max_users} partner_status={data.partner_status}/>
@@ -108,7 +104,6 @@ function EntrypointLayout({
                             border-t border-stone-500">
 						{entrypointactions}
 					</div>
-				</div>
 			</div>
 		)
 	return (

@@ -131,6 +131,7 @@ const Entrypoint = (props: any) => {
             headers: h,
             body: session.user.uuid
         };
+
         const res = await fetch(endpoint, options)
         if (res.ok) {
             const updated = await res.json()
