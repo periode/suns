@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import * as ReactDOMServer from 'react-dom/server';
 import { ImageOverlay, MapContainer, Marker } from 'react-leaflet'
 import { CRS } from 'leaflet';
 import L from "leaflet";
@@ -18,14 +19,8 @@ import Cracks from './pages/archives/Cracks';
 import Sacrifice from './pages/archives/Sacrifice';
 import EntrypointNotFound from './components/entrypoints/EntrypointNotFound';
 
-export interface EntrypointInterface {
-  uuid: string
-  lat: number,
-  lng: number,
-  name: string,
-  modules: [],
-  max_users: number
-}
+import Lottie from 'react-lottie' //-- there are multiple react/lottie npm packages (react-lottie, lottie-react, and none of them seem to work)
+import cracksAnimation from './animations/cracks.json'
 
 const WIDTH = 2500;
 const HEIGHT = 2500;
@@ -36,7 +31,6 @@ const { noise } = require('@chriscourses/perlin-noise')
 const App = () => {
   var currentEntrypoint: IEntrypoint = {} as IEntrypoint
   const hasData = useRef(false)
-  const hasState = useRef(false)
   const navigate = useNavigate()
   const step = useRef(0)
   const [entrypoints, setEntrypoints] = useState(Array<IEntrypoint>)
@@ -48,6 +42,30 @@ const App = () => {
     iconUrl: cracksMarker,
     iconSize: [36, 36],
   })
+
+  // const cracksOptions = {
+  //   loop: true,
+  //   autoplay: true,
+  //   animationData: cracksAnimation,
+  //   rendererSettings: {
+  //     preserveAspectRatio: "xMidYMid slice"
+  //   }
+  // };
+
+  // //-- the problem is here: the <Lottie> element disappears when rendered to string
+  // const cracksIconElement = ReactDOMServer.renderToString(<div className="backgroundcircle">
+  //   <Lottie options={cracksOptions} width={40} height={40}></Lottie>
+  // </div>)
+
+  // const cracksAnimationIcon = L.divIcon({
+  //   html: `
+  //   <div class = "backgroundcircle">
+  //       <lottie-player id="lottieTest" src="./symbiosis1.json" style="width:40px; height: 40px;"></lottie-player>
+  //   </div>`,
+  //   className: "lottiefuck",
+  //   iconSize: [80, 80],
+  //   iconAnchor: [12, 40],
+  // });
 
   useEffect(() => {
     const endpoint = new URL('entrypoints/map', process.env.REACT_APP_API_URL)
@@ -72,7 +90,7 @@ const App = () => {
 
     if (hasData.current === false) {
       fetchClusters()
-      setBackgroundMap("https://map.joiningsuns.online/map.png?refresh"+Date.now().toString().substring(9))
+      setBackgroundMap("https://map.joiningsuns.online/map.png?refresh" + Date.now().toString().substring(9))
 
       hasData.current = true
     }
@@ -83,12 +101,12 @@ const App = () => {
   const moveCracks = () => {
     const x = noise(step.current)
     const y = noise(step.current + 0.1)
-    step.current += 0.001
+    step.current += 0.0001
     setCracksCoords(new L.LatLng(x * WIDTH, y * HEIGHT));
   }
 
   useEffect(() => {
-    setInterval(moveCracks, 1000)
+    setInterval(moveCracks, 2000)
   }, [])
 
   return (
