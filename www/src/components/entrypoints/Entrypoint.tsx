@@ -178,7 +178,6 @@ const Entrypoint = (props: any) => {
 
 
         uploads.forEach(u => {
-            console.log(u);
 
             submitUpload(session.token, data.modules[data.current_module].uuid, u)
                 .then(() => {
@@ -238,9 +237,10 @@ const Entrypoint = (props: any) => {
     }
 
     const getModule = () => {
+        console.log("called getModule")
         if (data.status === ENTRYPOINT_STATUS.EntrypointCompleted)
             return (<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}-final`} className="m-1 p-1">
-                {parseModule(data.current_module, data)}
+                { parseModule(data.current_module, data) }
             </div>)
 
         if (hasUserCompleted)
@@ -252,7 +252,7 @@ const Entrypoint = (props: any) => {
             className="m-1 p-1">{parseModule(data.current_module, data)}
         </div>)
     }
-    
+    console.log(data)
     if (data !== undefined)
         return (
             <div className="absolute z-20 w-full h-full p-4 
@@ -284,7 +284,9 @@ const Entrypoint = (props: any) => {
                     module={
                         <div className="w-full h-full p-4 overflow-scroll">
                             {
-                                isOwned || data.status === ENTRYPOINT_STATUS.EntrypointCompleted || data.status === ENTRYPOINT_STATUS.EntrypointOpen ?
+                                
+                                (isOwned || data.status === ENTRYPOINT_STATUS.EntrypointCompleted || data.status === ENTRYPOINT_STATUS.EntrypointOpen)
+                                    && (data.modules[data.current_module].type !== "final") ?
                                     getModule()
                                     :
                                     <PublicView entrypoint={data} />

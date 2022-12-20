@@ -23,7 +23,7 @@ function EntrypointLayout({
 	entrypointactions
 }: EntrypointLayoutProps) {
 
-	if (data.status === ENTRYPOINT_STATUS.EntrypointCompleted)
+	if (data.status === ENTRYPOINT_STATUS.EntrypointCompleted || data.modules[data.current_module].type === "final")
 		return (
 			<div className="
                         flex flex-col
