@@ -36,7 +36,7 @@ function SacrificeItem(
 	return (
 		<div className="w-full h-12 
 						flex items-start gap-2
-						p-5">
+						m-5">
 			<FiUsers />
 			{generateString()}
 		</div>
