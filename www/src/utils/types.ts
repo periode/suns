@@ -123,3 +123,11 @@ export  type TaskDoneType = {
         key: string,
         value: boolean
 };
+
+export interface ISacrifice {
+    uuid: string,
+    generation: number,
+    sacrifice_wave: number,
+    users: Array<IUser>,
+    name: string,
+}
