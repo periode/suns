@@ -34,6 +34,7 @@ const Entrypoint = (props: any) => {
     const [uploads, setUploads] = useState(Array<IFile>)
     const [endDate, setEndDate] = useState("")
     const [isOwned, setOwned] = useState(false)
+    const [isFetching, setFetching] = useState(false)
 
     const [canUserComplete, setCanUserComplete] = useState(false)
     const [hasUserCompleted, setUserCompleted] = useState(false)
@@ -63,7 +64,8 @@ const Entrypoint = (props: any) => {
                 })
             hasData.current = true
         }
-    }, [params.id])
+    }, [params.id, session.token, navigate])
+
 
 
     //-- this checks if the user owns the current entrypoint
@@ -131,13 +133,17 @@ const Entrypoint = (props: any) => {
             headers: h,
             body: session.user.uuid
         };
+
+        setFetching(true)
         const res = await fetch(endpoint, options)
         if (res.ok) {
+            setFetching(false)
             const updated = await res.json()
             setData(updated)
             if (updated.max_users > 1)
                 setCanUserComplete(false)
         } else {
+            setFetching(false)
             console.warn('error', res.status)
             if (res.status === 401)
                 navigate("/auth")
@@ -176,19 +182,22 @@ const Entrypoint = (props: any) => {
         if (session.token === "")
             Navigate({ to: "/auth" })
 
-
+        setFetching(true)
         uploads.forEach(u => {
-            console.log(u);
-
             submitUpload(session.token, data.modules[data.current_module].uuid, u)
                 .then(() => {
                     console.log("uploaded file!")
                 })
-                .catch((err) => console.error(err))
+                .catch(
+                    (err) => {
+                        console.error(err)
+                    }
+                )
         })
 
         progressModule(ep.uuid, session.token)
             .then(updated => {
+                setFetching(false)
                 setUploads([])
                 //-- check if we're done with the module
                 if (updated.current_module === ep.current_module)
@@ -205,6 +214,7 @@ const Entrypoint = (props: any) => {
                 setData(updated)
             })
             .catch(err => {
+                setFetching(false)
                 console.log("failed to complete module, status:", err);
             })
     }
@@ -238,9 +248,10 @@ const Entrypoint = (props: any) => {
     }
 
     const getModule = () => {
+        console.log("called getModule")
         if (data.status === ENTRYPOINT_STATUS.EntrypointCompleted)
             return (<div key={`mod-${data.name.split(' ').join('-')}-${data.current_module}-final`} className="m-1 p-1">
-                {parseModule(data.current_module, data)}
+                { parseModule(data.current_module, data) }
             </div>)
 
         if (hasUserCompleted)
@@ -252,7 +263,7 @@ const Entrypoint = (props: any) => {
             className="m-1 p-1">{parseModule(data.current_module, data)}
         </div>)
     }
-    
+    console.log(data)
     if (data !== undefined)
         return (
             <div className="absolute z-20 w-full h-full p-4 
@@ -284,10 +295,14 @@ const Entrypoint = (props: any) => {
                     module={
                         <div className="w-full h-full p-4 overflow-scroll">
                             {
-                                isOwned || data.status === ENTRYPOINT_STATUS.EntrypointCompleted || data.status === ENTRYPOINT_STATUS.EntrypointOpen ?
-                                    getModule()
-                                    :
+                                
+                                (data.modules[data.current_module].type === "final") ?
                                     <PublicView entrypoint={data} />
+                                    :
+                                    data.status === ENTRYPOINT_STATUS.EntrypointPending && !isOwned ?
+                                        <IntroModule airtable_key={data.airtable_key} data={data.modules[0]} />
+                                    :
+                                    getModule()
                             }
                         </div>
                     }
@@ -299,6 +314,7 @@ const Entrypoint = (props: any) => {
                             handleNext={handleNext}
                             hasUserCompleted={hasUserCompleted}
                             canUserComplete={canUserComplete}
+                            isFetching={isFetching}
                         />
                     }
                 />

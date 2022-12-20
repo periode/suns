@@ -1,3 +1,4 @@
+
 //--------
 //-- enums
 //--------
@@ -14,7 +15,7 @@ export enum PARTNER_STATUS {
 }
 
 export enum FINAL_TYPE {
-    Tangled         = "Tangled",
+    Tangled = "Tangled",
     TangledInverted = "Tangled Inverted",
     Separate = "Separate",
     // Custom:
@@ -119,9 +120,9 @@ export interface ISession {
     user: IUser
 }
 
-export  type TaskDoneType = {
-        key: string,
-        value: boolean
+export type TaskDoneType = {
+    key: string,
+    value: boolean
 };
 
 export interface ISacrifice {
