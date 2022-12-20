@@ -1,15 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { FiX } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import { ENTRYPOINT_STATUS, IEntrypoint, IUser } from "../../utils/types";
-
-interface ISacrifice {
-    uuid: string,
-    generation: number,
-    sacrifice_wave: number,
-    users: Array<IUser>,
-    name: string,
-}
+import { ENTRYPOINT_STATUS, IEntrypoint, ISacrifice, IUser } from "../../utils/types";
 
 const Sacrifice = () => {
     const hasData = useRef(false);
