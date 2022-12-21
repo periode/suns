@@ -81,7 +81,7 @@ func CreateUpload(c echo.Context) error {
 				fext = "wav"
 			}
 
-			fname := fmt.Sprintf("%d_%s_%s.%s",
+			fname := fmt.Sprintf("uploads/%d_%s_%s.%s",
 				time.Now().Unix(),
 				uuid.New().String()[:8],
 				strings.Split(file.Filename, ".")[0],

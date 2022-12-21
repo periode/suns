@@ -1,31 +1,31 @@
 uuid: "03ed6a2b-aacb-4c24-b1e1-3495821f846d"
-name: "Draught"
+name: "Drought"
 entrypoints:
 - status: "open"
   cluster_uuid: "03ed6a2b-aacb-4c24-b1e1-3495821f846d"
-  name: "Draught: You"
-  airtable_key: "DraughtYou"
+  name: "Drought: You"
+  airtable_key: "DroughtYou"
   lat: 240.300
   lng: 240.400
-  icon: "draught_1.svg"
+  icon: "drought_1.svg"
   max_users: 2
   final_module_type: "Tangled"
   modules:
-    - name: "Start Draught You"
+    - name: "Start Drought You"
       type: "intro"
       contents:
         - type: "txt"
           key: "intro_txt_1"
         - type: "txt"
           key: "intro_txt_2"
-    - name: "Text description of draught"
+    - name: "Text description of drought"
       type: "task"
       tasks:
         - type: "text_input"
           key: "textinput_info_txt_1"
           min_limit: 2
           max_limit: 300
-      hint: "Text description of draught"
+      hint: "Text description of drought"
     - name: "Respond to text prompt"
       type: "task"
       show_previous_uploads: true
@@ -34,29 +34,29 @@ entrypoints:
           key: "textinput_info_txt_2"
           min_limit: 2
           max_limit: 300
-      hint: "This is where you compare your draught stories"
-    - name: "Final Draught You"
+      hint: "This is where you compare your drought stories"
+    - name: "Final Drought You"
       type: "final"
-      hint: "This is the final view for the draught - you"
+      hint: "This is the final view for the drought - you"
 
 - status: "open"
   cluster_uuid: "03ed6a2b-aacb-4c24-b1e1-3495821f846d"
-  name: "Draught: World"
-  airtable_key: "DraughtWorld"
+  name: "Drought: World"
+  airtable_key: "DroughtWorld"
   lat: 150.300
   lng: 150.400
-  icon: "draught_2.svg"
+  icon: "drought_2.svg"
   max_users: 2
   final_module_type: "Tangled"
   modules:
-    - name: "Start Draught World"
+    - name: "Start Drought World"
       type: "intro"
       contents:
         - type: "wav"
           key: "intro_aud"
         - type: "txt"
           key: "intro_txt"
-    - name: "Record an interview about draught"
+    - name: "Record an interview about drought"
       type: "task"
       tasks:
         - type: "audio_input"
@@ -68,36 +68,36 @@ entrypoints:
         - type: "audio_input"
           key: "audupload_info_txt_2"
           max_limit: 1
-    - name: "Final Draught World"
+    - name: "Final Drought World"
       type: "final"
-      hint: "This is the final view for the draught - World. It combines both interviews together"
+      hint: "This is the final view for the drought - World. It combines both interviews together"
 
 - status: "open"
   cluster_uuid: "03ed6a2b-aacb-4c24-b1e1-3495821f846d"
-  name: "Draught: Personal"
-  airtable_key:  "DraughtPersonal"
+  name: "Drought: Personal"
+  airtable_key:  "DroughtPersonal"
   lat: 540.300
   lng: 550.400
-  icon: "draught_3.svg"
+  icon: "drought_3.svg"
   max_users: 2
   final_module_type: "Tangled"
   modules:
-    - name: "Start Draught Personal"
+    - name: "Start Drought Personal"
       type: "intro"
       contents:
         - type: "txt"
           key: "intro_txt_1"
         - type: "txt"
           key: "intro_txt_2"          
-    - name: "Describe personal draught"
+    - name: "Describe personal drought"
       type: "task"
       tasks:
         - type: "text_input"
           key: "textinput_info_txt_1"
           min_limit: 2
           max_limit: 300
-      hint: "This is where you describe in text your personal draught."
-    - name: "Respond to personal draught"
+      hint: "This is where you describe in text your personal drought."
+    - name: "Respond to personal drought"
       type: "task"
       show_previous_uploads: true
       tasks:
@@ -105,6 +105,6 @@ entrypoints:
           key: "textinput_info_txt_2"
           min_limit: 2
           max_limit: 300
-    - name: "Final Draught personal"
+    - name: "Final Drought personal"
       type: "final"
-      hint: "This is the final view for the draught - Personal"
+      hint: "This is the final view for the drought - Personal"

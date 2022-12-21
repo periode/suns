@@ -61,7 +61,7 @@ func CreateUser(c echo.Context) error {
 	}
 
 	mark := form.File["mark"][0]
-	fname := fmt.Sprintf("%d_%s_%s.%s",
+	fname := fmt.Sprintf("marks/%d_%s_%s.%s",
 		time.Now().Unix(),
 		uuid.New().String()[:8],
 		strings.Split(mark.Filename, ".")[0],
