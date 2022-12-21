@@ -1,12 +1,15 @@
 import { useRef, useState } from "react";
 import { FiPause, FiPlay, FiRotateCcw } from "react-icons/fi";
+import SpinnerSmall from "../../commons/Spinners/SpinnerSmall";
 
 interface AudioPlayerProps {
 	src: string | undefined,
-	final?: boolean 
+	final?: boolean,
+	setLoaded?: Function
+	hasLoaded?: boolean,
 }
 
-function AudioPlayer({ src, final=false }: AudioPlayerProps) {
+function AudioPlayer({ src, final=false, setLoaded=()=>{}, hasLoaded=true }: AudioPlayerProps) {
 	
 	const [isPlaying, setPlaying] = useState(false)
 	const [time, setTime] = useState(0)
@@ -16,7 +19,12 @@ function AudioPlayer({ src, final=false }: AudioPlayerProps) {
 	const audioElement = useRef<HTMLAudioElement>(null)
 
 	const [duration, setDuration] = useState(0)
-
+	
+	var styleAsset: React.CSSProperties
+	if (hasLoaded)
+		styleAsset = { display: "flex" }
+	else
+		styleAsset = { display: "hidden" }
 	
 
 	const calculateTime = (secs:number) => {
@@ -80,6 +88,10 @@ function AudioPlayer({ src, final=false }: AudioPlayerProps) {
 			audioElement.current.currentTime = 0
 	}
 
+	const handleOnLoad = () => {
+		if (setLoaded)
+			setLoaded(true) 
+	}
 
 	return ( 
 		<div className={
@@ -89,16 +101,19 @@ function AudioPlayer({ src, final=false }: AudioPlayerProps) {
 				"w-full h-full flex items-center gap-2 bg-amber-200 p-2"
 
 		}>
-			<div className={
+			
+			<div
+				className={
 				final
 					?
 					"w-10 h-10 flex items-center justify-center cursor-pointer border border-green-500 text-green-50 bg-green-500"
 					:
 					"w-10 h-10 flex items-center justify-center cursor-pointer border border-amber-500 text-amber-50 bg-amber-500"
 						}
-							onClick={handlePlay}>
+				style={styleAsset}
+				onClick={handlePlay}>
 				{!isPlaying ? <FiPlay /> : <FiPause />}
-				<audio ref={ audioElement } className="hidden" src={src} controls/>
+				<audio ref={audioElement} className="hidden" src={src} onCanPlay={ handleOnLoad } controls/>
 			</div>
 			<div className={final
 				?
