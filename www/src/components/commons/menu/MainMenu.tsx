@@ -67,7 +67,6 @@ const MainMenu = ({ username, markURL }: MainMenuProps) => {
 									Museum
 								</h2>
 							</div>
-							<EngineState/>
 						</div>
 						<div className="w-full h-24
 										font-mono

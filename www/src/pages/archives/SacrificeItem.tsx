@@ -22,11 +22,11 @@ function SacrificeItem(
 	const navigate = useNavigate()
 
 	const generateString = () => {
-		if (users.length == 1) {
+		if (users.length === 1) {
 			return (
 				<div>{users[0].name} has contributed to <button className="hover:underline" onClick={() => navigate(`/archive/${uuid}`)}>{name}</button></div>
 			)
-		} else if (users.length == 2) {
+		} else if (users.length === 2) {
 			return (
 				<div>{users[0].name} and {users[1].name} have contributed to <button className="hover:underline" onClick={() => navigate(`/archive/${uuid}`)}>{name}</button></div>
 			)
