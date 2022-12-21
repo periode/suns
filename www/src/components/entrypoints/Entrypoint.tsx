@@ -15,9 +15,7 @@ import { fetchEntrypoint, progressModule, submitUpload } from "../../utils/entry
 import WaitingModule from "../modules/WaitingModule";
 import EntrypointLayout from "./Layouts/EntrypointLayout";
 
-const FETCH_INTERVAL = 50 * 1000
 const ENTRYPOINT_LIFETIME_MINUTES = 72 * 60
-const AUTOMATIC_NEXT_DELAY = 3000
 
 const Entrypoint = (props: any) => {
 

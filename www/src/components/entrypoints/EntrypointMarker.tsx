@@ -9,7 +9,7 @@ const EntrypointMarker = (props: any) => {
     const navigate = useNavigate()
     const session = props.session
     const ep = props.ep as IEntrypoint
-    const htmlIcon = ReactDOMServer.renderToString(<img src={`${process.env.REACT_APP_SPACES_URL}/markers/${ep.icon}`} />)
+    const htmlIcon = ReactDOMServer.renderToString(<img src={`${process.env.REACT_APP_SPACES_URL}/markers/${ep.icon}`} alt="Marker for the gesture point"/>)
     const [icon, setIcon] = useState<L.DivIcon>(new L.DivIcon({
         html: htmlIcon,
         iconSize: [80, 80],
@@ -60,7 +60,7 @@ const EntrypointMarker = (props: any) => {
             default:
                 break;
         }
-    }, [ep])
+    }, [ep, htmlIcon, session.user.uuid])
 
     return (
         <Marker

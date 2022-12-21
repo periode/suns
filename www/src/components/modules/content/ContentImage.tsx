@@ -12,11 +12,9 @@ interface ContentImageProps {
 }
 
 function ContentImage({ index, src, name, ep_name }: ContentImageProps) {
-	const [errorMessage, setErrorMessage] = useState("The image is currently processing...")
 	const ctx = useContext(AirTableContext)
 	const contents = ctx.get("PublicView")
 	
-	const hadAttemptedFallback = useRef(false)
 	const [hasLoaded, setLoaded] = useState(false)
 	const fallbackAttempts = useRef(0)
 
