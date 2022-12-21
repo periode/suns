@@ -1,8 +1,9 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AirTableContext } from "../../../contexts/AirContext";
 import { assetIntro } from "../../../utils/entrypoint";
 import { UPLOAD_TYPE } from "../../../utils/types";
 import AudioPlayer from "./AudioPlayer";
+import SpinnerSmall from "../../commons/Spinners/SpinnerSmall";
 
 interface ContentAudioProps {
 	index?: number,
@@ -16,6 +17,13 @@ function ContentAudio({index, src, name, ep_name, final=false} : ContentAudioPro
 	const ctx = useContext(AirTableContext)
     const contents = ctx.get("PublicView")
 
+	const [hasLoaded, setLoaded] = useState(false)
+	var styleAsset: React.CSSProperties
+	if (hasLoaded)
+		styleAsset = { display: "block" }
+	else
+		styleAsset = { display: "hidden" }
+
 	return ( 
 		<div className="w-full flex flex-col gap-2 items-start justify-start mb-5 break-words">
 			{
@@ -28,7 +36,15 @@ function ContentAudio({index, src, name, ep_name, final=false} : ContentAudioPro
 						name
 					) }</div>
 			}
-			<AudioPlayer src={`${process.env.REACT_APP_SPACES_URL}/${src}`} final={final}/>
+			{!hasLoaded && <SpinnerSmall />}
+			<div className="w-full" style={styleAsset}>
+				<AudioPlayer
+					src={`${process.env.REACT_APP_SPACES_URL}/${src}`}
+					final={final}
+					setLoaded={setLoaded}
+					hasLoaded={hasLoaded}
+				/>
+			</div>
 		</div>
 	 );
 }
