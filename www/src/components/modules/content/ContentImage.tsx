@@ -12,18 +12,21 @@ interface ContentImageProps {
 }
 
 function ContentImage({ index, src, name, ep_name }: ContentImageProps) {
+	const [errorMessage, setErrorMessage] = useState("The image is currently processing...")
 	const ctx = useContext(AirTableContext)
 	const contents = ctx.get("PublicView")
 	
 	const hadAttemptedFallback = useRef(false)
 	const [hasLoaded, setLoaded] = useState(false)
+	const fallbackAttempts = useRef(0)
 
 	const handleMissingImage = (e: React.BaseSyntheticEvent) => {
 		const t = e.currentTarget
-		if (hadAttemptedFallback.current !== true)
-		{
-			t.src = `${process.env.REACT_APP_API_URL}/static/${src}`
-			hadAttemptedFallback.current = true
+		if (fallbackAttempts.current < 5) {
+			setTimeout(() => {
+				t.src = `${process.env.REACT_APP_SPACES_URL}/${src}`
+			}, 3000)
+			fallbackAttempts.current++
 		}
 	}
 
@@ -37,12 +40,12 @@ function ContentImage({ index, src, name, ep_name }: ContentImageProps) {
 			{
 				index !== undefined && name && name.length > 0 && ep_name && ep_name.length > 0 &&
 				<div className="font-mono text-xs opacity-70">{assetIntro(
-						contents,
-						UPLOAD_TYPE.Image,
-						ep_name,
-						index,
-						name
-					) }</div>
+					contents,
+					UPLOAD_TYPE.Image,
+					ep_name,
+					index,
+					name
+				)}</div>
 			}
 			{
 				!hasLoaded && <SpinnerSmall/>

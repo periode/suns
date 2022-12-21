@@ -7,7 +7,7 @@ entrypoints:
     airtable_key: "FootprintsPerson"
     lat: 240.300
     lng: 240.400
-    icon: "red.svg"
+    icon: "footprints_1.svg"
     max_users: 2
     final_module_type: "Tangled"
     modules:
@@ -47,7 +47,7 @@ entrypoints:
     airtable_key: "FootprintsPlace"
     lat: 150.300
     lng: 150.400
-    icon: "red.svg"
+    icon: "footprints_2.svg"
     max_users: 2
     final_module_type: "Tangled"
     modules:
@@ -94,7 +94,7 @@ entrypoints:
     airtable_key: "FootprintsObject"
     lat: 540.300
     lng: 550.400
-    icon: "red.svg"
+    icon: "footprints_3.svg"
     max_users: 2
     final_module_type: "Tangled"
     modules:

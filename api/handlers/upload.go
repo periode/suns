@@ -33,6 +33,10 @@ import (
 func CreateUpload(c echo.Context) error {
 	user_uuid := mustGetUser(c)
 	user, err := models.GetUser(user_uuid)
+	if err != nil {
+		zero.Warn("error getting the user UUID")
+		return c.String(http.StatusBadRequest, "Cannot parse the user UUID")
+	}
 
 	// Read form fields - module uuid is to know to which module to attach it to, and partner index is whether this is upload by partner 0 or 1
 	module_uuid, err := uuid.Parse(c.FormValue("module_uuid"))
@@ -41,7 +45,7 @@ func CreateUpload(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Cannot parse the module UUID")
 	}
 
-	var ftype, fpath string
+	var ftype string
 	uploads := make([]models.Upload, 0)
 
 	ftype = c.FormValue("type")
@@ -49,7 +53,7 @@ func CreateUpload(c echo.Context) error {
 		txt := c.FormValue("text[]")
 		u := models.Upload{
 			Name:     "",
-			URL:      fpath,
+			URL:      "",
 			UserUUID: user_uuid.String(),
 			UserName: user.Name,
 			Text:     txt,
@@ -66,15 +70,29 @@ func CreateUpload(c echo.Context) error {
 		files := form.File["files[]"]
 		for _, file := range files {
 
-			fpath, err := saveFile(file, ftype)
-			if err != nil {
-				zero.Error(err.Error())
-				return c.String(http.StatusBadRequest, "Error uploading the file")
+			//-- generate target path
+			var fext string
+			switch ftype {
+			case models.ImageType:
+				fext = "webp"
+			case models.VideoType:
+				fext = "mp4"
+			case models.AudioType:
+				fext = "wav"
 			}
+
+			fname := fmt.Sprintf("%d_%s_%s.%s",
+				time.Now().Unix(),
+				uuid.New().String()[:8],
+				strings.Split(file.Filename, ".")[0],
+				fext,
+			)
+
+			go saveFile(file, ftype, fname)
 
 			u := models.Upload{
 				Name:     file.Filename,
-				URL:      fpath,
+				URL:      fname,
 				UserUUID: user_uuid.String(),
 				UserName: user.Name,
 				Text:     "",
@@ -103,7 +121,7 @@ func CreateUpload(c echo.Context) error {
 
 var s3Client *s3.S3
 
-func saveFile(file *multipart.FileHeader, ftype string) (string, error) {
+func saveFile(file *multipart.FileHeader, ftype string, fname string) {
 	key := os.Getenv("SPACES_API_KEY")
 	secret := os.Getenv("SPACES_API_SECRET")
 
@@ -116,27 +134,10 @@ func saveFile(file *multipart.FileHeader, ftype string) (string, error) {
 
 	newSession, err := session.NewSession(s3Config)
 	if err != nil {
-		return "", err
+		zero.Log.Error().Err(err).Msg("unable to create new S3 config")
+		return
 	}
 	s3Client = s3.New(newSession)
-
-	//-- generate target path
-	var fext string
-	switch ftype {
-	case models.ImageType:
-		fext = "webp"
-	case models.VideoType:
-		fext = "mp4"
-	case models.AudioType:
-		fext = "wav"
-	}
-
-	fname := fmt.Sprintf("%d_%s_%s.%s",
-		time.Now().Unix(),
-		uuid.New().String()[:8],
-		strings.Split(file.Filename, ".")[0],
-		fext,
-	)
 
 	var uploadsDir string
 	if os.Getenv("UPLOADS_DIR") == "" {
@@ -149,7 +150,8 @@ func saveFile(file *multipart.FileHeader, ftype string) (string, error) {
 
 	src, err := file.Open()
 	if err != nil {
-		return "", err
+		zero.Log.Error().Err(err).Msg("unable to open file")
+		return
 	}
 	defer src.Close()
 
@@ -158,22 +160,26 @@ func saveFile(file *multipart.FileHeader, ftype string) (string, error) {
 		//-- convert to webp
 		m, _, err := image.Decode(src)
 		if err != nil {
-			return "", err
+			zero.Log.Error().Err(err).Msg("unable to decode image")
+			return
 		}
 		encoded, err := webp.EncodeRGBA(m, 100)
 		if err != nil {
-			return "", err
+			zero.Log.Error().Err(err).Msg("unable to encode image")
+			return
 		}
 
 		err = os.WriteFile(target, encoded, 0666)
 		if err != nil {
-			return "", err
+			zero.Log.Error().Err(err).Msg("unable to write converted image")
+			return
 		}
 
 		//-- read the converted file
 		body, err := os.ReadFile(target)
 		if err != nil {
-			return "", err
+			zero.Log.Error().Err(err).Msg("unable to read converted image")
+			return
 		}
 
 		//-- upload object
@@ -186,12 +192,14 @@ func saveFile(file *multipart.FileHeader, ftype string) (string, error) {
 
 		_, err = s3Client.PutObject(&upload)
 		if err != nil {
-			return "", err
+			zero.Log.Error().Err(err).Msg("unable to upload image to s3")
+			return
 		}
 
 		err = os.Remove(target)
 		if err != nil {
-			return "", err
+			zero.Log.Error().Err(err).Msg("unable to remove local image")
+			return
 		}
 
 	} else if ftype == models.VideoType {
@@ -199,12 +207,14 @@ func saveFile(file *multipart.FileHeader, ftype string) (string, error) {
 
 		dst, err := os.Create(target)
 		if err != nil {
-			return "", err
+			zero.Log.Error().Err(err).Msg("unable to create target")
+			return
 		}
 		defer dst.Close()
 
 		if _, err = io.Copy(dst, src); err != nil {
-			return "", err
+			zero.Log.Error().Err(err).Msg("unable to copy video into target")
+			return
 		}
 
 		go transcodeAndUploadVideo(uploadsDir, fname)
@@ -222,13 +232,12 @@ func saveFile(file *multipart.FileHeader, ftype string) (string, error) {
 
 		_, err = s3Client.PutObject(&upload)
 		if err != nil {
-			return "", err
+			zero.Log.Error().Err(err).Msg("unable to upload video to S3")
+			return
 		}
 	} else {
 		fmt.Println("unknown upload type")
 	}
-
-	return fname, nil
 }
 
 func transcodeAndUploadVideo(dir string, original string) {

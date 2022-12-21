@@ -7,7 +7,7 @@ entrypoints:
   airtable_key: "DraughtYou"
   lat: 240.300
   lng: 240.400
-  icon: "yellow.svg"
+  icon: "draught_1.svg"
   max_users: 2
   final_module_type: "Tangled"
   modules:
@@ -45,7 +45,7 @@ entrypoints:
   airtable_key: "DraughtWorld"
   lat: 150.300
   lng: 150.400
-  icon: "yellow.svg"
+  icon: "draught_2.svg"
   max_users: 2
   final_module_type: "Tangled"
   modules:
@@ -78,7 +78,7 @@ entrypoints:
   airtable_key:  "DraughtPersonal"
   lat: 540.300
   lng: 550.400
-  icon: "yellow.svg"
+  icon: "draught_3.svg"
   max_users: 2
   final_module_type: "Tangled"
   modules:
