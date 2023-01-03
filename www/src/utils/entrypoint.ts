@@ -16,7 +16,6 @@ export const assetIntro = (
     name: string,
 ) => {
 		const narrationString : string | undefined = contents?.get(`${ep_name}_${type}_${index}`)
-            // console.log(`${ep_name}_${type}_${index}`)
 		if (narrationString && name)
 			return fillDynamicContent(narrationString, name)
 		else

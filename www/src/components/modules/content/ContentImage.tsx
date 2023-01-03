@@ -47,14 +47,17 @@ function ContentImage({ index, src, name, ep_name }: ContentImageProps) {
 					name
 				)}</div>
 			}
-			{ !hasLoaded && <SpinnerSmall/> }
-			<img className="w-auto md:max-h-80"
+			{
+				!hasLoaded ? <SpinnerSmall />
+				:	
+				<img className="w-auto md:max-h-80"
 				src={`${process.env.REACT_APP_SPACES_URL}/${src}`}
 				alt={src}
 				onError={handleMissingImage}
 				style={styleImg}
 				
 				onLoad={ () => setLoaded(true)} />
+			}
 		</div>
 	);
 }

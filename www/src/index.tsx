@@ -18,6 +18,7 @@ import AccountRecovery from './pages/auth/AccountRecovery';
 import AccountRecoveryConfirm from './pages/auth/AccountRecoveryConfirm';
 import WelcomeContainer from './components/entrypoints/welcome/WelcomeContainer';
 import Archive from './pages/archives/Archive';
+import Privacy from './Privacy';
 
 const router = createBrowserRouter([
   {
@@ -43,6 +44,14 @@ const router = createBrowserRouter([
   {
     path: '/about',
     element: <About />
+  },
+  {
+    path: '/about',
+    element: <About />
+  },
+  {
+    path: '/privacy',
+    element: <Privacy/>
   },
   {
     path: '/welcome',

@@ -17,7 +17,7 @@ const EntrypointMarker = (props: any) => {
     }))
 
     useEffect(() => {
-        if(ep.users.length === 1 && session.user.uuid === ep.users[0].uuid){
+        if(ep.status !==ENTRYPOINT_STATUS.EntrypointCompleted && ep.users.length === 1 && session.user.uuid === ep.users[0].uuid){
             setIcon(new L.DivIcon({
                 html: htmlIcon,
                 iconSize: [80, 80],
@@ -26,7 +26,7 @@ const EntrypointMarker = (props: any) => {
             return
         }
 
-        if(ep.users.length === 2 && (session.user.uuid === ep.users[0].uuid || session.user.uuid === ep.users[1].uuid)){
+        if(ep.status !==ENTRYPOINT_STATUS.EntrypointCompleted && ep.users.length === 2 && (session.user.uuid === ep.users[0].uuid || session.user.uuid === ep.users[1].uuid)){
             setIcon(new L.DivIcon({
                 html: htmlIcon,
                 iconSize: [80, 80],

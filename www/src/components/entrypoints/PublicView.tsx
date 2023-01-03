@@ -94,7 +94,6 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
 
 
     const getContent = (user: IUser): JSX.Element => {
-        // console.log("entrypoint.final_module_type: ", entrypoint.final_module_type)
         if (
             entrypoint === undefined
             || entrypoint.modules.length === 0
@@ -171,7 +170,7 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
             {
                 entrypoint.name === "Cracks" ?
                     <button className=" 
-                        flex items-center justify-center gap-2
+                        flex items-center justify-center gap-2 pb-4
                         text-green-500 font-mono text-lg font-bold italic
                         hover:text-green-600 hover:border-green-600
                         transition-all ease-in duration-300" onClick={() => { navigate(`/entrypoints/archive/cracks`, { replace: true }) }}>Go to the cracks archive <FiArrowRight/></button>
