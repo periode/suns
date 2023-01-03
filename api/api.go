@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"syscall"
 	"time"
 
@@ -27,6 +28,8 @@ func StartServer(port string, c Config) {
 	if err != nil {
 		panic(err)
 	}
+	os.MkdirAll(filepath.Join(c.UploadsDir, "marks"), os.ModePerm)
+	os.MkdirAll(filepath.Join(c.UploadsDir, "uploads"), os.ModePerm)
 
 	router := SetupRouter()
 	s := &http.Server{

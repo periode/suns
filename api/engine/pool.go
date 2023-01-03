@@ -11,7 +11,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-var fixtures = [5]string{"first_times", "cracks", "draught", "footprints", "symbiosis"}
+var fixtures = [5]string{"first_times", "cracks", "drought", "footprints", "symbiosis"}
 
 type Pool struct {
 	entrypoints []models.Entrypoint
@@ -23,9 +23,9 @@ func (p *Pool) Generate() error {
 
 	weights = map[string]int{
 		"Cracks":              1,
-		"DraughtYou":          1,
-		"DraughtWorld":        1,
-		"DraughtPersonal":     1,
+		"DroughtYou":          1,
+		"DroughtWorld":        1,
+		"DroughtPersonal":     1,
 		"CombiningFirstTimes": 1,
 		"FootprintsPerson":    1,
 		"FootprintsPlace":     1,

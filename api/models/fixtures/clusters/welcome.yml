@@ -24,7 +24,7 @@ entrypoints:
             key: "intro_img_2"
         uploads:
           - user_uuid: "e8b74bcd-c864-41ee-b5a7-d3031f76c8a8"
-            url: "based-nerd.gif"
+            url: "artists/welcome_bot_placeholder.png"
             text: ""
             type: "img"
 
@@ -55,7 +55,7 @@ entrypoints:
         hint: "This is the part where you learn about the gestures and co-creation"
         uploads:
           - user_uuid: "e8b74bcd-c864-41ee-b5a7-d3031f76c8a8"
-            url: "sample.wav"
+            url: "artists/1670775040_16e839d5_recording.wav"
             text: ""
             type: "wav"
 
@@ -67,7 +67,7 @@ entrypoints:
             key: "intro_txt_audio_input"
         uploads:
           - user_uuid: "e8b74bcd-c864-41ee-b5a7-d3031f76c8a8"
-            url: "based-nerd.gif"
+            url: "artists/welcome_bot_placeholder.png"
             text: ""
             type: "img"
         hint: "This is where you upload a picture for the co-creation"
@@ -83,7 +83,7 @@ entrypoints:
         uploads:
           - user_uuid: "e8b74bcd-c864-41ee-b5a7-d3031f76c8a8"
             url: ""
-            text: "yo this is the prompt you get from the bot bro"
+            text: "This is the placeholder for the prompt that you got from the bot"
             type: "txt"
         hint: "This is where you write a text based on the image you receive"
 
@@ -97,7 +97,7 @@ entrypoints:
         uploads:
           - user_uuid: "e8b74bcd-c864-41ee-b5a7-d3031f76c8a8"
             url: ""
-            text: "this is the sample from the bot"
+            text: "This is what the welcome bot has written to your prompt"
             type: "txt"
         hint: "This is where you upload a video for the co-creation"
 

@@ -63,7 +63,7 @@ func InitDB(url string) (*gorm.DB, error) {
 	return db, err
 }
 
-var clusters = [7]string{"first_times", "cracks", "draught", "footprints", "symbiosis", "prompts", "welcome"}
+var clusters = [7]string{"first_times", "cracks", "drought", "footprints", "symbiosis", "prompts", "welcome"}
 
 func runFixtures(shouldTruncateTables bool) error {
 	var err error

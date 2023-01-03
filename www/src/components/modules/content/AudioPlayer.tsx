@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
 import { FiPause, FiPlay, FiRotateCcw } from "react-icons/fi";
-import SpinnerSmall from "../../commons/Spinners/SpinnerSmall";
 
 interface AudioPlayerProps {
 	src: string | undefined,
@@ -14,8 +13,6 @@ function AudioPlayer({ src, final=false, setLoaded=()=>{}, hasLoaded=true }: Aud
 	const [isPlaying, setPlaying] = useState(false)
 	const [time, setTime] = useState(0)
 
-
-	// const audioElement?.current?: HTMLAudioElement = new Audio(src)
 	const audioElement = useRef<HTMLAudioElement>(null)
 
 	const [duration, setDuration] = useState(0)
@@ -35,7 +32,6 @@ function AudioPlayer({ src, final=false, setLoaded=()=>{}, hasLoaded=true }: Aud
 		return `${returnedMinutes}:${returnedSeconds}`;
 	}
 	
-
 	audioElement?.current?.addEventListener("loadeddata", () => {
 		setDuration(audioElement?.current?.duration || 0)
 	});
