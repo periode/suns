@@ -113,7 +113,7 @@ type PromptPayload struct {
 
 func (w PromptPayload) Check() error {
 	var err error
-	if w.Index == 0 || w.Name == "" || w.Body == "" || w.Host == "" || w.EntrypointUUID == "" {
+	if w.Name == "" || w.Body == "" {
 		err = fmt.Errorf("the payload should not be empty")
 	}
 	return err

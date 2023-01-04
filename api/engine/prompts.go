@@ -71,6 +71,8 @@ func (p *Prompts) Populate() error {
 		p.Monthly = append(p.Monthly, pr)
 	}
 
+	zero.Log.Debug().Int("weekly", len(p.Weekly)).Int("monthly", len(p.Monthly)).Msg("loaded prompts")
+
 	return nil
 }
 

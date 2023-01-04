@@ -215,7 +215,11 @@ func UpdateUserPrompts(c echo.Context) error {
 			Name: user.Name,
 		}
 
-		mailer.SendMail(user.Email, "SIMPLE Rewilding Prompt #1", "weekly_intro", p)
+		err = mailer.SendMail(user.Email, "SIMPLE Rewilding Prompt #1", "weekly_intro", p)
+		if err != nil {
+			zero.Error(err.Error())
+			return c.String(http.StatusInternalServerError, "We could not send the weekly intro email.")
+		}
 	}
 
 	if c.FormValue("monthly") == "on" {
@@ -225,10 +229,12 @@ func UpdateUserPrompts(c echo.Context) error {
 			Name: user.Name,
 		}
 
-		mailer.SendMail(user.Email, "COMPLEX Rewilding Prompt #1", "monthly_intro", p)
+		err = mailer.SendMail(user.Email, "COMPLEX Rewilding Prompt #1", "monthly_intro", p)
+		if err != nil {
+			zero.Error(err.Error())
+			return c.String(http.StatusInternalServerError, "We could not send the monthly intro email.")
+		}
 	}
-
-	fmt.Printf("updating user preferences - weekly (%v) monthly (%v)\n", user.CanReceiveWeeklyPrompts, user.CanReceiveMonthlyPrompts)
 
 	updated, err := models.UpdateUser(uid, user_uuid, &user)
 	if err != nil {
