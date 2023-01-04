@@ -8,6 +8,13 @@ export enum ENTRYPOINT_STATUS {
     EntrypointCompleted = "completed",
 }
 
+// OWNED_ENTRYPOINT_STATUS is the status of an entrypoint that the user owns
+export enum OWNED_ENTRYPOINT_STATUS {
+    OwnedEntrypointActionable = "actionable",
+    OwnedEntrypointWaiting = "waiting",
+    OwnedEntrypointCompleted = "completed",
+}
+
 export enum PARTNER_STATUS {
     PartnerNone = "none",
     PartnerPartial = "partial",

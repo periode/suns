@@ -27,7 +27,7 @@ function MenuBar(
 		</div>
 		<div	className="cursor-pointer text-3xl"
 				onClick={onClick}>
-			<FiX/>
+			<FiX />	
 		</div>
 	</div>);
 }

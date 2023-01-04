@@ -261,6 +261,7 @@ const Entrypoint = (props: any) => {
             className="m-1 p-1">{parseModule(data.current_module, data)}
         </div>)
     }
+    console.log(data)
     if (data !== undefined)
         return (
             <div className="absolute z-20 w-full h-full p-4 

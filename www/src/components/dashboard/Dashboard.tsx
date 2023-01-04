@@ -39,12 +39,18 @@ function Dashboard(
 			:
 				<div className="absolute z-10
 									w-full h-full
+									flex flex-col
 									bg-amber-100
 									">
-						<MenuBar onClick={() => setIsCollapsed(false)}>
-							<></>
-						</MenuBar>
-						
+						<MenuBar onClick={() => setIsCollapsed(false)}></MenuBar>
+						<div className="w-full">
+							<h2>Entrypoints</h2>
+							<div className="w-full "></div>
+							{
+								// List entrypoints that the user interacts with
+								
+							}
+						</div>
 				</div>
 			}
 	</>
