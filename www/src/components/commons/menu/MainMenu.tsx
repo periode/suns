@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FiMenu, FiX } from 'react-icons/fi'
 import { Link, useNavigate } from "react-router-dom";
 import EngineState from "./EngineState";
+import MenuBar from "./MenuBar";
 
 
 const signout = () => {
@@ -24,11 +25,11 @@ const MainMenu = ({ username, markURL }: MainMenuProps) => {
 				isCollapsed ?
 				<div className="absolute z-10 w-full h-full
 								flex flex-col
-								bg-amber-50 
+								bg-amber-100
 								text-amber-900
 								font-serif
 								">
-						<div className="absolute
+						{/* <div className="absolute
 								w-full
 								h-16 
 								p-4
@@ -46,7 +47,15 @@ const MainMenu = ({ username, markURL }: MainMenuProps) => {
 
 								<FiX className="text-3xl"/>
 							</div>
-						</div>
+						</div> */}
+						<MenuBar onClick={() => setIsCollapsed(false)}>
+							<div className="flex items-center font-mono gap-2">
+								<div className="w-12 h-12">
+									<img className="w-full h-full" src={`${process.env.REACT_APP_SPACES_URL}/${markURL}`} alt="usermark"/>
+								</div>
+								{ username }
+							</div>
+						</MenuBar>
 						<div className="h-20 w-full
 										border border-b-amber-900">
 

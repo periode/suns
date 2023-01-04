@@ -21,6 +21,7 @@ import EntrypointNotFound from './components/entrypoints/EntrypointNotFound';
 
 import Lottie from 'react-lottie' //-- there are multiple react/lottie npm packages (react-lottie, lottie-react, and none of them seem to work)
 import cracksAnimation from './animations/cracks.json'
+import Dashboard from './components/dashboard/Dashboard';
 
 const WIDTH = 2500;
 const HEIGHT = 2500;
@@ -118,6 +119,7 @@ const App = () => {
           :
           <>
             <MainMenu username={session.user.name} markURL={session.user.mark_url} />
+            <Dashboard entrypoints={entrypoints} session={session}/>
             <div className="map-container" id="map">
               <MapContainer center={[WIDTH / 2, HEIGHT / 2]} minZoom={MIN_ZOOOM} maxZoom={MAX_ZOOM} zoom={2} scrollWheelZoom={true} crs={CRS.Simple} maxBounds={bounds} inertia={false}>
                 <ImageOverlay url={backgroundMap} bounds={bounds} />
