@@ -12,9 +12,11 @@ interface ContentImageProps {
 }
 
 function ContentImage({ index, src, name, ep_name }: ContentImageProps) {
+	const [errorMessage, setErrorMessage] = useState("The image is currently processing...")
 	const ctx = useContext(AirTableContext)
 	const contents = ctx.get("PublicView")
 	
+	const hadAttemptedFallback = useRef(false)
 	const [hasLoaded, setLoaded] = useState(false)
 	const fallbackAttempts = useRef(0)
 
@@ -45,17 +47,14 @@ function ContentImage({ index, src, name, ep_name }: ContentImageProps) {
 					name
 				)}</div>
 			}
-			{
-				!hasLoaded ? <SpinnerSmall />
-				:	
-				<img className="w-auto md:max-h-80"
+			{ !hasLoaded && <SpinnerSmall/> }
+			<img className="w-auto md:max-h-80"
 				src={`${process.env.REACT_APP_SPACES_URL}/${src}`}
 				alt={src}
 				onError={handleMissingImage}
 				style={styleImg}
 				
 				onLoad={ () => setLoaded(true)} />
-			}
 		</div>
 	);
 }

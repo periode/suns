@@ -57,7 +57,7 @@ function EntrypointActions({
 	}
 
 	const ShareButton =
-		<button className=" font-mono italic
+		<button className=" font-mono 
 							cursor-pointer
 							flex items-center
 							gap-1"
@@ -77,7 +77,7 @@ function EntrypointActions({
 		</button>
 
 	const NextButton =
-		<button ref={nextButtonRef} className={`font-mono italic
+		<button ref={nextButtonRef} className={`font-mono 
 							cursor-pointer
 							flex items-center
 							gap-1 disabled:opacity-50`}
@@ -113,7 +113,7 @@ function EntrypointActions({
 
 	return (
 		
-		<div className="w-full flex items-center justify-between text-sm italic">
+		<div className="w-full flex items-center justify-between text-sm">
 			<div className="w-16">
 
 				{ShareButton}
