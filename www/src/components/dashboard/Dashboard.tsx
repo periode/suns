@@ -48,7 +48,7 @@ function Dashboard(
 							<div className="w-full "></div>
 							{
 								// List entrypoints that the user interacts with
-								
+
 							}
 						</div>
 				</div>
