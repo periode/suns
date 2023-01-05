@@ -82,7 +82,7 @@ function Dashboard(
 				<div className="absolute z-10
 									w-full h-full 
 									">
-					<div className="w-full flex flex-col bg-amber-100">
+					<div className="w-full min-h-full flex flex-col bg-amber-100">
 						<MenuBar onClick={() => setIsCollapsed(false)}></MenuBar>
 						<div className="w-full mt-16 p-4 text-amber-900">
 							<h2 className="w-full mb-2">Gestures</h2>
@@ -95,7 +95,7 @@ function Dashboard(
 											}/>
 										)
 									})
-								}
+									}
 							</div>
 							{
 								// List entrypoints that the user interacts with
