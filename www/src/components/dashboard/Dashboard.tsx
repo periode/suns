@@ -97,11 +97,7 @@ function Dashboard(
 									})
 									}
 							</div>
-							{
-								// List entrypoints that the user interacts with
-
-							}
-							</div>
+						</div>
 					</div>
 				</div>
 			}
