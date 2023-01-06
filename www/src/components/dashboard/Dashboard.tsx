@@ -89,7 +89,7 @@ function Dashboard(
 						<MenuBar onClick={() => setIsCollapsed(false)}></MenuBar>
 							<div className="w-full flex flex-col gap-8 mt-16 p-4 text-amber-900">
 								<div>
-									<h2 className="w-full mb-2 uppercase text-sm">Gestures</h2>
+									<h2 className="w-full mb-2">Gestures</h2>
 									<div className="w-full flex flex-col gap-8">
 										{
 											listedClusters.map((cluster) => {
@@ -105,7 +105,7 @@ function Dashboard(
 								{
 									session.user.debug_account &&	
 									<div>
-										<h2 className="w-full mb-2 uppercase text-sm">Debug</h2>
+										<h2 className="w-full mb-2">Debug</h2>
 											<EngineState/>	
 									</div>
 								}	

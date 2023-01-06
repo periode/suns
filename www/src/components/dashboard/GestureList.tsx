@@ -19,6 +19,7 @@ function GestureList({
 }: GestureListProps) {
 
 	const [isCollapsed, setIsCollapsed] = useState(false)
+	var containsActionable : boolean = false
 
 	var Actionable : IEntrypoint [] = []
 	var Waiting : IEntrypoint [] = []
@@ -37,8 +38,8 @@ function GestureList({
 				&& entrypoint.user_completed[i] === 1)
 				hasUserCompleted = true
 		
-		
-		if (entrypoint.max_users === 1 || !hasUserCompleted)
+		// Checking if the entrypoint is actionable. The entrypoint is actionable when 
+		if (entrypoint.users.length === entrypoint.max_users && (entrypoint.max_users === 1 || !hasUserCompleted) )
 			return OWNED_ENTRYPOINT_STATUS.OwnedEntrypointActionable
 		else
 			return OWNED_ENTRYPOINT_STATUS.OwnedEntrypointWaiting
@@ -48,6 +49,7 @@ function GestureList({
 	for (var i = 0; i < entrypoints.length; i++) {
 		switch (getOwnedStatus(entrypoints[i])) {
 			case OWNED_ENTRYPOINT_STATUS.OwnedEntrypointActionable:
+				containsActionable = true
 				Actionable.push(entrypoints[i])
 				break;
 			case OWNED_ENTRYPOINT_STATUS.OwnedEntrypointWaiting:
@@ -59,16 +61,28 @@ function GestureList({
 		}
 	}
 
+	const GestureListStyle: React.CSSProperties = {
+		cursor: entrypoints.length === 0? "auto" : "pointer"
+	}
+
 	return (
 		<div className="w-full ">
 			<div className="flex items-center justify-between
-							text-2xl	"
-				onClick={() => setIsCollapsed(!isCollapsed)}>
+							text-2xl	
+							"
+				onClick={() => setIsCollapsed(!isCollapsed)}
+				style={GestureListStyle}>
 				<div className="flex items-center gap-2">
 					<div className="text-3xl">
 						{ icon }
 					</div>
 					<h3>{name}</h3>
+					{
+						containsActionable &&
+						<div className="text-2xl w-6 h-6 flex items-center justify-center">
+							<div className="h-2 w-2 rounded-full bg-amber-500"></div>
+						</div>
+					}
 				</div>
 				{
 					entrypoints.length === 0 ?

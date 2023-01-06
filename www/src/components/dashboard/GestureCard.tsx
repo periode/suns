@@ -1,5 +1,6 @@
 import { FiArrowRight, FiCheck, FiClock } from "react-icons/fi";
 import { OWNED_ENTRYPOINT_STATUS } from "../../utils/types";
+import { useNavigate } from "react-router-dom";
 
 interface GestureCardProps {
 	name: string,
@@ -14,12 +15,17 @@ function GestureCard(
 		status
 	} : GestureCardProps
 ) {
+
+	const navigate = useNavigate()
+
 	if (status === OWNED_ENTRYPOINT_STATUS.OwnedEntrypointCompleted)
 		return (
 			<div className="w-full p-3
 							text-amber-900/50
 							border-2 border-amber-900/50 rounded-[4px]
-						 	flex items-center justify-between">
+						 	flex items-center justify-between
+							cursor-pointer"
+					onClick={() => {navigate(url)}}>
 				<div className="flex items-center gap-2 text-lg">
 					<div className="text-2xl w-6 h-6 flex items-center justify-center">
 						<FiCheck/>
@@ -36,7 +42,9 @@ function GestureCard(
 			<div className="w-full p-3
 							text-amber-500
 							border-2 border-amber-500 rounded-[4px]
-						 	flex items-center justify-between">
+						 	flex items-center justify-between
+							cursor-pointer"
+					onClick={() => {navigate(url)}}>
 				<div className="flex items-center gap-2 text-lg">
 					<div className="text-2xl w-6 h-6 flex items-center justify-center">
 						<div className="h-2 w-2 rounded-full bg-amber-500"></div>
@@ -51,16 +59,20 @@ function GestureCard(
 	else if (status === OWNED_ENTRYPOINT_STATUS.OwnedEntrypointWaiting)
 		return (
 			<div className="w-full p-3
-							text-stone-500
-							border-2 border-stone-500 rounded-[4px]
-						 	flex items-center justify-between">
+							text-stone-400
+							border-2 border-stone-400 rounded-[4px]
+						 	flex items-center justify-between
+							cursor-pointer"
+					onClick={() => {navigate(url)}}>
 				<div className="flex items-center gap-2 text-lg">
 					<div className="text-2xl w-6 h-6 flex items-center justify-center">
 						<FiClock/>
 					</div>
 					<p>{name}</p>
 				</div>
-				<FiArrowRight/>
+				<div className="text-2xl">
+					<FiArrowRight/>
+				</div>
 			</div>
 	);
 	else return <>There was a problem making this gesture card</>
