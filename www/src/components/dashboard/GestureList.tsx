@@ -62,8 +62,11 @@ function GestureList({
 	}
 
 	const GestureListStyle: React.CSSProperties = {
-		cursor: entrypoints.length === 0? "auto" : "pointer"
+		cursor: entrypoints.length === 0 ? "auto" : "pointer",
+		opacity: entrypoints.length === 0 ? "0.5" : "1"
 	}
+
+
 
 	return (
 		<div className="w-full ">

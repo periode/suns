@@ -95,7 +95,11 @@ function Dashboard(
 											listedClusters.map((cluster) => {
 												return (
 													<GestureList name={cluster.name} icon={cluster.icon} session={session} entrypoints={
-														entrypoints.filter((entrypoint) => entrypoint.cluster.name === cluster.name &&  checkOwnership(entrypoint))
+														entrypoints.filter((entrypoint) =>
+															entrypoint.cluster.name === cluster.name
+															&& checkOwnership(entrypoint)
+															// instert condition if entrypoints has been sacrificed
+														)
 													}/>
 												)
 											})
