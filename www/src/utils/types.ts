@@ -70,6 +70,7 @@ export interface IEntrypoint {
 }
 
 export interface IUpload {
+    ID: string,
     user_uuid: string,
     user_name: string,
     url: string,
