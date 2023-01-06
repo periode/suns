@@ -291,7 +291,7 @@ const Entrypoint = (props: any) => {
                         </div>
                     }
                     module={
-                        <div className="w-full h-full p-4 overflow-scroll">
+                        <div className="w-full h-full p-4 overflow-y-scroll">
                             {
                                 
                                 (data.modules[data.current_module].type === "final") ?

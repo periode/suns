@@ -6,7 +6,7 @@ import { TbChartCircles } from "react-icons/tb";
 import { IoFootstepsOutline } from "react-icons/io5";
 
 import EngineState from "../commons/menu/EngineState";
-import { IEntrypoint, ISession } from "../../utils/types";
+import { ENTRYPOINT_STATUS, IEntrypoint, ISession } from "../../utils/types";
 import MenuBar from "../commons/menu/MenuBar";
 import GestureList from "./GestureList";
 
@@ -95,7 +95,11 @@ function Dashboard(
 											listedClusters.map((cluster) => {
 												return (
 													<GestureList name={cluster.name} icon={cluster.icon} session={session} entrypoints={
-														entrypoints.filter((entrypoint) => entrypoint.cluster.name === cluster.name &&  checkOwnership(entrypoint))
+														entrypoints.filter((entrypoint) =>
+															entrypoint.cluster.name === cluster.name
+															&& checkOwnership(entrypoint)
+															&& entrypoint.status !== ENTRYPOINT_STATUS.EntrypointSacrificed
+														)
 													}/>
 												)
 											})
