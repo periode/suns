@@ -120,6 +120,7 @@ export interface IUser {
     name: string,
     uuid: string,
     mark_url: string,
+    debug_account: boolean
 }
 
 export interface ISession {

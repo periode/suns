@@ -20,6 +20,10 @@ function GestureList({
 
 	const [isCollapsed, setIsCollapsed] = useState(false)
 
+	var Actionable : IEntrypoint [] = []
+	var Waiting : IEntrypoint [] = []
+	var Completed : IEntrypoint [] = []
+
 	const getOwnedStatus = (entrypoint: IEntrypoint): OWNED_ENTRYPOINT_STATUS => { 
 
 		if (entrypoint.status === ENTRYPOINT_STATUS.EntrypointCompleted)
@@ -38,6 +42,21 @@ function GestureList({
 			return OWNED_ENTRYPOINT_STATUS.OwnedEntrypointActionable
 		else
 			return OWNED_ENTRYPOINT_STATUS.OwnedEntrypointWaiting
+	}
+
+
+	for (var i = 0; i < entrypoints.length; i++) {
+		switch (getOwnedStatus(entrypoints[i])) {
+			case OWNED_ENTRYPOINT_STATUS.OwnedEntrypointActionable:
+				Actionable.push(entrypoints[i])
+				break;
+			case OWNED_ENTRYPOINT_STATUS.OwnedEntrypointWaiting:
+				Waiting.push(entrypoints[i])
+				break;
+			case OWNED_ENTRYPOINT_STATUS.OwnedEntrypointCompleted:
+				Completed.push(entrypoints[i])
+				break;
+		}
 	}
 
 	return (
@@ -60,23 +79,55 @@ function GestureList({
 					<FiChevronUp/>
 				}
 			</div>
-			<div className="w-full flex flex-col mt-4 gap-2">
 			{
-				entrypoints.map((entrypoint, index) => { 
-					return (
-						<GestureCard
-							key={index}
-							name={entrypoint.name}
-							url={entrypoint.uuid}
-							status={
-								getOwnedStatus(entrypoint)
-							}	
-						/>
-					)
-				})
-				
+				isCollapsed &&
+				<div className="w-full flex flex-col mt-4 gap-2">
+
+					{ 
+						Actionable.map((entrypoint, index) => {
+							return (
+								<GestureCard
+									key={index}
+									name={entrypoint.name}
+									url={entrypoint.uuid}
+									status={
+										OWNED_ENTRYPOINT_STATUS.OwnedEntrypointActionable
+									}
+								/>
+							)
+						}) 
+					}
+					{ 
+						Waiting.map((entrypoint, index) => {
+							return (
+								<GestureCard
+									key={index}
+									name={entrypoint.name}
+									url={entrypoint.uuid}
+									status={
+										OWNED_ENTRYPOINT_STATUS.OwnedEntrypointWaiting
+									}
+								/>
+							)
+						}) 
+					}
+					{ 
+						Completed.map((entrypoint, index) => {
+							return (
+								<GestureCard
+									key={index}
+									name={entrypoint.name}
+									url={entrypoint.uuid}
+									status={
+										OWNED_ENTRYPOINT_STATUS.OwnedEntrypointCompleted
+									}
+								/>
+							)
+						}) 
+					}
+
+				</div>
 			}
-			</div>
 		</div>
 	);
 }

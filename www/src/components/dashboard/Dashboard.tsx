@@ -9,7 +9,6 @@ import EngineState from "../commons/menu/EngineState";
 import { IEntrypoint, ISession } from "../../utils/types";
 import MenuBar from "../commons/menu/MenuBar";
 import GestureList from "./GestureList";
-import { IconType } from "react-icons";
 
 interface DashboardProps { 
 	entrypoints: Array<IEntrypoint>,
@@ -34,6 +33,8 @@ function Dashboard(
 				return true
 		return false
 	}
+
+
 
 	const listedClusters : ICluster[] = [
 		{
@@ -80,23 +81,34 @@ function Dashboard(
 				</div>
 			:
 				<div className="absolute z-10
-									w-full h-full 
+									w-full h-full md:w-96 
+									right-0 top-0
+									md:border-l border-amber-900
 									">
 					<div className="w-full min-h-full flex flex-col bg-amber-100">
 						<MenuBar onClick={() => setIsCollapsed(false)}></MenuBar>
-						<div className="w-full mt-16 p-4 text-amber-900">
-							<h2 className="w-full mb-2">Gestures</h2>
-							<div className="w-full flex flex-col gap-8">
+							<div className="w-full flex flex-col gap-8 mt-16 p-4 text-amber-900">
+								<div>
+									<h2 className="w-full mb-2 uppercase text-sm">Gestures</h2>
+									<div className="w-full flex flex-col gap-8">
+										{
+											listedClusters.map((cluster) => {
+												return (
+													<GestureList name={cluster.name} icon={cluster.icon} session={session} entrypoints={
+														entrypoints.filter((entrypoint) => entrypoint.cluster.name === cluster.name &&  checkOwnership(entrypoint))
+													}/>
+												)
+											})
+											}
+									</div>
+								</div>
 								{
-									listedClusters.map((cluster) => {
-										return (
-											<GestureList name={cluster.name} icon={cluster.icon} session={session} entrypoints={
-												entrypoints.filter((entrypoint) => entrypoint.cluster.name === cluster.name &&  checkOwnership(entrypoint))
-											}/>
-										)
-									})
-									}
-							</div>
+									session.user.debug_account &&	
+									<div>
+										<h2 className="w-full mb-2 uppercase text-sm">Debug</h2>
+											<EngineState/>	
+									</div>
+								}	
 						</div>
 					</div>
 				</div>

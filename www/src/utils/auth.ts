@@ -92,7 +92,8 @@ const signin = async (_email: string, _password: string) => {
         user = {
             uuid: data.user.uuid,
             name: data.user.name,
-            mark_url: data.user.mark_url
+            mark_url: data.user.mark_url,
+            debug_account: data.user.debug_account
         }
         localStorage.setItem("user", JSON.stringify(user))
         localStorage.setItem("token", token)
