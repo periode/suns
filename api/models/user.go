@@ -40,6 +40,8 @@ type User struct {
 
 	//-- a user has many-many entrypoints
 	Entrypoints []*Entrypoint `gorm:"many2many:entrypoints_users;" json:"entrypoints"`
+
+	DebugAccount bool `gorm:"default:false" yaml:"debug_account" json:"debug_account"`
 }
 
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {

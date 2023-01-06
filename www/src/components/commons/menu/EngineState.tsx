@@ -29,7 +29,8 @@ const EngineState = () => {
         }
     }, [])
 
-    return (<div className="text-xl border-amber-800 border p-2">
+    return (
+    <div className="font-mono text-sm">
         <ul>
             <li>We have created {engineState?.generation} generations of gesture points.</li>
             <li>{engineState?.sacrifice_time < 0 ? "No sacrifice is expected soon." : `A sacrifice is expected on ${new Date(engineState.sacrifice_time * 1000)}`}</li>

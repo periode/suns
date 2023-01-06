@@ -43,18 +43,18 @@ const WelcomePrompts = ({
     }
 
     return (<>
-        <form className="bg-amber-100 rounded-sm shadow-inner shadow-amber-900/20 p-4" id="prompts-preference" onSubmit={handleSubmission}>
+        <form className="" id="prompts-preference" onSubmit={handleSubmission}>
             <fieldset className="flex flex-col gap-2 flex-items" disabled={!isFormActive}>
                 <div>
                     <legend>Pick your prompts frequency:</legend>
                 </div>
-                <div className="">
+                <div className="flex items-center gap-1 text-sm">
                     <input className="m-1" type="checkbox" id="weekly" name="weekly" />
-                    <label htmlFor="weekly">+ Weekly</label>
+                    <label htmlFor="weekly">Weekly</label>
                 </div>
-                <div className="">
+                <div className="flex items-center gap-1 text-sm">
                     <input className="m-1" type="checkbox" id="monthly" name="monthly" />
-                    <label htmlFor="monthly">+ Monthly</label>
+                    <label htmlFor="monthly">Monthly</label>
                 </div>
                 <div className="h-12">
                     {

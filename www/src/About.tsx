@@ -1,9 +1,26 @@
+import { useContext } from "react"
+import AirContext, { AirTableContext } from "./contexts/AirContext"
+import PulicPageLayout from "./components/entrypoints/Layouts/PublicPageLayout"
+
+
 const About = () => {
-    return(
-        <>
-        <h1>About</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci neque, itaque veniam ducimus suscipit placeat porro ipsa eveniet. Voluptatem laboriosam necessitatibus vero obcaecati reiciendis voluptate modi quae doloremque fuga provident?</p>
-        </>
+
+    const ctx = useContext(AirTableContext)
+    const contents = ctx.get("About")
+
+    return (
+        <AirContext>
+
+        <PulicPageLayout>
+            <h1>About</h1>
+            <h2>{ contents?.get("about_headline_1")}</h2>
+            <p>{ contents?.get("about_content_1")}</p>
+            <h2>{ contents?.get("about_headline_2")}</h2>
+            <p>{ contents?.get("about_content_2")}</p>
+            <h2>{ contents?.get("about_headline_3")}</h2>
+            <p>{ contents?.get("about_content_3")}</p>
+        </PulicPageLayout>
+        </AirContext>
     )
 }
 
