@@ -6,7 +6,7 @@ import { TbChartCircles } from "react-icons/tb";
 import { IoFootstepsOutline } from "react-icons/io5";
 
 import EngineState from "../commons/menu/EngineState";
-import { IEntrypoint, ISession } from "../../utils/types";
+import { ENTRYPOINT_STATUS, IEntrypoint, ISession } from "../../utils/types";
 import MenuBar from "../commons/menu/MenuBar";
 import GestureList from "./GestureList";
 
@@ -98,7 +98,7 @@ function Dashboard(
 														entrypoints.filter((entrypoint) =>
 															entrypoint.cluster.name === cluster.name
 															&& checkOwnership(entrypoint)
-															// instert condition if entrypoints has been sacrificed
+															&& entrypoint.status !== ENTRYPOINT_STATUS.EntrypointSacrificed
 														)
 													}/>
 												)
