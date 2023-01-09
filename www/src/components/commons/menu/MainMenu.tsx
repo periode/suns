@@ -82,6 +82,9 @@ const MainMenu = ({ username, markURL }: MainMenuProps) => {
 								<h2 onClick={() => navigate('/about')}>About</h2>
 							</div>
 							<div className="h-24 w-full flex items-center justify-center cursor-pointer">
+								<h2 onClick={() => navigate('/history')}>History</h2>
+							</div>
+							<div className="h-24 w-full flex items-center justify-center cursor-pointer">
 								<h2 onClick={() => navigate('/privacy')}>Privacy</h2>
 							</div>
 							<div className="h-24 w-full flex items-center justify-center cursor-pointer">
