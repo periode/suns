@@ -163,7 +163,7 @@ func saveFile(file *multipart.FileHeader, ftype string, fname string) {
 			zero.Log.Error().Err(err).Msg("unable to decode image")
 			return
 		}
-		encoded, err := webp.EncodeRGBA(m, 100)
+		encoded, err := webp.EncodeRGBA(m, 50)
 		if err != nil {
 			zero.Log.Error().Err(err).Msg("unable to encode image")
 			return
