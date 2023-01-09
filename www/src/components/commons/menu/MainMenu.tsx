@@ -59,13 +59,16 @@ const MainMenu = ({ username, markURL }: MainMenuProps) => {
 						<div className="w-full h-full flex flex-col items-center justify-center text-6xl regular
 										">
 							<div className="h-24 w-full flex items-center justify-center cursor-pointer">
-								<h2 >About</h2>
+								<h2 onClick={() => navigate('/about')}>About</h2>
 							</div>
 							<div className="h-24 w-full flex items-center justify-center cursor-pointer">
-								<h2 >Privacy</h2>
+								<h2 onClick={() => navigate('/history')}>History</h2>
 							</div>
 							<div className="h-24 w-full flex items-center justify-center cursor-pointer">
-								<h2 >Help</h2>
+								<h2 onClick={() => navigate('/privacy')}>Privacy</h2>
+							</div>
+							<div className="h-24 w-full flex items-center justify-center cursor-pointer">
+								<h2 onClick={() => navigate('/help')}>Help</h2>
 							</div>
 							<div className="h-24 w-full flex items-center justify-center cursor-pointer">
 								<h2 onClick={() => {setIsCollapsed(false); navigate(`/entrypoints/archive/sacrifice`, {replace: true})}}>
