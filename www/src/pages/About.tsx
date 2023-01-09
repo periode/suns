@@ -1,6 +1,6 @@
 import { useContext } from "react"
-import { AirTableContext } from "./contexts/AirContext"
-import PulicPageLayout from "./components/entrypoints/Layouts/PublicPageLayout"
+import PulicPageLayout from "../components/entrypoints/Layouts/PublicPageLayout";
+import { AirTableContext } from "../contexts/AirContext";
 
 
 const About = () => {
@@ -10,27 +10,24 @@ const About = () => {
 
     return (
             <PulicPageLayout>
-                <h1>About</h1>
-                <h2>
+                <h1 className="text-4xl mb-2">About</h1>
+                <h2 className="text-2xl mb-1">
                     { contents?.get("about_headline_1")}
                 </h2>
-                <p>
+                <p className="mb-2">
                     { contents?.get("about_content_1")}
                 </p>
-                <h2>
+                <h2 className="text-2xl">
                     { contents?.get("about_headline_2")}
                 </h2>
-                <p>
+                <p className="mb-2">
                     { contents?.get("about_content_2")}
                 </p>
-                <h2>
+                <h2 className="text-2xl">
                     { contents?.get("about_headline_3")}
                 </h2>
-                <p>
+                <p className="mb-2">
                     { contents?.get("about_content_3")}
-                </p>
-                <p>
-                    okay okay
                 </p>
             </PulicPageLayout>
     )

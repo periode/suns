@@ -115,7 +115,7 @@ const App = () => {
     
       <div className="App w-full h-full font-serif">
         {session.token === '' ?
-          <Navigate to="/auth" />
+          <Navigate to="/" />
           :
           <>
             <MainMenu username={session.user.name} markURL={session.user.mark_url} />

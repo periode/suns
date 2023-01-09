@@ -31,7 +31,6 @@ const Welcome = () => {
     }
 
     return (
-        <AirContext>
             <div className="relative w-full h-screen p-4
                             bg-amber-50 text-amber-900 font-serif leading-relaxed
                             flex items-center justify-center gap-4
@@ -56,7 +55,6 @@ const Welcome = () => {
                 }
                 </div >
             </div>
-        </AirContext>
     )
 }
 
