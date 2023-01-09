@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 body {
+  background-color: aqua;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -14,6 +15,7 @@ body {
 }
 
 html {
+  background-color: aqua;
   height: 100%;
 }
 
@@ -158,6 +160,7 @@ code {
 .leaflet-container {
   width: 100%;
   height: 100vh;
+  background-color: #fffbeb;
 }
 
 #map {

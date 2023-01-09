@@ -6,6 +6,7 @@ export enum ENTRYPOINT_STATUS {
     EntrypointOpen = "open",
     EntrypointPending = "pending",
     EntrypointCompleted = "completed",
+    EntrypointSacrificed = "sacrificed"
 }
 
 // OWNED_ENTRYPOINT_STATUS is the status of an entrypoint that the user owns
