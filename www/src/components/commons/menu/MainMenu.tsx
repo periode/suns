@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { FiMenu, FiX } from 'react-icons/fi'
-import { Link, useNavigate } from "react-router-dom";
-import EngineState from "./EngineState";
+import { FiMenu } from 'react-icons/fi'
+import { useNavigate } from "react-router-dom";
 import MenuBar from "./MenuBar";
 import { getSession } from "../../../utils/auth";
 import Logo from "../logo/Logo";
@@ -13,11 +12,12 @@ const signout = () => {
 }
 
 interface MainMenuProps {
-	username: string,
-	markURL: string
+	username?: string,
+	markURL?: string,
+	publicPage?: boolean,
 }
 
-const MainMenu = ({ username, markURL }: MainMenuProps) => {
+const MainMenu = ({ username = "", markURL = "", publicPage = false }: MainMenuProps) => {
 
 	const [isCollapsed, setIsCollapsed] = useState(false)
 	const navigate = useNavigate()
@@ -58,7 +58,7 @@ const MainMenu = ({ username, markURL }: MainMenuProps) => {
 						<MenuBar onClick={() => setIsCollapsed(false)}>
 							<div className="flex items-center font-mono gap-2">
 								{
-									session.user.debug_account ? 
+									session.user.debug_account && !publicPage ? 
 									<div className="flex items-center font-mono gap-2">
 										<div className="w-12 h-12">
 											<img className="w-full h-full" src={`${process.env.REACT_APP_SPACES_URL}/${markURL}`} alt="usermark"/>
@@ -73,36 +73,39 @@ const MainMenu = ({ username, markURL }: MainMenuProps) => {
 											<p>Joining Suns</p>	
 									</div>
 								}
-
 							</div>
 						</MenuBar>
-						<div className="w-full h-full flex flex-col items-center justify-center text-6xl regular
-										">
-							<div className="h-24 w-full flex items-center justify-center cursor-pointer">
+						<div className="w-full h-full flex flex-col items-center justify-center text-5xl regular
+										gap-8">
+							<div className="w-full flex items-center justify-center cursor-pointer">
 								<h2 onClick={() => navigate('/about')}>About</h2>
 							</div>
-							<div className="h-24 w-full flex items-center justify-center cursor-pointer">
-								<h2 onClick={() => navigate('/history')}>History</h2>
-							</div>
-							<div className="h-24 w-full flex items-center justify-center cursor-pointer">
-								<h2 onClick={() => navigate('/privacy')}>Privacy</h2>
-							</div>
-							<div className="h-24 w-full flex items-center justify-center cursor-pointer">
+							<div className="w-full flex items-center justify-center cursor-pointer">
 								<h2 onClick={() => navigate('/help')}>Help</h2>
 							</div>
-							<div className="h-24 w-full flex items-center justify-center cursor-pointer">
-								<h2 onClick={() => {setIsCollapsed(false); navigate(`/entrypoints/archive/sacrifice`, {replace: true})}}>
-									Museum
-								</h2>
+							<div className="w-full flex items-center justify-center cursor-pointer">
+								<h2 onClick={() => navigate('/team')}>Team</h2>
+							</div>
+							<div className="w-full flex items-center justify-center cursor-pointer">
+								<h2 onClick={() => navigate('/history')}>History</h2>
+							</div>
+							<div className="w-full flex items-center justify-center cursor-pointer">
+								<h2 onClick={() => navigate('/privacy')}>Privacy</h2>
+							</div>
+							<div className="w-full flex items-center justify-center cursor-pointer">
+								<h2 onClick={() => navigate('/history')}>Contact</h2>
 							</div>
 						</div>
-						<div className="w-full h-24
-										font-mono
-										flex flex-col items-center justify-center text-2xl
-										border border-t-amber-900">
-							<button className="flex items-center justify-center 
-							" onClick={signout}>Log out</button>
-						</div>
+						{
+							!publicPage &&
+							<div className="w-full h-24
+											font-mono
+											flex flex-col items-center justify-center text-2xl
+											border border-t-amber-900">
+								<button className="flex items-center justify-center 
+								" onClick={signout}>Log out</button>
+							</div>
+						}
 				</div>
 					:
 				<div className="absolute z-10 top-2 right-2

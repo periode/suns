@@ -93,7 +93,7 @@ const router = createBrowserRouter([
     element: <Contact/>
   },
   {
-    path: '/community-guidelines',
+    path: '/guidelines',
     element: <Community/>
   },
 ])

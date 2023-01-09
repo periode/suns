@@ -1,7 +1,6 @@
 import { PropsWithChildren } from "react";
-import AirContext from "../../../contexts/AirContext";
-import NavBar from "../../commons/layout/nav/NavBar";
 import Footer from "../../public/Footer";
+import PublicNavBar from "../../commons/layout/nav/PublicNavBar";
 
 interface PublicPageLayoutProps extends PropsWithChildren {
 
@@ -9,18 +8,24 @@ interface PublicPageLayoutProps extends PropsWithChildren {
 
 function PublicPageLayout({ children } : PublicPageLayoutProps) {
 	return ( 
-		<div className="w-screen h-screen
-		bg-amber-100
-		text-amber-900 font-serif">
-				<NavBar />
-				<div className="w-full h-full p-4 pt-20
-						overflow-y-scroll
-				">
-					{children}
-					<Footer/>
-				</div>
+		<>
+			<PublicNavBar/>
+					<div className="w-screen h-screen
+					bg-amber-100
+					text-amber-900 font-serif">
+					<div className="w-full h-full pt-20
+							overflow-y-scroll
+							md:flex md:flex-col md:items-center 
+							">
+						<div className="w-full md:max-w-[720px] p-6">
 
-		</div>
+							{children}
+						</div>
+						
+						<Footer/>
+					</div>
+			</div>
+		</>
 	 );
 }
 

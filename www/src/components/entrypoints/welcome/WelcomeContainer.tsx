@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react"
-import AirContext from "../../../contexts/AirContext"
+import { useState } from "react"
 import SignUp from "../../../pages/auth/SignUp"
 import NextButton from "../../commons/buttons/NextButton"
 import MarkMaker from "./MarkMaker/MarkMaker"

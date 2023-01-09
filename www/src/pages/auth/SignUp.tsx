@@ -143,7 +143,7 @@ const SignUp = ({ mark }: SignUpProps) => {
 							<fieldset>
 								<div className="m-2">
 									<input className="m-1" type="checkbox" id="guidelines" name="guidelines" onClick={(e => setCheckboxGuidelines(e.currentTarget.value))} />
-									<label htmlFor="guidelines">I agree that any contributions found to contain harmful content, will be immediately deleted along with my registered account.<Link to="/community-guidelines">More information about our community guidelines</Link>.</label>
+									<label htmlFor="guidelines">I agree that any contributions found to contain harmful content, will be immediately deleted along with my registered account.<Link to="/guidelines">More information about our community guidelines</Link>.</label>
 								</div>
 
 								<div className="m-2">

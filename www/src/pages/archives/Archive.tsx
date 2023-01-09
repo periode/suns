@@ -1,5 +1,4 @@
 import Entrypoint from "../../components/entrypoints/Entrypoint";
-import AirContext from "../../contexts/AirContext";
 
 const Archive = () => {
     return (<>
