@@ -19,6 +19,7 @@ import AccountRecoveryConfirm from './pages/auth/AccountRecoveryConfirm';
 import WelcomeContainer from './components/entrypoints/welcome/WelcomeContainer';
 import Archive from './pages/archives/Archive';
 import Privacy from './Privacy';
+import AirContext from './contexts/AirContext';
 
 const router = createBrowserRouter([
   {
@@ -40,10 +41,6 @@ const router = createBrowserRouter([
   {
     path: '/auth/recover',
     element: <AccountRecoveryConfirm/>
-  },
-  {
-    path: '/about',
-    element: <About />
   },
   {
     path: '/about',
@@ -76,7 +73,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AirContext>
+      <RouterProvider router={router} />
+    </AirContext>
   </React.StrictMode>
 );
 

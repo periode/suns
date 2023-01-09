@@ -112,7 +112,7 @@ const App = () => {
 
   return (
 
-    <AirContext>
+    
       <div className="App w-full h-full font-serif">
         {session.token === '' ?
           <Navigate to="/auth" />
@@ -159,7 +159,7 @@ const App = () => {
           </>
         }
       </div>
-    </AirContext>
+    
   );
 }
 

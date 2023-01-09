@@ -92,9 +92,9 @@ function Dashboard(
 									<h2 className="w-full mb-2">Gestures</h2>
 									<div className="w-full flex flex-col gap-8">
 										{
-											listedClusters.map((cluster) => {
+											listedClusters.map((cluster, index) => {
 												return (
-													<GestureList name={cluster.name} icon={cluster.icon} session={session} entrypoints={
+													<GestureList key={index} name={cluster.name} icon={cluster.icon} session={session} entrypoints={
 														entrypoints.filter((entrypoint) =>
 															entrypoint.cluster.name === cluster.name
 															&& checkOwnership(entrypoint)

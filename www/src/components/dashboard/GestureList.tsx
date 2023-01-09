@@ -104,7 +104,7 @@ function GestureList({
 						Actionable.map((entrypoint, index) => {
 							return (
 								<GestureCard
-									key={index}
+									key={"Actionable"+ index}
 									name={entrypoint.name}
 									url={entrypoint.uuid}
 									status={
@@ -118,7 +118,7 @@ function GestureList({
 						Waiting.map((entrypoint, index) => {
 							return (
 								<GestureCard
-									key={index}
+									key={"Waiting"+ index}
 									name={entrypoint.name}
 									url={entrypoint.uuid}
 									status={
@@ -132,7 +132,7 @@ function GestureList({
 						Completed.map((entrypoint, index) => {
 							return (
 								<GestureCard
-									key={index}
+									key={"Completed"+ index}
 									name={entrypoint.name}
 									url={entrypoint.uuid}
 									status={
