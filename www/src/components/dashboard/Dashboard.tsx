@@ -9,6 +9,7 @@ import EngineState from "../commons/menu/EngineState";
 import { ENTRYPOINT_STATUS, IEntrypoint, ISession } from "../../utils/types";
 import MenuBar from "../commons/menu/MenuBar";
 import GestureList from "./GestureList";
+import { useNavigate } from "react-router-dom";
 
 interface DashboardProps { 
 	entrypoints: Array<IEntrypoint>,
@@ -34,7 +35,7 @@ function Dashboard(
 		return false
 	}
 
-
+	const navigate = useNavigate()
 
 	const listedClusters : ICluster[] = [
 		{
@@ -92,9 +93,9 @@ function Dashboard(
 									<h2 className="w-full mb-2">Gestures</h2>
 									<div className="w-full flex flex-col gap-8">
 										{
-											listedClusters.map((cluster) => {
+											listedClusters.map((cluster, index) => {
 												return (
-													<GestureList name={cluster.name} icon={cluster.icon} session={session} entrypoints={
+													<GestureList key={index} name={cluster.name} icon={cluster.icon} session={session} entrypoints={
 														entrypoints.filter((entrypoint) =>
 															entrypoint.cluster.name === cluster.name
 															&& checkOwnership(entrypoint)
@@ -105,6 +106,9 @@ function Dashboard(
 											})
 											}
 									</div>
+								</div>
+								<div className="w-full flex items-center justify-center cursor-pointer">
+									<h2 onClick={() => {setIsCollapsed(false); navigate(`/entrypoints/archive/sacrifice`, {replace: true})}}>Museum</h2>
 								</div>
 								{
 									session.user.debug_account &&	

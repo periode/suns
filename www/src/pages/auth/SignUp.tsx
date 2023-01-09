@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import { FiCheck } from "react-icons/fi"
 import { Link, useNavigate } from "react-router-dom"
 import LoginPrimary from "../../components/commons/buttons/LoginPrimary"
 import InputField, { IValidation } from "../../components/commons/forms/inputs/InputField"
@@ -144,7 +143,7 @@ const SignUp = ({ mark }: SignUpProps) => {
 							<fieldset>
 								<div className="m-2">
 									<input className="m-1" type="checkbox" id="guidelines" name="guidelines" onClick={(e => setCheckboxGuidelines(e.currentTarget.value))} />
-									<label htmlFor="guidelines">I agree that any contributions found to contain harmful content, will be immediately deleted along with my registered account.More information about our community guidelines <a className="underline" href="http://joiningsuns.online/guidelines" target="_blank" rel="noopener noreferrer">here</a>.</label>
+									<label htmlFor="guidelines">I agree that any contributions found to contain harmful content, will be immediately deleted along with my registered account.<Link to="/guidelines">More information about our community guidelines</Link>.</label>
 								</div>
 
 								<div className="m-2">

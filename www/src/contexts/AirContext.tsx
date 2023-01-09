@@ -18,7 +18,14 @@ const AirTablePages : string[] = [
 	"Cracks",
 	"Welcome",
 	"PublicView",
-	"Sacrifice"
+	"Sacrifice",
+	"About",
+	"Privacy",
+	"History",
+	"Team",
+	"Help",
+	"Contact",
+	"CommunityGuidelines"
 ]
 
 var AirTableMap = new Map<string, Map<string, string>>()
@@ -32,8 +39,10 @@ interface AirContextProps {
 
 
 const AirContext = ({children} : AirContextProps) => {
-	
+
+
 	const [mainContext, setMainContext] = useState(AirTableMap)
+	
 	const [isLoading, setIsLoading] = useState(false)
 
 
@@ -59,7 +68,7 @@ const AirContext = ({children} : AirContextProps) => {
 					if (Name && Content)
 						newMap.set(Name, Content)
 				})
-				setMainContext(new Map(mainContext.set(pageName, newMap)))
+				setMainContext((mainContext) => new Map(mainContext.set(pageName, newMap)))
 				fetchNextPage();
 			}, function done(err) {
 				setIsLoading(false)
@@ -67,7 +76,7 @@ const AirContext = ({children} : AirContextProps) => {
 			})
 		});
 		renderOnce.current = true
-	}, [mainContext])
+	}, [])
 
 	return ( 
 		<>

@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import * as ReactDOMServer from 'react-dom/server';
 import { ImageOverlay, MapContainer, Marker } from 'react-leaflet'
 import { CRS } from 'leaflet';
 import L from "leaflet";
@@ -12,15 +11,13 @@ import Entrypoint from './components/entrypoints/Entrypoint';
 import MainMenu from './components/commons/menu/MainMenu';
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import UILayout from './components/commons/layout/UILayout';
-import AirContext from './contexts/AirContext';
 
 import { IEntrypoint } from './utils/types';
 import Cracks from './pages/archives/Cracks';
 import Sacrifice from './pages/archives/Sacrifice';
 import EntrypointNotFound from './components/entrypoints/EntrypointNotFound';
 
-import Lottie from 'react-lottie' //-- there are multiple react/lottie npm packages (react-lottie, lottie-react, and none of them seem to work)
-import cracksAnimation from './animations/cracks.json'
+// import Lottie from 'react-lottie' //-- there are multiple react/lottie npm packages (react-lottie, lottie-react, and none of them seem to work)
 import Dashboard from './components/dashboard/Dashboard';
 
 const WIDTH = 2500;
@@ -112,10 +109,10 @@ const App = () => {
 
   return (
 
-    <AirContext>
+    
       <div className="App w-full h-full font-serif">
         {session.token === '' ?
-          <Navigate to="/auth" />
+          <Navigate to="/" />
           :
           <>
             <MainMenu username={session.user.name} markURL={session.user.mark_url} />
@@ -159,7 +156,7 @@ const App = () => {
           </>
         }
       </div>
-    </AirContext>
+    
   );
 }
 

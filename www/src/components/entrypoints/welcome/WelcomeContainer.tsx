@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react"
-import AirContext from "../../../contexts/AirContext"
+import { useState } from "react"
 import SignUp from "../../../pages/auth/SignUp"
 import NextButton from "../../commons/buttons/NextButton"
 import MarkMaker from "./MarkMaker/MarkMaker"
@@ -31,7 +30,6 @@ const Welcome = () => {
     }
 
     return (
-        <AirContext>
             <div className="relative w-full h-screen p-4
                             bg-amber-50 text-amber-900 font-serif leading-relaxed
                             flex items-center justify-center gap-4
@@ -56,7 +54,6 @@ const Welcome = () => {
                 }
                 </div >
             </div>
-        </AirContext>
     )
 }
 

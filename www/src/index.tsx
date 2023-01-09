@@ -10,7 +10,6 @@ import reportWebVitals from './reportWebVitals';
 
 import NotFound from './NotFound';
 
-import About from './About';
 
 import Auth from './components/auth/Auth';
 import AccountConfirm from './pages/auth/AccountConfirm';
@@ -18,7 +17,15 @@ import AccountRecovery from './pages/auth/AccountRecovery';
 import AccountRecoveryConfirm from './pages/auth/AccountRecoveryConfirm';
 import WelcomeContainer from './components/entrypoints/welcome/WelcomeContainer';
 import Archive from './pages/archives/Archive';
-import Privacy from './Privacy';
+import AirContext from './contexts/AirContext';
+import Contact from './pages/Contact';
+import About from './pages/About';
+import Privacy from './pages/Privacy';
+import Team from './pages/Team';
+import Help from './pages/Help';
+import History from './pages/History';
+import Community from './pages/Community';
+import Home from './pages/Home';
 
 const router = createBrowserRouter([
   {
@@ -42,18 +49,6 @@ const router = createBrowserRouter([
     element: <AccountRecoveryConfirm/>
   },
   {
-    path: '/about',
-    element: <About />
-  },
-  {
-    path: '/about',
-    element: <About />
-  },
-  {
-    path: '/privacy',
-    element: <Privacy/>
-  },
-  {
     path: '/welcome',
     element: <WelcomeContainer />
   },
@@ -68,7 +63,39 @@ const router = createBrowserRouter([
   {
     path: "*",
     element: <NotFound />
-  }
+  },
+  {
+    path: '/',
+    element: <Home/>
+  },
+  {
+    path: '/about',
+    element: <About />
+  },
+  {
+    path: '/privacy',
+    element: <Privacy/>
+  },
+  {
+    path: '/history',
+    element: <History />
+  },
+  {
+    path: '/team',
+    element: <Team/>
+  },
+  {
+    path: '/help',
+    element: <Help/>
+  },
+  {
+    path: '/contact',
+    element: <Contact/>
+  },
+  {
+    path: '/guidelines',
+    element: <Community/>
+  },
 ])
 
 const root = ReactDOM.createRoot(
@@ -76,7 +103,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AirContext>
+      <RouterProvider router={router} />
+    </AirContext>
   </React.StrictMode>
 );
 
