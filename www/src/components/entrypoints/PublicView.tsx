@@ -4,7 +4,7 @@ import ContentImage from "../modules/content/ContentImage"
 import ContentVideoInternal from "../modules/content/ContentVideoInternal"
 import ContentText from "../modules/content/ContentText"
 import { AirTableContext } from "../../contexts/AirContext"
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import EntrypointPartners from "./EntrypointPartners"
 import SeperatorFinal from "../commons/layout/SeperatorFinal"
 import { useNavigate } from "react-router-dom"
@@ -18,6 +18,12 @@ const PublicView = ({ entrypoint }: PublicViewProps) => {
     const navigate = useNavigate()
     const ctx = useContext(AirTableContext)
     const contents = ctx.get("PublicView")
+
+    useEffect(() => {
+        entrypoint.modules.forEach((m : IModule) => {
+            m.uploads.sort((a:IUpload, b:IUpload) => parseInt(a.ID) - parseInt(b.ID))
+        })
+    }, [entrypoint])
 
     const getUploadContent = (index: number, upload: IUpload, name: string): JSX.Element => {
         if (upload === undefined)
