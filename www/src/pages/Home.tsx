@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import PublicPageLayout from "../components/entrypoints/Layouts/PublicPageLayout";
 import { FiArrowRight } from "react-icons/fi";
+import Spinner from "../components/commons/Spinners/Spinner";
 
 function Home() {
 	const navigate = useNavigate()

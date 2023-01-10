@@ -1,9 +1,25 @@
-import { FiOctagon } from "react-icons/fi";
+import animationData from "../../../animations/loader.json"
+import Lottie from "react-lottie";
+
+
+const defaultOptions = {
+	loop: true,
+	autoplay: true,
+	animationData: animationData,
+	className: "fill-red-500" ,
+	renderSettings: {
+		
+	}
+}
 
 function Spinner() {
 	return ( 
-		<div className="text-7xl text-amber-500 text-center">
-			<FiOctagon strokeWidth={1} className="animate-spin"/>
+		<div className="">
+			<Lottie 
+				options={defaultOptions}
+				isClickToPauseDisabled={true}
+				segments={ [30, 90] }
+				style={ {fill: "red"} } />
 		</div>
 	 );
 }
