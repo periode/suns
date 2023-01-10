@@ -10,7 +10,7 @@ function Team() {
 
 	return (
 		<PulicPageLayout>
-			<h1 className="text-4xl mb-2">Team</h1>
+			<h1 className="text-6xl mb-6">Team</h1>
 			<div className="w-full flex flex-wrap md:gap-8 gap-2">
 				<TeamMember name={contents?.get("team_name_1")} content={contents?.get("team_content_1")} location={contents?.get("team_location_1")} url={contents?.get("team_image_1")} />
 				<TeamMember name={contents?.get("team_name_2")} content={contents?.get("team_content_2")} location={contents?.get("team_location_2")} url={contents?.get("team_image_2")} />

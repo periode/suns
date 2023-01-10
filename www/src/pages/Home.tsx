@@ -11,7 +11,7 @@ function Home() {
 							flex items-center justify-center">
 				<div className="flex flex-col items-center gap-2">
 					<h1 className="text-8xl text-center">Joining Suns</h1>
-					<div className="w-full flex items-center p-4 font-mono gap-4 
+					<div className="w-full flex items-center justify-center p-4 font-mono gap-4 
 									md:flex-row flex-col">
 						<button className=" w-full md:w-48 rounded-sm
 											flex items-center justify-center gap-2

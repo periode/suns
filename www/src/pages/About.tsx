@@ -10,23 +10,23 @@ const About = () => {
 
     return (
             <PulicPageLayout>
-                <h1 className="text-4xl mb-2">About</h1>
-                <h2 className="text-2xl mb-1">
+                <h1 className="text-6xl mb-6">About</h1>
+                <h2 className="text-2xl mb-2">
                     { contents?.get("about_headline_1")}
                 </h2>
-                <p className="mb-2">
+                <p className="mb-8">
                     { contents?.get("about_content_1")}
                 </p>
-                <h2 className="text-2xl">
+                <h2 className="text-2xl mb-2">
                     { contents?.get("about_headline_2")}
                 </h2>
-                <p className="mb-2">
+                <p className="mb-8">
                     { contents?.get("about_content_2")}
                 </p>
-                <h2 className="text-2xl">
+                <h2 className="text-2xl mb-2">
                     { contents?.get("about_headline_3")}
                 </h2>
-                <p className="mb-2">
+                <p className="mb-8">
                     { contents?.get("about_content_3")}
                 </p>
             </PulicPageLayout>

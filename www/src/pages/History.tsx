@@ -10,9 +10,12 @@ function History() {
 
 	return ( 
 		<PulicPageLayout>
-			<h1 className="text-4xl">History</h1>
-			<p>{contents?.get("history_content_1")}</p>
-			<ContentVideoExternal src={contents?.get("history_video_1")}/>
+			<h1 className="text-6xl mb-6">History</h1>
+			<div className="w-full mb-2">
+
+				<ContentVideoExternal src={contents?.get("history_video_1")}/>
+			</div>
+			<p className="mb-8">{contents?.get("history_content_1")}</p>
 		</PulicPageLayout>
 	 );
 }

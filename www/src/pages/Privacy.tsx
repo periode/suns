@@ -9,15 +9,31 @@ function Privacy() {
 
 	return ( 
 		<PulicPageLayout>
-			<h1>Privacy Policy</h1>
-			<h2>{ contents?.get("about_headline_1")}</h2>
-			<p>{ contents?.get("about_content_1")}</p>
-			<h2>{ contents?.get("about_headline_2")}</h2>
-			<p>{ contents?.get("about_content_2")}</p>
-			<h2>{ contents?.get("about_headline_3")}</h2>
-			<p>{ contents?.get("about_content_3")}</p>
-			<h2>{ contents?.get("about_headline_4")}</h2>
-			<p>{ contents?.get("about_content_4")}</p>
+			<h1 className="text-6xl mb-6">Privacy Policy</h1>
+			<h2 className="text-2xl mb-2">
+				{ contents?.get("privacy_headline_1")}
+			</h2>
+			<p className="mb-8">
+				{ contents?.get("privacy_content_1")}
+			</p>
+			<h2 className="text-2xl mb-2">
+				{ contents?.get("privacy_headline_2")}
+			</h2>
+			<p className="mb-8">
+				{ contents?.get("privacy_content_2")}
+			</p>
+			<h2 className="text-2xl mb-2">
+				{ contents?.get("privacy_headline_3")}
+			</h2>
+			<p className="mb-8">
+				{ contents?.get("privacy_content_3")}
+			</p>
+			<h2 className="text-2xl mb-2">
+				{ contents?.get("privacy_headline_4")}
+			</h2>
+			<p className="mb-8">
+				{ contents?.get("privacy_content_4")}
+			</p>
 		</PulicPageLayout>
 	 );
 }
