@@ -81,7 +81,7 @@ const AirContext = ({children} : AirContextProps) => {
 	return ( 
 		<>
 		{
-			true ? 
+			isLoading ? 
 			<LoadingApp/>
 			:
 			mainContext ? 
