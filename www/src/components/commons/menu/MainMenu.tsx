@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiMenu } from 'react-icons/fi'
+import { FiLogOut, FiMenu, FiX } from 'react-icons/fi'
 import { useNavigate } from "react-router-dom";
 import MenuBar from "./MenuBar";
 import { getSession } from "../../../utils/auth";
@@ -23,7 +23,7 @@ const MainMenu = ({ username = "", markURL = "", publicPage = false }: MainMenuP
 	const navigate = useNavigate()
 
 	const session = getSession()
-
+	console.log(session)
 	return ( 
 	<>		
 			{
@@ -36,27 +36,17 @@ const MainMenu = ({ username = "", markURL = "", publicPage = false }: MainMenuP
 								text-amber-900
 								font-serif
 								">
-						{/* <div className="absolute
-								w-full
-								h-16 
-								p-4
-								flex items-center justify-between
-								"
-						>
-							<div className="flex items-center font-mono gap-2">
-								<div className="w-12 h-12">
-									<img className="w-full h-full" src={`${process.env.REACT_APP_SPACES_URL}/${markURL}`} alt="usermark"/>
-								</div>
-								{ username }
-							</div>
-							<div className="cursor-pointer text-[40px]"
-								onClick={() => setIsCollapsed(false)}>
-
-								<FiX className="text-3xl"/>
-							</div>
-						</div> */}
-						<MenuBar onClick={() => setIsCollapsed(false)}>
-							<div className="flex items-center font-mono gap-2">
+						<div className="absolute
+									w-full
+									h-16 
+									p-4
+									flex items-center justify-between
+									bg-amber-100
+									border border-b-amber-900
+									text-amber-900
+									">
+							<div>
+								<div className="flex items-center font-mono gap-2">
 								{
 									session.user.debug_account && !publicPage ? 
 									<div className="flex items-center font-mono gap-2">
@@ -73,8 +63,22 @@ const MainMenu = ({ username = "", markURL = "", publicPage = false }: MainMenuP
 											<p>Joining Suns</p>	
 									</div>
 								}
+								</div>
 							</div>
-						</MenuBar>
+							<div className="flex items-center gap-3 text-2xl">
+								{
+									session.token !== ""  &&
+									<div className="cursor-pointer"
+										onClick={signout}>
+										<FiLogOut/>
+									</div>
+								}
+								<div	className="cursor-pointer"
+										onClick={() => setIsCollapsed(false)}>
+									<FiX />	
+								</div>
+							</div>
+						</div>
 						<div className="w-full h-full flex flex-col items-center justify-center text-5xl regular
 										gap-8">
 							<div className="w-full flex items-center justify-center cursor-pointer">
@@ -96,16 +100,6 @@ const MainMenu = ({ username = "", markURL = "", publicPage = false }: MainMenuP
 								<h2 onClick={() => navigate('/contact')}>Contact</h2>
 							</div>
 						</div>
-						{
-							!publicPage &&
-							<div className="w-full h-24
-											font-mono
-											flex flex-col items-center justify-center text-2xl
-											border border-t-amber-900">
-								<button className="flex items-center justify-center 
-								" onClick={signout}>Log out</button>
-							</div>
-						}
 				</div>
 					:
 				<div className="absolute z-10 top-2 right-2

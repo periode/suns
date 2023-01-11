@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 
-import { FiActivity, FiDroplet, FiSmile, FiTarget, FiZap } from "react-icons/fi";
+import { FiActivity, FiArrowRight, FiDroplet, FiSmile, FiTarget, FiZap } from "react-icons/fi";
 import { TbChartCircles } from "react-icons/tb";
 import { IoFootstepsOutline } from "react-icons/io5";
 
@@ -10,6 +10,7 @@ import { ENTRYPOINT_STATUS, IEntrypoint, ISession } from "../../utils/types";
 import MenuBar from "../commons/menu/MenuBar";
 import GestureList from "./GestureList";
 import { useNavigate } from "react-router-dom";
+import SacrificeState from "../commons/menu/SacrificeState";
 
 interface DashboardProps { 
 	entrypoints: Array<IEntrypoint>,
@@ -104,12 +105,10 @@ function Dashboard(
 													}/>
 												)
 											})
-											}
+										}
 									</div>
 								</div>
-								<div className="w-full flex items-center justify-center cursor-pointer">
-									<h2 onClick={() => {setIsCollapsed(false); navigate(`/entrypoints/archive/sacrifice`, {replace: true})}}>Museum</h2>
-								</div>
+								<SacrificeState/>
 								{
 									session.user.debug_account &&	
 									<div>
