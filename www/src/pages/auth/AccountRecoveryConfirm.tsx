@@ -1,7 +1,10 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Spinner from "../../components/commons/Spinners/Spinner";
 import { recoverConfirm } from "../../utils/auth";
+import PublicPageLayout from "../../components/entrypoints/Layouts/PublicPageLayout";
+import SpinnerSmall from "../../components/commons/Spinners/SpinnerSmall";
+import InputField from "../../components/commons/forms/inputs/InputField";
 
 
 const AccountRecoveryConfirm = () => {
@@ -50,22 +53,35 @@ const AccountRecoveryConfirm = () => {
 		<p>What are you doing here? </p>
 	</>
 
-	const recoveryForm = <>
-		<form action="">
-				<div className="">
-					<label htmlFor="email">New Password</label>
-					<input className="border border-amber-900 bg-amber-50" onChange={ handlePasswordChange } type="password" name="email" />
-				</div>
-				<div className="form-group">
-					<button onClick={ handleRecover }>Change password</button>
-				</div>
-		</form>
-	</>
+	const recoveryForm =
+	<form className="	w-full h-full md:w-[720px] md:h-4/5
+									flex flex-col p-4 justify-between md:justify-center md:gap-4" onSubmit={handleRecover}>
+					<div className="flex flex-col items-start justify-center w-full h-full md:h-auto gap-4">
+						<h2 className="text-6xl ">Email recovery</h2>
+						<div className="flex flex-col gap-1 items-start w-full">
+							<InputField label="New Password" onChange={handlePasswordChange} placeholder="•••••" type="password"/>
+						</div>
+						
+					</div>
+					<div className="sticky bottom-4 md:static 
+									flex flex-col-reverse md:flex-row w-full gap-4">
+						<div className="flex-1">
+							<button
+								className=" flex items-center justify-center 
+								w-full h-14 bg-amber-500 
+								text-white font-mono font-bold
+								hover:bg-amber-600 hover:text-amber-50
+								transition-all ease-in duration-300 disabled:opacity-25"
+								type="submit">Change password</button>
+						</div>
+					</div>
+	</form>
+	
 	const requestStatus = <>
 		<div className="">
 			{
 				isSuccess === true ?
-				<p>Your password was changed you can now login</p>
+				<p>Your password was changed you can now <Link className="font-bold" to="/auth">login</Link></p>
 				:
 				<p>{ message }</p>
 			}
@@ -73,13 +89,18 @@ const AccountRecoveryConfirm = () => {
 	</>
 
 	return ( 
-			!token ? noToken : 
-			(
-				!isCheckingPassword ?
-					(! requestMade ? recoveryForm : requestStatus) 
-				:
-				<Spinner></Spinner> 
-			)
+		<div className="w-full h-full font-serif">
+			<div className="bg-amber-50 w-full h-screen text-amber-900 flex items-center justify-center">
+				{
+					!token ? noToken : 
+						(!isCheckingPassword 
+						?
+						(! requestMade ? recoveryForm : requestStatus) 
+						:
+						<SpinnerSmall/>)
+				}
+			</div>
+		</div>
 	 );
 }
 
